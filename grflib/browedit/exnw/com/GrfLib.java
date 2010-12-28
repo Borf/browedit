@@ -39,4 +39,14 @@ public class GrfLib {
 			return null;
 		}
 		
+		public static ArrayList<String> listFiles(String f)
+		{
+			ArrayList<String> files = new ArrayList<String>();
+			for(FileLocation l: locations)
+			{
+				l.listFiles(files, f);
+			}
+			return files;
+		}
+		
 }

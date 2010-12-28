@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.zip.DataFormatException;
@@ -155,5 +156,24 @@ public class GrfFileLocation extends FileLocation
 	{
 		return files.containsKey(fileName);
 	}
+	
+	
+	public void listFiles(ArrayList<String> files, String f)
+	{
+		for(String file: this.files.keySet())
+		{
+			if(file.startsWith(f))
+			{
+				if(file.indexOf("\\", f.length()) != -1)
+				{
+					String dir = file.substring(0, file.indexOf("\\", f.length())+1);
+					if(!files.contains(dir))
+						files.add(dir);
+				}
+				else
+					files.add(file);
+			}
+		}
+	}	
 
 }

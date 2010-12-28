@@ -1,12 +1,16 @@
 package gui.browedit.exnw.com;
 
-import javax.media.opengl.GLCanvas;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
-import com.sun.opengl.util.Animator;
+import data.browedit.exnw.com.Map;
 
 public class MainFrame extends JFrame
 {
+	ArrayList<Map> maps = new ArrayList<Map>();
+	Map currentMap = null;
+	
 	public MainFrame()
 	{
 		super("BrowEdit");

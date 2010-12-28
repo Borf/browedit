@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class RealFileLocation extends FileLocation
 {
@@ -23,6 +24,9 @@ public class RealFileLocation extends FileLocation
 	{
 		File f = new File(this.path + fileName);
 		return f.exists();
+	}
+	public void listFiles(ArrayList<String> files, String f)
+	{
 	}
 	
 }

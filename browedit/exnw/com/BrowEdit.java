@@ -3,9 +3,8 @@ package browedit.exnw.com;
 import grflib.browedit.exnw.com.GrfLib;
 import gui.browedit.exnw.com.MainFrame;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class BrowEdit {
 
@@ -13,14 +12,30 @@ public class BrowEdit {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		System.out.println("Opening GRFs");
 		long l = System.currentTimeMillis();
 		GrfLib.addGrf("/home/borf/Ragray/rdata.grf");
 		GrfLib.addGrf("/home/borf/Ragray/data.grf");
-	//	GrfLib.addDir("/home/borf/Ragray");
 		System.out.println("Bench: " + (System.currentTimeMillis() - l));
 		
-		
-		
+
+		try {
+		    // Set System L&F
+	        UIManager.setLookAndFeel(
+	            UIManager.getSystemLookAndFeelClassName());
+	    } 
+	    catch (UnsupportedLookAndFeelException e) {
+	       // handle exception
+	    }
+	    catch (ClassNotFoundException e) {
+	       // handle exception
+	    }
+	    catch (InstantiationException e) {
+	       // handle exception
+	    }
+	    catch (IllegalAccessException e) {
+	       // handle exception
+	    }
 		new MainFrame();
 		
 	}
