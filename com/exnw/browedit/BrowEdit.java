@@ -1,4 +1,4 @@
-package browedit.exnw.com;
+package com.exnw.browedit;
 
 import grflib.browedit.exnw.com.GrfLib;
 import gui.browedit.exnw.com.MainFrame;
@@ -14,8 +14,8 @@ public class BrowEdit {
 	public static void main(String[] args) {
 		System.out.println("Opening GRFs");
 		long l = System.currentTimeMillis();
-		GrfLib.addGrf("/home/borf/Ragray/rdata.grf");
-		GrfLib.addGrf("/home/borf/Ragray/data.grf");
+		GrfLib.addGrf("C:\\Users\\Borf\\AppData\\Local\\Ragray\\rdata.grf");
+		GrfLib.addGrf("C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf");
 		System.out.println("Bench: " + (System.currentTimeMillis() - l));
 		
 
