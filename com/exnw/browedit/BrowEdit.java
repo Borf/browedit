@@ -1,10 +1,11 @@
 package com.exnw.browedit;
 
-import grflib.browedit.exnw.com.GrfLib;
-import gui.browedit.exnw.com.MainFrame;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import com.exnw.browedit.grflib.GrfLib;
+import com.exnw.browedit.grflib.gui.MainFrame;
 
 public class BrowEdit {
 
