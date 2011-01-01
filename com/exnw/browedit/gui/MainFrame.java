@@ -1,4 +1,4 @@
-package com.exnw.browedit.grflib.gui;
+package com.exnw.browedit.gui;
 
 import java.util.ArrayList;
 
@@ -11,19 +11,28 @@ public class MainFrame extends JFrame
 {
 	ArrayList<Map> maps = new ArrayList<Map>();
 	Map currentMap = null;
+	MenuBar menuBar;
 	
 	public MainFrame()
 	{
 		super("BrowEdit");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setContentPane(new MainPanel());
+		this.setContentPane(new MainPanel(this));
 
-		this.setJMenuBar(new com.exnw.browedit.grflib.gui.MenuBar());
-		
-		
+		this.setJMenuBar(menuBar = new com.exnw.browedit.gui.MenuBar(this));
+		openMap("data\\prontera.rsw");
 		
 		
 		this.setSize(1280, 900);
 		this.setVisible(true);
 	}
+	
+	public void openMap(String fileName)
+	{
+		currentMap = new Map(fileName);
+		maps.add(currentMap);
+		menuBar.addMap(fileName);
+	}
+	
+	
 }

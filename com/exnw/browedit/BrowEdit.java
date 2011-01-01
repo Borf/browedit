@@ -5,7 +5,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.exnw.browedit.grflib.GrfLib;
-import com.exnw.browedit.grflib.gui.MainFrame;
+import com.exnw.browedit.gui.MainFrame;
 
 public class BrowEdit {
 

@@ -1,5 +1,11 @@
 package com.exnw.browedit.data;
 
+import java.awt.Color;
+
+import javax.media.opengl.GL;
+
+import com.exnw.browedit.grflib.GrfLib;
+
 /**
  * This java class covers support for reading a Ragnarok Online GAT file,
  * where GAT seems to stand for Ground Altitude Table.
@@ -8,7 +14,7 @@ package com.exnw.browedit.data;
  */
 public class Gat
 {
-	private static char[] magic = new char[]{ 'G', 'R', 'A', 'T' };
+	private static byte[] magic = "GRAT".getBytes();
 	private static byte[][] supportedVersions = new byte[][]{
 		{ 1, 2 }
 	};
@@ -24,13 +30,23 @@ public class Gat
 	 * Everything else = unknown
 	*/
 	private static enum GatCellType{
-		WALKABLE_BLOCK,
-		NON_WALKABLE_BLOCK,
-		NON_WALKABLE_WATER_NOT_SNIPEABLE,
-		WALKABLE_WATER,
-		NON_WALKABLE_WATER_SNIPEABLE,
-		CLIFF_SNIPEABLE,
-		CLIFF_NOT_SNIPEABLE
+		WALKABLE_BLOCK (new Color(0.0f,1.0f,0.0f)),
+		NON_WALKABLE_BLOCK (new Color(1.0f,0.0f,0.0f)),
+		NON_WALKABLE_WATER_NOT_SNIPEABLE (new Color(0.0f,0.0f,1.0f)),
+		WALKABLE_WATER (new Color(1.0f,1.0f,0.0f)),
+		NON_WALKABLE_WATER_SNIPEABLE (new Color(1.0f,0.0f,1.0f)),
+		CLIFF_SNIPEABLE (new Color(0.0f,1.0f,1.0f)),
+		CLIFF_NOT_SNIPEABLE (new Color(1.0f,1.0f,1.0f));
+		
+		private Color color;
+		public Color getColor()
+		{
+			return color;
+		}
+		GatCellType(Color color)
+		{
+			this.color = color;
+		}
 	};
 	
 	private String filename;
@@ -55,7 +71,15 @@ public class Gat
 			filename += ".gat";
 		
 		this.filename = filename;
+		this.read();
 	}
+
+	//TODO: move this somewhere global
+	private int swap(int other)
+	{
+		return (((other>>0)&0xFF)<<24) | (((other>>8)&0xFF)<<16) | (((other>>16)&0xFF)<<8) | (((other>>24)&0xFF)<<0);
+	}
+	
 	
 	// TODO: hand over an file handler for GRF/Local files,
 	// 		 as for now we do it only with local files
@@ -63,10 +87,10 @@ public class Gat
 		java.io.DataInputStream dis = null;
 		
 		try{
-			dis = new java.io.DataInputStream( new java.io.FileInputStream( this.filename ) );
+			dis = new java.io.DataInputStream( GrfLib.openFile( this.filename ) );
 			
-			for( char c : Gat.magic ){
-				if( c != dis.readChar() ){
+			for( byte c : Gat.magic ){
+				if( c != dis.readByte() ){
 					throw new IllegalArgumentException("GAT file header is corrupted.");
 				}
 			}
@@ -90,10 +114,10 @@ public class Gat
 			
 			this.cells = new java.util.ArrayList<Gat.GatCell>();
 			
-			this.width = dis.readInt();
-			this.height = dis.readInt();
+			this.width = swap(dis.readInt());
+			this.height = swap(dis.readInt());
 			
-			for( int i = 0, max = this.width * this.height; i < max; i++ ){
+			for( int i = 0, max = this.getWidth() * this.getHeight(); i < max; i++ ){
 				this.cells.add( new Gat.GatCell( dis ) );
 			}
 		}catch( java.io.IOException ex ){
@@ -113,14 +137,44 @@ public class Gat
 		if( x < 0 || y < 0 )
 			throw new IllegalArgumentException();
 		
-		return this.cells.get( x + y * this.width );
+		return this.cells.get( x + y * this.getWidth() );
 	}
 	
 	@Override
 	public String toString(){
 		return String.format( "Ragnarok Online GAT File(Version %01d.%01d): %s | %01d cells", this.version_major, this.version_minor, this.filename, this.cells.size() );
 	}
+
+	public void render(GL gl)
+	{
+		gl.glBegin(gl.GL_QUADS);
+		for(int x = 0; x < getWidth(); x++)
+		{
+			for(int y = 0; y < getHeight(); y++)
+			{
+				GatCell cell = getCell(x,y);
+				gl.glColor3f(cell.type.getColor().getRed()/255.0f, cell.type.getColor().getGreen()/255.0f, cell.type.getColor().getBlue()/255.0f); 
+
+				gl.glVertex3f(x+0, cell.height[0], y+0);
+				gl.glVertex3f(x+1, cell.height[1], y+0);
+				gl.glVertex3f(x+1, cell.height[2], y+1);
+				gl.glVertex3f(x+0, cell.height[3], y+1);
+			}
+		}
+		gl.glEnd();
+	}
 	
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
+
 	private class GatCell{
 		private float[] height;
 		private Gat.GatCellType type;
@@ -138,7 +192,7 @@ public class Gat
 			for( int i = 0; i < 4; i++ )
 				this.height[i] = dis.readFloat();
 			
-			int type = dis.readInt();
+			int type = swap(dis.readInt());
 			
 			try{
 				this.type = Gat.GatCellType.values()[type];

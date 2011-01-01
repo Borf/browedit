@@ -1,4 +1,4 @@
-package com.exnw.browedit.grflib.gui;
+package com.exnw.browedit.gui;
 
 
 import java.awt.event.ActionEvent;
@@ -21,7 +21,7 @@ public class MenuBar extends JMenuBar
 	
 	JMenu maps;
 	
-	public MenuBar()
+	public MenuBar(final MainFrame mainFrame)
 	{
 		add(file = new JMenu("File"));
 		file.add(fileNew = 		new JMenuItem("New"));
@@ -35,6 +35,7 @@ public class MenuBar extends JMenuBar
 		add(maps = new JMenu("Maps"));
 		
 		
+
 		fileOpen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -42,7 +43,7 @@ public class MenuBar extends JMenuBar
 				JFileChooser fileChooser = new JFileChooser(new GrfFileSystemView());
 				 if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 				 {
-					 maps.add(new JMenuItem(fileChooser.getSelectedFile().getPath()));
+					mainFrame.openMap(fileChooser.getSelectedFile().getPath());
 				 }			
 			}
 		});
@@ -57,6 +58,11 @@ public class MenuBar extends JMenuBar
 		});
 		
 		
+	}
+
+	public void addMap(String fileName)
+	{
+		maps.add(new JMenuItem(fileName));
 	}
 }
 
