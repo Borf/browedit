@@ -30,23 +30,13 @@ public class Gat extends Observable
 	 * Everything else = unknown
 	*/
 	public static enum GatCellType{
-		WALKABLE_BLOCK (new Color(0.0f,1.0f,0.0f)),
-		NON_WALKABLE_BLOCK (new Color(1.0f,0.0f,0.0f)),
-		NON_WALKABLE_WATER_NOT_SNIPEABLE (new Color(0.0f,0.0f,1.0f)),
-		WALKABLE_WATER (new Color(1.0f,1.0f,0.0f)),
-		NON_WALKABLE_WATER_SNIPEABLE (new Color(1.0f,0.0f,1.0f)),
-		CLIFF_SNIPEABLE (new Color(0.0f,1.0f,1.0f)),
-		CLIFF_NOT_SNIPEABLE (new Color(1.0f,1.0f,1.0f));
-		
-		private Color color;
-		public Color getColor()
-		{
-			return color;
-		}
-		GatCellType(Color color)
-		{
-			this.color = color;
-		}
+		WALKABLE_BLOCK ,
+		NON_WALKABLE_BLOCK,
+		NON_WALKABLE_WATER_NOT_SNIPEABLE,
+		WALKABLE_WATER,
+		NON_WALKABLE_WATER_SNIPEABLE,
+		CLIFF_SNIPEABLE,
+		CLIFF_NOT_SNIPEABLE,
 	};
 	
 	private String filename;

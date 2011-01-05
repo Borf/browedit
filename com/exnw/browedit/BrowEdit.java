@@ -17,6 +17,7 @@ public class BrowEdit {
 		long l = System.currentTimeMillis();
 		GrfLib.addGrf("C:\\Users\\Borf\\AppData\\Local\\Ragray\\rdata.grf");
 		GrfLib.addGrf("C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf");
+		GrfLib.addDir(".");
 		System.out.println("Bench: " + (System.currentTimeMillis() - l));
 		
 

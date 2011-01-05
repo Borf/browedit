@@ -9,6 +9,7 @@ public class BrowRenderer implements GLEventListener
 {
 	static GLU glu = new GLU();
 	float rotateT = 0;
+	float dist = 0;
 	
 	MainFrame mainFrame;
 	
@@ -22,13 +23,15 @@ public class BrowRenderer implements GLEventListener
 		final GL gl = glDrawable.getGL();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+		float d = 25+(float) (Math.abs(Math.sin(dist))*100.0);
 		gl.glLoadIdentity();
-		glu.gluLookAt(	mainFrame.currentMap.getGat().getWidth()/2+(mainFrame.currentMap.getGat().getWidth()/2*Math.cos(rotateT)), 100, mainFrame.currentMap.getGat().getHeight()/2+(mainFrame.currentMap.getGat().getHeight()/2*Math.sin(rotateT)),	//eye 
+		glu.gluLookAt(	
+						mainFrame.currentMap.getGat().getWidth()/2+(d*Math.cos(rotateT)), d, mainFrame.currentMap.getGat().getHeight()/2+(d*Math.sin(rotateT)),	//eye 
+						//mainFrame.currentMap.getGat().getWidth()/2+(10*Math.cos(rotateT)), 10, mainFrame.currentMap.getGat().getHeight()/2+(10*Math.sin(rotateT)),	//eye 
 						mainFrame.currentMap.getGat().getWidth()/2, 0, mainFrame.currentMap.getGat().getHeight()/2,	//lookat 
-						0, 1, 0);	//up
-		
-		
+						0, 1, 0);	//up		
 		rotateT+=0.01f;
+		dist += 0.01f;
 		mainFrame.currentMap.render(gl);
 		
 	}
