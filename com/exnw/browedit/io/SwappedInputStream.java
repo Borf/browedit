@@ -21,7 +21,7 @@ public class SwappedInputStream
 	}
 	
 	public final float readFloat() throws java.io.IOException{
-		return this.in.readFloat();
+		return Float.intBitsToFloat(this.in.readInt());
 	}
 
 	public final int readInt() throws java.io.IOException{
