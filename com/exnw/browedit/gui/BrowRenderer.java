@@ -23,12 +23,12 @@ public class BrowRenderer implements GLEventListener
 		final GL gl = glDrawable.getGL();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-		float d = 25+(float) (Math.abs(Math.sin(dist))*100.0);
+		float d = 100+(float) (Math.abs(Math.sin(dist))*1000.0);
 		gl.glLoadIdentity();
 		glu.gluLookAt(	
-						mainFrame.currentMap.getGat().getWidth()/2+(d*Math.cos(rotateT)), d, mainFrame.currentMap.getGat().getHeight()/2+(d*Math.sin(rotateT)),	//eye 
+						mainFrame.currentMap.getGat().getWidth()*5+(d*Math.cos(rotateT)), d, mainFrame.currentMap.getGat().getHeight()*5+(d*Math.sin(rotateT)),	//eye 
 						//mainFrame.currentMap.getGat().getWidth()/2+(10*Math.cos(rotateT)), 10, mainFrame.currentMap.getGat().getHeight()/2+(10*Math.sin(rotateT)),	//eye 
-						mainFrame.currentMap.getGat().getWidth()/2, 0, mainFrame.currentMap.getGat().getHeight()/2,	//lookat 
+						mainFrame.currentMap.getGat().getWidth()*5, 0, mainFrame.currentMap.getGat().getHeight()*5,	//lookat 
 						0, 1, 0);	//up		
 		rotateT+=0.01f;
 		dist += 0.01f;
@@ -61,7 +61,7 @@ public class BrowRenderer implements GLEventListener
 		float h = (float)width / (float)height;
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(50.0f, h, 1.0, 1000.0);
+		glu.gluPerspective(50.0f, h, 1.0, 10000.0);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();		
 	}
