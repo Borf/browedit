@@ -74,20 +74,20 @@ public class Gat
 		this.read();
 	}
 
-	//TODO: move this somewhere global
-	private int swap(int other)
-	{
-		return (((other>>0)&0xFF)<<24) | (((other>>8)&0xFF)<<16) | (((other>>16)&0xFF)<<8) | (((other>>24)&0xFF)<<0);
+	public static boolean isSupported( byte major, byte minor ){
+		for( byte[]version : Gat.supportedVersions ){
+			if( major == version[0] && minor == version[1] ){
+				return true;
+			}
+		}
+		return false;
 	}
 	
-	
-	// TODO: hand over an file handler for GRF/Local files,
-	// 		 as for now we do it only with local files
 	public void read(){
-		java.io.DataInputStream dis = null;
+		com.exnw.browedit.io.SwappedInputStream dis = null;
 		
 		try{
-			dis = new java.io.DataInputStream( GrfLib.openFile( this.filename ) );
+			dis = new com.exnw.browedit.io.SwappedInputStream( GrfLib.openFile( this.filename ) );
 			
 			for( byte c : Gat.magic ){
 				if( c != dis.readByte() ){
@@ -98,24 +98,13 @@ public class Gat
 			this.version_major = dis.readByte();
 			this.version_minor = dis.readByte();
 			
-			{
-				boolean supported = false;
-				
-				for( byte[]version : Gat.supportedVersions ){
-					if( this.version_major == version[0] && this.version_minor == version[1] ){
-						supported = true;
-						break;
-					}
-				}
-				
-				if( !supported )
-					throw new IllegalArgumentException( String.format( "GAT Version %01d.%01d not supported.", this.version_major, this.version_minor ) );
-			}
+			if( !Gat.isSupported( this.version_major, this.version_minor) )
+				throw new IllegalArgumentException( String.format( "GAT Version %01d.%01d not supported.", this.version_major, this.version_minor ) );
 			
 			this.cells = new java.util.ArrayList<Gat.GatCell>();
 			
-			this.width = swap(dis.readInt());
-			this.height = swap(dis.readInt());
+			this.width = dis.readInt();
+			this.height = dis.readInt();
 			
 			for( int i = 0, max = this.getWidth() * this.getHeight(); i < max; i++ ){
 				this.cells.add( new Gat.GatCell( dis ) );
@@ -147,7 +136,7 @@ public class Gat
 
 	public void render(GL gl)
 	{
-		gl.glBegin(gl.GL_QUADS);
+		gl.glBegin(GL.GL_QUADS);
 		for(int x = 0; x < getWidth(); x++)
 		{
 			for(int y = 0; y < getHeight(); y++)
@@ -183,16 +172,16 @@ public class Gat
 			this.height = new float[4];
 		}
 		
-		public GatCell( java.io.DataInputStream dis ) throws java.io.IOException{
+		public GatCell( com.exnw.browedit.io.SwappedInputStream dis ) throws java.io.IOException{
 			this();
 			this.read( dis );
 		}
 		
-		public void read( java.io.DataInputStream dis ) throws java.io.IOException{
+		public void read( com.exnw.browedit.io.SwappedInputStream dis ) throws java.io.IOException{
 			for( int i = 0; i < 4; i++ )
 				this.height[i] = dis.readFloat();
 			
-			int type = swap(dis.readInt());
+			int type = dis.readInt();
 			
 			try{
 				this.type = Gat.GatCellType.values()[type];
