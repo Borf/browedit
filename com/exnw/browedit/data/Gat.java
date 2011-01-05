@@ -1,10 +1,13 @@
 package com.exnw.browedit.data;
 
 import java.awt.Color;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.media.opengl.GL;
 
 import com.exnw.browedit.grflib.GrfLib;
+import com.sun.opengl.util.BufferUtil;
 
 /**
  * This java class covers support for reading a Ragnarok Online GAT file,
@@ -60,6 +63,9 @@ public class Gat
 	private int height;
 	
 	private java.util.List<Gat.GatCell> cells;
+	
+	//rendering
+	private IntBuffer vbos = null;
 	
 	public Gat( String filename ){
 		if( filename == null || filename.isEmpty() )
@@ -136,21 +142,64 @@ public class Gat
 
 	public void render(GL gl)
 	{
-		gl.glBegin(GL.GL_QUADS);
-		for(int x = 0; x < getWidth(); x++)
+		if(vbos == null)
 		{
-			for(int y = 0; y < getHeight(); y++)
+			vbos = IntBuffer.allocate(2);
+			gl.glGenBuffersARB(2, vbos);		// vertices
+												// texture coordinats
+			
+			FloatBuffer vertices = FloatBuffer.allocate(getWidth()*getHeight()*4*3);
+			IntBuffer indices = IntBuffer.allocate(getWidth()*getHeight()*4);
+			int i = 0;
+			for(int x = 0; x < getWidth(); x++)
 			{
-				GatCell cell = getCell(x,y);
-				gl.glColor3f(cell.type.getColor().getRed()/255.0f, cell.type.getColor().getGreen()/255.0f, cell.type.getColor().getBlue()/255.0f); 
+				for(int y = 0; y < getHeight(); y++)
+				{
+					GatCell cell = getCell(x,y);
+					gl.glColor3f(cell.type.getColor().getRed()/255.0f, cell.type.getColor().getGreen()/255.0f, cell.type.getColor().getBlue()/255.0f); 
 
-				gl.glVertex3f(x+0, cell.height[0], y+0);
-				gl.glVertex3f(x+1, cell.height[1], y+0);
-				gl.glVertex3f(x+1, cell.height[2], y+1);
-				gl.glVertex3f(x+0, cell.height[3], y+1);
+					vertices.put(i, 	x+0);
+					vertices.put(i+1,	cell.height[0]);
+					vertices.put(i+2,	y+0);
+					
+					vertices.put(i+3, 	x+1);
+					vertices.put(i+4,	cell.height[1]);
+					vertices.put(i+5,	y+0);
+					
+					vertices.put(i+6, 	x+1);
+					vertices.put(i+7,	cell.height[2]);
+					vertices.put(i+8,	y+1);
+					
+					vertices.put(i+9, 	x+0);
+					vertices.put(i+10,	cell.height[3]);
+					vertices.put(i+11,	y+1);
+					i+=12;
+				}
 			}
+			for(i = 0; i < getWidth()*getHeight()*4; i++)
+				indices.put(i,i);
+			
+			
+			gl.glBindBufferARB(GL.GL_ARRAY_BUFFER_ARB, vbos.get(0));
+			gl.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, vertices.limit()*BufferUtil.SIZEOF_FLOAT, vertices, GL.GL_STATIC_DRAW_ARB);
+
+			gl.glBindBufferARB(GL.GL_ARRAY_BUFFER_ARB, vbos.get(1));
+			gl.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, indices.limit()*BufferUtil.SIZEOF_INT, indices, GL.GL_STATIC_DRAW);
 		}
-		gl.glEnd();
+		else
+		{
+			gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
+			
+			gl.glBindBufferARB(GL.GL_ARRAY_BUFFER_ARB, vbos.get(0));         // for vertex coordinates
+			gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
+
+			gl.glDrawArrays(GL.GL_QUADS, 0, getWidth()*getHeight()*4);
+			
+			gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
+			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);			
+		}
+
 	}
 	
 	public int getWidth()
@@ -180,7 +229,6 @@ public class Gat
 		public void read( com.exnw.browedit.io.SwappedInputStream dis ) throws java.io.IOException{
 			for( int i = 0; i < 4; i++ )
 				this.height[i] = dis.readFloat();
-			
 			int type = dis.readInt();
 			
 			try{

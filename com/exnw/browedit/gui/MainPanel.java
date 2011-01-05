@@ -19,6 +19,7 @@ public class MainPanel extends JPanel
 
 	    Animator animator = new Animator(canvas);
 	    animator.start();
+	    animator.setRunAsFastAsPossible(true);
 	    canvas.requestFocus();
 	}
 	

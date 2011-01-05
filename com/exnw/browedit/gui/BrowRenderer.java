@@ -17,16 +17,18 @@ public class BrowRenderer implements GLEventListener
 		this.mainFrame = mainFrame;
 	}
 	
-	
 	public void display(GLAutoDrawable glDrawable)
 	{
 		final GL gl = glDrawable.getGL();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		glu.gluLookAt(	0, 100, 0,	//eye 
+		glu.gluLookAt(	mainFrame.currentMap.getGat().getWidth()/2+(mainFrame.currentMap.getGat().getWidth()/2*Math.cos(rotateT)), 100, mainFrame.currentMap.getGat().getHeight()/2+(mainFrame.currentMap.getGat().getHeight()/2*Math.sin(rotateT)),	//eye 
 						mainFrame.currentMap.getGat().getWidth()/2, 0, mainFrame.currentMap.getGat().getHeight()/2,	//lookat 
 						0, 1, 0);	//up
+		
+		
+		rotateT+=0.01f;
 		mainFrame.currentMap.render(gl);
 		
 	}
