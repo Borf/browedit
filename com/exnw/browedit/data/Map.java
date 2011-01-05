@@ -2,11 +2,14 @@ package com.exnw.browedit.data;
 
 import javax.media.opengl.GL;
 
+import com.exnw.browedit.render.GatRenderer;
+
 public class Map
 {
 	private Gat gat;
 	private Gnd gnd;
 	private Rsw rsw;
+	private GatRenderer gatRenderer;
 	
 	public Map(String fileName)
 	{
@@ -20,13 +23,13 @@ public class Map
 	
 	public void render(GL gl)
 	{
-		getGat().render(gl);
-		
+		gatRenderer.render(gl);
 	}
 
 	public void setGat(Gat gat)
 	{
 		this.gat = gat;
+		this.gatRenderer = new GatRenderer(this.gat);
 	}
 
 	public Gat getGat()
