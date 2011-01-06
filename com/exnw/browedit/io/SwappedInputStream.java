@@ -14,12 +14,20 @@ public class SwappedInputStream
 		this.in = new java.io.DataInputStream( input );
 	}
 	
+	public final void skip( int amount ) throws java.io.IOException{
+		this.in.skipBytes( amount );
+	}
+	
 	public final void close() throws java.io.IOException{
 		this.in.close();
 	}
 	
 	public final byte readByte() throws java.io.IOException{
 		return this.in.readByte();
+	}
+	
+	public final void readBytes( byte[] buffer ) throws java.io.IOException{
+		this.in.read( buffer, 0, buffer.length );
 	}
 	
 	public final float readFloat() throws java.io.IOException{
@@ -69,15 +77,5 @@ public class SwappedInputStream
 	
 	private static int swap( int other ){
 		return ( ( other & 0xFF ) << 24 ) | ( ( ( other >> 8 ) & 0xFF ) << 16 ) | ( ( ( other >> 16 ) & 0xFF ) << 8 ) | ( ( other >> 24 ) & 0xFF );
-	}
-
-	public int readBytes(byte[] buffer) throws IOException
-	{
-		return in.read(buffer);
-	}
-
-	public long skip(int i) throws IOException
-	{
-		return in.skip(i);		
 	}
 }

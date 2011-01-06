@@ -2,6 +2,7 @@ package com.exnw.browedit.grflib;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -109,16 +110,21 @@ public class GrfFileLocation extends FileLocation
 			file.comprLen = 		((result[index+p+1]&0xFF)<<0) | ((result[index+p+2]&0xFF)<<8) | ((result[index+p+3]&0xFF)<<16) | ((result[index+p+4]&0xFF)<<24);
 			file.comprLenAligned =	((result[index+p+5]&0xFF)<<0) | ((result[index+p+6]&0xFF)<<8) | ((result[index+p+7]&0xFF)<<16) | ((result[index+p+8]&0xFF)<<24);
 			file.len = 				((result[index+p+9]&0xFF)<<0) | ((result[index+p+10]&0xFF)<<8) | ((result[index+p+11]&0xFF)<<16) | ((result[index+p+12]&0xFF)<<24);
-			file.flags =			result[13];
-			file.pos = 				46 + (((result[index+p+14]&0xFF)<<0) | ((result[index+p+15]&0xFF)<<8) | ((result[index+p+16]&0xFF)<<16) | ((result[index+p+17]&0xFF)<<24));
-			
-			if(file.flags == -72)
-			{
-				file.cycle = 1;
-				for(int ii=10; file.comprLen>=ii; ii=ii*10) file.cycle++;
-			}
-			else
-				file.cycle = 0;
+			file.flags =			result[index+p+13];
+			file.pos = 				46 + (((result[index+p+14]&0xFF)<<0) | ((result[index+p+15]&0xFF)<<8) | ((result[index+p+16]&0xFF)<<16) | ((result[index+p+17]&0xFF)<<24));			
+            switch( ( int )file.flags ) {
+	            case 1:
+	                file.cycle = -1;
+	                break;
+	            case 3:
+	                file.cycle = 1;
+	                for( int j = 10; file.comprLen >= j; j *= 10, file.cycle++ )
+	                    ;
+	                break;
+	            case 5:
+	                file.cycle = 0;
+	                break;
+            }
 			files.put(file.name, file);	
 			index += p+18; 
 		}
@@ -140,22 +146,33 @@ public class GrfFileLocation extends FileLocation
 			byte[] compr = new byte[file.comprLenAligned];
 			byte[] data = new byte[file.len];
 			this.grfFileStream.read(compr);
-			if(file.flags == -72)
-			{
-				DES.decodeGRF(compr, file.cycle);
-			}
-				
 			
-			Inflater decompresser = new Inflater();
-			decompresser.setInput(compr);
-			try
+			if( file.flags == 1 || file.flags == 3 || file.flags == 5 )
 			{
-				int resultLength = decompresser.inflate(data);
-			} catch (DataFormatException e)
-			{
-				e.printStackTrace();
+				if( file.cycle >= 0 )
+					DES.decodeGRF(compr, file.cycle );
 			}
-			decompresser.end();		
+			
+			if( file.comprLen < file.len ){
+				Inflater decompresser = new Inflater();
+				decompresser.setInput(compr);
+				try
+				{
+					int resultLength = decompresser.inflate(data);
+				} catch (DataFormatException e)
+				{
+					/*
+					System.out.println(file.name);
+					FileOutputStream fos = new FileOutputStream("java.dump");
+					for( byte b : compr ){
+						fos.write(b);
+					}
+					fos.close();
+					*/
+					e.printStackTrace();
+				}
+				decompresser.end();	
+			}
 			
 			return new ByteArrayInputStream(data);
 
