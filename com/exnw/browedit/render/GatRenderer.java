@@ -16,7 +16,7 @@ import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureIO;
 
-public class GatRenderer implements Observer
+public class GatRenderer implements Observer, Renderer
 {
 	Gat gat;
 	IntBuffer vbos;

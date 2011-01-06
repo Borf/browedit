@@ -32,7 +32,7 @@ public class SwappedInputStream
     	java.util.List<Byte> bytes = new java.util.ArrayList<Byte>();
     	byte b;
     	
-    	while( ( b = this.readByte() ) > 0 ){
+    	while( (( b = this.readByte() )&0xFF) > 0 ){
     		bytes.add( b );
     	}
     	

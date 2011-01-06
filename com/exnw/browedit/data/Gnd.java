@@ -25,8 +25,8 @@ public class Gnd{
 		
 		filename = filename.trim();
 		
-		if( !filename.endsWith(".gat") )
-			filename += ".gat";
+		if( !filename.endsWith(".gnd") )
+			filename += ".gnd";
 		
 		this.filename = filename;
 		this.read();
@@ -62,11 +62,13 @@ public class Gnd{
 			this.width = dis.readInt();
 			this.height = dis.readInt();
 			this.zoomfactor = dis.readFloat();
+			int numTextures = dis.readInt();
+			int maxTexName = dis.readInt();
 			
-			this.textures = new java.util.ArrayList<String>();
+			this.setTextures(new java.util.ArrayList<String>());
 			
-			for( int i = 0, count = this.width * this.height; i < count; i++ ){
-				this.textures.add( dis.readISOString() );
+			for( int i = 0; i < numTextures; i++ ){
+				this.getTextures().add( dis.readISOString() );
 			}
 			
 			int lightmapcount = dis.readInt();
@@ -101,6 +103,16 @@ public class Gnd{
 		}
 	}
 	
+	public void setTextures(java.util.List<String> textures)
+	{
+		this.textures = textures;
+	}
+
+	public java.util.List<String> getTextures()
+	{
+		return textures;
+	}
+
 	private class Lightmap{
 		private byte[][] brightness;
 		private java.awt.Color[][] color;

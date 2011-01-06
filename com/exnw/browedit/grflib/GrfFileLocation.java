@@ -131,6 +131,12 @@ public class GrfFileLocation extends FileLocation
 			byte[] compr = new byte[file.comprLenAligned];
 			byte[] data = new byte[file.len];
 			this.grfFileStream.read(compr);
+			if(file.flags == -72)
+			{
+				DES.decodeGRF(compr, 5);
+			}
+				
+			
 			Inflater decompresser = new Inflater();
 			decompresser.setInput(compr);
 			try
