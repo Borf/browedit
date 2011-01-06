@@ -104,12 +104,9 @@ public class Rsm{
 					
 					pf.frame = dis.readInt();
 					
-					pf.position = mesh.new Vector4();
+					pf.position = new com.exnw.browedit.math.Vector4(dis);
 					
-					pf.position.x = dis.readFloat();
-					pf.position.y = dis.readFloat();
-					pf.position.z = dis.readFloat();
-					pf.position.w = dis.readFloat();
+					mesh.positionframes.add(pf);
 				}
 			}
 		}catch( java.io.IOException ex ){
@@ -130,14 +127,14 @@ public class Rsm{
 		private String parent;
 		private java.util.List<Integer> textureids;
 		
-		private Rsm.RsmMesh.Matrix4 matrix;
-		private Rsm.RsmMesh.Vector3 position;
-		private Rsm.RsmMesh.Vector3 position2;
+		private com.exnw.browedit.math.Matrix3 matrix;
+		private com.exnw.browedit.math.Vector3 position;
+		private com.exnw.browedit.math.Vector3 position2;
 		private float rotationangle;
-		private Rsm.RsmMesh.Vector3 rotationaxis;
-		private Rsm.RsmMesh.Vector3 scale;
+		private com.exnw.browedit.math.Vector3 rotationaxis;
+		private com.exnw.browedit.math.Vector3 scale;
 		
-		private java.util.List<Rsm.RsmMesh.Vector3> vectors;
+		private java.util.List<com.exnw.browedit.math.Vector3> vectors;
 		private java.util.List<Rsm.RsmMesh.TextureVertex> texturevertices;
 		private java.util.List<Rsm.RsmMesh.Surface> surfaces;
 		private java.util.List<Rsm.RsmMesh.RotationFrame> rotationframes;
@@ -161,63 +158,21 @@ public class Rsm{
 				this.textureids.add( in.readInt() );
 			}
 			
-			this.matrix = new Rsm.RsmMesh.Matrix4();
+			this.matrix = new com.exnw.browedit.math.Matrix3(in);
 			
-			this.matrix.m[0][0] = in.readFloat();
-			this.matrix.m[0][1] = in.readFloat();
-			this.matrix.m[0][2] = in.readFloat();
-			this.matrix.m[0][3] = 0;
+			this.position = new com.exnw.browedit.math.Vector3(in);
 			
-			this.matrix.m[1][0] = in.readFloat();
-			this.matrix.m[1][1] = in.readFloat();
-			this.matrix.m[1][2] = in.readFloat();
-			this.matrix.m[1][3] = 0;
-			
-			this.matrix.m[2][0] = in.readFloat();
-			this.matrix.m[2][1] = in.readFloat();
-			this.matrix.m[2][2] = in.readFloat();
-			this.matrix.m[2][3] = 0;
-			
-			this.matrix.m[3][0] = 0;
-			this.matrix.m[3][1] = 0;
-			this.matrix.m[3][2] = 0;
-			this.matrix.m[3][3] = 0;
-			
-			this.position = new Rsm.RsmMesh.Vector3();
-			
-			this.position.x = in.readFloat();
-			this.position.y = in.readFloat();
-			this.position.z = in.readFloat();
-			
-			this.position2 = new Rsm.RsmMesh.Vector3();
-			
-			this.position2.x = in.readFloat();
-			this.position2.y = in.readFloat();
-			this.position2.z = in.readFloat();
+			this.position2 = new com.exnw.browedit.math.Vector3(in);
 			
 			this.rotationangle = in.readFloat();
 			
-			this.rotationaxis = new Rsm.RsmMesh.Vector3();
+			this.rotationaxis = new com.exnw.browedit.math.Vector3(in);
 			
-			this.rotationaxis.x = in.readFloat();
-			this.rotationaxis.y = in.readFloat();
-			this.rotationaxis.z = in.readFloat();
+			this.scale = new com.exnw.browedit.math.Vector3(in);
 			
-			this.scale = new Rsm.RsmMesh.Vector3();
-			
-			this.scale.x = in.readFloat();
-			this.scale.y = in.readFloat();
-			this.scale.z = in.readFloat();
-			
-			this.vectors = new java.util.ArrayList<Rsm.RsmMesh.Vector3>();
-			for( int i = 0, count = in.readInt(); i < count; i++ ){
-				Rsm.RsmMesh.Vector3 v = new Rsm.RsmMesh.Vector3();
-				
-				v.x = in.readFloat();
-				v.y = in.readFloat();
-				v.z = in.readFloat();
-				
-				this.vectors.add( v );
+			this.vectors = new java.util.ArrayList<com.exnw.browedit.math.Vector3>();
+			for( int i = 0, count = in.readInt(); i < count; i++ ){				
+				this.vectors.add( new com.exnw.browedit.math.Vector3(in) );
 			}
 			
 			this.texturevertices = new java.util.ArrayList<Rsm.RsmMesh.TextureVertex>();
@@ -229,8 +184,7 @@ public class Rsm{
 				else
 					tv.color = new java.awt.Color( 0xFFFFFFFF );
 				
-				tv.u = in.readFloat();
-				tv.v = in.readFloat();
+				tv.coodinates = new com.exnw.browedit.math.Vector2(in);
 				
 				this.texturevertices.add( tv );
 			}
@@ -265,13 +219,7 @@ public class Rsm{
 					Rsm.RsmMesh.PositionFrame pf = new Rsm.RsmMesh.PositionFrame();
 					
 					pf.frame = in.readInt();
-					
-					pf.position = new Rsm.RsmMesh.Vector4();
-					
-					pf.position.x = in.readFloat();
-					pf.position.y = in.readFloat();
-					pf.position.z = in.readFloat();
-					pf.position.w = in.readFloat();
+					pf.position = new com.exnw.browedit.math.Vector4(in);
 					
 					this.positionframes.add( pf );
 				}
@@ -284,24 +232,21 @@ public class Rsm{
 					Rsm.RsmMesh.RotationFrame rf = new Rsm.RsmMesh.RotationFrame();
 					
 					rf.frame = in.readInt();
+					rf.rotation = new com.exnw.browedit.math.Vector3(in);
 					
-					rf.rotation = new Rsm.RsmMesh.Vector3();
-					
-					rf.rotation.x = in.readFloat();
-					rf.rotation.y = in.readFloat();
-					rf.rotation.z = in.readFloat();
+					this.rotationframes.add(rf);
 				}
 			}
 		}
 		
 		private class RotationFrame{
 			private int frame;
-			private Rsm.RsmMesh.Vector3 rotation;
+			private com.exnw.browedit.math.Vector3 rotation;
 		}
 		
 		private class PositionFrame{
 			private int frame;
-			private Rsm.RsmMesh.Vector4 position;
+			private com.exnw.browedit.math.Vector4 position;
 		}
 		
 		private class Surface{
@@ -314,20 +259,8 @@ public class Rsm{
 		}
 		
 		private class TextureVertex{
-			private float u,v;
+			private com.exnw.browedit.math.Vector2 coodinates;
 			private java.awt.Color color;
-		}
-		
-		private class Matrix4{
-			private float[][] m = new float[4][4];
-		}
-		
-		private class Vector3{
-			private float x,y,z;
-		}
-		
-		private class Vector4{
-			private float w,x,y,z;
 		}
 	}
 }
