@@ -54,12 +54,12 @@ public class SwappedInputStream
     	return new String( output, "ISO-8859-1" ).trim();
     }
     
-    public final String readLenString(int len) throws java.io.IOException{
+    public final String readISOString( int len ) throws java.io.IOException{
     	byte[] output = new byte[len];
-    	this.readBytes(output);
+    	this.readBytes( output );
     	
     	int nullByte = 0;
-    	while(output[nullByte] != 0 && nullByte < len)
+    	while( output[nullByte] != 0 && nullByte < len )
     		nullByte++;
 
     	return new String( output, 0, nullByte, "ISO-8859-1" ).trim();
