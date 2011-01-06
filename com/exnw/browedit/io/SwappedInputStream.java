@@ -1,5 +1,7 @@
 package com.exnw.browedit.io;
 
+import java.io.IOException;
+
 public class SwappedInputStream
 {
 	private java.io.DataInputStream in;
@@ -43,6 +45,17 @@ public class SwappedInputStream
     	
     	return new String( output, "ISO-8859-1" ).trim();
     }
+    
+    public final String readLenString(int len) throws java.io.IOException{
+    	byte[] output = new byte[len];
+    	this.readBytes(output);
+    	
+    	int nullByte = 0;
+    	while(output[nullByte] != 0 && nullByte < len)
+    		nullByte++;
+
+    	return new String( output, 0, nullByte, "ISO-8859-1" ).trim();
+    }
 	
     public final short readShort() throws java.io.IOException{
         int ch1 = this.in.read();
@@ -56,5 +69,15 @@ public class SwappedInputStream
 	
 	private static int swap( int other ){
 		return ( ( other & 0xFF ) << 24 ) | ( ( ( other >> 8 ) & 0xFF ) << 16 ) | ( ( ( other >> 16 ) & 0xFF ) << 8 ) | ( ( other >> 24 ) & 0xFF );
+	}
+
+	public int readBytes(byte[] buffer) throws IOException
+	{
+		return in.read(buffer);
+	}
+
+	public long skip(int i) throws IOException
+	{
+		return in.skip(i);		
 	}
 }

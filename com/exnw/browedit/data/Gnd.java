@@ -12,11 +12,23 @@ public class Gnd{
 	
 	private int width;
 	private int height;
+
+
 	private float zoomfactor;
 	
 	private java.util.List<String> textures;
 	private java.util.List<Gnd.Lightmap> lightmaps;
 	private java.util.List<Gnd.Surface> surfaces;
+	public java.util.List<Gnd.Surface> getSurfaces()
+	{
+		return surfaces;
+	}
+
+	public void setSurfaces(java.util.List<Gnd.Surface> surfaces)
+	{
+		this.surfaces = surfaces;
+	}
+
 	private java.util.List<Gnd.GndCell> cells;
 	
 	public Gnd( String filename ){
@@ -68,7 +80,7 @@ public class Gnd{
 			this.setTextures(new java.util.ArrayList<String>());
 			
 			for( int i = 0; i < numTextures; i++ ){
-				this.getTextures().add( dis.readISOString() );
+				this.getTextures().add( dis.readLenString(80) );
 			}
 			
 			int lightmapcount = dis.readInt();
@@ -107,11 +119,29 @@ public class Gnd{
 	{
 		this.textures = textures;
 	}
+	public int getWidth()
+	{
+		return width;
+	}
+	public int getHeight()
+	{
+		return height;
+	}	
 
 	public java.util.List<String> getTextures()
 	{
 		return textures;
 	}
+	
+	
+	public GndCell getCell(int x, int y)
+	{
+		return cells.get(x+this.width*y);		
+	}
+	
+	
+	
+	
 
 	private class Lightmap{
 		private byte[][] brightness;
@@ -142,8 +172,28 @@ public class Gnd{
 		}
 	}
 	
-	private class Surface{
+	public class Surface{
 		private float[] u;
+		public float[] getU()
+		{
+			return u;
+		}
+
+		public void setU(float[] u)
+		{
+			this.u = u;
+		}
+
+		public float[] getV()
+		{
+			return v;
+		}
+
+		public void setV(float[] v)
+		{
+			this.v = v;
+		}
+
 		private float[] v;
 		private short textureID;
 		private short lightmapID;
@@ -166,7 +216,7 @@ public class Gnd{
             for( int i = 0; i < 4; i++ )
                 this.v[i] = in.readFloat();
 
-            this.textureID = in.readShort();
+            this.setTextureID(in.readShort());
             this.lightmapID = in.readShort();
 
             byte b = in.readByte();
@@ -174,17 +224,27 @@ public class Gnd{
             byte r = in.readByte();
             byte a = in.readByte();
 
-            this.color = new java.awt.Color( r, g, b );//, a );		
+            this.color = new java.awt.Color( r&0xff, g&0xff, b&0xff );//, a );		
+		}
+
+		public void setTextureID(short textureID)
+		{
+			this.textureID = textureID;
+		}
+
+		public short getTextureID()
+		{
+			return textureID;
 		}		
 	}
 	
-	private class GndCell{
+	public class GndCell{
 		private float[] height;
 		private int[] surface;
 		
 		public GndCell(){
-			this.height = new float[4];
-			this.surface = new int[3];
+			this.setHeight(new float[4]);
+			this.setSurface(new int[3]);
 		}
 		
 		public GndCell( com.exnw.browedit.io.SwappedInputStream in ) throws java.io.IOException{
@@ -194,9 +254,29 @@ public class Gnd{
 		
 		public void read( com.exnw.browedit.io.SwappedInputStream in ) throws java.io.IOException{
             for( int i = 0; i < 4; i++ )
-                this.height[i] = in.readFloat();
+                this.getHeight()[i] = in.readFloat();
             for( int i = 0; i < 3; i++ )
-            	this.surface[i] = in.readInt();
+            	this.getSurface()[i] = in.readInt();
+		}
+
+		public void setHeight(float[] height)
+		{
+			this.height = height;
+		}
+
+		public float[] getHeight()
+		{
+			return height;
+		}
+
+		public void setSurface(int[] surface)
+		{
+			this.surface = surface;
+		}
+
+		public int[] getSurface()
+		{
+			return surface;
 		}			
 	}
 }

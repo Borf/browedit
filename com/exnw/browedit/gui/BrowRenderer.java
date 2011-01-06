@@ -1,16 +1,22 @@
 package com.exnw.browedit.gui;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
-public class BrowRenderer implements GLEventListener
+public class BrowRenderer implements GLEventListener, MouseMotionListener
 {
 	static GLU glu = new GLU();
 	float rotateT = 0;
 	float dist = 0;
 	
+	
+	float x = -1;
+	float y = -1;
 	MainFrame mainFrame;
 	
 	public BrowRenderer(MainFrame mainFrame)
@@ -20,16 +26,27 @@ public class BrowRenderer implements GLEventListener
 	
 	public void display(GLAutoDrawable glDrawable)
 	{
+		if(x == -1)
+		{
+			x = mainFrame.currentMap.getGnd().getWidth()*5;
+			y = mainFrame.currentMap.getGnd().getHeight()*1.5f;
+		}
 		final GL gl = glDrawable.getGL();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		float d = 100+(float) (Math.abs(Math.sin(dist))*1000.0);
 		gl.glLoadIdentity();
 		glu.gluLookAt(	
-						mainFrame.currentMap.getGat().getWidth()*5+(d*Math.cos(rotateT)), d, mainFrame.currentMap.getGat().getHeight()*5+(d*Math.sin(rotateT)),	//eye 
+						mainFrame.currentMap.getGnd().getWidth()*5+(d*Math.cos(rotateT)), d, mainFrame.currentMap.getGnd().getHeight()*5+(d*Math.sin(rotateT)),	//eye 
 						//mainFrame.currentMap.getGat().getWidth()/2+(10*Math.cos(rotateT)), 10, mainFrame.currentMap.getGat().getHeight()/2+(10*Math.sin(rotateT)),	//eye 
-						mainFrame.currentMap.getGat().getWidth()*5, 0, mainFrame.currentMap.getGat().getHeight()*5,	//lookat 
-						0, 1, 0);	//up		
+						mainFrame.currentMap.getGnd().getWidth()*5, 0, mainFrame.currentMap.getGnd().getHeight()*5,	//lookat 
+						0, 1, 0);	//up	
+		
+		/*glu.gluLookAt(
+						x, 100, y+100,
+						x, 0,y,
+						0,1,0);*/
+		
 		rotateT+=0.01f;
 		dist += 0.01f;
 		mainFrame.currentMap.render(gl);
@@ -64,6 +81,35 @@ public class BrowRenderer implements GLEventListener
 		glu.gluPerspective(50.0f, h, 1.0, 10000.0);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();		
+	}
+
+	int oldx = -1;
+	int oldy = -1;
+	public void mouseDragged(MouseEvent e)
+	{
+		if((e.getModifiers() & MouseEvent.BUTTON2_MASK)!= 0)
+		{
+			oldx = -1;
+		}
+			
+		if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0)
+		{
+			if(oldx != -1)
+			{
+				x += oldx-e.getX();
+				y += oldy-e.getY();
+			}
+			oldx = e.getX();
+			oldy = e.getY();
+		}
+			
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

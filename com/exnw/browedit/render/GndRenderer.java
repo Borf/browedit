@@ -27,6 +27,46 @@ public class GndRenderer implements Renderer
 	public void render(GL gl)
 	{
 		if(textures == null)
+			this.loadTextures();
+		
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		for(int x = 0; x < gnd.getWidth(); x++)
+		{
+			for(int y = 0; y < gnd.getHeight(); y++)
+			{
+				Gnd.GndCell cell = gnd.getCell(x, y);
+				int[] surfaces = cell.getSurface();
+				if(surfaces[0] != -1)
+				{
+					Gnd.Surface surface = gnd.getSurfaces().get(surfaces[0]);
+					textures.get(surface.getTextureID()).bind();
+					gl.glBegin(GL.GL_QUADS);
+					gl.glTexCoord2f(surface.getU()[2], surface.getV()[2]);
+					gl.glVertex3f(10*x, -cell.getHeight()[2], 10*(gnd.getHeight()-y));//tr
+
+					gl.glTexCoord2f(surface.getU()[0], surface.getV()[0]);
+					gl.glVertex3f(10*x, -cell.getHeight()[0], 10*(gnd.getHeight()-y)+10);//tl
+
+					gl.glTexCoord2f(surface.getU()[1], surface.getV()[1]);
+					gl.glVertex3f(10*x+10, -cell.getHeight()[1], 10*(gnd.getHeight()-y)+10);//bl
+
+					gl.glTexCoord2f(surface.getU()[3], surface.getV()[3]);
+					gl.glVertex3f(10*x+10, -cell.getHeight()[3], 10*(gnd.getHeight()-y));//br
+					gl.glEnd();
+				}				
+			}
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	private void loadTextures()
+	{
 		{
 			textures = new ArrayList<Texture>();
 			List<String> TextureFileNames = gnd.getTextures();
@@ -34,7 +74,7 @@ public class GndRenderer implements Renderer
 			{
 				try
 				{
-					textures.add(TextureIO.newTexture(GrfLib.openFile("data\\texture\\" + s), true, "bmp"));
+					textures.add(TextureIO.newTexture(GrfLib.openFile("data\\texture\\" + s), true, s.substring(s.lastIndexOf('.'))));
 				} catch (GLException e)
 				{
 					// TODO Auto-generated catch block

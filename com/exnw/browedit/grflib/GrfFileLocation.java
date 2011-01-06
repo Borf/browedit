@@ -26,6 +26,7 @@ public class GrfFileLocation extends FileLocation
 		int len;
 		int flags;
 		int pos;
+		int cycle;
 		
 		public String toString()
 		{
@@ -110,6 +111,14 @@ public class GrfFileLocation extends FileLocation
 			file.len = 				((result[index+p+9]&0xFF)<<0) | ((result[index+p+10]&0xFF)<<8) | ((result[index+p+11]&0xFF)<<16) | ((result[index+p+12]&0xFF)<<24);
 			file.flags =			result[13];
 			file.pos = 				46 + (((result[index+p+14]&0xFF)<<0) | ((result[index+p+15]&0xFF)<<8) | ((result[index+p+16]&0xFF)<<16) | ((result[index+p+17]&0xFF)<<24));
+			
+			if(file.flags == -72)
+			{
+				file.cycle = 1;
+				for(int ii=10; file.comprLen>=ii; ii=ii*10) file.cycle++;
+			}
+			else
+				file.cycle = 0;
 			files.put(file.name, file);	
 			index += p+18; 
 		}
@@ -133,7 +142,7 @@ public class GrfFileLocation extends FileLocation
 			this.grfFileStream.read(compr);
 			if(file.flags == -72)
 			{
-				DES.decodeGRF(compr, 5);
+				DES.decodeGRF(compr, file.cycle);
 			}
 				
 			
