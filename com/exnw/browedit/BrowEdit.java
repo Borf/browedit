@@ -1,6 +1,8 @@
 package com.exnw.browedit;
 
 
+import java.io.InputStream;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -20,7 +22,7 @@ public class BrowEdit {
 		GrfLib.addDir(".");
 		System.out.println("Bench: " + (System.currentTimeMillis() - l));
 		
-
+		
 		try {
 		    // Set System L&F
 	        UIManager.setLookAndFeel(

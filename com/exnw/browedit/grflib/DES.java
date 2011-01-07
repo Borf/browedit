@@ -173,20 +173,20 @@ class DES {
 
     private static void NibbleSwap( byte[] buffer, int offset, int length ) {
         for( int i=0; i < length; i++ ) {
-            buffer[offset + i] = ( byte )( ( buffer[offset + i] >> 4 ) | ( buffer[offset + i] << 4 ) );
+            buffer[offset + i] = ( byte )( ( buffer[offset + i] >> 4 ) | ( (buffer[offset + i]&0xff) << 4 ) );
         }
     }
 
     private static void BitConvert4( byte[] buffer, int offset ) {
         byte[] tmp = new byte[8];
-        tmp[0] = ( byte )( ( ( buffer[offset + 7] << 5 ) | ( buffer[offset + 4] >> 3 ) ) & 0x3f );
-        tmp[1] = ( byte )( ( ( buffer[offset + 4] << 1 ) | ( buffer[offset + 5] >> 7 ) ) & 0x3f );
-        tmp[2] = ( byte )( ( ( buffer[offset + 4] << 5 ) | ( buffer[offset + 5] >> 3 ) ) & 0x3f );
-        tmp[3] = ( byte )( ( ( buffer[offset + 5] << 1 ) | ( buffer[offset + 6] >> 7 ) ) & 0x3f );
-        tmp[4] = ( byte )( ( ( buffer[offset + 5] << 5 ) | ( buffer[offset + 6] >> 3 ) ) & 0x3f );
-        tmp[5] = ( byte )( ( ( buffer[offset + 6] << 1 ) | ( buffer[offset + 7] >> 7 ) ) & 0x3f );
-        tmp[6] = ( byte )( ( ( buffer[offset + 6] << 5 ) | ( buffer[offset + 7] >> 3 ) ) & 0x3f );
-        tmp[7] = ( byte )( ( ( buffer[offset + 7] << 1 ) | ( buffer[offset + 4] >> 7 ) ) & 0x3f );
+        tmp[0] = ( byte )( ( ( (buffer[offset + 7]&0xff) << 5 ) | ( (buffer[offset + 4]&0xff) >> 3 ) ) & 0x3f );
+        tmp[1] = ( byte )( ( ( (buffer[offset + 4]&0xff) << 1 ) | ( (buffer[offset + 5]&0xff) >> 7 ) ) & 0x3f );
+        tmp[2] = ( byte )( ( ( (buffer[offset + 4]&0xff) << 5 ) | ( (buffer[offset + 5]&0xff) >> 3 ) ) & 0x3f );
+        tmp[3] = ( byte )( ( ( (buffer[offset + 5]&0xff) << 1 ) | ( (buffer[offset + 6]&0xff) >> 7 ) ) & 0x3f );
+        tmp[4] = ( byte )( ( ( (buffer[offset + 5]&0xff) << 5 ) | ( (buffer[offset + 6]&0xff) >> 3 ) ) & 0x3f );
+        tmp[5] = ( byte )( ( ( (buffer[offset + 6]&0xff) << 1 ) | ( (buffer[offset + 7]&0xff) >> 7 ) ) & 0x3f );
+        tmp[6] = ( byte )( ( ( (buffer[offset + 6]&0xff) << 5 ) | ( (buffer[offset + 7]&0xff) >> 3 ) ) & 0x3f );
+        tmp[7] = ( byte )( ( ( (buffer[offset + 7]&0xff) << 1 ) | ( (buffer[offset + 4]&0xff) >> 7 ) ) & 0x3f );
 
         for( int i = 0; i != 4; i++ )
             tmp[i] = ( byte )( ( ( int )NibbleData[i][( int )tmp[i * 2]] & 0xf0 ) | ( ( int )NibbleData[i][( int )tmp[i * 2 + 1]] & 0x0f ) );

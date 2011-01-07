@@ -111,18 +111,20 @@ public class GrfFileLocation extends FileLocation
 			file.comprLenAligned =	((result[index+p+5]&0xFF)<<0) | ((result[index+p+6]&0xFF)<<8) | ((result[index+p+7]&0xFF)<<16) | ((result[index+p+8]&0xFF)<<24);
 			file.len = 				((result[index+p+9]&0xFF)<<0) | ((result[index+p+10]&0xFF)<<8) | ((result[index+p+11]&0xFF)<<16) | ((result[index+p+12]&0xFF)<<24);
 			file.flags =			result[index+p+13];
-			file.pos = 				46 + (((result[index+p+14]&0xFF)<<0) | ((result[index+p+15]&0xFF)<<8) | ((result[index+p+16]&0xFF)<<16) | ((result[index+p+17]&0xFF)<<24));			
-            switch( ( int )file.flags ) {
+			file.pos = 				46 + (((result[index+p+14]&0xFF)<<0) | ((result[index+p+15]&0xFF)<<8) | ((result[index+p+16]&0xFF)<<16) | ((result[index+p+17]&0xFF)<<24));
+			
+            switch( ( int )file.flags)
+            {
 	            case 1:
-	                file.cycle = -1;
+	            	file.cycle = -1;
 	                break;
 	            case 3:
-	                file.cycle = 1;
+	            	file.cycle = 1;
 	                for( int j = 10; file.comprLen >= j; j *= 10, file.cycle++ )
 	                    ;
 	                break;
 	            case 5:
-	                file.cycle = 0;
+	            	file.cycle = 0;
 	                break;
             }
 			files.put(file.name, file);	
@@ -146,12 +148,9 @@ public class GrfFileLocation extends FileLocation
 			byte[] compr = new byte[file.comprLenAligned];
 			byte[] data = new byte[file.len];
 			this.grfFileStream.read(compr);
+			if( file.cycle >= 0 )
+				DES.decodeGRF(compr, file.cycle );
 			
-			if( file.flags == 1 || file.flags == 3 || file.flags == 5 )
-			{
-				if( file.cycle >= 0 )
-					DES.decodeGRF(compr, file.cycle );
-			}
 			
 			if( file.comprLen < file.len ){
 				Inflater decompresser = new Inflater();
