@@ -155,7 +155,7 @@ public class Gnd{
 
             for( int i = 0; i < 8; i++ ) {
                 for( int j = 0; j < 8; j++ ) {
-                    this.color[i][j] = new java.awt.Color( in.readByte(), in.readByte(), in.readByte() );
+            		this.color[i][j] = new java.awt.Color( in.readByte()&0xff, in.readByte()&0xff, in.readByte()&0xff );
                 }
             }
 		}

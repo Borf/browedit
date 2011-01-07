@@ -1,8 +1,6 @@
 package com.exnw.browedit;
 
 
-import java.io.InputStream;
-
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
