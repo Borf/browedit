@@ -1,17 +1,32 @@
 package com.exnw.browedit.io;
 
-import java.io.IOException;
-
 public class SwappedInputStream
 {
 	private java.io.DataInputStream in;
+	public static enum SEEK_POSITION{
+		SEEK_SET,
+		SEEK_CURRENT,
+		SEEK_END
+	}
 
-	public SwappedInputStream( java.io.InputStream input )
-	{
+	public SwappedInputStream( java.io.InputStream input ){
 		if( input == null )
 			throw new IllegalArgumentException();
 		
 		this.in = new java.io.DataInputStream( input );
+	}
+	
+	public final void seek( SwappedInputStream.SEEK_POSITION from, long amount ) throws java.io.IOException{
+		switch( from ){
+			case SEEK_SET:
+				this.in.reset();
+			case SEEK_CURRENT:
+				this.in.skip( amount );
+				break;
+			case SEEK_END:
+				this.in.skip( this.in.available() + amount );
+				break;
+		}
 	}
 	
 	public final void skip( int amount ) throws java.io.IOException{
@@ -42,7 +57,7 @@ public class SwappedInputStream
     	java.util.List<Byte> bytes = new java.util.ArrayList<Byte>();
     	byte b;
     	
-    	while( (( b = this.readByte() )&0xFF) > 0 ){
+    	while( ( ( b = this.readByte() ) & 0xFF ) > 0 ){
     		bytes.add( b );
     	}
     	
