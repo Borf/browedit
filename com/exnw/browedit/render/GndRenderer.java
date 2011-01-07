@@ -116,6 +116,69 @@ public class GndRenderer implements Renderer
 							textureCoords.add(surface.getV()[3]);
 						}
 					}
+					if(surfaces[2] != -1)
+					{
+						Surface surface = gnd.getSurfaces().get(surfaces[2]);
+						if(surface.getTextureID() == i)
+						{
+							GndCell otherCell = gnd.getCell(x+1, y);
+								
+							vertices.add(10.0f*x+10.0f);
+							vertices.add(-otherCell.getHeight()[2]);
+							vertices.add(10.0f*(gnd.getHeight()-y));//tr
+							textureCoords.add(surface.getU()[2]);
+							textureCoords.add(surface.getV()[2]);
+		
+							vertices.add(10.0f*x+10.0f);
+							vertices.add(-otherCell.getHeight()[0]);
+							vertices.add(10.0f*(gnd.getHeight()-y)+10);//tl
+							textureCoords.add(surface.getU()[3]);
+							textureCoords.add(surface.getV()[3]);
+		
+							vertices.add(10.0f*x+10.0f);
+							vertices.add(-cell.getHeight()[1]);
+							vertices.add(10.0f*(gnd.getHeight()-y)+10);//bl
+							textureCoords.add(surface.getU()[1]);
+							textureCoords.add(surface.getV()[1]);
+		
+							vertices.add(10.0f*x+10.0f);
+							vertices.add(-cell.getHeight()[3]);
+							vertices.add(10.0f*(gnd.getHeight()-y));//br
+							textureCoords.add(surface.getU()[0]);
+							textureCoords.add(surface.getV()[0]);
+						}
+					}
+					if(surfaces[1] != -1) // front surfaces
+					{
+						Surface surface = gnd.getSurfaces().get(surfaces[1]);
+						if(surface.getTextureID() == i)
+						{
+							GndCell otherCell = gnd.getCell(x, y+1);
+							vertices.add(10.0f*x);
+							vertices.add(-otherCell.getHeight()[2]);
+							vertices.add(10.0f*(gnd.getHeight()-y));//tr
+							textureCoords.add(surface.getU()[2]);
+							textureCoords.add(surface.getV()[2]);
+		
+							vertices.add(10.0f*x);
+							vertices.add(-cell.getHeight()[0]);
+							vertices.add(10.0f*(gnd.getHeight()-y));//tl
+							textureCoords.add(surface.getU()[0]);
+							textureCoords.add(surface.getV()[0]);
+		
+							vertices.add(10.0f*x+10);
+							vertices.add(-cell.getHeight()[1]);
+							vertices.add(10.0f*(gnd.getHeight()-y));//bl
+							textureCoords.add(surface.getU()[1]);
+							textureCoords.add(surface.getV()[1]);
+		
+							vertices.add(10.0f*x+10);
+							vertices.add(-otherCell.getHeight()[3]);
+							vertices.add(10.0f*(gnd.getHeight()-y));//br
+							textureCoords.add(surface.getU()[3]);
+							textureCoords.add(surface.getV()[3]);
+						}
+					}
 				}
 			}
 			
@@ -149,13 +212,19 @@ public class GndRenderer implements Renderer
 			{
 				try
 				{
-					textures.add(TextureIO.newTexture(GrfLib.openFile("data\\texture\\" + s), true, s.substring(s.lastIndexOf('.'))));
+					Texture texture = TextureIO.newTexture(GrfLib.openFile("data\\texture\\" + s), true, s.substring(s.lastIndexOf('.')));
+					//TODO: fix borders
+					texture.setTexParameteri(GL.GL_TEXTURE_WRAP_S, GL.GL_MIRRORED_REPEAT);
+					texture.setTexParameteri(GL.GL_TEXTURE_WRAP_T, GL.GL_MIRRORED_REPEAT);
+					
+					textures.add(texture);
 				} catch (GLException e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e)
 				{
+					System.err.println("Could not open: " + s);
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

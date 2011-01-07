@@ -12,7 +12,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener
 {
 	static GLU glu = new GLU();
 	float rotateT = 0;
-	float dist = 0;
+	float dist = 0.1f;
 	
 	
 	float x = -1;
@@ -36,19 +36,19 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		float d = 100+(float) (Math.abs(Math.sin(dist))*1000.0);
 		gl.glLoadIdentity();
-		glu.gluLookAt(	
+/*		glu.gluLookAt(	
 						mainFrame.currentMap.getGnd().getWidth()*5+(d*Math.cos(rotateT)), d, mainFrame.currentMap.getGnd().getHeight()*5+(d*Math.sin(rotateT)),	//eye 
 						//mainFrame.currentMap.getGat().getWidth()/2+(10*Math.cos(rotateT)), 10, mainFrame.currentMap.getGat().getHeight()/2+(10*Math.sin(rotateT)),	//eye 
 						mainFrame.currentMap.getGnd().getWidth()*5, 0, mainFrame.currentMap.getGnd().getHeight()*5,	//lookat 
-						0, 1, 0);	//up	
+						0, 1, 0);	//up	*/
 		
-		/*glu.gluLookAt(
-						x, 100, y+100,
+		glu.gluLookAt(
+						x, 200, y+200,
 						x, 0,y,
-						0,1,0);*/
+						0,1,0);
 		
 		rotateT+=0.01f;
-		dist += 0.01f;
+		//dist += 0.01f;
 		mainFrame.currentMap.render(gl);
 		
 	}
@@ -87,7 +87,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener
 	int oldy = -1;
 	public void mouseDragged(MouseEvent e)
 	{
-		if((e.getModifiers() & MouseEvent.BUTTON2_MASK)!= 0)
+		if((e.getModifiers() & MouseEvent.BUTTON3_MASK)!= 0)
 		{
 			oldx = -1;
 		}

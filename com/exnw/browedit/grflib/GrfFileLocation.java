@@ -106,7 +106,7 @@ public class GrfFileLocation extends FileLocation
 			int p = 0;
 			while(result[index+p] != 0)
 				p++;			
-			file.name = new String(result,index, p, "ISO-8859-1");
+			file.name = new String(result,index, p, "ISO-8859-1").toLowerCase();
 			file.comprLen = 		((result[index+p+1]&0xFF)<<0) | ((result[index+p+2]&0xFF)<<8) | ((result[index+p+3]&0xFF)<<16) | ((result[index+p+4]&0xFF)<<24);
 			file.comprLenAligned =	((result[index+p+5]&0xFF)<<0) | ((result[index+p+6]&0xFF)<<8) | ((result[index+p+7]&0xFF)<<16) | ((result[index+p+8]&0xFF)<<24);
 			file.len = 				((result[index+p+9]&0xFF)<<0) | ((result[index+p+10]&0xFF)<<8) | ((result[index+p+11]&0xFF)<<16) | ((result[index+p+12]&0xFF)<<24);
@@ -138,7 +138,7 @@ public class GrfFileLocation extends FileLocation
 
 	public InputStream getStream(String fileName)
 	{
-		GrfFileDesc file = files.get(fileName);
+		GrfFileDesc file = files.get(fileName.toLowerCase());
 		if(file == null)
 			return null;
 		
@@ -185,7 +185,7 @@ public class GrfFileLocation extends FileLocation
 
 	public boolean isFile(String fileName)
 	{
-		return files.containsKey(fileName);
+		return files.containsKey(fileName.toLowerCase());
 	}
 	
 	
