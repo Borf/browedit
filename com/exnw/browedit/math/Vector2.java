@@ -46,4 +46,23 @@ public class Vector2{
 	public float[] getData(){
 		return this.data;
 	}
+
+	public double getAngle()
+	{
+		return Math.atan2(data[1], data[0]);
+	}
+	
+	public void rotateBy(float rotateIncrement)
+	{
+		float len = getLength();
+		double angle = getAngle();
+		angle += rotateIncrement;
+		data[0] = (float) (len*Math.cos(angle));
+		data[1] = (float) (len*Math.sin(angle));
+	}
+
+	private float getLength()
+	{
+		return (float) Math.sqrt(data[0]*data[0]+data[1]*data[1]);
+	}
 }
