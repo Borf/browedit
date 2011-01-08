@@ -72,13 +72,13 @@ public class Gnd{
 				this.getTextures().add( dis.readISOString( 80 ) );
 			}
 			
-			this.lightmaps = new java.util.ArrayList<Gnd.Lightmap>();
+			this.setLightmaps(new java.util.ArrayList<Gnd.Lightmap>());
 			{
 				int lightmapcount = dis.readInt();
 				
 				if( dis.readInt() == 8 && dis.readInt() == 8 && dis.readInt() == 1 ) {
 	                for( int i = 0; i < lightmapcount; i++ )
-	                    this.lightmaps.add( new Lightmap( dis ) );
+	                    this.getLightmaps().add( new Lightmap( dis ) );
 	            }
 			}
 			
@@ -132,12 +132,22 @@ public class Gnd{
 		this.surfaces = surfaces;
 	}
 
-	private class Lightmap{
+	public void setLightmaps(java.util.List<Gnd.Lightmap> lightmaps)
+	{
+		this.lightmaps = lightmaps;
+	}
+
+	public java.util.List<Gnd.Lightmap> getLightmaps()
+	{
+		return lightmaps;
+	}
+
+	public class Lightmap{
 		private byte[][] brightness;
 		private java.awt.Color[][] color;
 		
 		public Lightmap(){
-			this.brightness = new byte[8][8];
+			this.setBrightness(new byte[8][8]);
 			this.color = new java.awt.Color[8][8];
 		}
 		
@@ -149,7 +159,7 @@ public class Gnd{
 		public void read( com.exnw.browedit.io.SwappedInputStream in ) throws java.io.IOException{
             for( int i = 0; i < 8; i++ ) {
                 for( int j = 0; j < 8; j++ ) {
-                    this.brightness[i][j] = in.readByte();
+                    this.getBrightness()[i][j] = in.readByte();
                 }
             }
 
@@ -158,6 +168,16 @@ public class Gnd{
             		this.color[i][j] = new java.awt.Color( in.readByte()&0xff, in.readByte()&0xff, in.readByte()&0xff );
                 }
             }
+		}
+
+		public void setBrightness(byte[][] brightness)
+		{
+			this.brightness = brightness;
+		}
+
+		public byte[][] getBrightness()
+		{
+			return brightness;
 		}
 	}
 	
@@ -186,7 +206,7 @@ public class Gnd{
                 this.v[i] = in.readFloat();
 
             this.setTextureID(in.readShort());
-            this.lightmapID = in.readShort();
+            this.setLightmapID(in.readShort());
 
             byte b = in.readByte();
             byte g = in.readByte();
@@ -218,6 +238,16 @@ public class Gnd{
 
 		public void setV( float[] v ){
 			this.v = v;
+		}
+
+		public void setLightmapID(short lightmapID)
+		{
+			this.lightmapID = lightmapID;
+		}
+
+		public short getLightmapID()
+		{
+			return lightmapID;
 		}
 	}
 	

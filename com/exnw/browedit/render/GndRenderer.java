@@ -1,12 +1,17 @@
 package com.exnw.browedit.render;
 
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLException;
 
@@ -23,8 +28,10 @@ public class GndRenderer implements Renderer
 	Gnd gnd;
 	
 	ArrayList<Texture> textures = null;
+	Texture				shadows = null;
 	int[]				vertexCounts = null;
 	IntBuffer vbos = null;
+	final static int TEXTURESIZE = 2048;
 	
 	
 	public GndRenderer(Gnd gnd)
@@ -42,6 +49,7 @@ public class GndRenderer implements Renderer
 		for(int i = 0; i < textures.size(); i++)
 		{
 			textures.get(i).bind();
+			shadows.bind();
 
 			gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
 			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
@@ -91,29 +99,51 @@ public class GndRenderer implements Renderer
 						Surface surface = gnd.getSurfaces().get(surfaces[0]);
 						if(surface.getTextureID() == i)
 						{
+							int lightmap = surface.getLightmapID();
+														
+							float tx1 = (lightmap % (TEXTURESIZE/8)) * (1.0f/(TEXTURESIZE/8.0f));
+							float ty1 = (lightmap / (TEXTURESIZE/8)) * (1.0f/(TEXTURESIZE/8.0f));
+							float tx2 = tx1 + 1.0f/(TEXTURESIZE/8.0f);
+							float ty2 = ty1 + 1.0f/(TEXTURESIZE/8.0f);
+							
+							float onePixel = (1.0f/(TEXTURESIZE/8.0f)) / 8.0f;
+							tx1 += onePixel;
+							ty1 += onePixel;
+							tx2 -= onePixel;
+							ty2 -= onePixel;
+							
+							
 							vertices.add(10.0f*x);
 							vertices.add(-cell.getHeight()[2]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//tr
-							textureCoords.add(surface.getU()[2]);
-							textureCoords.add(surface.getV()[2]);
+//							textureCoords.add(surface.getU()[2]);
+//							textureCoords.add(surface.getV()[2]);
+							textureCoords.add(tx1);
+							textureCoords.add(ty2);
 		
 							vertices.add(10.0f*x);
 							vertices.add(-cell.getHeight()[0]);
 							vertices.add(10.0f*(gnd.getHeight()-y)+10);//tl
-							textureCoords.add(surface.getU()[0]);
-							textureCoords.add(surface.getV()[0]);
+//							textureCoords.add(surface.getU()[0]);
+//							textureCoords.add(surface.getV()[0]);
+							textureCoords.add(tx1);
+							textureCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
 							vertices.add(-cell.getHeight()[1]);
 							vertices.add(10.0f*(gnd.getHeight()-y)+10);//bl
-							textureCoords.add(surface.getU()[1]);
-							textureCoords.add(surface.getV()[1]);
+//							textureCoords.add(surface.getU()[1]);
+//							textureCoords.add(surface.getV()[1]);
+							textureCoords.add(tx2);
+							textureCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
 							vertices.add(-cell.getHeight()[3]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//br
-							textureCoords.add(surface.getU()[3]);
-							textureCoords.add(surface.getV()[3]);
+//							textureCoords.add(surface.getU()[3]);
+//							textureCoords.add(surface.getV()[3]);
+							textureCoords.add(tx2);
+							textureCoords.add(ty2);
 						}
 					}
 					if(surfaces[2] != -1)
@@ -229,6 +259,50 @@ public class GndRenderer implements Renderer
 					e.printStackTrace();
 				}
 			}
+			
+			BufferedImage image = new BufferedImage(TEXTURESIZE, TEXTURESIZE, BufferedImage.TYPE_INT_ARGB);
+			
+			int x = 0;
+			int y = 0;
+			
+			for(Gnd.Lightmap lightmap : gnd.getLightmaps())
+			{
+				byte[][] brightness = lightmap.getBrightness();
+				for(int xx = x; xx < x+8; xx++)
+				{
+					for(int yy = y; yy < y+8; yy++)
+					{
+						int c = 0xff000000;
+						c |= brightness[yy-y][xx-x]&0xff;
+						c |= (brightness[yy-y][xx-x]&0xff)<<8;
+						c |= (brightness[yy-y][xx-x]&0xff)<<16;
+						
+						image.setRGB(xx, yy, c);
+						
+					}
+				}
+				x += 8;
+				if(x >= TEXTURESIZE)
+				{
+					x = 0;
+					y += 8;
+				}
+			}
+				
+			try
+			{
+				ImageIO.write(image, "png", new FileOutputStream("test.png"));
+			} catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			shadows = TextureIO.newTexture(image, true);
+			
 		}
 	}
 	public void update(Observable arg0, Object arg1)
