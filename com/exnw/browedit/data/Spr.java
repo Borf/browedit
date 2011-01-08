@@ -13,8 +13,6 @@ public class Spr{
 	private byte version_major;
 	private byte version_minor;
 	
-	private int width;
-	private int height;
 	private java.awt.Color[] palette;
 	private java.util.List<java.awt.image.BufferedImage> frames;
 	

@@ -15,6 +15,7 @@ public class MainPanel extends JPanel
 		GLCanvas canvas = new GLCanvas();
 		BrowRenderer renderer = new BrowRenderer(mainFrame);
 		canvas.addGLEventListener(renderer);
+		canvas.addMouseListener(renderer);
 		canvas.addMouseMotionListener(renderer);
 		
 		this.add(canvas, BorderLayout.CENTER);

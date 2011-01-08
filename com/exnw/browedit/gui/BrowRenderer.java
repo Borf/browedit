@@ -1,6 +1,7 @@
 package com.exnw.browedit.gui;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.media.opengl.GL;
@@ -8,16 +9,18 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
-public class BrowRenderer implements GLEventListener, MouseMotionListener
-{
+public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener{
 	static GLU glu = new GLU();
 	float rotateT = 0;
 	float dist = 0.1f;
-	
-	
 	float x = -1;
 	float y = -1;
 	MainFrame mainFrame;
+	
+	// Variables for mouse dragging
+	private int oldx = 0;
+	private int oldy = 0;
+	private boolean dragged = false;
 	
 	public BrowRenderer(MainFrame mainFrame)
 	{
@@ -83,33 +86,46 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener
 		gl.glLoadIdentity();		
 	}
 
-	int oldx = -1;
-	int oldy = -1;
-	public void mouseDragged(MouseEvent e)
-	{
-		if((e.getModifiers() & MouseEvent.BUTTON3_MASK)!= 0)
-		{
-			oldx = -1;
-		}
-			
-		if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0)
-		{
-			if(oldx != -1)
-			{
-				x += oldx-e.getX();
-				y += oldy-e.getY();
-			}
+	public void mouseDragged( MouseEvent e ){		
+		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
+			x += oldx - e.getX();
+			y += oldy - e.getY();
 			oldx = e.getX();
 			oldy = e.getY();
 		}
-			
+	}
+	
+	@Override
+	public void mousePressed( MouseEvent e ){
+		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
+			if( !dragged ){
+				dragged = true;
+				oldx = e.getX();
+				oldy = e.getY();
+			}
+		}
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e)
-	{
-		// TODO Auto-generated method stub
-		
+	public void mouseReleased( MouseEvent e ){
+		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
+			if( dragged ){
+				dragged = false;
+				oldx = e.getX();
+				oldy = e.getY();
+			}
+		}		
 	}
 
+	@Override
+	public void mouseMoved( MouseEvent e ){}
+
+	@Override
+	public void mouseClicked( MouseEvent e ){}
+
+	@Override
+	public void mouseEntered( MouseEvent e ){}
+
+	@Override
+	public void mouseExited( MouseEvent e ){}
 }
