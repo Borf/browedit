@@ -87,7 +87,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 			y += v.getY();
 		}
 		if( ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
-			rotateT += (oldx - e.getX()) / 100.0f;
+			rotateT += (oldx - e.getX()) / 300.0f;
 			dist += (oldy - e.getY());
 			dist = Math.max(dist, 20);
 		}

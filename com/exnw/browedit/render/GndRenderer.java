@@ -45,29 +45,53 @@ public class GndRenderer implements Renderer
 		if(vbos == null)
 			this.generateVbos(gl);
 		
+		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
+
+		gl.glActiveTexture(GL.GL_TEXTURE1);
 		gl.glEnable(GL.GL_TEXTURE_2D);
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_MULT);
+		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+		shadows.bind();
+		
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		gl.glEnable(GL.GL_TEXTURE_2D);
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_REPLACE);		
+		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+		
+		
 		for(int i = 0; i < textures.size(); i++)
 		{
+			gl.glClientActiveTexture(GL.GL_TEXTURE0);
 			textures.get(i).bind();
 
-			gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
-			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
 			
 			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i));         // for vertex coordinates
 			gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
 
+			gl.glClientActiveTexture(GL.GL_TEXTURE0);
 			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i+1));         // for vertex coordinates
 			gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
 
+			gl.glClientActiveTexture(GL.GL_TEXTURE1);
+			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i+2));         // for vertex coordinates
+			gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
+			
+			
 			gl.glDrawArrays(GL.GL_QUADS, 0, vertexCounts[i]);
 			
-			gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-			gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-			
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);			
 		}
+		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 		
+		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);			
+
+		
+		gl.glActiveTexture(GL.GL_TEXTURE1);
+		gl.glDisable(GL.GL_TEXTURE_2D);
+		gl.glActiveTexture(GL.GL_TEXTURE0);
 		
 	}
 	
