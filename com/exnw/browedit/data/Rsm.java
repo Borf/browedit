@@ -76,26 +76,22 @@ public class Rsm{
 			this.textures = new java.util.ArrayList<String>();
 			
 			for( int i = 0, count = dis.readInt(); i < count; i++ ){
-				byte[] buffer = new byte[40];
-				dis.readBytes( buffer );
-				this.textures.add( new String( buffer, "ISO-8859-1" ).trim().toLowerCase() );
+				this.textures.add( dis.readISOString(40) );
 			}
 			
 			{
-				byte[] buffer = new byte[40];
-				dis.readBytes( buffer );
-				this.root = new String( buffer, "ISO-8859-1" ).trim().toLowerCase();
+				this.setRoot(dis.readISOString(40));
 			}
 			
-			this.meshes = new java.util.ArrayList<Rsm.RsmMesh>();
+			this.setMeshes(new java.util.ArrayList<Rsm.RsmMesh>());
 			for( int i = 0, count = dis.readInt(); i < count; i++ ){
 				Rsm.RsmMesh mesh = new Rsm.RsmMesh();
 				mesh.read( dis );
-				this.meshes.add( mesh );
+				this.getMeshes().add( mesh );
 			}
 			
 			if( this.version_minor < 5 ){
-				Rsm.RsmMesh mesh = this.meshes.get(0);
+				Rsm.RsmMesh mesh = this.getMeshes().get(0);
 				
 				mesh.positionframes = new java.util.ArrayList<Rsm.RsmMesh.PositionFrame>();
 				
@@ -122,19 +118,39 @@ public class Rsm{
 		}
 	}
 	
-	private class RsmMesh{
+	public void setMeshes(java.util.List<Rsm.RsmMesh> meshes)
+	{
+		this.meshes = meshes;
+	}
+
+	public java.util.List<Rsm.RsmMesh> getMeshes()
+	{
+		return meshes;
+	}
+
+	public void setRoot(String root)
+	{
+		this.root = root;
+	}
+
+	public String getRoot()
+	{
+		return root;
+	}
+
+	public class RsmMesh{
 		private String name;
 		private String parent;
 		private java.util.List<Integer> textureids;
 		
-		private com.exnw.browedit.math.Matrix3 matrix;
+		private com.exnw.browedit.math.Matrix4 matrix;
 		private com.exnw.browedit.math.Vector3 position;
 		private com.exnw.browedit.math.Vector3 position2;
 		private float rotationangle;
 		private com.exnw.browedit.math.Vector3 rotationaxis;
 		private com.exnw.browedit.math.Vector3 scale;
 		
-		private java.util.List<com.exnw.browedit.math.Vector3> vectors;
+		private java.util.List<com.exnw.browedit.math.Vector3> vertices;
 		private java.util.List<Rsm.RsmMesh.TextureVertex> texturevertices;
 		private java.util.List<Rsm.RsmMesh.Surface> surfaces;
 		private java.util.List<Rsm.RsmMesh.RotationFrame> rotationframes;
@@ -145,34 +161,29 @@ public class Rsm{
 		}
 		
 		public void read( com.exnw.browedit.io.SwappedInputStream in ) throws java.io.IOException{
-			byte[] buffer = new byte[40];
-			
-			in.readBytes( buffer );
-			this.name = new String( buffer, "ISO-8859-1" ).trim().toLowerCase();
-			
-			in.readBytes( buffer );
-			this.parent = new String( buffer, "ISO-8859-1" ).trim().toLowerCase();
+			this.setName(in.readISOString(40));
+			this.setParent(in.readISOString(40));
 			
 			this.textureids = new java.util.ArrayList<Integer>();			
 			for( int i = 0, count = in.readInt(); i < count; i++ ){
 				this.textureids.add( in.readInt() );
 			}
 			
-			this.matrix = new com.exnw.browedit.math.Matrix3(in);
+			this.setMatrix(new com.exnw.browedit.math.Matrix4(in));
 			
-			this.position = new com.exnw.browedit.math.Vector3(in);
+			this.setPosition(new com.exnw.browedit.math.Vector3(in));
 			
 			this.position2 = new com.exnw.browedit.math.Vector3(in);
 			
-			this.rotationangle = in.readFloat();
+			this.setRotationangle(in.readFloat());
 			
-			this.rotationaxis = new com.exnw.browedit.math.Vector3(in);
+			this.setRotationaxis(new com.exnw.browedit.math.Vector3(in));
 			
-			this.scale = new com.exnw.browedit.math.Vector3(in);
+			this.setScale(new com.exnw.browedit.math.Vector3(in));
 			
-			this.vectors = new java.util.ArrayList<com.exnw.browedit.math.Vector3>();
+			this.setVertices(new java.util.ArrayList<com.exnw.browedit.math.Vector3>());
 			for( int i = 0, count = in.readInt(); i < count; i++ ){				
-				this.vectors.add( new com.exnw.browedit.math.Vector3(in) );
+				this.getVertices().add( new com.exnw.browedit.math.Vector3(in) );
 			}
 			
 			this.texturevertices = new java.util.ArrayList<Rsm.RsmMesh.TextureVertex>();
@@ -189,12 +200,12 @@ public class Rsm{
 				this.texturevertices.add( tv );
 			}
 			
-			this.surfaces = new java.util.ArrayList<Rsm.RsmMesh.Surface>();
+			this.setSurfaces(new java.util.ArrayList<Rsm.RsmMesh.Surface>());
 			for( int i = 0, count = in.readInt(); i < count; i++ ){
 				Rsm.RsmMesh.Surface s = new Rsm.RsmMesh.Surface();
 				
 				for( int j = 0; j < 3; j++ )
-					s.surfacevertices[j] = in.readShort();
+					s.getSurfacevertices()[j] = in.readShort();
 				
 				for( int j = 0; j < 3; j++ )
 					s.texturevertices[j] = in.readShort();
@@ -209,11 +220,11 @@ public class Rsm{
 					s.smoothgroup = 0;
 				}
 				
-				this.surfaces.add( s );
+				this.getSurfaces().add( s );
 			}
 			
+			this.positionframes = new java.util.ArrayList<Rsm.RsmMesh.PositionFrame>();
 			if( Rsm.this.version_minor < 5 ){
-				this.positionframes = new java.util.ArrayList<Rsm.RsmMesh.PositionFrame>();
 				
 				for( int i = 0, count = in.readInt(); i < count; i++ ){
 					Rsm.RsmMesh.PositionFrame pf = new Rsm.RsmMesh.PositionFrame();
@@ -225,8 +236,8 @@ public class Rsm{
 				}
 			}
 			
+			this.setRotationframes(new java.util.ArrayList<Rsm.RsmMesh.RotationFrame>());
 			if( Rsm.this.version_minor == 5 ){
-				this.rotationframes = new java.util.ArrayList<Rsm.RsmMesh.RotationFrame>();
 				
 				for( int i = 0, count = in.readInt(); i < count; i++ ){
 					Rsm.RsmMesh.RotationFrame rf = new Rsm.RsmMesh.RotationFrame();
@@ -234,11 +245,111 @@ public class Rsm{
 					rf.frame = in.readInt();
 					rf.rotation = new com.exnw.browedit.math.Vector3(in);
 					
-					this.rotationframes.add(rf);
+					this.getRotationframes().add(rf);
 				}
 			}
 		}
 		
+		public void setParent(String parent)
+		{
+			this.parent = parent;
+		}
+
+		public String getParent()
+		{
+			return parent;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public void setSurfaces(java.util.List<Rsm.RsmMesh.Surface> surfaces)
+		{
+			this.surfaces = surfaces;
+		}
+
+		public java.util.List<Rsm.RsmMesh.Surface> getSurfaces()
+		{
+			return surfaces;
+		}
+
+		public void setVertices(java.util.List<com.exnw.browedit.math.Vector3> vertices)
+		{
+			this.vertices = vertices;
+		}
+
+		public java.util.List<com.exnw.browedit.math.Vector3> getVertices()
+		{
+			return vertices;
+		}
+
+		public void setPosition(com.exnw.browedit.math.Vector3 position)
+		{
+			this.position = position;
+		}
+
+		public com.exnw.browedit.math.Vector3 getPosition()
+		{
+			return position;
+		}
+
+		public void setRotationframes(java.util.List<Rsm.RsmMesh.RotationFrame> rotationframes)
+		{
+			this.rotationframes = rotationframes;
+		}
+
+		public java.util.List<Rsm.RsmMesh.RotationFrame> getRotationframes()
+		{
+			return rotationframes;
+		}
+
+		public void setRotationangle(float rotationangle)
+		{
+			this.rotationangle = rotationangle;
+		}
+
+		public float getRotationangle()
+		{
+			return rotationangle;
+		}
+
+		public void setRotationaxis(com.exnw.browedit.math.Vector3 rotationaxis)
+		{
+			this.rotationaxis = rotationaxis;
+		}
+
+		public com.exnw.browedit.math.Vector3 getRotationaxis()
+		{
+			return rotationaxis;
+		}
+
+		public void setScale(com.exnw.browedit.math.Vector3 scale)
+		{
+			this.scale = scale;
+		}
+
+		public com.exnw.browedit.math.Vector3 getScale()
+		{
+			return scale;
+		}
+
+		public void setMatrix(com.exnw.browedit.math.Matrix4 matrix)
+		{
+			this.matrix = matrix;
+		}
+
+		public com.exnw.browedit.math.Matrix4 getMatrix()
+		{
+			return matrix;
+		}
+
 		private class RotationFrame{
 			private int frame;
 			private com.exnw.browedit.math.Vector3 rotation;
@@ -249,13 +360,21 @@ public class Rsm{
 			private com.exnw.browedit.math.Vector4 position;
 		}
 		
-		private class Surface{
+		public class Surface{
 			private short[] surfacevertices = new short[3];
 			private short[] texturevertices = new short[3];
 			private short textureid;
 			private short padding;
 			private int twoside;
 			private int smoothgroup;
+			public void setSurfacevertices(short[] surfacevertices)
+			{
+				this.surfacevertices = surfacevertices;
+			}
+			public short[] getSurfacevertices()
+			{
+				return surfacevertices;
+			}
 		}
 		
 		private class TextureVertex{

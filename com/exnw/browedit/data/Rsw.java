@@ -253,8 +253,8 @@ public class Rsw{
 			this.setModelname(in.readISOString( 80 ));
 			this.nodename = in.readISOString( 80 );
 			this.setPosition(new com.exnw.browedit.math.Vector3( in ));
-			this.rotation = new com.exnw.browedit.math.Vector3( in );
-			this.scale = new com.exnw.browedit.math.Vector3( in );
+			this.setRotation(new com.exnw.browedit.math.Vector3( in ));
+			this.setScale(new com.exnw.browedit.math.Vector3( in ));
 		}
 
 		public void setModelname(String modelname)
@@ -275,6 +275,26 @@ public class Rsw{
 		public com.exnw.browedit.math.Vector3 getPosition()
 		{
 			return position;
+		}
+
+		public void setRotation(com.exnw.browedit.math.Vector3 rotation)
+		{
+			this.rotation = rotation;
+		}
+
+		public com.exnw.browedit.math.Vector3 getRotation()
+		{
+			return rotation;
+		}
+
+		public void setScale(com.exnw.browedit.math.Vector3 scale)
+		{
+			this.scale = scale;
+		}
+
+		public com.exnw.browedit.math.Vector3 getScale()
+		{
+			return scale;
 		}
 	}
 	
