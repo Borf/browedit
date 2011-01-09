@@ -20,7 +20,7 @@ public class MainFrame extends JFrame
 		this.setContentPane(new MainPanel(this));
 
 		this.setJMenuBar(menuBar = new com.exnw.browedit.gui.MenuBar(this));
-		openMap("data\\c_tower1.rsw");
+		openMap("data\\prontera.rsw");
 		
 		
 		this.setSize(1280, 900);

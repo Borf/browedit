@@ -83,6 +83,7 @@ public class Rsw{
 			if( this.version_major > 1 || this.version_minor >= 4 ){
 				this.gatfile = dis.readISOString( 40 );
 			}
+			this.scrfile = dis.readISOString( 40 );
 			
 			this.water = new Rsw.Water( dis );
 			
@@ -98,7 +99,7 @@ public class Rsw{
 				this.ground_bottom = this.ground_right = 500;
 			}
 			
-			this.models = new java.util.ArrayList<Rsw.ModelResource>();
+			this.setModels(new java.util.ArrayList<Rsw.ModelResource>());
 			this.lights = new java.util.ArrayList<Rsw.LightResource>();
 			this.sounds = new java.util.ArrayList<Rsw.SoundResource>();
 			this.effects = new java.util.ArrayList<Rsw.EffectResource>();
@@ -106,7 +107,7 @@ public class Rsw{
 			for( int i = 0, count = dis.readInt(), type = 0; i < count; i++ ){
 				switch( ( type = dis.readInt() ) ){
 					case 1:
-						this.models.add( new Rsw.ModelResource( dis ) );
+						this.getModels().add( new Rsw.ModelResource( dis ) );
 						continue;
 					case 2:
 						this.lights.add( new Rsw.LightResource( dis ) );
@@ -137,6 +138,16 @@ public class Rsw{
 		}
 	}
 	
+	public void setModels(java.util.List<Rsw.ModelResource> models)
+	{
+		this.models = models;
+	}
+
+	public java.util.List<Rsw.ModelResource> getModels()
+	{
+		return models;
+	}
+
 	private class Water{
 		private float level;
 		private int type;
@@ -241,7 +252,7 @@ public class Rsw{
 			
 			this.setModelname(in.readISOString( 80 ));
 			this.nodename = in.readISOString( 80 );
-			this.position = new com.exnw.browedit.math.Vector3( in );
+			this.setPosition(new com.exnw.browedit.math.Vector3( in ));
 			this.rotation = new com.exnw.browedit.math.Vector3( in );
 			this.scale = new com.exnw.browedit.math.Vector3( in );
 		}
@@ -254,6 +265,16 @@ public class Rsw{
 		public String getModelname()
 		{
 			return modelname;
+		}
+
+		public void setPosition(com.exnw.browedit.math.Vector3 position)
+		{
+			this.position = position;
+		}
+
+		public com.exnw.browedit.math.Vector3 getPosition()
+		{
+			return position;
 		}
 	}
 	

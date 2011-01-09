@@ -16,12 +16,7 @@ public class Map
 	{
 		return rsw;
 	}
-
-	public void setRsw(Rsw rsw)
-	{
-		this.rsw = rsw;
-	}
-
+	
 	private GatRenderer gatRenderer;
 	private GndRenderer gndRenderer;
 	private RswRenderer rswRenderer;
@@ -31,7 +26,7 @@ public class Map
 		if(fileName.toLowerCase().endsWith(".rsw"))
 			fileName = fileName.substring(0, fileName.lastIndexOf("."));
 		
-	//	setRsw(new Rsw(fileName + ".rsw"));
+		setRsw(new Rsw(fileName + ".rsw"));
 		setGnd(new Gnd(fileName + ".gnd"));
 		setGat(new Gat(fileName + ".gat"));
 	}
@@ -40,7 +35,7 @@ public class Map
 	{
 //		gatRenderer.render(gl);
 		gndRenderer.render(gl);
-	//	rswRenderer.render(gl);
+		rswRenderer.render(gl);
 	}
 
 	public void setGat(Gat gat)
@@ -48,6 +43,16 @@ public class Map
 		this.gat = gat;
 		this.gatRenderer = new GatRenderer(this.gat);
 	}
+	public void setRsw(Rsw rsw)
+	{
+		this.rsw = rsw;
+		this.rswRenderer = new RswRenderer(rsw,this);
+	}
+	public void setGnd(Gnd gnd)
+	{
+		this.gnd = gnd;
+		this.gndRenderer = new GndRenderer(this.gnd);
+	}		
 
 	public Gat getGat()
 	{
@@ -58,9 +63,5 @@ public class Map
 		return gnd;
 	}
 
-	public void setGnd(Gnd gnd)
-	{
-		this.gnd = gnd;
-		this.gndRenderer = new GndRenderer(this.gnd);
-	}	
+
 }
