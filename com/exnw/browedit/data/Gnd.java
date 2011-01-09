@@ -148,7 +148,7 @@ public class Gnd{
 		
 		public Lightmap(){
 			this.setBrightness(new byte[8][8]);
-			this.color = new java.awt.Color[8][8];
+			this.setColor(new java.awt.Color[8][8]);
 		}
 		
 		public Lightmap( com.exnw.browedit.io.SwappedInputStream in ) throws java.io.IOException{
@@ -165,7 +165,7 @@ public class Gnd{
 
             for( int i = 0; i < 8; i++ ) {
                 for( int j = 0; j < 8; j++ ) {
-            		this.color[i][j] = new java.awt.Color( in.readByte()&0xff, in.readByte()&0xff, in.readByte()&0xff );
+            		this.getColor()[i][j] = new java.awt.Color( in.readByte()&0xff, in.readByte()&0xff, in.readByte()&0xff );
                 }
             }
 		}
@@ -178,6 +178,16 @@ public class Gnd{
 		public byte[][] getBrightness()
 		{
 			return brightness;
+		}
+
+		public void setColor(java.awt.Color[][] color)
+		{
+			this.color = color;
+		}
+
+		public java.awt.Color[][] getColor()
+		{
+			return color;
 		}
 	}
 	

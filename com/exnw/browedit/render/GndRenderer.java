@@ -1,17 +1,14 @@
 package com.exnw.browedit.render;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLException;
 
@@ -29,10 +26,12 @@ public class GndRenderer implements Renderer
 	
 	ArrayList<Texture> textures = null;
 	Texture				shadows = null;
+	Texture				colorLightmap = null;
 	int[]				vertexCounts = null;
 	IntBuffer vbos = null;
 	final static int TEXTURESIZE = 2048;
 	
+	Shader shader;
 	
 	public GndRenderer(Gnd gnd)
 	{
@@ -44,28 +43,27 @@ public class GndRenderer implements Renderer
 			this.loadTextures();
 		if(vbos == null)
 			this.generateVbos(gl);
+		if(shader == null)
+			this.shader = new Shader("vertex.glsl", "fragment.glsl");
 		
+		this.shader.use(gl);
 		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
 
-		gl.glActiveTexture(GL.GL_TEXTURE1);
-		gl.glEnable(GL.GL_TEXTURE_2D);
-        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
-        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_MULT);
-		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+		
+		gl.glActiveTexture(GL.GL_TEXTURE2);
 		shadows.bind();
 		
-		gl.glActiveTexture(GL.GL_TEXTURE0);
-		gl.glEnable(GL.GL_TEXTURE_2D);
-        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_COMBINE);
-        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, GL.GL_REPLACE);		
+		gl.glActiveTexture(GL.GL_TEXTURE1);
 		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+		colorLightmap.bind();
 		
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
 		
 		for(int i = 0; i < textures.size(); i++)
 		{
 			gl.glClientActiveTexture(GL.GL_TEXTURE0);
 			textures.get(i).bind();
-
 			
 			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i));         // for vertex coordinates
 			gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
@@ -76,23 +74,23 @@ public class GndRenderer implements Renderer
 
 			gl.glClientActiveTexture(GL.GL_TEXTURE1);
 			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i+2));         // for vertex coordinates
-			gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
-			
-			
+			gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);			
+
+			gl.glClientActiveTexture(GL.GL_TEXTURE1);
 			gl.glDrawArrays(GL.GL_QUADS, 0, vertexCounts[i]);
 			
 		}
 		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 		
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);			
-
 		
 		gl.glActiveTexture(GL.GL_TEXTURE1);
-		gl.glDisable(GL.GL_TEXTURE_2D);
+		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 		gl.glActiveTexture(GL.GL_TEXTURE0);
-		
+		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+
+		gl.glUseProgram(0);
 	}
 	
 	
@@ -321,45 +319,68 @@ public class GndRenderer implements Renderer
 					textures.add(texture);
 				} catch (GLException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e)
 				{
 					System.err.println("Could not open: " + s);
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			
-			BufferedImage image = new BufferedImage(TEXTURESIZE, TEXTURESIZE, BufferedImage.TYPE_INT_ARGB);
-			
-			int x = 0;
-			int y = 0;
-			
-			for(Gnd.Lightmap lightmap : gnd.getLightmaps())
+
 			{
-				byte[][] brightness = lightmap.getBrightness();
-				for(int xx = x; xx < x+8; xx++)
+				BufferedImage image = new BufferedImage(TEXTURESIZE, TEXTURESIZE, BufferedImage.TYPE_INT_ARGB);
+				int x = 0;
+				int y = 0;
+				for(Gnd.Lightmap lightmap : gnd.getLightmaps())
 				{
-					for(int yy = y; yy < y+8; yy++)
+					byte[][] brightness = lightmap.getBrightness();
+					for(int xx = x; xx < x+8; xx++)
 					{
-						int c = 0xff000000;
-						c |= brightness[yy-y][xx-x]&0xff;
-						c |= (brightness[yy-y][xx-x]&0xff)<<8;
-						c |= (brightness[yy-y][xx-x]&0xff)<<16;
-						
-						image.setRGB(xx, yy, c);
-						
+						for(int yy = y; yy < y+8; yy++)
+						{
+							int c = 0xff000000;
+							c |= brightness[yy-y][xx-x]&0xff;
+							c |= (brightness[yy-y][xx-x]&0xff)<<8;
+							c |= (brightness[yy-y][xx-x]&0xff)<<16;
+							
+							image.setRGB(xx, yy, c);
+							
+						}
+					}
+					x += 8;
+					if(x >= TEXTURESIZE)
+					{
+						x = 0;
+						y += 8;
 					}
 				}
-				x += 8;
-				if(x >= TEXTURESIZE)
-				{
-					x = 0;
-					y += 8;
-				}
+				shadows = TextureIO.newTexture(image, true);
 			}
-			shadows = TextureIO.newTexture(image, true);
+			{
+				BufferedImage image = new BufferedImage(TEXTURESIZE, TEXTURESIZE, BufferedImage.TYPE_INT_ARGB);
+				int x = 0;
+				int y = 0;
+				for(Gnd.Lightmap lightmap : gnd.getLightmaps())
+				{
+					Color[][] colors = lightmap.getColor();
+					for(int xx = x; xx < x+8; xx++)
+					{
+						for(int yy = y; yy < y+8; yy++)
+						{
+							image.setRGB(xx, yy, colors[yy-y][xx-x].getRGB() | 0xff000000);							
+						}
+					}
+					x += 8;
+					if(x >= TEXTURESIZE)
+					{
+						x = 0;
+						y += 8;
+					}
+				}
+				colorLightmap = TextureIO.newTexture(image, true);
+			}			
+			
+			
 			
 		}
 	}
