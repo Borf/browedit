@@ -1,51 +1,41 @@
 package com.exnw.browedit.grflib;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
 public class GrfLib {
-		private static ArrayList<FileLocation> locations = new ArrayList<FileLocation>();
+		private static java.util.Map<String,FileLocation> locations = new java.util.LinkedHashMap<String,FileLocation>();
 		
-		public static void addGrf(String fileName) 
-		{
-			try
-			{
-				locations.add(new GrfFileLocation(fileName));
-			} catch (FileNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		public static void addDir(String path)
-		{
-			locations.add(new RealFileLocation(path));
+		public static void addGrf( String file ) throws java.io.FileNotFoundException{
+			GrfLib.locations.put( file, new GrfFileLocation( file ) );
 		}
 		
+		public static void addDir( String path ) throws java.io.FileNotFoundException{
+			GrfLib.locations.put( path, new RealFileLocation( path ) );
+		}
 		
-		public static InputStream openFile(String fileName)
-		{
-			for(FileLocation l: locations)
-				if(l.isFile(fileName))
-				{
-					try
-					{
-						return l.getStream(fileName);
-					} catch (FileNotFoundException e)
-					{
+		public static void enableJar(){
+			GrfLib.locations.put( "", new JarFileLocation() );
+		}
+		
+		public static java.io.InputStream openFile( String file ){
+			for( FileLocation l: GrfLib.locations.values() ){
+				if( l.isFile( file ) ){
+					try{
+						return l.getStream( file );
+					}catch( java.io.FileNotFoundException e ){
 						e.printStackTrace();
 					}
 				}
+			}
+			
 			return null;
 		}
 		
-		public static ArrayList<String> listFiles(String f)
-		{
-			ArrayList<String> files = new ArrayList<String>();
-			for(FileLocation l: locations)
-			{
-				l.listFiles(files, f);
+		public static java.util.Set<String> listFiles( String f ){
+			java.util.Set<String> files = new java.util.HashSet<String>();
+			
+			for( FileLocation l: GrfLib.locations.values() ){
+				l.listFiles( files, f );
 			}
+			
 			return files;
 		}
 		

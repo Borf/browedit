@@ -1,37 +1,20 @@
 package com.exnw.browedit.io;
 
-public class SwappedInputStream{
-	private java.io.DataInputStream in;
-
-	public SwappedInputStream( java.io.InputStream input ) throws java.io.IOException{
-		if( input == null )
-			throw new IllegalArgumentException();
-		
-		this.in = new java.io.DataInputStream( input );
+public class SwappedRandomAccessFile extends java.io.RandomAccessFile{
+	public SwappedRandomAccessFile( java.io.File file, String mode ) throws java.io.FileNotFoundException{
+		super( file, mode );
 	}
 	
-	public final void skip( int count ) throws java.io.IOException{
-		this.in.skip( count );
+	public SwappedRandomAccessFile( String name, String mode ) throws java.io.FileNotFoundException{
+		super( name, mode );
 	}
 	
-	public final void close() throws java.io.IOException{
-		this.in.close();
-	}
-	
-	public final byte readByte() throws java.io.IOException{
-		return this.in.readByte();
-	}
-	
-	public final void readBytes( byte[] buffer ) throws java.io.IOException{
-		this.in.read( buffer, 0, buffer.length );
-	}
-	
-	public final float readFloat() throws java.io.IOException{
-		return Float.intBitsToFloat( this.readInt() );
+	public final float readSwappedFloat() throws java.io.IOException{
+		return Float.intBitsToFloat( this.readSwappedInt() );
 	}
 
-	public final int readInt() throws java.io.IOException{
-		return SwappedInputStream.swap( this.in.readInt() );
+	public final int readSwappedInt() throws java.io.IOException{
+		return SwappedRandomAccessFile.swap( this.readInt() );
 	}
 	
     public final String readISOString() throws java.io.IOException{
@@ -52,7 +35,7 @@ public class SwappedInputStream{
     
     public final String readISOString( int len ) throws java.io.IOException{
     	byte[] output = new byte[len];
-    	this.readBytes( output );
+    	this.read( output );
     	
     	int nullByte = 0;
     	while( output[nullByte] != 0 && nullByte < len )
@@ -61,9 +44,9 @@ public class SwappedInputStream{
     	return new String( output, 0, nullByte, "ISO-8859-1" ).trim();
     }
 	
-    public final short readShort() throws java.io.IOException{
-        int ch1 = this.in.read();
-        int ch2 = this.in.read();
+    public final short readSwappedShort() throws java.io.IOException{
+        int ch1 = this.read();
+        int ch2 = this.read();
         
         if( ( ch1 | ch2 ) < 0 )
             throw new java.io.EOFException();

@@ -56,20 +56,9 @@ public class Spr{
 			if( !Spr.isSupported( this.version_major, this.version_minor) )
 				throw new IllegalArgumentException( String.format( "SPR Version %01d.%01d not supported.", this.version_major, this.version_minor ) );
 			
-			// Jump to color palette ( 256 color => 256 * 4 = 1024 )
-			dis.seek( com.exnw.browedit.io.SwappedInputStream.SEEK_POSITION.SEEK_END, -1024 );
-			
-			java.awt.Color[] palette = new java.awt.Color[256];
-			for( int i = 0; i < 256; i++ ){
-				palette[i] = new java.awt.Color( dis.readByte(), dis.readByte(), dis.readByte(), dis.readByte() );
-			}
-			
-			palette[0] = new java.awt.Color( palette[0].getRed(), palette[0].getGreen(), palette[0].getBlue(), 0 );
-			
-			dis.seek( com.exnw.browedit.io.SwappedInputStream.SEEK_POSITION.SEEK_SET, 8 );
-			
 			this.frames = new java.util.ArrayList<java.awt.image.BufferedImage>();
-			for( int i = 0, count = dis.readInt(); i < count; i++ ){
+			byte[][] images = new byte[dis.readInt()][];
+			for( int i = 0; i < images.length; i++ ){
 				java.awt.image.BufferedImage img = new java.awt.image.BufferedImage( dis.readShort(), dis.readShort(), java.awt.image.BufferedImage.TYPE_4BYTE_ABGR );
 				byte[] buffer = null;
 				
@@ -81,6 +70,29 @@ public class Spr{
 					buffer = new byte[img.getWidth() * img.getHeight()];
 					dis.readBytes( buffer );
 				}
+				
+	            for( int j = 0, x = 0, y = 0; j < buffer.length; j++ ){
+	                img.setRGB( x, y, this.palette[buffer[j]].getRGB() );
+	                x = ++x % img.getWidth();
+	                if( x == 0 )
+	                    y++;
+	                if( y == img.getHeight() )
+	                    break;
+	            }
+	            
+	            this.frames.add( img );
+			}
+			
+			java.awt.Color[] palette = new java.awt.Color[256];
+			for( int i = 0; i < 256; i++ ){
+				palette[i] = new java.awt.Color( dis.readByte(), dis.readByte(), dis.readByte(), dis.readByte() );
+			}
+			
+			palette[0] = new java.awt.Color( palette[0].getRed(), palette[0].getGreen(), palette[0].getBlue(), 0 );
+			
+			for( int i = 0; i < images.length; i++ ){
+				java.awt.image.BufferedImage img = this.frames.get( i );
+				byte[] buffer = images[i];
 				
 	            for( int j = 0, x = 0, y = 0; j < buffer.length; j++ ){
 	                img.setRGB( x, y, this.palette[buffer[j]].getRGB() );
