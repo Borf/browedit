@@ -16,7 +16,7 @@ public class BrowEdit {
 		long l = System.currentTimeMillis();
 		
 		try{
-			GrfLib.addGrf("F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\data.grf");
+			GrfLib.addGrf("C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf");
 			GrfLib.addDir(".");
 		}catch( java.io.FileNotFoundException e ){
 			e.printStackTrace();

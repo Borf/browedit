@@ -54,27 +54,27 @@ public class GatRenderer implements Observer, Renderer
 				float tx1 = tx0+tw;
 				float ty1 = ty0+th;
 
-				vertices.put(vertexIndex+0, 	10*x+0);
+				vertices.put(vertexIndex+0, 	5*x+0);
 				vertices.put(vertexIndex+1,		-cell.getHeight()[0]);
-				vertices.put(vertexIndex+2,		10*(gat.getHeight()-y)+10);
+				vertices.put(vertexIndex+2,		10*(gat.getHeight()-y)+5);
 				texVertices.put(texIndex+0,		tx0);
 				texVertices.put(texIndex+1,		ty0);
 				
-				vertices.put(vertexIndex+3, 	10*x+10);
+				vertices.put(vertexIndex+3, 	5*x+5);
 				vertices.put(vertexIndex+4,		-cell.getHeight()[1]);
-				vertices.put(vertexIndex+5,		10*(gat.getHeight()-y)+10);
+				vertices.put(vertexIndex+5,		10*(gat.getHeight()-y)+5);
 				texVertices.put(texIndex+2,		tx1);
 				texVertices.put(texIndex+3,		ty0);
 				
-				vertices.put(vertexIndex+6, 	10*x+10);
+				vertices.put(vertexIndex+6, 	5*x+5);
 				vertices.put(vertexIndex+7,		-cell.getHeight()[3]);
-				vertices.put(vertexIndex+8,		10*(gat.getHeight()-y)+0);
+				vertices.put(vertexIndex+8,		5*(gat.getHeight()-y)+0);
 				texVertices.put(texIndex+4,		tx1);
 				texVertices.put(texIndex+5,		ty1);
 				
-				vertices.put(vertexIndex+9, 	10*x+0);
+				vertices.put(vertexIndex+9, 	5*x+0);
 				vertices.put(vertexIndex+10,	-cell.getHeight()[2]);
-				vertices.put(vertexIndex+11,	10*(gat.getHeight()-y)+0);
+				vertices.put(vertexIndex+11,	5*(gat.getHeight()-y)+0);
 				texVertices.put(texIndex+6,		tx0);
 				texVertices.put(texIndex+7,		ty1);
 

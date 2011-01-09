@@ -211,7 +211,7 @@ public class Rsw{
 		}
 	}
 	
-	private class ModelResource{
+	public class ModelResource{
 		private String name;
 		private int animationType;
 		private float animationSpeed;
@@ -239,11 +239,21 @@ public class Rsw{
 				this.blockType = in.readInt();
 			}
 			
-			this.modelname = in.readISOString( 80 );
+			this.setModelname(in.readISOString( 80 ));
 			this.nodename = in.readISOString( 80 );
 			this.position = new com.exnw.browedit.math.Vector3( in );
 			this.rotation = new com.exnw.browedit.math.Vector3( in );
 			this.scale = new com.exnw.browedit.math.Vector3( in );
+		}
+
+		public void setModelname(String modelname)
+		{
+			this.modelname = modelname;
+		}
+
+		public String getModelname()
+		{
+			return modelname;
 		}
 	}
 	

@@ -190,34 +190,34 @@ public class GndRenderer implements Renderer
 							vertices.add(10.0f*x+10.0f);
 							vertices.add(-otherCell.getHeight()[2]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//tr
-							textureCoords.add(surface.getU()[2]);
-							textureCoords.add(surface.getV()[2]);
+							textureCoords.add(surface.getU()[3]);
+							textureCoords.add(surface.getV()[3]);
 							shadowCoords.add(tx1);
 							shadowCoords.add(ty2);
 		
 							vertices.add(10.0f*x+10.0f);
 							vertices.add(-otherCell.getHeight()[0]);
 							vertices.add(10.0f*(gnd.getHeight()-y)+10);//tl
-							textureCoords.add(surface.getU()[3]);
-							textureCoords.add(surface.getV()[3]);
-							shadowCoords.add(tx1);
-							shadowCoords.add(ty1);
+							textureCoords.add(surface.getU()[2]);
+							textureCoords.add(surface.getV()[2]);
+							shadowCoords.add(tx2);
+							shadowCoords.add(ty2);
 		
 							vertices.add(10.0f*x+10.0f);
 							vertices.add(-cell.getHeight()[1]);
 							vertices.add(10.0f*(gnd.getHeight()-y)+10);//bl
-							textureCoords.add(surface.getU()[1]);
-							textureCoords.add(surface.getV()[1]);
+							textureCoords.add(surface.getU()[0]);
+							textureCoords.add(surface.getV()[0]);
 							shadowCoords.add(tx2);
 							shadowCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10.0f);
 							vertices.add(-cell.getHeight()[3]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//br
-							textureCoords.add(surface.getU()[0]);
-							textureCoords.add(surface.getV()[0]);
-							shadowCoords.add(tx2);
-							shadowCoords.add(ty2);
+							textureCoords.add(surface.getU()[1]);
+							textureCoords.add(surface.getV()[1]);
+							shadowCoords.add(tx1);
+							shadowCoords.add(ty1);
 						}
 					}
 					if(surfaces[1] != -1) // front surfaces
@@ -241,7 +241,7 @@ public class GndRenderer implements Renderer
 
 							
 							vertices.add(10.0f*x);
-							vertices.add(-otherCell.getHeight()[2]);
+							vertices.add(-otherCell.getHeight()[0]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//tr
 							textureCoords.add(surface.getU()[2]);
 							textureCoords.add(surface.getV()[2]);
@@ -249,7 +249,7 @@ public class GndRenderer implements Renderer
 							shadowCoords.add(ty2);
 		
 							vertices.add(10.0f*x);
-							vertices.add(-cell.getHeight()[0]);
+							vertices.add(-cell.getHeight()[2]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//tl
 							textureCoords.add(surface.getU()[0]);
 							textureCoords.add(surface.getV()[0]);
@@ -257,7 +257,7 @@ public class GndRenderer implements Renderer
 							shadowCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
-							vertices.add(-cell.getHeight()[1]);
+							vertices.add(-cell.getHeight()[3]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//bl
 							textureCoords.add(surface.getU()[1]);
 							textureCoords.add(surface.getV()[1]);
@@ -265,7 +265,7 @@ public class GndRenderer implements Renderer
 							shadowCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
-							vertices.add(-otherCell.getHeight()[3]);
+							vertices.add(-otherCell.getHeight()[1]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//br
 							textureCoords.add(surface.getU()[3]);
 							textureCoords.add(surface.getV()[3]);
