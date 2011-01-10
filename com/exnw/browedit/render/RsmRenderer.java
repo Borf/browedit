@@ -1,5 +1,7 @@
 package com.exnw.browedit.render;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -15,6 +17,7 @@ import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Quaternion;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
+import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 
 public class RsmRenderer implements Renderer
@@ -33,14 +36,17 @@ public class RsmRenderer implements Renderer
 	
 	MeshRenderer root;
 	List<Texture> textures = new ArrayList<Texture>();
-	
 	long lastTick;
+	
+	boolean isAnimated;
 
 	RsmRenderer(Rsw.ModelResource resource, Map map)
 	{
 		this.map = map;
 		this.modelProperties = resource;
 		rsm = new Rsm("data\\model\\" + modelProperties.getModelname());
+		
+		isAnimated = false;
 		
 		for(String t : rsm.getTextures())
 			textures.add(TextureCache.getTexture("data\\texture\\" + t));
@@ -130,6 +136,9 @@ public class RsmRenderer implements Renderer
 		private Vector3 bbrange;
 		private Vector3 realbbmin;
 		
+		private IntBuffer vbos;
+		private int[] polyCount;
+		
 		public MeshRenderer(RsmMesh rsmMesh, Rsm rsm)
 		{
 			this.rsmMesh = rsmMesh;
@@ -175,6 +184,8 @@ public class RsmRenderer implements Renderer
 
 		public void setBoundingBox(Vector3 _bbmin, Vector3 _bbmax)
 		{
+			if(rsmMesh.getAnimationFrames().size() > 0)
+				RsmRenderer.this.isAnimated = true;
 			bbmin = new Vector3( 999999, 999999, 999999);
 			bbmax = new Vector3(-999999,-999999,-999999);
 			
@@ -223,6 +234,34 @@ public class RsmRenderer implements Renderer
 			gl.glPushMatrix();
 			gl.glMultMatrixf(getMatrix2().getData(), 0);
 			
+			
+			if(vbos == null)
+				this.generateVbos(gl);
+			
+			for(int i = 0; i < textures.size(); i++)
+			{
+				textures.get(i).bind();
+				gl.glEnable(GL.GL_TEXTURE_2D);
+				
+				gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
+				gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+				
+				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2));         // for vertex coordinates
+				gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
+
+				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2+1));         // for vertex coordinates
+				gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
+
+				gl.glDrawArrays(GL.GL_TRIANGLES, 0, polyCount[i]);
+				
+				gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
+				gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+				
+				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+				gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);					
+				
+			}
+		/*	
 			for(RsmMesh.Surface surface : rsmMesh.getSurfaces())
 			{
 				textures.get(surface.getTextureid()).bind();
@@ -235,9 +274,9 @@ public class RsmRenderer implements Renderer
 				Vector2 t2 = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[1]).getCoodinates();
 				Vector2 t3 = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[2]).getCoodinates();
 				
-			/*	v1 = new Vector3(v1.getX(), -v1.getY(), v1.getZ());
-				v2 = new Vector3(v2.getX(), -v2.getY(), v2.getZ());
-				v3 = new Vector3(v3.getX(), -v3.getY(), v3.getZ());*/
+//				v1 = new Vector3(v1.getX(), -v1.getY(), v1.getZ());
+//				v2 = new Vector3(v2.getX(), -v2.getY(), v2.getZ());
+//				v3 = new Vector3(v3.getX(), -v3.getY(), v3.getZ());
 	
 				gl.glTexCoord2fv(t1.getData(),0);
 				gl.glVertex3fv(v1.getData(),0);
@@ -247,7 +286,7 @@ public class RsmRenderer implements Renderer
 				gl.glVertex3fv(v3.getData(),0);
 				gl.glEnd();
 				
-			}
+			}*/
 			
 			gl.glPopMatrix();
 			for(MeshRenderer renderer : subMeshes)
@@ -258,6 +297,51 @@ public class RsmRenderer implements Renderer
 			}
 		}
 		
+		private void generateVbos(GL gl)
+		{
+			vbos = IntBuffer.allocate(textures.size()*2);
+			gl.glGenBuffers(textures.size()*2, vbos);		// vertices, texturecoordinats
+ 			polyCount = new int[textures.size()];
+			for(int i = 0; i < textures.size(); i++)
+			{
+				ArrayList<Float> vertices = new ArrayList<Float>();
+				ArrayList<Float> texCoords = new ArrayList<Float>();
+				for(Surface surface : rsmMesh.getSurfaces())
+				{
+					if(surface.getTextureid() == i)
+					{
+						for(int ii = 0; ii < 3; ii++)
+						{
+							Vector3 vec = rsmMesh.getVertices().get(surface.getSurfacevertices()[ii]);
+							for(int iii = 0; iii < 3; iii++)
+								vertices.add(vec.getData()[iii]);
+
+							Vector2 tex = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[ii]).getCoodinates();
+							for(int iii = 0; iii < 2; iii++)
+								texCoords.add(tex.getData()[iii]);
+						}
+					}
+				}
+
+				FloatBuffer vertexBuf = FloatBuffer.allocate(vertices.size());
+				for(int ii = 0; ii < vertices.size(); ii++)
+					vertexBuf.put(ii, vertices.get(ii));
+				FloatBuffer texCoordBuf = FloatBuffer.allocate(texCoords.size());
+				for(int ii = 0; ii < texCoords.size(); ii++)
+					texCoordBuf.put(ii, texCoords.get(ii));
+				
+				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2));
+				gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexBuf.limit()*BufferUtil.SIZEOF_FLOAT, vertexBuf, GL.GL_STATIC_DRAW);
+
+				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2+1));
+				gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordBuf.limit()*BufferUtil.SIZEOF_FLOAT, texCoordBuf, GL.GL_STATIC_DRAW);		
+				
+				polyCount[i] = vertexBuf.limit()/3;				
+			}
+			
+		}
+
+
 		public boolean isRoot()
 		{
 			return true;
@@ -310,7 +394,7 @@ public class RsmRenderer implements Renderer
 
 				matrix1 = matrix1.mult(quat.getRotationMatrix());
 
-				lastTick += System.currentTimeMillis() % rsmMesh.getAnimationFrames().get(rsmMesh.getAnimationFrames().size()-1).getTime();
+				lastTick = (System.currentTimeMillis()/1) % rsmMesh.getAnimationFrames().get(rsmMesh.getAnimationFrames().size()-1).getTime();
 				
 				
 //				matrix1 = matrix1.mult(rsmMesh.getAnimationFrames().get(0).getQuat().getNormalized().getRotationMatrix());
