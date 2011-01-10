@@ -132,7 +132,7 @@ public class RsmRenderer implements Renderer
 			}
 			
 			if(!isRoot())
-				matrix1.mult(Matrix4.makeTranslation(rsmMesh.getPosition().getX(), rsmMesh.getPosition().getY(), rsmMesh.getPosition().getZ()));
+				matrix1.mult(Matrix4.makeTranslation(rsmMesh.getPosition2().getX(), rsmMesh.getPosition2().getY(), rsmMesh.getPosition2().getZ()));
 				
 			if(rsmMesh.getRotationframes().size() == 0)
 				matrix1.mult(Matrix4.makeRotation(rsmMesh.getRotationangle(), rsmMesh.getRotationaxis().getX(), rsmMesh.getRotationaxis().getY(), rsmMesh.getRotationaxis().getZ()));
@@ -157,7 +157,7 @@ public class RsmRenderer implements Renderer
 				matrix2.mult(Matrix4.makeTranslation(0, 0, 0)); //-base->bbrange.x, -base->bbrange.y, -base->bbrange.z
 			
 			if(!isRoot() || subMeshes.size() != 0)
-				matrix2.mult(Matrix4.makeTranslation(0, 0, 0)); //pos_.x, pos_.y, pos_.z
+				matrix2.mult(Matrix4.makeTranslation(rsmMesh.getPosition().getX(), rsmMesh.getPosition().getY(), rsmMesh.getPosition().getZ()));
 			
 			matrix2.mult(rsmMesh.getMatrix());
 				

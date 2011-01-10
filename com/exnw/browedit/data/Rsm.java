@@ -146,6 +146,7 @@ public class Rsm{
 		private com.exnw.browedit.math.Matrix4 matrix;
 		private com.exnw.browedit.math.Vector3 position;
 		private com.exnw.browedit.math.Vector3 position2;
+
 		private float rotationangle;
 		private com.exnw.browedit.math.Vector3 rotationaxis;
 		private com.exnw.browedit.math.Vector3 scale;
@@ -299,7 +300,16 @@ public class Rsm{
 		{
 			return position;
 		}
+		
+		public com.exnw.browedit.math.Vector3 getPosition2()
+		{
+			return position2;
+		}
 
+		public void setPosition2(com.exnw.browedit.math.Vector3 position2)
+		{
+			this.position2 = position2;
+		}
 		public void setRotationframes(java.util.List<Rsm.RsmMesh.RotationFrame> rotationframes)
 		{
 			this.rotationframes = rotationframes;
