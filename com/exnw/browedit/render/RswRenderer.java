@@ -28,6 +28,7 @@ public class RswRenderer implements Renderer
 			loadModels(gl);
 		
 		gl.glPushMatrix();
+		gl.glScalef(1,1,-1);
 		for(RsmRenderer model : models)
 			model.render(gl);
 		gl.glPopMatrix();

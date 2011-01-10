@@ -68,7 +68,7 @@ public class RsmRenderer implements Renderer
 	public void render(GL gl)
 	{
 		gl.glPushMatrix();
-		gl.glTranslatef(5*map.getGnd().getWidth()+modelProperties.getPosition().getX(), -modelProperties.getPosition().getY(), 5*map.getGnd().getHeight()-modelProperties.getPosition().getZ());
+		gl.glTranslatef(5*map.getGnd().getWidth()+modelProperties.getPosition().getX(), -modelProperties.getPosition().getY(), -5*map.getGnd().getHeight()+modelProperties.getPosition().getZ());
 		gl.glRotatef(-modelProperties.getRotation().getZ(), 0, 0, 1);
 		gl.glRotatef(-modelProperties.getRotation().getX(), 1, 0, 0);
 		gl.glRotatef(modelProperties.getRotation().getY(), 0, 1, 0);
@@ -194,8 +194,11 @@ public class RsmRenderer implements Renderer
 						v.add(rsmMesh.getPosition());
 						v.add(rsmMesh.getPosition2());
 					}
-					bbmin.getData()[i] = Math.min(bbmin.getData()[i], v.getData()[i]);
-					bbmax.getData()[i] = Math.max(bbmax.getData()[i], v.getData()[i]);
+					for(int ii = 0; ii < 3; ii++)
+					{
+						bbmin.getData()[ii] = Math.min(bbmin.getData()[ii], v.getData()[ii]);
+						bbmax.getData()[ii] = Math.max(bbmax.getData()[ii], v.getData()[ii]);
+					}
 				}
 			}
 			bbrange = new Vector3((bbmin.getX()+bbmax.getX())/2.0f, (bbmin.getY()+bbmax.getY())/2.0f, (bbmin.getZ()+bbmax.getZ())/2.0f);
