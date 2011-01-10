@@ -73,10 +73,10 @@ public class Rsm{
 			
 			dis.skip( 16 );
 			
-			this.textures = new java.util.ArrayList<String>();
+			this.setTextures(new java.util.ArrayList<String>());
 			
 			for( int i = 0, count = dis.readInt(); i < count; i++ ){
-				this.textures.add( dis.readISOString(40) );
+				this.getTextures().add( dis.readISOString(40) );
 			}
 			
 			{
@@ -138,6 +138,16 @@ public class Rsm{
 		return root;
 	}
 
+	public void setTextures(java.util.List<String> textures)
+	{
+		this.textures = textures;
+	}
+
+	public java.util.List<String> getTextures()
+	{
+		return textures;
+	}
+
 	public class RsmMesh{
 		private String name;
 		private String parent;
@@ -152,7 +162,7 @@ public class Rsm{
 		private com.exnw.browedit.math.Vector3 scale;
 		
 		private java.util.List<com.exnw.browedit.math.Vector3> vertices;
-		private java.util.List<Rsm.RsmMesh.TextureVertex> texturevertices;
+		private java.util.List<Rsm.RsmMesh.TextureCoordinate> textureCoordinats;
 		private java.util.List<Rsm.RsmMesh.Surface> surfaces;
 		private java.util.List<Rsm.RsmMesh.RotationFrame> rotationframes;
 		private java.util.List<Rsm.RsmMesh.PositionFrame> positionframes;
@@ -165,9 +175,9 @@ public class Rsm{
 			this.setName(in.readISOString(40));
 			this.setParent(in.readISOString(40));
 			
-			this.textureids = new java.util.ArrayList<Integer>();			
+			this.setTextureids(new java.util.ArrayList<Integer>());			
 			for( int i = 0, count = in.readInt(); i < count; i++ ){
-				this.textureids.add( in.readInt() );
+				this.getTextureids().add( in.readInt() );
 			}
 			
 			this.setMatrix(new com.exnw.browedit.math.Matrix4(in));
@@ -187,18 +197,18 @@ public class Rsm{
 				this.getVertices().add( new com.exnw.browedit.math.Vector3(in) );
 			}
 			
-			this.texturevertices = new java.util.ArrayList<Rsm.RsmMesh.TextureVertex>();
+			this.setTextureCoordinats(new java.util.ArrayList<Rsm.RsmMesh.TextureCoordinate>());
 			for( int i = 0, count = in.readInt(); i < count; i++ ){
-				Rsm.RsmMesh.TextureVertex tv = new Rsm.RsmMesh.TextureVertex();
+				Rsm.RsmMesh.TextureCoordinate tv = new Rsm.RsmMesh.TextureCoordinate();
 				
 				if( Rsm.this.version_minor >= 2 )
 					tv.color = new java.awt.Color( in.readInt() );
 				else
 					tv.color = new java.awt.Color( 0xFFFFFFFF );
 				
-				tv.coodinates = new com.exnw.browedit.math.Vector2(in);
+				tv.setCoodinates(new com.exnw.browedit.math.Vector2(in));
 				
-				this.texturevertices.add( tv );
+				this.getTextureCoordinats().add( tv );
 			}
 			
 			this.setSurfaces(new java.util.ArrayList<Rsm.RsmMesh.Surface>());
@@ -209,9 +219,9 @@ public class Rsm{
 					s.getSurfacevertices()[j] = in.readShort();
 				
 				for( int j = 0; j < 3; j++ )
-					s.texturevertices[j] = in.readShort();
+					s.getTexturevertices()[j] = in.readShort();
 				
-				s.textureid = in.readShort();
+				s.setTextureid(in.readShort());
 				s.padding = in.readShort();
 				s.twoside = in.readInt();
 				
@@ -360,6 +370,26 @@ public class Rsm{
 			return matrix;
 		}
 
+		public void setTextureCoordinats(java.util.List<Rsm.RsmMesh.TextureCoordinate> textureCoordinats)
+		{
+			this.textureCoordinats = textureCoordinats;
+		}
+
+		public java.util.List<Rsm.RsmMesh.TextureCoordinate> getTextureCoordinats()
+		{
+			return textureCoordinats;
+		}
+
+		public void setTextureids(java.util.List<Integer> textureids)
+		{
+			this.textureids = textureids;
+		}
+
+		public java.util.List<Integer> getTextureids()
+		{
+			return textureids;
+		}
+
 		private class RotationFrame{
 			private int frame;
 			private com.exnw.browedit.math.Vector3 rotation;
@@ -385,11 +415,35 @@ public class Rsm{
 			{
 				return surfacevertices;
 			}
+			public void setTexturevertices(short[] texturevertices)
+			{
+				this.texturevertices = texturevertices;
+			}
+			public short[] getTexturevertices()
+			{
+				return texturevertices;
+			}
+			public void setTextureid(short textureid)
+			{
+				this.textureid = textureid;
+			}
+			public short getTextureid()
+			{
+				return textureid;
+			}
 		}
 		
-		private class TextureVertex{
+		public class TextureCoordinate{
 			private com.exnw.browedit.math.Vector2 coodinates;
 			private java.awt.Color color;
+			public void setCoodinates(com.exnw.browedit.math.Vector2 coodinates)
+			{
+				this.coodinates = coodinates;
+			}
+			public com.exnw.browedit.math.Vector2 getCoodinates()
+			{
+				return coodinates;
+			}
 		}
 	}
 }

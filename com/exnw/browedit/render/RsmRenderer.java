@@ -1,17 +1,23 @@
 package com.exnw.browedit.render;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GLException;
 
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsm;
 import com.exnw.browedit.data.Rsm.RsmMesh;
 import com.exnw.browedit.data.Rsw;
+import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.math.Matrix4;
+import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
+import com.sun.opengl.util.texture.Texture;
+import com.sun.opengl.util.texture.TextureIO;
 
 public class RsmRenderer implements Renderer
 {
@@ -20,12 +26,29 @@ public class RsmRenderer implements Renderer
 	Map map;
 
 	MeshRenderer root;
+	List<Texture> textures = new ArrayList<Texture>();
 
 	RsmRenderer(Rsw.ModelResource resource, Map map)
 	{
 		this.map = map;
 		this.modelProperties = resource;
 		rsm = new Rsm("data\\model\\" + modelProperties.getModelname());
+		
+		for(String t : rsm.getTextures())
+		{
+			try
+			{
+				textures.add(TextureIO.newTexture(GrfLib.openFile("data\\texture\\" + t), true, t.substring(t.lastIndexOf('.'))));
+			} catch (GLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		for(Rsm.RsmMesh mesh : rsm.getMeshes())
 		{
@@ -46,6 +69,7 @@ public class RsmRenderer implements Renderer
 		gl.glRotatef(modelProperties.getRotation().getY(), 0, 1, 0);
 		gl.glScalef(modelProperties.getScale().getX(), -modelProperties.getScale().getY(), modelProperties.getScale().getZ());
 		
+		gl.glEnable(GL.GL_TEXTURE_2D);
 		root.render(gl);
 		
 		gl.glPopMatrix();
@@ -59,6 +83,7 @@ public class RsmRenderer implements Renderer
 	class MeshRenderer
 	{
 		Rsm.RsmMesh rsmMesh;
+		List<Texture> textures = new ArrayList<Texture>();
 		private List<MeshRenderer> subMeshes;
 		private Matrix4 matrix1;
 		private Matrix4 matrix2;
@@ -75,6 +100,9 @@ public class RsmRenderer implements Renderer
 					this.subMeshes.add(new MeshRenderer(mesh, rsm));
 				}
 			}
+			
+			for(Integer tid : rsmMesh.getTextureids())
+				textures.add(RsmRenderer.this.textures.get(tid.intValue()));
 		}
 		
 		
@@ -84,22 +112,31 @@ public class RsmRenderer implements Renderer
 			gl.glPushMatrix();
 			gl.glMultMatrixf(getMatrix2().getData(), 0);
 			
-			gl.glBegin(GL.GL_TRIANGLES);
 			for(RsmMesh.Surface surface : rsmMesh.getSurfaces())
 			{
+				textures.get(surface.getTextureid()).bind();
+				gl.glBegin(GL.GL_TRIANGLES);
 				Vector3 v1 = rsmMesh.getVertices().get(surface.getSurfacevertices()[0]);
 				Vector3 v2 = rsmMesh.getVertices().get(surface.getSurfacevertices()[1]);
 				Vector3 v3 = rsmMesh.getVertices().get(surface.getSurfacevertices()[2]);
+				
+				Vector2 t1 = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[0]).getCoodinates();
+				Vector2 t2 = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[1]).getCoodinates();
+				Vector2 t3 = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[2]).getCoodinates();
+				
 			/*	v1 = new Vector3(v1.getX(), -v1.getY(), v1.getZ());
 				v2 = new Vector3(v2.getX(), -v2.getY(), v2.getZ());
 				v3 = new Vector3(v3.getX(), -v3.getY(), v3.getZ());*/
-				
+	
+				gl.glTexCoord2fv(t1.getData(),0);
 				gl.glVertex3fv(v1.getData(),0);
+				gl.glTexCoord2fv(t2.getData(),0);
 				gl.glVertex3fv(v2.getData(),0);
+				gl.glTexCoord2fv(t3.getData(),0);
 				gl.glVertex3fv(v3.getData(),0);
+				gl.glEnd();
 				
 			}
-			gl.glEnd();
 			
 			gl.glPopMatrix();
 			for(MeshRenderer renderer : subMeshes)

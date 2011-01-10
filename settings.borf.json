@@ -1,4 +1,4 @@
 {
-    "grfs" : [ "C:\\program files\\..", "stupidfile.grf" ],
-    "datadir" : [ "C:\\program files\\gravity\\ro", "" ]
+    "grfs" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf", "C:\\Users\\Borf\\AppData\\Local\\Ragray\\rdata.grf" ],
+    "datadir" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray", "." ]
 }
