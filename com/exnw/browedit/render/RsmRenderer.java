@@ -73,7 +73,7 @@ public class RsmRenderer implements Renderer
 		gl.glRotatef(-modelProperties.getRotation().getX(), 1, 0, 0);
 		gl.glRotatef(modelProperties.getRotation().getY(), 0, 1, 0);
 		gl.glScalef(modelProperties.getScale().getX(), -modelProperties.getScale().getY(), modelProperties.getScale().getZ());
-		gl.glTranslatef(-realbbrange.getX(), realbbrange.getY(), -realbbrange.getZ());
+		gl.glTranslatef(-realbbrange.getX(), realbbmin.getY(), -realbbrange.getZ());
 		
 		/*
 		gl.glDisable(GL.GL_TEXTURE_2D);
