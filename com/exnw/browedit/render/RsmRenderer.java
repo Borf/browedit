@@ -12,6 +12,7 @@ import com.exnw.browedit.data.Rsm.RsmMesh;
 import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
 import com.exnw.browedit.data.Rsw;
 import com.exnw.browedit.math.Matrix4;
+import com.exnw.browedit.math.Quaternion;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.sun.opengl.util.texture.Texture;
@@ -32,6 +33,8 @@ public class RsmRenderer implements Renderer
 	
 	MeshRenderer root;
 	List<Texture> textures = new ArrayList<Texture>();
+	
+	long lastTick;
 
 	RsmRenderer(Rsw.ModelResource resource, Map map)
 	{
@@ -283,12 +286,45 @@ public class RsmRenderer implements Renderer
 				matrix1 = matrix1.mult(Matrix4.makeRotation((float) (rsmMesh.getRotationangle()*180.0/Math.PI), rsmMesh.getRotationaxis().getX(), rsmMesh.getRotationaxis().getY(), rsmMesh.getRotationaxis().getZ()));
 			else
 			{
-				//TODO: animate
-				matrix1 = matrix1.mult(rsmMesh.getAnimationFrames().get(0).getQuat().getNormalized().getRotationMatrix());
+				int current = 0;
+				for(int i = 0; i < rsmMesh.getAnimationFrames().size(); i++)
+				{
+					if(rsmMesh.getAnimationFrames().get(i).getTime() > lastTick)
+					{
+						current = i-1;
+						break;
+					}
+				}
+				if(current < 0)
+					current = 0;
+				
+				int next = current+1;
+				if(next >= rsmMesh.getAnimationFrames().size())
+					next = 0;
+
+				float interval = ((float) (lastTick-rsmMesh.getAnimationFrames().get(current).getTime())) / ((float) (rsmMesh.getAnimationFrames().get(next).getTime()-rsmMesh.getAnimationFrames().get(current).getTime()));
+
+				Quaternion quat = new Quaternion(rsmMesh.getAnimationFrames().get(current).getQuat(), rsmMesh.getAnimationFrames().get(next).getQuat(), interval);
+
+				quat = quat.getNormalized();
+
+				matrix1 = matrix1.mult(quat.getRotationMatrix());
+
+				lastTick += System.currentTimeMillis() % rsmMesh.getAnimationFrames().get(rsmMesh.getAnimationFrames().size()-1).getTime();
+				
+				
+//				matrix1 = matrix1.mult(rsmMesh.getAnimationFrames().get(0).getQuat().getNormalized().getRotationMatrix());
 			}
 			
 			matrix1 = matrix1.mult(Matrix4.makeScale(rsmMesh.getScale().getX(), rsmMesh.getScale().getY(), rsmMesh.getScale().getZ()));
 			
+			
+			if(rsmMesh.getAnimationFrames().size() != 0)
+			{
+				Matrix4 m = matrix1;
+				matrix1 = null;
+				return m;
+			}
 			return matrix1;
 		}
 		

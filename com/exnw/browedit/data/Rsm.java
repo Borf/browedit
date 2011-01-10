@@ -239,7 +239,7 @@ public class Rsm{
 			for( int i = 0, count = in.readInt(); i < count; i++ ){
 				Rsm.RsmMesh.AnimationFrame rf = new Rsm.RsmMesh.AnimationFrame();
 				
-				rf.time = in.readInt();
+				rf.setTime(in.readInt());
 				rf.setQuat(new com.exnw.browedit.math.Quaternion(in));
 				
 				this.getAnimationFrames().add(rf);
@@ -387,6 +387,14 @@ public class Rsm{
 			public Quaternion getQuat()
 			{
 				return quat;
+			}
+			public void setTime(int time)
+			{
+				this.time = time;
+			}
+			public int getTime()
+			{
+				return time;
 			}
 
 		}
