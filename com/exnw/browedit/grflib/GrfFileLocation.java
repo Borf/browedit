@@ -24,6 +24,11 @@ public class GrfFileLocation extends FileLocation{
 		if( !filename.endsWith(".grf") )
 			filename += ".grf";
 		
+		java.io.File f = new java.io.File( filename );
+		
+		if( !f.exists() || f.isDirectory() )
+			throw new IllegalArgumentException();
+		
 		this.filename = filename;
 		this.read();
 	}
