@@ -1,30 +1,35 @@
 package com.exnw.browedit.render;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLException;
 
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsm;
 import com.exnw.browedit.data.Rsm.RsmMesh;
+import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
 import com.exnw.browedit.data.Rsw;
-import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureIO;
 
 public class RsmRenderer implements Renderer
 {
 	Rsw.ModelResource modelProperties;
 	Rsm rsm;
 	Map map;
-
+	
+	Vector3 bbmin;
+	Vector3 bbmax;
+	Vector3 bbrange;
+	
+	private Vector3 realbbmin;
+	private Vector3 realbbmax;
+	private Vector3 realbbrange;
+	
 	MeshRenderer root;
 	List<Texture> textures = new ArrayList<Texture>();
 
@@ -46,6 +51,19 @@ public class RsmRenderer implements Renderer
 			}
 		}
 		
+		bbmin = new Vector3( 999999, 999999, 999999);
+		bbmax = new Vector3(-999999,-999999,-999999);
+		root.setBoundingBox(bbmin, bbmax);
+		bbrange = new Vector3((bbmin.getX()+bbmax.getX())/2.0f, (bbmin.getY()+bbmax.getY())/2.0f, (bbmin.getZ()+bbmax.getZ())/2.0f);
+
+		realbbmax = new Vector3(-999999, -999999, -999999);
+		realbbmin = new Vector3(999999, 999999, 999999);
+		
+		Matrix4 mat = Matrix4.makeScale(1, -1, 1);
+		root.setRealBoundingBox(mat, realbbmin, realbbmax);
+		realbbrange = new Vector3((realbbmin.getX()+realbbmax.getX())/2.0f, (realbbmin.getY()+realbbmax.getY())/2.0f, (realbbmin.getZ()+realbbmax.getZ())/2.0f);
+		
+		
 	}
 	public void render(GL gl)
 	{
@@ -55,6 +73,36 @@ public class RsmRenderer implements Renderer
 		gl.glRotatef(-modelProperties.getRotation().getX(), 1, 0, 0);
 		gl.glRotatef(modelProperties.getRotation().getY(), 0, 1, 0);
 		gl.glScalef(modelProperties.getScale().getX(), -modelProperties.getScale().getY(), modelProperties.getScale().getZ());
+		gl.glTranslatef(-realbbrange.getX(), realbbrange.getY(), -realbbrange.getZ());
+		
+		
+		gl.glDisable(GL.GL_TEXTURE_2D);
+		gl.glColor3f(1,0,0);
+		gl.glLineWidth(4);
+		gl.glBegin(GL.GL_LINE_LOOP);
+		gl.glVertex3f(realbbmin.getX(), -realbbmin.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmin.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmin.getY(), realbbmax.getZ());
+		gl.glVertex3f(realbbmin.getX(), -realbbmin.getY(), realbbmax.getZ());
+		gl.glEnd();
+		gl.glBegin(GL.GL_LINE_LOOP);
+		gl.glVertex3f(realbbmin.getX(), -realbbmax.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmax.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmax.getY(), realbbmax.getZ());
+		gl.glVertex3f(realbbmin.getX(), -realbbmax.getY(), realbbmax.getZ());
+		gl.glEnd();
+		gl.glBegin(GL.GL_LINES);
+		gl.glVertex3f(realbbmin.getX(), -realbbmin.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmin.getX(), -realbbmax.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmin.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmax.getY(), realbbmin.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmin.getY(), realbbmax.getZ());
+		gl.glVertex3f(realbbmax.getX(), -realbbmax.getY(), realbbmax.getZ());
+		gl.glVertex3f(realbbmin.getX(), -realbbmin.getY(), realbbmax.getZ());
+		gl.glVertex3f(realbbmin.getX(), -realbbmax.getY(), realbbmax.getZ());
+		gl.glEnd();
+		gl.glColor4f(1,1,1,1);
+		
 		
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		root.render(gl);
@@ -74,6 +122,10 @@ public class RsmRenderer implements Renderer
 		private List<MeshRenderer> subMeshes;
 		private Matrix4 matrix1;
 		private Matrix4 matrix2;
+		private Vector3 bbmin;
+		private Vector3 bbmax;
+		private Vector3 bbrange;
+		private Vector3 realbbmin;
 		
 		public MeshRenderer(RsmMesh rsmMesh, Rsm rsm)
 		{
@@ -93,6 +145,72 @@ public class RsmRenderer implements Renderer
 		}
 		
 		
+		public void setRealBoundingBox(Matrix4 mat, Vector3 realbbmin,Vector3 realbbmax)
+		{
+			Matrix4 mat1 = mat.mult(getMatrix1());	
+			Matrix4 mat2 = mat.mult(getMatrix1()).mult(getMatrix2());
+			
+			for(Surface surface : rsmMesh.getSurfaces())
+			{
+				for(int i = 0; i < 3; i++)
+				{
+					Vector3 v = rsmMesh.getVertices().get(surface.getSurfacevertices()[i]);
+					v = mat2.mult(v);
+					for(int ii = 0; ii < 3; ii++)
+					{
+						realbbmin.getData()[ii] = Math.min(realbbmin.getData()[ii], v.getData()[ii]);
+						realbbmax.getData()[ii] = Math.max(realbbmax.getData()[ii], v.getData()[ii]);
+					}
+				}
+			}
+			for(MeshRenderer mesh : subMeshes)
+				mesh.setRealBoundingBox(mat1, realbbmin, realbbmax);			
+			
+			
+		}
+
+
+		public void setBoundingBox(Vector3 _bbmin, Vector3 _bbmax)
+		{
+			bbmin = new Vector3( 999999, 999999, 999999);
+			bbmax = new Vector3(-999999,-999999,-999999);
+			
+			if(!isRoot())
+			{
+				bbmin = new Vector3(0,0,0);
+				bbmax = new Vector3(0,0,0);
+			}
+			
+			Matrix4 myMat = rsmMesh.getMatrix();
+			
+			for(Surface surface : rsmMesh.getSurfaces())
+			{
+				for(int i = 0; i < 3; i++)
+				{
+					Vector3 v = rsmMesh.getVertices().get(surface.getSurfacevertices()[i]);
+					v = myMat.mult(v);
+					if(!isRoot() || subMeshes.size() != 0)
+					{
+						v.add(rsmMesh.getPosition());
+						v.add(rsmMesh.getPosition2());
+					}
+					bbmin.getData()[i] = Math.min(bbmin.getData()[i], v.getData()[i]);
+					bbmax.getData()[i] = Math.max(bbmax.getData()[i], v.getData()[i]);
+				}
+			}
+			bbrange = new Vector3((bbmin.getX()+bbmax.getX())/2.0f, (bbmin.getY()+bbmax.getY())/2.0f, (bbmin.getZ()+bbmax.getZ())/2.0f);
+			
+			for(int i = 0; i < 3; i++)
+			{
+				_bbmin.getData()[i] = Math.min(_bbmin.getData()[i], bbmin.getData()[i]);
+				_bbmax.getData()[i] = Math.max(_bbmax.getData()[i], bbmax.getData()[i]);
+			}
+			
+			for(MeshRenderer mesh : subMeshes)
+				mesh.setBoundingBox(_bbmin, _bbmax);			
+		}
+
+
 		public void render(GL gl)
 		{
 			gl.glMultMatrixf(getMatrix1().getData(), 0);
@@ -150,22 +268,23 @@ public class RsmRenderer implements Renderer
 			if(isRoot())
 			{
 				if(subMeshes.size() > 0)
-					matrix1.mult(Matrix4.makeTranslation(0,0,0));//-base->bbrange.x, -base->bbmax.y, -base->bbrange.z
+					matrix1 = matrix1.mult(Matrix4.makeTranslation(-RsmRenderer.this.bbrange.getX(), -RsmRenderer.this.bbmax.getY(), -RsmRenderer.this.bbrange.getZ()));
 				else
-					matrix1.mult(Matrix4.makeTranslation(0,0,0));//0, -base->bbmax.y+base->bbrange.y, 0);
+					matrix1= matrix1.mult(Matrix4.makeTranslation(0, -RsmRenderer.this.bbmax.getY(), 0));
 			}
 			
 			if(!isRoot())
-				matrix1.mult(Matrix4.makeTranslation(rsmMesh.getPosition2().getX(), rsmMesh.getPosition2().getY(), rsmMesh.getPosition2().getZ()));
+				matrix1 = matrix1.mult(Matrix4.makeTranslation(rsmMesh.getPosition2().getX(), rsmMesh.getPosition2().getY(), rsmMesh.getPosition2().getZ()));
 				
-			if(rsmMesh.getRotationframes().size() == 0)
-				matrix1.mult(Matrix4.makeRotation(rsmMesh.getRotationangle(), rsmMesh.getRotationaxis().getX(), rsmMesh.getRotationaxis().getY(), rsmMesh.getRotationaxis().getZ()));
+			if(rsmMesh.getAnimationFrames().size() == 0)
+				matrix1 = matrix1.mult(Matrix4.makeRotation((float) (rsmMesh.getRotationangle()*180.0/Math.PI), rsmMesh.getRotationaxis().getX(), rsmMesh.getRotationaxis().getY(), rsmMesh.getRotationaxis().getZ()));
 			else
 			{
-				//TODO: animation
+				//TODO: animate
+				matrix1 = matrix1.mult(rsmMesh.getAnimationFrames().get(0).getQuat().getNormalized().getRotationMatrix());
 			}
 			
-			matrix1.mult(Matrix4.makeScale(rsmMesh.getScale().getX(), rsmMesh.getScale().getY(), rsmMesh.getScale().getZ()));
+			matrix1 = matrix1.mult(Matrix4.makeScale(rsmMesh.getScale().getX(), rsmMesh.getScale().getY(), rsmMesh.getScale().getZ()));
 			
 			return matrix1;
 		}
@@ -178,12 +297,13 @@ public class RsmRenderer implements Renderer
 			matrix2 = new Matrix4();
 			
 			if(isRoot() && subMeshes.size() == 0)
-				matrix2.mult(Matrix4.makeTranslation(0, 0, 0)); //-base->bbrange.x, -base->bbrange.y, -base->bbrange.z
+				matrix2 = matrix2.mult(Matrix4.makeTranslation(-RsmRenderer.this.bbrange.getX(), -RsmRenderer.this.bbrange.getY(), -RsmRenderer.this.bbrange.getZ()));
 			
 			if(!isRoot() || subMeshes.size() != 0)
-				matrix2.mult(Matrix4.makeTranslation(rsmMesh.getPosition().getX(), rsmMesh.getPosition().getY(), rsmMesh.getPosition().getZ()));
+				matrix2 = matrix2.mult(Matrix4.makeTranslation(rsmMesh.getPosition().getX(), rsmMesh.getPosition().getY(), rsmMesh.getPosition().getZ()));
+		
 			
-			matrix2.mult(rsmMesh.getMatrix());
+			matrix2 = matrix2.mult(rsmMesh.getMatrix());
 				
 			return matrix2;
 		}

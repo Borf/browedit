@@ -1,5 +1,7 @@
 package com.exnw.browedit.data;
 
+import com.exnw.browedit.math.Quaternion;
+
 public class Rsm{
 	private static byte[] magic = "GRSM".getBytes();
 	private static byte[][] supportedVersions = new byte[][]{
@@ -90,7 +92,7 @@ public class Rsm{
 				this.getMeshes().add( mesh );
 			}
 			
-			if( this.version_minor < 5 ){
+/*			if( this.version_minor < 5 ){
 				Rsm.RsmMesh mesh = this.getMeshes().get(0);
 				
 				mesh.positionframes = new java.util.ArrayList<Rsm.RsmMesh.PositionFrame>();
@@ -104,7 +106,7 @@ public class Rsm{
 					
 					mesh.positionframes.add(pf);
 				}
-			}
+			}*/
 		}catch( java.io.IOException ex ){
 			ex.printStackTrace();
 		}finally{
@@ -164,8 +166,7 @@ public class Rsm{
 		private java.util.List<com.exnw.browedit.math.Vector3> vertices;
 		private java.util.List<Rsm.RsmMesh.TextureCoordinate> textureCoordinats;
 		private java.util.List<Rsm.RsmMesh.Surface> surfaces;
-		private java.util.List<Rsm.RsmMesh.RotationFrame> rotationframes;
-		private java.util.List<Rsm.RsmMesh.PositionFrame> positionframes;
+		private java.util.List<Rsm.RsmMesh.AnimationFrame> animationFrames;
 		
 		public RsmMesh(){
 			
@@ -234,30 +235,14 @@ public class Rsm{
 				this.getSurfaces().add( s );
 			}
 			
-			this.positionframes = new java.util.ArrayList<Rsm.RsmMesh.PositionFrame>();
-			if( Rsm.this.version_minor < 5 ){
+			this.setAnimationFrames(new java.util.ArrayList<Rsm.RsmMesh.AnimationFrame>());
+			for( int i = 0, count = in.readInt(); i < count; i++ ){
+				Rsm.RsmMesh.AnimationFrame rf = new Rsm.RsmMesh.AnimationFrame();
 				
-				for( int i = 0, count = in.readInt(); i < count; i++ ){
-					Rsm.RsmMesh.PositionFrame pf = new Rsm.RsmMesh.PositionFrame();
-					
-					pf.frame = in.readInt();
-					pf.position = new com.exnw.browedit.math.Vector4(in);
-					
-					this.positionframes.add( pf );
-				}
-			}
-			
-			this.setRotationframes(new java.util.ArrayList<Rsm.RsmMesh.RotationFrame>());
-			if( Rsm.this.version_minor == 5 ){
+				rf.time = in.readInt();
+				rf.setQuat(new com.exnw.browedit.math.Quaternion(in));
 				
-				for( int i = 0, count = in.readInt(); i < count; i++ ){
-					Rsm.RsmMesh.RotationFrame rf = new Rsm.RsmMesh.RotationFrame();
-					
-					rf.frame = in.readInt();
-					rf.rotation = new com.exnw.browedit.math.Vector3(in);
-					
-					this.getRotationframes().add(rf);
-				}
+				this.getAnimationFrames().add(rf);
 			}
 		}
 		
@@ -320,15 +305,6 @@ public class Rsm{
 		{
 			this.position2 = position2;
 		}
-		public void setRotationframes(java.util.List<Rsm.RsmMesh.RotationFrame> rotationframes)
-		{
-			this.rotationframes = rotationframes;
-		}
-
-		public java.util.List<Rsm.RsmMesh.RotationFrame> getRotationframes()
-		{
-			return rotationframes;
-		}
 
 		public void setRotationangle(float rotationangle)
 		{
@@ -390,14 +366,37 @@ public class Rsm{
 			return textureids;
 		}
 
+		public void setAnimationFrames(java.util.List<Rsm.RsmMesh.AnimationFrame> animationFrames)
+		{
+			this.animationFrames = animationFrames;
+		}
+
+		public java.util.List<Rsm.RsmMesh.AnimationFrame> getAnimationFrames()
+		{
+			return animationFrames;
+		}
+
+		public class AnimationFrame
+		{
+			private int time;
+			private Quaternion quat;
+			public void setQuat(Quaternion quat)
+			{
+				this.quat = quat;
+			}
+			public Quaternion getQuat()
+			{
+				return quat;
+			}
+
+		}
+
 		private class RotationFrame{
 			private int frame;
-			private com.exnw.browedit.math.Vector3 rotation;
 		}
 		
 		private class PositionFrame{
 			private int frame;
-			private com.exnw.browedit.math.Vector4 position;
 		}
 		
 		public class Surface{

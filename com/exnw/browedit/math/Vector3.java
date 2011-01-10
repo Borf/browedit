@@ -51,4 +51,10 @@ public class Vector3{
 	public float[] getData(){
 		return this.data;
 	}
+
+	public void add(Vector3 other)
+	{
+		for(int i = 0; i < 3; i++)
+			this.data[i] += other.data[i];		
+	}
 }

@@ -27,15 +27,22 @@ public class RswRenderer implements Renderer
 		if(models == null)
 			loadModels(gl);
 		
+		gl.glPushMatrix();
 		for(RsmRenderer model : models)
 			model.render(gl);
+		gl.glPopMatrix();
 	}
 	
 	public void loadModels(GL gl)
 	{
 		models = new ArrayList<RsmRenderer>();
+		int i = 0;
 		for(Rsw.ModelResource model : rsw.getModels())
+		{
 			models.add(new RsmRenderer(model, map));
+			//if(i++ > 10)
+			//	break;
+		}
 	}
 	
 	

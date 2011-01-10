@@ -86,14 +86,14 @@ public class Matrix4{
 	public static Matrix4 makeTranslation(float x, float y, float z)
 	{
 		return new Matrix4(new float[] 
-		                             { 	1, 0, 0, x,
-										0, 1, 0, y,
-										0, 0, 1, z,
-										0, 0, 0, 1
+		                             { 	1, 0, 0, 0,
+										0, 1, 0, 0,
+										0, 0, 1, 0,
+										x, y, z, 1
               });
 	}
 
-	public void mult(Matrix4 other)
+	public Matrix4 mult(Matrix4 other)
 	{
 		float[] newData = new float[16];
 		newData[0] = data[0]*other.data[0] + data[4]*other.data[1] + data[8]*other.data[2] + data[12]*other.data[3];
@@ -115,7 +115,7 @@ public class Matrix4{
 		newData[7] = data[3]*other.data[4] + data[7]*other.data[5] + data[11]*other.data[6] + data[15]*other.data[7];
 		newData[11]= data[3]*other.data[8] + data[7]*other.data[9] + data[11]*other.data[10]+ data[15]*other.data[11];
 		newData[15]= data[3]*other.data[12]+ data[7]*other.data[13]+ data[11]*other.data[14]+ data[15]*other.data[15];
-		data = newData;
+		return new Matrix4(newData);
 	}
 
 	public static Matrix4 makeRotation(float angle, float x, float y, float z)
@@ -164,6 +164,18 @@ public class Matrix4{
 										0, 0, 0, 1
               });
 	}
+
+	public Vector3 mult(Vector3 other)
+	{
+		return new Vector3(	data[0]*other.getX() + data[4]*other.getY()+data[8]*other.getZ() + data[12],
+							data[1]*other.getX() + data[5]*other.getY()+data[9]*other.getZ() + data[13],
+							data[2]*other.getX() + data[6]*other.getY()+data[10]*other.getZ()+ data[14]);
+	}
 	
+	
+	public Matrix4 clone()
+	{
+		return new Matrix4(data.clone());
+	}
 	
 }

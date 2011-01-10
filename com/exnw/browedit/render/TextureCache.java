@@ -19,7 +19,7 @@ public class TextureCache
 		{
 			try
 			{
-				textures.put(fileName, TextureIO.newTexture(GrfLib.openFile(fileName), true, fileName.substring(fileName.lastIndexOf('.'))));
+				textures.put(fileName, TextureIO.newTexture(GrfLib.openFile(fileName), false, fileName.substring(fileName.lastIndexOf('.'))));
 			} catch (GLException e)
 			{
 				// TODO Auto-generated catch block
