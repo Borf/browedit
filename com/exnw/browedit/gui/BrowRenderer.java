@@ -45,6 +45,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 						x+dist*Math.cos(rotateT+Math.PI/2.0), dist, y+dist*Math.sin(rotateT+Math.PI/2.0),
 						x, 0,y,
 						0,1,0);
+		gl.glEnable(GL.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
 		mainFrame.currentMap.render(gl);
 		
 	}
