@@ -137,7 +137,7 @@ public class RsmRenderer implements Renderer
 			
 			for(Rsm.RsmMesh mesh : rsm.getMeshes())
 			{
-				if(mesh.getParent().equals(this.rsmMesh.getName()))
+				if( this.rsmMesh != mesh && mesh.getParent().equals(this.rsmMesh.getName()))
 				{
 					this.subMeshes.add(new MeshRenderer(mesh, rsm));
 				}
