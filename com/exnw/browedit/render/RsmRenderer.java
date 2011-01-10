@@ -75,7 +75,7 @@ public class RsmRenderer implements Renderer
 		gl.glScalef(modelProperties.getScale().getX(), -modelProperties.getScale().getY(), modelProperties.getScale().getZ());
 		gl.glTranslatef(-realbbrange.getX(), realbbrange.getY(), -realbbrange.getZ());
 		
-		
+		/*
 		gl.glDisable(GL.GL_TEXTURE_2D);
 		gl.glColor3f(1,0,0);
 		gl.glLineWidth(4);
@@ -103,7 +103,7 @@ public class RsmRenderer implements Renderer
 		gl.glEnd();
 		gl.glColor4f(1,1,1,1);
 		
-		
+		*/
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		root.render(gl);
 		
@@ -273,7 +273,7 @@ public class RsmRenderer implements Renderer
 				if(subMeshes.size() > 0)
 					matrix1 = matrix1.mult(Matrix4.makeTranslation(-RsmRenderer.this.bbrange.getX(), -RsmRenderer.this.bbmax.getY(), -RsmRenderer.this.bbrange.getZ()));
 				else
-					matrix1= matrix1.mult(Matrix4.makeTranslation(0, -RsmRenderer.this.bbmax.getY(), 0));
+					matrix1= matrix1.mult(Matrix4.makeTranslation(0, -RsmRenderer.this.bbmax.getY()+RsmRenderer.this.bbrange.getY(), 0));
 			}
 			
 			if(!isRoot())

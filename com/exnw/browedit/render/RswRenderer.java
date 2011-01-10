@@ -27,22 +27,26 @@ public class RswRenderer implements Renderer
 		if(models == null)
 			loadModels(gl);
 		
+
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glPushMatrix();
 		gl.glScalef(1,1,-1);
 		for(RsmRenderer model : models)
 			model.render(gl);
 		gl.glPopMatrix();
+		gl.glDisable(GL.GL_BLEND);
 	}
 	
 	public void loadModels(GL gl)
 	{
 		models = new ArrayList<RsmRenderer>();
 		int i = 0;
+
 		for(Rsw.ModelResource model : rsw.getModels())
 		{
 			models.add(new RsmRenderer(model, map));
-			//if(i++ > 10)
-			//	break;
 		}
 	}
 	

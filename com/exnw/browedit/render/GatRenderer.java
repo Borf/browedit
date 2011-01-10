@@ -56,13 +56,13 @@ public class GatRenderer implements Observer, Renderer
 
 				vertices.put(vertexIndex+0, 	5*x+0);
 				vertices.put(vertexIndex+1,		-cell.getHeight()[0]);
-				vertices.put(vertexIndex+2,		10*(gat.getHeight()-y)+5);
+				vertices.put(vertexIndex+2,		5*(gat.getHeight()-y)+5);
 				texVertices.put(texIndex+0,		tx0);
 				texVertices.put(texIndex+1,		ty0);
 				
 				vertices.put(vertexIndex+3, 	5*x+5);
 				vertices.put(vertexIndex+4,		-cell.getHeight()[1]);
-				vertices.put(vertexIndex+5,		10*(gat.getHeight()-y)+5);
+				vertices.put(vertexIndex+5,		5*(gat.getHeight()-y)+5);
 				texVertices.put(texIndex+2,		tx1);
 				texVertices.put(texIndex+3,		ty0);
 				
@@ -97,6 +97,8 @@ public class GatRenderer implements Observer, Renderer
 			this.generateVbos(gl);
 		if(GatRenderer.texture == null)
 			GatRenderer.generateTexture();
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL.GL_BLEND);
 		
 		texture.bind();
 		gl.glEnable(GL.GL_TEXTURE_2D);
