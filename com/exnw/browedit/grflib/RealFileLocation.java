@@ -3,7 +3,7 @@ package com.exnw.browedit.grflib;
 public class RealFileLocation extends FileLocation{
 	private String path;
 	
-	public RealFileLocation( String path ){
+	public RealFileLocation( String path ) throws java.io.FileNotFoundException{
 		if( path == null ){
 			throw new NullPointerException();
 		}
@@ -11,7 +11,7 @@ public class RealFileLocation extends FileLocation{
 		java.io.File file = new java.io.File( path );
 		
 		if( !file.isDirectory() ){
-			throw new IllegalArgumentException();
+			throw new java.io.FileNotFoundException();
 		}
 		
 		if( !path.endsWith( java.io.File.separator ) ){

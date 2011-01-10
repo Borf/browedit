@@ -1,4 +1,5 @@
 {
-    "grfs" : [ "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\data.grf", "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\hdata.grf" ],
-    "datadir" : [ "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\data\\" ]
+    "grfs" : [ "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\data.grf", "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\hdata.grf", "D:\\Users\\Lemongrass\\Desktop\\RO\\data.grf" ],
+    "datadir" : [ "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\data\\", "D:\\Users\\Lemongrass\\Desktop\\RO\\data\\" ]
 }
+

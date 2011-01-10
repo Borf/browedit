@@ -15,7 +15,7 @@ public class GrfFileLocation extends FileLocation{
 	
 	private java.util.Map<String, GrfFileDesc> files;
 	
-	public GrfFileLocation( String filename ){
+	public GrfFileLocation( String filename ) throws java.io.FileNotFoundException{
 		if( filename == null || filename.isEmpty() )
 			throw new IllegalArgumentException("No empty filename allowed.");
 		
@@ -26,8 +26,8 @@ public class GrfFileLocation extends FileLocation{
 		
 		java.io.File f = new java.io.File( filename );
 		
-		if( !f.exists() || f.isDirectory() )
-			throw new IllegalArgumentException();
+		if( !f.exists() || !f.isFile() )
+			throw new java.io.FileNotFoundException();
 		
 		this.filename = filename;
 		this.read();

@@ -23,7 +23,7 @@ public class BrowEdit{
 					GrfLib.addGrf( grfs.getString(i) );
 				}catch( java.io.FileNotFoundException e ){
 					System.err.println("Could not find GRF File \"" + grfs.getString(i) + "\".");
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			
@@ -44,7 +44,7 @@ public class BrowEdit{
 					GrfLib.addDir( dirs.getString( i ) );
 				}catch( java.io.FileNotFoundException e ){
 					System.err.println("Could not find data directory File \"" + dirs.getString(i) + "\".");
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			
