@@ -35,20 +35,7 @@ public class RsmRenderer implements Renderer
 		rsm = new Rsm("data\\model\\" + modelProperties.getModelname());
 		
 		for(String t : rsm.getTextures())
-		{
-			try
-			{
-				textures.add(TextureIO.newTexture(GrfLib.openFile("data\\texture\\" + t), true, t.substring(t.lastIndexOf('.'))));
-			} catch (GLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+			textures.add(TextureCache.getTexture("data\\texture\\" + t));
 		
 		for(Rsm.RsmMesh mesh : rsm.getMeshes())
 		{

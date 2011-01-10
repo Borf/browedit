@@ -34,13 +34,8 @@ public class RswRenderer implements Renderer
 	public void loadModels(GL gl)
 	{
 		models = new ArrayList<RsmRenderer>();
-		int i = 0;
 		for(Rsw.ModelResource model : rsw.getModels())
-		{
 			models.add(new RsmRenderer(model, map));
-			if(i++ > 150)
-				break;
-		}
 	}
 	
 	
