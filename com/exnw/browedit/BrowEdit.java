@@ -13,44 +13,73 @@ public class BrowEdit{
 	 */
 	public static void main( String[] args ){
 		try{
-			System.out.println("Opening GRFs");
-			long l = System.currentTimeMillis();
-			org.json.JSONArray grfs = Settings.json.getJSONArray( "grfs" );
-			
-			for( int i = 0; i < grfs.length(); i++ ){
-				//System.out.println("Initiating GRF["+i+"]: "+ grfs.getString(i) );
+			if( Settings.json.getBoolean( "readini" ) ){
+				System.out.println("Opening GRFs");
+				long l = System.currentTimeMillis();
+				
 				try{
-					GrfLib.addGrf( grfs.getString(i) );
+					GrfLib.addGrfs( Settings.json.getString("ini") );
 				}catch( java.io.FileNotFoundException e ){
-					System.err.println("Could not find GRF File \"" + grfs.getString(i) + "\".");
-					//e.printStackTrace();
+					System.err.println("INI file \""+ Settings.json.getString("ini") +"\" was not found.");
+					e.printStackTrace();
+				}catch( java.io.IOException e ){
+					e.printStackTrace();
 				}
+				System.out.println("Bench: " + (System.currentTimeMillis() - l));
+			}else{
+				try{
+					System.out.println("Opening GRFs");
+					long l = System.currentTimeMillis();
+					org.json.JSONArray grfs = Settings.json.getJSONArray( "grfs" );
+					
+					for( int i = 0; i < grfs.length(); i++ ){
+						//System.out.println("Initiating GRF["+i+"]: "+ grfs.getString(i) );
+						try{
+							GrfLib.addGrf( grfs.getString(i) );
+						}catch( java.io.FileNotFoundException e ){
+							System.err.println("Could not find GRF File \"" + grfs.getString(i) + "\".");
+							//e.printStackTrace();
+						}
+					}
+					
+					System.out.println("Bench: " + (System.currentTimeMillis() - l));
+				}catch( org.json.JSONException e ){
+					System.err.println("No configuration for any grf file in the settings.");
+					e.printStackTrace();
+					System.exit(1);
+				}				
 			}
-			
-			System.out.println("Bench: " + (System.currentTimeMillis() - l));
 		}catch( org.json.JSONException e ){
-			System.err.println("No configuration for any grf file in the settings.");
+			System.err.println("Missing readini config.");
 			e.printStackTrace();
 			System.exit(1);
 		}
 		
 		try{
-			System.out.println("Opening Directories");
-			long l = System.currentTimeMillis();
-			org.json.JSONArray dirs = Settings.json.getJSONArray( "datadir" );
-			
-			for( int i = 0; i < dirs.length(); i++ ){
+			if( Settings.json.getBoolean( "readdata" ) ){
 				try{
-					GrfLib.addDir( dirs.getString( i ) );
-				}catch( java.io.FileNotFoundException e ){
-					System.err.println("Could not find data directory File \"" + dirs.getString(i) + "\".");
-					//e.printStackTrace();
+					System.out.println("Opening Directories");
+					long l = System.currentTimeMillis();
+					org.json.JSONArray dirs = Settings.json.getJSONArray( "datadir" );
+					
+					for( int i = 0; i < dirs.length(); i++ ){
+						try{
+							GrfLib.addDir( dirs.getString( i ) );
+						}catch( java.io.FileNotFoundException e ){
+							System.err.println("Could not find data directory File \"" + dirs.getString(i) + "\".");
+							//e.printStackTrace();
+						}
+					}
+					
+					System.out.println("Bench: " + (System.currentTimeMillis() - l));
+				}catch( org.json.JSONException e ){
+					System.err.println("No configuration for any grf file in the settings.");
+					e.printStackTrace();
+					System.exit(1);
 				}
 			}
-			
-			System.out.println("Bench: " + (System.currentTimeMillis() - l));
 		}catch( org.json.JSONException e ){
-			System.err.println("No configuration for any grf file in the settings.");
+			System.err.println("Missing readdata config.");
 			e.printStackTrace();
 			System.exit(1);
 		}

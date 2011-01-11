@@ -1,4 +1,7 @@
 {
+	"readini" : false,
+	"ini" : "",
     "grfs" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf", "C:\\Users\\Borf\\AppData\\Local\\Ragray\\rdata.grf" ],
+	"readdata" : false,
     "datadir" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray", "." ]
 }

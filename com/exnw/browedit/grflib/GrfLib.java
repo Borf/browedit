@@ -7,6 +7,44 @@ public class GrfLib {
 			GrfLib.locations.put( file, new GrfFileLocation( file ) );
 		}
 		
+		public static void addGrfs( String file ) throws java.io.FileNotFoundException, java.io.IOException{
+			java.io.BufferedReader br = null;
+			
+			try{
+				br = new java.io.BufferedReader( new java.io.FileReader( file ) );
+				
+				String line = null;
+				java.util.Map<Integer,String> grfs = new java.util.TreeMap<Integer, String>();
+				
+				if( ( line = br.readLine() ) == null || line.trim().isEmpty() || !line.trim().equalsIgnoreCase("[DATA]") )
+					throw new IllegalArgumentException();
+				
+				while( ( line = br.readLine() ) != null ){
+					String[] pts = line.trim().split( "=", 2 );
+					
+					try{
+						grfs.put( Integer.parseInt( pts[0].trim() ), pts[1].trim() );
+					}catch( NumberFormatException e ){
+						continue;
+					}
+				}
+				
+				String path = file.substring( 0, file.lastIndexOf( java.io.File.separatorChar ) + 1 );
+				
+				for( String grf : grfs.values() ){
+					try{
+						GrfLib.addGrf( path + grf );
+					}catch( java.io.FileNotFoundException e ){
+						System.err.println("Could not find GRF File \"" + ( path + grf ) + "\".");
+					}
+				}
+			}finally{
+				if( br != null ){
+					br.close();
+				}
+			}
+		}
+		
 		public static void addDir( String path ) throws java.io.FileNotFoundException{
 			GrfLib.locations.put( path, new RealFileLocation( path ) );
 		}
