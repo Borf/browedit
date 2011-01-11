@@ -43,11 +43,16 @@ public class RswRenderer implements Renderer
 	{
 		models = new ArrayList<RsmRenderer>();
 		int i = 0;
+		
+		System.out.println("Loading models");
+		long l = System.currentTimeMillis();
 
 		for(Rsw.ModelResource model : rsw.getModels())
 		{
 			models.add(new RsmRenderer(model, map));
 		}
+		
+		System.out.println("Bench: " + (System.currentTimeMillis() - l));
 	}
 	
 	
