@@ -1,6 +1,12 @@
 package com.exnw.browedit.grflib;
 
+import java.io.File;
+
+import javax.swing.Icon;
+
 public class GrfFileSystemView extends javax.swing.filechooser.FileSystemView{
+	private static Icon rswicon = new javax.swing.ImageIcon("rsw.ico", "");
+	
 	public java.io.File createFileObject( java.io.File dir, String filename ){
 		return new java.io.File( filename );
 	}
@@ -19,12 +25,16 @@ public class GrfFileSystemView extends javax.swing.filechooser.FileSystemView{
 
 	@Override
 	public String getSystemDisplayName( java.io.File f ){
-		// TODO Auto-generated method stub
 		return f.getPath();
 	}
 
 	public String getSystemTypeDescription( java.io.File f ){
 		return "This is a file";
+	}
+
+	@Override
+	public Icon getSystemIcon( File f ){
+		return GrfFileSystemView.rswicon;
 	}
 
 	public boolean isComputerNode( java.io.File dir ){
