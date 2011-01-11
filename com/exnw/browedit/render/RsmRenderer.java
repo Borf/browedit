@@ -238,31 +238,28 @@ public class RsmRenderer implements Renderer
 			if(vbos == null)
 				this.generateVbos(gl);
 			
+			gl.glEnable(GL.GL_TEXTURE_2D);
+			gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
+			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+
 			for(int i = 0; i < textures.size(); i++)
 			{
 				textures.get(i).bind();
-				gl.glEnable(GL.GL_TEXTURE_2D);
-				
-				gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
-				gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
-				
-				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2));         // for vertex coordinates
+
+				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(2*i));         // for vertex coordinates
 				gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
 
-				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2+1));         // for vertex coordinates
+				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(2*i+1));         // for texture coordinates
 				gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
 
-				gl.glDrawArrays(GL.GL_TRIANGLES, 0, polyCount[i]);
-				
-				gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-				gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-				
-				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-				gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);					
-				
+				gl.glDrawArrays(GL.GL_TRIANGLES, 0, polyCount[i]);				
 			}
-		/*	
-			for(RsmMesh.Surface surface : rsmMesh.getSurfaces())
+			gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
+			gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+			
+			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+			
+			/*for(RsmMesh.Surface surface : rsmMesh.getSurfaces())
 			{
 				textures.get(surface.getTextureid()).bind();
 				gl.glBegin(GL.GL_TRIANGLES);
@@ -318,21 +315,23 @@ public class RsmRenderer implements Renderer
 
 							Vector2 tex = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[ii]).getCoodinates();
 							for(int iii = 0; iii < 2; iii++)
-								texCoords.add(tex.getData()[iii]);
+								texCoords.add(tex.getData()[iii]); 
 						}
 					}
 				}
 
 				FloatBuffer vertexBuf = FloatBuffer.allocate(vertices.size());
 				for(int ii = 0; ii < vertices.size(); ii++)
-					vertexBuf.put(ii, vertices.get(ii));
-				FloatBuffer texCoordBuf = FloatBuffer.allocate(texCoords.size());
-				for(int ii = 0; ii < texCoords.size(); ii++)
-					texCoordBuf.put(ii, texCoords.get(ii));
-				
+					vertexBuf.put(ii, vertices.get(ii).floatValue());
+
 				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2));
 				gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexBuf.limit()*BufferUtil.SIZEOF_FLOAT, vertexBuf, GL.GL_STATIC_DRAW);
 
+				
+				FloatBuffer texCoordBuf = FloatBuffer.allocate(texCoords.size());
+				for(int ii = 0; ii < texCoords.size(); ii++)
+					texCoordBuf.put(ii, texCoords.get(ii).floatValue());
+				
 				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2+1));
 				gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordBuf.limit()*BufferUtil.SIZEOF_FLOAT, texCoordBuf, GL.GL_STATIC_DRAW);		
 				
@@ -344,7 +343,7 @@ public class RsmRenderer implements Renderer
 
 		public boolean isRoot()
 		{
-			return true;
+			return RsmRenderer.this.root == this;
 		}
 		
 		

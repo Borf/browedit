@@ -48,7 +48,6 @@ public class GndRenderer implements Renderer
 		
 		this.shader.use(gl);
 		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
-
 		
 		gl.glActiveTexture(GL.GL_TEXTURE2);
 		shadows.bind();
@@ -65,30 +64,35 @@ public class GndRenderer implements Renderer
 			gl.glClientActiveTexture(GL.GL_TEXTURE0);
 			textures.get(i).bind();
 			
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i));         // for vertex coordinates
+			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(2*i));         // for vertex coordinates
 			gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
 
+
 			gl.glClientActiveTexture(GL.GL_TEXTURE0);
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i+1));         // for vertex coordinates
-			gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
+			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(2*i+1));         // for vertex coordinates
+			gl.glTexCoordPointer(2, GL.GL_FLOAT, 4*4, 0);
 
 			gl.glClientActiveTexture(GL.GL_TEXTURE1);
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(3*i+2));         // for vertex coordinates
-			gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);			
-
-			gl.glClientActiveTexture(GL.GL_TEXTURE1);
+			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
+			gl.glTexCoordPointer(2, GL.GL_FLOAT, 4*4, 4*2);			
+			
 			gl.glDrawArrays(GL.GL_QUADS, 0, vertexCounts[i]);
 			
 		}
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-		
+
+		gl.glClientActiveTexture(GL.GL_TEXTURE0);		
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);			
 		
-		gl.glActiveTexture(GL.GL_TEXTURE1);
+		gl.glActiveTexture(GL.GL_TEXTURE1);	
 		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+
 		gl.glActiveTexture(GL.GL_TEXTURE0);
 		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+		
+		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
 
 		gl.glUseProgram(0);
 	}
@@ -99,8 +103,8 @@ public class GndRenderer implements Renderer
 	
 	private void generateVbos(GL gl)
 	{
-		vbos = IntBuffer.allocate(textures.size()*3); // vertices, texturecoords, shadowcoords
-		gl.glGenBuffers(textures.size()*3, vbos);
+		vbos = IntBuffer.allocate(textures.size()*2); // vertices, texturecoords, shadowcoords
+		gl.glGenBuffers(textures.size()*2, vbos);
 
 		vertexCounts = new int[textures.size()];
 		
@@ -108,7 +112,6 @@ public class GndRenderer implements Renderer
 		{
 			ArrayList<Float> vertices = new ArrayList<Float>();
 			ArrayList<Float> textureCoords = new ArrayList<Float>();
-			ArrayList<Float> shadowCoords = new ArrayList<Float>();
 			
 			for(int x = 0; x < gnd.getWidth(); x++)
 			{
@@ -140,32 +143,32 @@ public class GndRenderer implements Renderer
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//tr
 							textureCoords.add(surface.getU()[2]);
 							textureCoords.add(surface.getV()[2]);
-							shadowCoords.add(tx1);
-							shadowCoords.add(ty2);
+							textureCoords.add(tx1);
+							textureCoords.add(ty2);
 		
 							vertices.add(10.0f*x);
 							vertices.add(-cell.getHeight()[0]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//tl
 							textureCoords.add(surface.getU()[0]);
 							textureCoords.add(surface.getV()[0]);
-							shadowCoords.add(tx1);
-							shadowCoords.add(ty1);
+							textureCoords.add(tx1);
+							textureCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
 							vertices.add(-cell.getHeight()[1]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//bl
 							textureCoords.add(surface.getU()[1]);
 							textureCoords.add(surface.getV()[1]);
-							shadowCoords.add(tx2);
-							shadowCoords.add(ty1);
+							textureCoords.add(tx2);
+							textureCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
 							vertices.add(-cell.getHeight()[3]);
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//br
 							textureCoords.add(surface.getU()[3]);
 							textureCoords.add(surface.getV()[3]);
-							shadowCoords.add(tx2);
-							shadowCoords.add(ty2);
+							textureCoords.add(tx2);
+							textureCoords.add(ty2);
 						}
 					}
 					if(surfaces[2] != -1)
@@ -192,32 +195,32 @@ public class GndRenderer implements Renderer
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//tr
 							textureCoords.add(surface.getU()[3]);
 							textureCoords.add(surface.getV()[3]);
-							shadowCoords.add(tx1);
-							shadowCoords.add(ty2);
+							textureCoords.add(tx1);
+							textureCoords.add(ty2);
 		
 							vertices.add(10.0f*x+10.0f);
 							vertices.add(-otherCell.getHeight()[0]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//tl
 							textureCoords.add(surface.getU()[2]);
 							textureCoords.add(surface.getV()[2]);
-							shadowCoords.add(tx2);
-							shadowCoords.add(ty2);
+							textureCoords.add(tx2);
+							textureCoords.add(ty2);
 		
 							vertices.add(10.0f*x+10.0f);
 							vertices.add(-cell.getHeight()[1]);
 							vertices.add(10.0f*(gnd.getHeight()-y));//bl
 							textureCoords.add(surface.getU()[0]);
 							textureCoords.add(surface.getV()[0]);
-							shadowCoords.add(tx2);
-							shadowCoords.add(ty1);
+							textureCoords.add(tx2);
+							textureCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10.0f);
 							vertices.add(-cell.getHeight()[3]);
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//br
 							textureCoords.add(surface.getU()[1]);
 							textureCoords.add(surface.getV()[1]);
-							shadowCoords.add(tx1);
-							shadowCoords.add(ty1);
+							textureCoords.add(tx1);
+							textureCoords.add(ty1);
 						}
 					}
 					if(surfaces[1] != -1) // front surfaces
@@ -245,32 +248,32 @@ public class GndRenderer implements Renderer
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//tr
 							textureCoords.add(surface.getU()[2]);
 							textureCoords.add(surface.getV()[2]);
-							shadowCoords.add(tx1);
-							shadowCoords.add(ty2);
+							textureCoords.add(tx1);
+							textureCoords.add(ty2);
 		
 							vertices.add(10.0f*x);
 							vertices.add(-cell.getHeight()[2]);
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//tl
 							textureCoords.add(surface.getU()[0]);
 							textureCoords.add(surface.getV()[0]);
-							shadowCoords.add(tx1);
-							shadowCoords.add(ty1);
+							textureCoords.add(tx1);
+							textureCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
 							vertices.add(-cell.getHeight()[3]);
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//bl
 							textureCoords.add(surface.getU()[1]);
 							textureCoords.add(surface.getV()[1]);
-							shadowCoords.add(tx2);
-							shadowCoords.add(ty1);
+							textureCoords.add(tx2);
+							textureCoords.add(ty1);
 		
 							vertices.add(10.0f*x+10);
 							vertices.add(-otherCell.getHeight()[1]);
 							vertices.add(10.0f*(gnd.getHeight()-y)-10);//br
 							textureCoords.add(surface.getU()[3]);
 							textureCoords.add(surface.getV()[3]);
-							shadowCoords.add(tx2);
-							shadowCoords.add(ty2);
+							textureCoords.add(tx2);
+							textureCoords.add(ty2);
 						}
 					}
 				}
@@ -286,18 +289,11 @@ public class GndRenderer implements Renderer
 			for(int ii = 0; ii < textureCoords.size(); ii++)
 				texCoordBuffer.put(ii, textureCoords.get(ii).floatValue());
 			
-			FloatBuffer shadowCoordBuffer = FloatBuffer.allocate(shadowCoords.size());
-			for(int ii = 0; ii < shadowCoords.size(); ii++)
-				shadowCoordBuffer.put(ii, shadowCoords.get(ii).floatValue());	
-			
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*3));
+			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2));
 			gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexBuffer.limit()*BufferUtil.SIZEOF_FLOAT, vertexBuffer, GL.GL_STATIC_DRAW);
 
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*3+1));
+			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2+1));
 			gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordBuffer.limit()*BufferUtil.SIZEOF_FLOAT, texCoordBuffer, GL.GL_STATIC_DRAW);
-			
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*3+2));
-			gl.glBufferData(GL.GL_ARRAY_BUFFER, shadowCoordBuffer.limit()*BufferUtil.SIZEOF_FLOAT, shadowCoordBuffer, GL.GL_STATIC_DRAW);
 		}
 		
 		

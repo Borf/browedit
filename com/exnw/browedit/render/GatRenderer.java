@@ -105,7 +105,7 @@ public class GatRenderer implements Observer, Renderer
 		
 		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
 		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
-		
+
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(0));         // for vertex coordinates
 		gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
 
@@ -113,12 +113,11 @@ public class GatRenderer implements Observer, Renderer
 		gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
 
 		gl.glDrawArrays(GL.GL_QUADS, 0, gat.getWidth()*gat.getHeight()*4);
-		
+
 		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 		
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);			
 
 	}
 
