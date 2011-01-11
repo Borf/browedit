@@ -35,7 +35,7 @@ public class TextureCache
 					for(int y = 0; y < img.getHeight(); y++)
 					{
 						int rgb = img.getRGB(x, y);
-						if((rgb ^ 0xFFFF00FF) == 0)
+						if((rgb & 0xFF) >= 246 && ((rgb>>16)&0xFF) >= 246 && ((rgb>>8)&0xFF) <= 10)
 							rgb = 0x00000000;
 						dest.setRGB(x, y, rgb);
 					}
