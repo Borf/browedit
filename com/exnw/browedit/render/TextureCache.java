@@ -1,6 +1,5 @@
 package com.exnw.browedit.render;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,10 +40,8 @@ public class TextureCache
 					}
 				}
 				Texture t = TextureIO.newTexture(new TextureData(0,0,true,dest));
-				t.setTexParameteri(GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
-				
+				t.setTexParameteri(GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);				
 //				Texture t = TextureIO.newTexture(GrfLib.openFile(fileName), true, fileName.substring(fileName.lastIndexOf('.')));
-				
 				textures.put(fileName, t);
 			} catch (GLException e)
 			{

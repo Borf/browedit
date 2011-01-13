@@ -13,8 +13,6 @@ import com.exnw.browedit.data.Rsm;
 import com.exnw.browedit.data.Rsm.RsmMesh;
 import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
 import com.exnw.browedit.data.Rsw;
-import com.exnw.browedit.math.Matrix4;
-import com.exnw.browedit.math.Quaternion;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.sun.opengl.util.BufferUtil;

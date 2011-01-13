@@ -2,7 +2,6 @@ package com.exnw.browedit.render;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -10,12 +9,10 @@ import java.util.List;
 import java.util.Observable;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLException;
 
 import com.exnw.browedit.data.Gnd;
 import com.exnw.browedit.data.Gnd.GndCell;
 import com.exnw.browedit.data.Gnd.Surface;
-import com.exnw.browedit.grflib.GrfLib;
 import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureIO;
@@ -305,24 +302,15 @@ public class GndRenderer implements Renderer
 			List<String> TextureFileNames = gnd.getTextures();
 			for(String s : TextureFileNames)
 			{
-				try
-				{
-					Texture texture = TextureIO.newTexture(GrfLib.openFile("data\\texture\\" + s), true, s.substring(s.lastIndexOf('.')));
-					//TODO: fix borders
-					texture.setTexParameteri(GL.GL_TEXTURE_WRAP_S, GL.GL_MIRRORED_REPEAT);
-					texture.setTexParameteri(GL.GL_TEXTURE_WRAP_T, GL.GL_MIRRORED_REPEAT);
-					
-					textures.add(texture);
-				} catch (GLException e)
-				{
-					e.printStackTrace();
-				} catch (IOException e)
-				{
-					System.err.println("Could not open: " + s);
-					e.printStackTrace();
-				}
+				Texture texture = TextureCache.getTexture("data\\texture\\" + s);
+				//TODO: fix borders
+				texture.setTexParameteri(GL.GL_TEXTURE_WRAP_S, GL.GL_MIRRORED_REPEAT);
+				texture.setTexParameteri(GL.GL_TEXTURE_WRAP_T, GL.GL_MIRRORED_REPEAT);
+				
+				textures.add(texture);
 			}
 
+			
 			{
 				BufferedImage image = new BufferedImage(TEXTURESIZE, TEXTURESIZE, BufferedImage.TYPE_INT_ARGB);
 				int x = 0;

@@ -1,6 +1,5 @@
 package com.exnw.browedit.data;
 
-import java.awt.Color;
 import java.nio.IntBuffer;
 import java.util.Observable;
 

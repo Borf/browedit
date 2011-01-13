@@ -42,7 +42,6 @@ public class RswRenderer implements Renderer
 	public void loadModels(GL gl)
 	{
 		models = new ArrayList<RsmRenderer>();
-		int i = 0;
 		
 		System.out.println("Loading models");
 		long l = System.currentTimeMillis();
