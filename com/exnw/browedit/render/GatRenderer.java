@@ -1,7 +1,6 @@
 package com.exnw.browedit.render;
 
 import java.io.IOException;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Observable;
 import java.util.Observer;
@@ -12,6 +11,11 @@ import javax.media.opengl.GLException;
 import com.exnw.browedit.data.Gat;
 import com.exnw.browedit.data.Gat.GatCell;
 import com.exnw.browedit.grflib.GrfLib;
+import com.exnw.browedit.math.Vector2;
+import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Vbo;
+import com.exnw.browedit.renderutils.VertexList;
+import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
 import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureIO;
@@ -19,9 +23,8 @@ import com.sun.opengl.util.texture.TextureIO;
 public class GatRenderer implements Observer, Renderer
 {
 	Gat gat;
-	IntBuffer vbos;
 	static Texture texture = null;	//same for all gat renderers
-	
+	Vbo<VertexPNT> vbo;
 	
 	public GatRenderer(Gat gat)
 	{
@@ -31,14 +34,9 @@ public class GatRenderer implements Observer, Renderer
 	
 	public void generateVbos(GL gl)
 	{
-		vbos = IntBuffer.allocate(2);
-		gl.glGenBuffers(2, vbos);		// vertices
-											// texture coordinats
+		vbo = new Vbo<VertexPNT>();
 		
-		FloatBuffer vertices = FloatBuffer.allocate(gat.getWidth()*gat.getHeight()*4*3);
-		FloatBuffer texVertices = FloatBuffer.allocate(gat.getWidth()*gat.getHeight()*4*2);
-		int vertexIndex = 0;
-		int texIndex = 0;
+		VertexList<VertexPNT> vertexList = new VertexList<VertexPNT>();
 		
 		for(int x = 0; x < gat.getWidth(); x++)
 		{
@@ -53,69 +51,37 @@ public class GatRenderer implements Observer, Renderer
 				float ty0 = (textureIndex/4)*th;
 				float tx1 = tx0+tw;
 				float ty1 = ty0+th;
-
-				vertices.put(vertexIndex+0, 	5*x+0);
-				vertices.put(vertexIndex+1,		-cell.getHeight()[0]);
-				vertices.put(vertexIndex+2,		5*(gat.getHeight()-y)+5);
-				texVertices.put(texIndex+0,		tx0);
-				texVertices.put(texIndex+1,		ty0);
+				Vector3 normal = new Vector3(0,1,0);
 				
-				vertices.put(vertexIndex+3, 	5*x+5);
-				vertices.put(vertexIndex+4,		-cell.getHeight()[1]);
-				vertices.put(vertexIndex+5,		5*(gat.getHeight()-y)+5);
-				texVertices.put(texIndex+2,		tx1);
-				texVertices.put(texIndex+3,		ty0);
-				
-				vertices.put(vertexIndex+6, 	5*x+5);
-				vertices.put(vertexIndex+7,		-cell.getHeight()[3]);
-				vertices.put(vertexIndex+8,		5*(gat.getHeight()-y)+0);
-				texVertices.put(texIndex+4,		tx1);
-				texVertices.put(texIndex+5,		ty1);
-				
-				vertices.put(vertexIndex+9, 	5*x+0);
-				vertices.put(vertexIndex+10,	-cell.getHeight()[2]);
-				vertices.put(vertexIndex+11,	5*(gat.getHeight()-y)+0);
-				texVertices.put(texIndex+6,		tx0);
-				texVertices.put(texIndex+7,		ty1);
-
-				vertexIndex+=12;
-				texIndex+=8;
+				vertexList.add(new VertexPNT(new Vector3(5*x+0, -cell.getHeight()[0], 5*(gat.getHeight()-y)+5), normal, new Vector2(tx0,ty0)));
+				vertexList.add(new VertexPNT(new Vector3(5*x+5, -cell.getHeight()[1], 5*(gat.getHeight()-y)+5), normal, new Vector2(tx1,ty0)));
+				vertexList.add(new VertexPNT(new Vector3(5*x+5, -cell.getHeight()[3], 5*(gat.getHeight()-y)+0), normal, new Vector2(tx1,ty1)));
+				vertexList.add(new VertexPNT(new Vector3(5*x+0, -cell.getHeight()[2], 5*(gat.getHeight()-y)+0), normal, new Vector2(tx0,ty1)));
 			}
-		}		
-		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(0));
-		gl.glBufferData(GL.GL_ARRAY_BUFFER, vertices.limit()*BufferUtil.SIZEOF_FLOAT, vertices, GL.GL_STATIC_DRAW);
-
-		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(1));
-		gl.glBufferData(GL.GL_ARRAY_BUFFER, texVertices.limit()*BufferUtil.SIZEOF_FLOAT, texVertices, GL.GL_STATIC_DRAW);		
-
+		}
+		vbo.generate(vertexList);
 	}
 	
 	
 	public void render(GL gl)
 	{
-		if(this.vbos == null)
+		if(this.vbo == null)
 			this.generateVbos(gl);
 		if(GatRenderer.texture == null)
 			GatRenderer.generateTexture();
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL.GL_BLEND);
 		
+		vbo.bind();
 		texture.bind();
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
-		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
-
-		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(0));         // for vertex coordinates
-		gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
-
-		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(1));         // for vertex coordinates
-		gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
-
+		vbo.setPointers();
 		gl.glDrawArrays(GL.GL_QUADS, 0, gat.getWidth()*gat.getHeight()*4);
 
 		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisableClientState(GL.GL_NORMAL_ARRAY);
 		
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
@@ -146,7 +112,7 @@ public class GatRenderer implements Observer, Renderer
 	{
 		if(o.equals(gat))
 		{
-			this.vbos = null; // TODO: eep! this leaks!
+			this.vbo = null; // TODO: eep! this leaks!
 		}
 		
 	}

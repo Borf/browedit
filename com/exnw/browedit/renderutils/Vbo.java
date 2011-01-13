@@ -8,10 +8,11 @@ import javax.media.opengl.GLContext;
 
 import com.sun.opengl.util.BufferUtil;
 
-public class Vbo
+public class Vbo<T extends Vertex>
 {
 	private IntBuffer vbo;
-	private int length;
+	private int length; // length in bytes
+	private T oneVertex;
 	
 	public Vbo()
 	{
@@ -33,22 +34,30 @@ public class Vbo
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo.get(0));
 	}
 	
-	public void generate(FloatBuffer buffer)
+	public void generate(VertexList<T> vertices)
+	{
+		oneVertex = vertices.get(0);
+		generate(vertices.GenerateFloatBuffer());
+	}
+	
+	private void generate(FloatBuffer buffer)
 	{
 		this.bind();
 		GL gl = GLContext.getCurrent().getGL();
 		//glBufferData automatically throws away the old one
 		gl.glBufferData(GL.GL_ARRAY_BUFFER, buffer.limit()*BufferUtil.SIZEOF_FLOAT, buffer, GL.GL_STATIC_DRAW);
+		length = buffer.limit()*BufferUtil.SIZEOF_FLOAT;
 	}
-	public void put(int index, Vertex v)
+	public void put(int index, T v)
 	{
 		this.bind();
 		GL gl = GLContext.getCurrent().getGL();
 
-		VertexList tmpList = new VertexList();
+		VertexList<T> tmpList = new VertexList<T>();
 		tmpList.add(v);
 		
-		gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * (v.getSize()*BufferUtil.SIZEOF_FLOAT), v.getSize()*BufferUtil.SIZEOF_FLOAT, tmpList.GenerateFloatBuffer());
+		int size = v.getSize();
+		gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * (size*BufferUtil.SIZEOF_FLOAT), size*BufferUtil.SIZEOF_FLOAT, tmpList.GenerateFloatBuffer());
 	}
 	
 	
@@ -64,5 +73,17 @@ public class Vbo
 		this.bind();
 		GL gl = GLContext.getCurrent().getGL();
 		gl.glUnmapBuffer(GL.GL_ARRAY_BUFFER);
+	}
+
+	public int size()
+	{
+		return length;
+	}
+
+	public void setPointers()
+	{
+		this.bind();
+		if(oneVertex != null)
+			oneVertex.setPointers();
 	}
 }
