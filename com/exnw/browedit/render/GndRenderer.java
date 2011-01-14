@@ -53,11 +53,9 @@ public class GndRenderer implements Renderer
 		shadows.bind();
 		
 		gl.glActiveTexture(GL.GL_TEXTURE1);
-		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
 		colorLightmap.bind();
 		
 		gl.glActiveTexture(GL.GL_TEXTURE0);
-		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
 		
 		for(int i = 0; i < textures.size(); i++)
 		{
@@ -70,18 +68,21 @@ public class GndRenderer implements Renderer
 			
 		}
 
-		gl.glClientActiveTexture(GL.GL_TEXTURE0);		
-		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-		
-		gl.glActiveTexture(GL.GL_TEXTURE1);	
+		gl.glClientActiveTexture(GL.GL_TEXTURE1);	
 		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
-		gl.glActiveTexture(GL.GL_TEXTURE0);
+		gl.glClientActiveTexture(GL.GL_TEXTURE0);
 		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 		
+		
+		gl.glActiveTexture(GL.GL_TEXTURE0);
+		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+
+		
 		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL.GL_COLOR_ARRAY);
 		
 		gl.glUseProgram(0);
 	}
