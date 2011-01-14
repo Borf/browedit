@@ -6,6 +6,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.Vertex;
 import com.sun.opengl.util.BufferUtil;
 
@@ -38,7 +39,8 @@ public class VertexPN implements Vertex
 			buffer.put(offset+3+i, normal.getData()[i]);
 	}
 
-	public void setPointers()
+	@Override
+	public void setPointers(Vbo vbo)
 	{
 		GL gl = GLContext.getCurrent().getGL();
 		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array

@@ -1,7 +1,6 @@
 package com.exnw.browedit.render;
 
 import java.io.IOException;
-import java.nio.IntBuffer;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -77,7 +76,7 @@ public class GatRenderer implements Observer, Renderer
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		
 		vbo.setPointers();
-		gl.glDrawArrays(GL.GL_QUADS, 0, gat.getWidth()*gat.getHeight()*4);
+		gl.glDrawArrays(GL.GL_QUADS, 0, vbo.size()/BufferUtil.SIZEOF_FLOAT/8);
 
 		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
@@ -112,6 +111,7 @@ public class GatRenderer implements Observer, Renderer
 	{
 		if(o.equals(gat))
 		{
+			this.vbo.dispose();
 			this.vbo = null; // TODO: eep! this leaks!
 		}
 		

@@ -33,9 +33,9 @@ public class Map
 	
 	public void render(GL gl)
 	{
-		gatRenderer.render(gl);
-		//gndRenderer.render(gl);
-		//rswRenderer.render(gl);
+		//gatRenderer.render(gl);
+		gndRenderer.render(gl);
+		rswRenderer.render(gl);
 	}
 
 	public void setGat(Gat gat)

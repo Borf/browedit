@@ -7,6 +7,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Vbo;
 import com.sun.opengl.util.BufferUtil;
 
 public class VertexPNC extends VertexPN
@@ -37,12 +38,11 @@ public class VertexPNC extends VertexPN
 	}
 	
 	@Override
-	public void setPointers()
+	public void setPointers(Vbo vbo)
 	{
-		super.setPointers();
+		super.setPointers(vbo);
 		GL gl = GLContext.getCurrent().getGL();
-		gl.glActiveTexture(GL.GL_TEXTURE0);
-		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+		gl.glEnableClientState(GL.GL_COLOR_ARRAY);
 		gl.glColorPointer(4, GL.GL_FLOAT, getSize()*BufferUtil.SIZEOF_FLOAT, super.getSize()*BufferUtil.SIZEOF_FLOAT);
 	}	
 }

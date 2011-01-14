@@ -223,7 +223,7 @@ public class Gnd{
             byte r = in.readByte();
             byte a = in.readByte();
 
-            this.color = new java.awt.Color( r & 0xff, g & 0xff, b & 0xff );//, a );		
+            this.setColor(new java.awt.Color( r & 0xff, g & 0xff, b & 0xff ));//, a );		
 		}
 
 		public void setTextureID( short textureID ){
@@ -258,6 +258,16 @@ public class Gnd{
 		public short getLightmapID()
 		{
 			return lightmapID;
+		}
+
+		public void setColor(java.awt.Color color)
+		{
+			this.color = color;
+		}
+
+		public java.awt.Color getColor()
+		{
+			return color;
 		}
 	}
 	

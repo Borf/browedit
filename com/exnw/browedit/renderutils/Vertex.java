@@ -6,5 +6,5 @@ public interface Vertex
 {
 	public int getSize();
 	public void fillBuffer(FloatBuffer buffer, int offset);
-	public void setPointers();
+	public void setPointers(Vbo vbo);
 }

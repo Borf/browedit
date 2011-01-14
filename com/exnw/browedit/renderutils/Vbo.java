@@ -84,6 +84,6 @@ public class Vbo<T extends Vertex>
 	{
 		this.bind();
 		if(oneVertex != null)
-			oneVertex.setPointers();
+			oneVertex.setPointers(this);
 	}
 }
