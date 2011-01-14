@@ -20,18 +20,6 @@ import com.sun.opengl.util.texture.Texture;
 
 public class RsmRenderer implements Renderer
 {
-	private static java.util.Map<String,Rsm> loadedmodels = new java.util.HashMap<String, Rsm>();
-	
-	private static Rsm loadModel( String model ){
-		if( RsmRenderer.loadedmodels.containsKey( model ) ){
-			return RsmRenderer.loadedmodels.get( model );
-		}else{
-			Rsm rsm = new Rsm("data\\model\\" + model );
-			RsmRenderer.loadedmodels.put( model, rsm );
-			return rsm;
-		}
-	}
-	
 	private Rsw.ModelResource modelProperties;
 	private Rsm rsm;
 	private Map map;
@@ -42,7 +30,7 @@ public class RsmRenderer implements Renderer
 	RsmRenderer( Rsw.ModelResource resource, Map map ){
 		this.map = map;
 		this.modelProperties = resource;
-		this.rsm =  RsmRenderer.loadModel( this.modelProperties.getModelname() );
+		this.rsm =  resource.getRsm();
 		
 		for( String t : this.rsm.getTextures() )
 			this.textures.add( TextureCache.getTexture("data\\texture\\" + t) );

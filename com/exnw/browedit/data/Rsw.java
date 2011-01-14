@@ -232,6 +232,7 @@ public class Rsw{
 		private com.exnw.browedit.math.Vector3 position;
 		private com.exnw.browedit.math.Vector3 rotation;
 		private com.exnw.browedit.math.Vector3 scale;
+		private Rsm rsm;
 		
 		public ModelResource(){
 			
@@ -255,6 +256,8 @@ public class Rsw{
 			this.setPosition(new com.exnw.browedit.math.Vector3( in ));
 			this.setRotation(new com.exnw.browedit.math.Vector3( in ));
 			this.setScale(new com.exnw.browedit.math.Vector3( in ));
+			
+			this.setRsm(RsmCache.getModel("data\\model\\" + this.modelname));
 		}
 
 		public void setModelname(String modelname)
@@ -295,6 +298,16 @@ public class Rsw{
 		public com.exnw.browedit.math.Vector3 getScale()
 		{
 			return scale;
+		}
+
+		public void setRsm(Rsm rsm)
+		{
+			this.rsm = rsm;
+		}
+
+		public Rsm getRsm()
+		{
+			return rsm;
 		}
 	}
 	
