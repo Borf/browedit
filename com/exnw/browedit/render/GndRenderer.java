@@ -88,7 +88,33 @@ public class GndRenderer implements Renderer
 	}
 	
 	
+	private Color mix(Color[] colors)
+	{
+		int r = 0, g = 0, b = 0, c = 0; 
+		for(Color color : colors)
+		{
+			if(color == null)
+				continue;
+			r += color.getRed();
+			g += color.getGreen();
+			b += color.getBlue();
+			c++;		
+		}
+		return new Color(r/c, g/c, b/c);
+	}
 	
+	private Color getColor(int x, int y)
+	{
+		if(x < 0 || y < 0 || x >= gnd.getWidth() || y >= gnd.getHeight())
+			return null;
+		GndCell cell = gnd.getCell(x, y);
+		int[] surfaces = cell.getSurface();
+		if(surfaces[0] != -1)
+		{
+			return gnd.getSurfaces().get(surfaces[0]).getColor();
+		}	
+		return null;
+	}
 	
 	
 	private void generateVbos()
@@ -124,30 +150,35 @@ public class GndRenderer implements Renderer
 							tx2 -= onePixel;
 							ty2 -= onePixel;
 
+							Color c1 = mix(new Color[] { getColor(x,y), getColor(x, y+1), getColor(x-1, y), getColor(x-1, y+1) });
+							Color c2 = mix(new Color[] { getColor(x,y), getColor(x, y-1), getColor(x-1, y), getColor(x-1, y-1) });
+							Color c3 = mix(new Color[] { getColor(x,y), getColor(x, y-1), getColor(x+1, y), getColor(x+1, y-1) });
+							Color c4 = mix(new Color[] { getColor(x,y), getColor(x, y+1), getColor(x+1, y), getColor(x+1, y+1) });
+							
 							//tr
 							vertices.add(new VertexPNCTT(new Vector3(10.0f*x, -cell.getHeight()[2], 10.0f*(gnd.getHeight()-y)-10),
 														 new Vector3(0,1,0),
-														 surface.getColor(),
+														 c1,
 														 new Vector2(surface.getU()[2], surface.getV()[2]),
 														 new Vector2(tx1,ty2)));
 							//tl
 							vertices.add(new VertexPNCTT(new Vector3(10.0f*x, -cell.getHeight()[0], 10.0f*(gnd.getHeight()-y)),
 														 new Vector3(0,1,0),
-														 surface.getColor(),
+														 c2,
 														 new Vector2(surface.getU()[0], surface.getV()[0]),
 														 new Vector2(tx1,ty1)));
 
 							//bl
 							vertices.add(new VertexPNCTT(new Vector3(10.0f*x+10, -cell.getHeight()[1], 10.0f*(gnd.getHeight()-y)),
 														 new Vector3(0,1,0),
-														 surface.getColor(),
+														 c3,
 														 new Vector2(surface.getU()[1], surface.getV()[1]),
 														 new Vector2(tx2,ty1)));
 		
 							//br
 							vertices.add(new VertexPNCTT(new Vector3(10.0f*x+10, -cell.getHeight()[3], 10.0f*(gnd.getHeight()-y)-10),
 														 new Vector3(0,1,0),
-														 surface.getColor(),
+														 c4,
 														 new Vector2(surface.getU()[3], surface.getV()[3]),
 														 new Vector2(tx2,ty2)));
 						}
