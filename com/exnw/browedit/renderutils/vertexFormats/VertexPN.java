@@ -40,7 +40,7 @@ public class VertexPN implements Vertex
 	}
 
 	@Override
-	public void setPointers(Vbo vbo)
+	public <T extends Vertex> void setPointers(Vbo<T> vbo)
 	{
 		GL gl = GLContext.getCurrent().getGL();
 		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array

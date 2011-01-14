@@ -8,6 +8,7 @@ import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
+import com.exnw.browedit.renderutils.Vertex;
 import com.sun.opengl.util.BufferUtil;
 
 public class VertexPNC extends VertexPN
@@ -38,7 +39,7 @@ public class VertexPNC extends VertexPN
 	}
 	
 	@Override
-	public void setPointers(Vbo vbo)
+	public <T extends Vertex> void setPointers(Vbo<T> vbo)
 	{
 		super.setPointers(vbo);
 		GL gl = GLContext.getCurrent().getGL();
