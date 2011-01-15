@@ -1,7 +1,6 @@
 package com.exnw.browedit.render;
 
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -15,6 +14,9 @@ import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
 import com.exnw.browedit.data.Rsw;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Vbo;
+import com.exnw.browedit.renderutils.VertexList;
+import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
 import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 
@@ -59,8 +61,7 @@ public class RsmRenderer implements Renderer
 		List<Texture> textures = new ArrayList<Texture>();
 		private List<MeshRenderer> subMeshes;
 		
-		private IntBuffer vbos;
-		private int[] polyCount;
+		private ArrayList<Vbo<VertexPNT>> vbos;
 		
 		public MeshRenderer(RsmMesh rsmMesh, Rsm rsm)
 		{
@@ -91,13 +92,9 @@ public class RsmRenderer implements Renderer
 			for( int i = 0; i < this.textures.size(); i++ ){
 				this.textures.get(i).bind();
 
-				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(2*i));         // for vertex coordinates
-				gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
-
-				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(2*i+1));         // for texture coordinates
-				gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
-
-				gl.glDrawArrays(GL.GL_TRIANGLES, 0, polyCount[i]);				
+				vbos.get(i).bind();
+				vbos.get(i).setPointers();
+				gl.glDrawArrays(GL.GL_TRIANGLES, 0, vbos.get(i).size() /BufferUtil.SIZEOF_FLOAT/8);				
 			}
 			gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
 			gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
@@ -114,13 +111,12 @@ public class RsmRenderer implements Renderer
 		}
 		
 		private void generateVbos(GL gl){
-			vbos = IntBuffer.allocate(textures.size()*2);
-			gl.glGenBuffers(textures.size()*2, vbos);		// vertices, texturecoordinats
- 			polyCount = new int[textures.size()];
+			vbos = new ArrayList<Vbo<VertexPNT>>();
+
 			for(int i = 0; i < textures.size(); i++)
 			{
-				ArrayList<Float> vertices = new ArrayList<Float>();
-				ArrayList<Float> texCoords = new ArrayList<Float>();
+				vbos.add(new Vbo<VertexPNT>());
+				VertexList<VertexPNT> vertices = new VertexList<VertexPNT>();
 				for(Surface surface : rsmMesh.getSurfaces())
 				{
 					if(surface.getTextureid() == i)
@@ -128,31 +124,13 @@ public class RsmRenderer implements Renderer
 						for(int ii = 0; ii < 3; ii++)
 						{
 							Vector3 vec = rsmMesh.getVertices().get(surface.getSurfacevertices()[ii]);
-							for(int iii = 0; iii < 3; iii++)
-								vertices.add(vec.getData()[iii]);
-
 							Vector2 tex = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[ii]).getCoodinates();
-							for(int iii = 0; iii < 2; iii++)
-								texCoords.add(tex.getData()[iii]); 
+							
+							vertices.add(new VertexPNT(vec, new Vector3(0,1,0), tex));
 						}
 					}
 				}
-
-				FloatBuffer vertexBuf = FloatBuffer.allocate(vertices.size());
-				for(int ii = 0; ii < vertices.size(); ii++)
-					vertexBuf.put(ii, vertices.get(ii).floatValue());
-
-				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2));
-				gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexBuf.limit()*BufferUtil.SIZEOF_FLOAT, vertexBuf, GL.GL_STATIC_DRAW);
-				
-				FloatBuffer texCoordBuf = FloatBuffer.allocate(texCoords.size());
-				for(int ii = 0; ii < texCoords.size(); ii++)
-					texCoordBuf.put(ii, texCoords.get(ii).floatValue());
-				
-				gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbos.get(i*2+1));
-				gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordBuf.limit()*BufferUtil.SIZEOF_FLOAT, texCoordBuf, GL.GL_STATIC_DRAW);		
-				
-				polyCount[i] = vertexBuf.limit()/3;				
+				vbos.get(i).generate(vertices);
 			}
 			
 		}	
