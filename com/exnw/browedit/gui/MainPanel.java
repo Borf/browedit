@@ -4,21 +4,21 @@ import java.awt.BorderLayout;
 
 import javax.media.opengl.GLCanvas;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 
+import com.exnw.browedit.data.Map;
 import com.sun.opengl.util.Animator;
 
 public class MainPanel extends JPanel
 {
+	BrushToolBar brushToolBar;
 	public MainPanel(MainFrame mainFrame)
 	{
 		this.setLayout(new BorderLayout());
 		
 		
-		JToolBar toolbar= new JToolBar("Browedit Toolbar");
 		add(new ToolBar(mainFrame), BorderLayout.PAGE_START);
 		add(new ToolToolBar(mainFrame), BorderLayout.WEST);
-		
+		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
 		
 		GLCanvas canvas = new GLCanvas();
@@ -33,6 +33,12 @@ public class MainPanel extends JPanel
 	    animator.start();
 	    animator.setRunAsFastAsPossible(true);
 	    canvas.requestFocus();
+	}
+
+	public void setMap(Map currentMap)
+	{
+		brushToolBar.setMap(currentMap);
+		
 	}
 	
 }

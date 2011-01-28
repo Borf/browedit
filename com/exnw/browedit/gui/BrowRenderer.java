@@ -33,8 +33,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	{
 		if(x == -1)
 		{
-			x = mainFrame.currentMap.getGnd().getWidth()*5;
-			y = mainFrame.currentMap.getGnd().getHeight()*5;
+			x = mainFrame.getCurrentMap().getGnd().getWidth()*5;
+			y = mainFrame.getCurrentMap().getGnd().getHeight()*5;
 		}
 		final GL gl = glDrawable.getGL();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -47,7 +47,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 						0,1,0);
 		gl.glEnable(GL.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
-		mainFrame.currentMap.render(gl);
+		mainFrame.getCurrentMap().render(gl);
 		
 	}
 

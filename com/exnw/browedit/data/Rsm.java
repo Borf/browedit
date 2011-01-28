@@ -146,6 +146,7 @@ public class Rsm{
 			this.getRoot().setRealBoundingBox( Matrix4.makeScale( 1, -1, 1 ), this.realbbmin, this.realbbmax );
 			this.realbbrange = new Vector3( ( this.realbbmin.getX() + this.realbbmax.getX() ) / 2.0f, ( this.realbbmin.getY() + this.realbbmax.getY() ) / 2.0f, ( this.realbbmin.getZ() + this.realbbmax.getZ() ) / 2.0f );
 		}catch( java.io.IOException ex ){
+			System.err.println("----------------------------------\nCould not open " + filename + "\n------------------------------\n");
 			ex.printStackTrace();
 		}finally{
 			if( dis != null ){

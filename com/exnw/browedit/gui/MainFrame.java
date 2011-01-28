@@ -3,7 +3,6 @@ package com.exnw.browedit.gui;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JToolBar;
 
 import com.exnw.browedit.data.Map;
 
@@ -11,7 +10,7 @@ import com.exnw.browedit.data.Map;
 public class MainFrame extends JFrame
 {
 	ArrayList<Map> maps = new ArrayList<Map>();
-	Map currentMap = null;
+	private Map currentMap = null;
 	MenuBar menuBar;
 	
 	public MainFrame()
@@ -21,7 +20,7 @@ public class MainFrame extends JFrame
 		this.setContentPane(new MainPanel(this));
 
 		this.setJMenuBar(menuBar = new com.exnw.browedit.gui.MenuBar(this));
-		openMap("data\\prontera.rsw");
+		openMap("data\\hugel.rsw");
 		
 		
 		this.setSize(1280, 900);
@@ -30,9 +29,21 @@ public class MainFrame extends JFrame
 	
 	public void openMap(String fileName)
 	{
-		currentMap = new Map(fileName);
+		Map map = new Map(fileName);
 		maps.add(currentMap);
 		menuBar.addMap(fileName);
+		setCurrentMap(map);
+	}
+
+	public Map getCurrentMap()
+	{
+		return currentMap;
+	}
+
+	public void setCurrentMap(Map currentMap)
+	{
+		this.currentMap = currentMap;
+		((MainPanel)this.getContentPane()).setMap(currentMap);
 	}
 	
 	

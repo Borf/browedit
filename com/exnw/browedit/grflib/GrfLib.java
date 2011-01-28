@@ -59,6 +59,7 @@ public class GrfLib {
 					try{
 						return l.getStream( file );
 					}catch( java.io.FileNotFoundException e ){
+						System.err.println("---------------\nCould not open " + file + "\n--------------\n");
 						e.printStackTrace();
 					}
 				}

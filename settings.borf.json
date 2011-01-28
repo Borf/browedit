@@ -1,7 +1,7 @@
 {
 	"readini" : false,
 	"ini" : "",
-    "grfs" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf", "C:\\Users\\Borf\\AppData\\Local\\Ragray\\rdata.grf" ],
-	"readdata" : false,
+    "grfs" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf", "C:\\Users\\Borf\\AppData\\Local\\Ragray\\rdata.grf", "C:\\Users\\Borf\\AppData\\Local\\Ragray\\colony.grf" ],
+	"readdata" : true,
     "datadir" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray", "." ]
 }
