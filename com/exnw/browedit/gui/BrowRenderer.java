@@ -102,22 +102,23 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	}
 
 	public void mouseDragged( MouseEvent e ){
-		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
-			Vector2 v = new Vector2(oldx - e.getX(), oldy - e.getY());
-			v.rotateBy(rotateT);
-			x += v.getX();
-			y += v.getY();
-		}
-		if( ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
-			if(!inversecamera){
-				rotateT -= (oldx - e.getX()) / 300.0f;
-			} else {
-				rotateT += (oldx - e.getX()) / 300.0f;
+		if(mainFrame.mainPanel.toolToolBar.isBasicViewSelected()){
+			if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
+				Vector2 v = new Vector2(oldx - e.getX(), oldy - e.getY());
+				v.rotateBy(rotateT);
+				x += v.getX();
+				y += v.getY();
 			}
+			if( ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
+				if(!inversecamera){
+					rotateT -= (oldx - e.getX()) / 300.0f;
+				} else {
+					rotateT += (oldx - e.getX()) / 300.0f;
+				}
+			}
+			oldx = e.getX();
+			oldy = e.getY();
 		}
-		oldx = e.getX();
-		oldy = e.getY();
-		
 	}
 	
 	@Override
@@ -144,9 +145,11 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e){
-		int notches = e.getWheelRotation();
-		dist += (notches*9);
-		dist = Math.max(dist, 20);
+		if(mainFrame.mainPanel.toolToolBar.isBasicViewSelected()){
+			int notches = e.getWheelRotation();
+			dist += (notches*9);
+			dist = Math.max(dist, 20);
+		}
 	}
 
 	@Override

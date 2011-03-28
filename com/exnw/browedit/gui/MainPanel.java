@@ -11,13 +11,16 @@ import com.sun.opengl.util.Animator;
 public class MainPanel extends JPanel
 {
 	BrushToolBar brushToolBar;
+	ToolToolBar toolToolBar;
+	ToolBar toolBar;
+	
 	public MainPanel(MainFrame mainFrame)
 	{
 		this.setLayout(new BorderLayout());
 		
 		
-		add(new ToolBar(mainFrame), BorderLayout.PAGE_START);
-		add(new ToolToolBar(mainFrame), BorderLayout.WEST);
+		add(toolBar = new ToolBar(mainFrame), BorderLayout.PAGE_START);
+		add(toolToolBar = new ToolToolBar(mainFrame), BorderLayout.WEST);
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
 		

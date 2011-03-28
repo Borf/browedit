@@ -12,12 +12,13 @@ public class MainFrame extends JFrame
 	ArrayList<Map> maps = new ArrayList<Map>();
 	private Map currentMap = null;
 	MenuBar menuBar;
+	MainPanel mainPanel;
 	
 	public MainFrame()
 	{
 		super("BrowEdit");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setContentPane(new MainPanel(this));
+		this.setContentPane(mainPanel = new MainPanel(this));
 
 		this.setJMenuBar(menuBar = new com.exnw.browedit.gui.MenuBar(this));
 		openMap("data\\hugel.rsw");
