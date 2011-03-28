@@ -1,5 +1,7 @@
 package com.exnw.browedit.gui;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -19,9 +21,10 @@ import com.exnw.browedit.config.Settings;
 import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.gui.ToolToolBar;
 
-public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener{
+public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener{
 	static GLU glu = new GLU();
 	float rotateT = 0;
+	float rotateV = 0;
 	float dist = 200;
 	float x = -1;
 	float y = -1;
@@ -32,6 +35,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	private int oldx = 0;
 	private int oldy = 0;
 	private boolean dragged = false;
+	private boolean ctrlheld = false;
 	
 	public BrowRenderer(MainFrame mainFrame)
 	{
@@ -62,7 +66,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		float d = 100+(float) (Math.abs(Math.sin(dist))*1000.0);
 		gl.glLoadIdentity();
 		glu.gluLookAt(
-						x+dist*Math.cos(rotateT+Math.PI/2.0), dist, y+dist*Math.sin(rotateT+Math.PI/2.0),
+						x+dist*Math.cos(rotateT+Math.PI/2.0), dist+rotateV, y+dist*Math.sin(rotateT+Math.PI/2.0),
 						x, 0,y,
 						0,1,0);
 		gl.glEnable(GL.GL_ALPHA_TEST);
@@ -109,11 +113,26 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 				x += v.getX();
 				y += v.getY();
 			}
+			
 			if( ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
 				if(!inversecamera){
-					rotateT -= (oldx - e.getX()) / 300.0f;
+					if(ctrlheld){
+						rotateV -= (oldy - e.getY()) / 2.0f;
+						if((dist+rotateV)<0){
+							rotateV = 1-dist;
+						}
+					} else {
+						rotateT -= (oldx - e.getX()) / 300.0f;
+					}
 				} else {
-					rotateT += (oldx - e.getX()) / 300.0f;
+					if(ctrlheld){
+						rotateV += (oldy - e.getY()) / 2.0f;
+						if((dist+rotateV)<0){
+							rotateV = 1-dist;
+						}
+					} else {
+						rotateT += (oldx - e.getX()) / 300.0f;
+					}
 				}
 			}
 			oldx = e.getX();
@@ -151,6 +170,21 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 			dist = Math.max(dist, 20);
 		}
 	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode()==KeyEvent.VK_CONTROL){
+			ctrlheld = true;
+		}
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode()==KeyEvent.VK_CONTROL){
+			ctrlheld = false;
+		}
+	}
 
 	@Override
 	public void mouseMoved( MouseEvent e ){}
@@ -163,5 +197,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 
 	@Override
 	public void mouseExited( MouseEvent e ){}
+
+	@Override
+	public void keyTyped(KeyEvent e){}
 
 }
