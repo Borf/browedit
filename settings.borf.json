@@ -3,5 +3,6 @@
 	"ini" : "",
     "grfs" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray\\data.grf", "C:\\Users\\Borf\\AppData\\Local\\Ragray\\rdata.grf", "C:\\Users\\Borf\\AppData\\Local\\Ragray\\colony.grf" ],
 	"readdata" : true,
-    "datadir" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray", "." ]
+    "datadir" : [ "C:\\Users\\Borf\\AppData\\Local\\Ragray", "." ],
+    "inversecamera" : false
 }

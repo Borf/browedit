@@ -26,6 +26,7 @@ public class MainPanel extends JPanel
 		canvas.addGLEventListener(renderer);
 		canvas.addMouseListener(renderer);
 		canvas.addMouseMotionListener(renderer);
+		canvas.addMouseWheelListener(renderer);
 		
 		this.add(canvas, BorderLayout.CENTER);
 

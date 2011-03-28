@@ -3,21 +3,30 @@ package com.exnw.browedit.gui;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import org.json.JSONException;
+
 import com.exnw.browedit.math.Vector2;
 
-public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener{
+import com.exnw.browedit.config.Settings;
+import com.exnw.browedit.grflib.GrfLib;
+import com.exnw.browedit.gui.ToolToolBar;
+
+public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener{
 	static GLU glu = new GLU();
 	float rotateT = 0;
 	float dist = 200;
 	float x = -1;
 	float y = -1;
 	MainFrame mainFrame;
+	boolean inversecamera;
 	
 	// Variables for mouse dragging
 	private int oldx = 0;
@@ -27,6 +36,17 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	public BrowRenderer(MainFrame mainFrame)
 	{
 		this.mainFrame = mainFrame;
+		
+		try
+		{
+			inversecamera = Settings.json.getBoolean("inversecamera");
+		} catch (JSONException e)
+		{
+			System.err.println("No configuration for inversecamera in the settings.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
 	}
 	
 	public void display(GLAutoDrawable glDrawable)
@@ -81,7 +101,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		gl.glLoadIdentity();		
 	}
 
-	public void mouseDragged( MouseEvent e ){		
+	public void mouseDragged( MouseEvent e ){
 		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
 			Vector2 v = new Vector2(oldx - e.getX(), oldy - e.getY());
 			v.rotateBy(rotateT);
@@ -89,12 +109,15 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 			y += v.getY();
 		}
 		if( ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
-			rotateT += (oldx - e.getX()) / 300.0f;
-			dist += (oldy - e.getY());
-			dist = Math.max(dist, 20);
+			if(!inversecamera){
+				rotateT -= (oldx - e.getX()) / 300.0f;
+			} else {
+				rotateT += (oldx - e.getX()) / 300.0f;
+			}
 		}
 		oldx = e.getX();
 		oldy = e.getY();
+		
 	}
 	
 	@Override
@@ -118,6 +141,13 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 			}
 		}		
 	}
+	
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e){
+		int notches = e.getWheelRotation();
+		dist += (notches*9);
+		dist = Math.max(dist, 20);
+	}
 
 	@Override
 	public void mouseMoved( MouseEvent e ){}
@@ -130,4 +160,5 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 
 	@Override
 	public void mouseExited( MouseEvent e ){}
+
 }
