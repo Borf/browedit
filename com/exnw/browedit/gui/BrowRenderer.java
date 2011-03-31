@@ -120,7 +120,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 				if(!inversecamera){
 						viewpoint.rotateBy((oldx-e.getX()) / 300.0f, (oldy-e.getY()) / 300.0f);
 				} else {
-						viewpoint.rotateBy((oldx-e.getX()) / 300.0f, (oldy-e.getY()) / 300.0f);
+						viewpoint.rotateBy(-((oldx-e.getX()) / 300.0f), -((oldy-e.getY()) / 300.0f));
 				}
 			}
 			oldx = e.getX();

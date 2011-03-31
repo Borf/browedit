@@ -70,7 +70,7 @@ public class Vector3{
 	{
 		double hAngle = getHorizontalAngle();
 		double vAngle = getVerticalAngle();
-		hAngle += xRotateIncrement;
+		hAngle -= xRotateIncrement;
 		vAngle += yRotateIncrement;
 		vAngle = Math.min(Math.max(vAngle, 0.001f),((Math.PI/2.0)-0.001f));
 		data[0] = (float) (Math.cos(hAngle)*Math.sin(vAngle));
