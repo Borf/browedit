@@ -51,6 +51,32 @@ public class Vector3{
 	public float[] getData(){
 		return this.data;
 	}
+	
+	public float getLength(){
+		return (float) Math.sqrt(data[0]*data[0]+data[1]*data[1]+data[2]*data[2]);
+	}
+	
+	public double getVerticalAngle()
+	{
+		return Math.acos(data[1]);
+	}
+	
+	public double getHorizontalAngle()
+	{
+		return Math.atan2(data[2], data[0]);
+	}
+	
+	public void rotateBy(float xRotateIncrement, float yRotateIncrement)
+	{
+		double hAngle = getHorizontalAngle();
+		double vAngle = getVerticalAngle();
+		hAngle += xRotateIncrement;
+		vAngle += yRotateIncrement;
+		vAngle = Math.min(Math.max(vAngle, 0.001f),((Math.PI/2.0)-0.001f));
+		data[0] = (float) (Math.cos(hAngle)*Math.sin(vAngle));
+		data[1] = (float) (Math.cos(vAngle));
+		data[2] = (float) (Math.sin(hAngle)*Math.sin(vAngle));
+	}
 
 	public void add(Vector3 other)
 	{

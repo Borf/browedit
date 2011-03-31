@@ -30,7 +30,6 @@ public class MainPanel extends JPanel
 		canvas.addMouseListener(renderer);
 		canvas.addMouseMotionListener(renderer);
 		canvas.addMouseWheelListener(renderer);
-		canvas.addKeyListener(renderer);
 		
 		this.add(canvas, BorderLayout.CENTER);
 

@@ -16,15 +16,14 @@ import javax.media.opengl.glu.GLU;
 import org.json.JSONException;
 
 import com.exnw.browedit.math.Vector2;
+import com.exnw.browedit.math.Vector3;
 
 import com.exnw.browedit.config.Settings;
 import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.gui.ToolToolBar;
 
-public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener{
+public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener {
 	static GLU glu = new GLU();
-	float rotateT = 0;
-	float rotateV = 0;
 	float dist = 200;
 	float x = -1;
 	float y = -1;
@@ -35,12 +34,14 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	private int oldx = 0;
 	private int oldy = 0;
 	private boolean dragged = false;
-	private boolean ctrlheld = false;
+	private Vector3 viewpoint;
 	
 	public BrowRenderer(MainFrame mainFrame)
 	{
 		this.mainFrame = mainFrame;
 		
+		double x = Math.PI / 2.0;
+		viewpoint = new Vector3(Math.cos(x),Math.cos(x/2),Math.sin(x));
 		try
 		{
 			inversecamera = Settings.json.getBoolean("inversecamera");
@@ -66,7 +67,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		float d = 100+(float) (Math.abs(Math.sin(dist))*1000.0);
 		gl.glLoadIdentity();
 		glu.gluLookAt(
-						x+dist*Math.cos(rotateT+Math.PI/2.0), dist+rotateV, y+dist*Math.sin(rotateT+Math.PI/2.0),
+						x+dist*viewpoint.getX(), dist*viewpoint.getY(), y+dist*viewpoint.getZ(),
 						x, 0,y,
 						0,1,0);
 		gl.glEnable(GL.GL_ALPHA_TEST);
@@ -108,31 +109,18 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	public void mouseDragged( MouseEvent e ){
 		if(mainFrame.mainPanel.toolToolBar.isBasicViewSelected()){
 			if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
-				Vector2 v = new Vector2(oldx - e.getX(), oldy - e.getY());
-				v.rotateBy(rotateT);
+				Vector2 v = new Vector2((((oldx - e.getX())/300.0f)*dist), (((oldy - e.getY())/300.0f)*dist));
+				float rot = (float) (viewpoint.getHorizontalAngle() - (Math.PI/2));
+				v.rotateBy(rot);
 				x += v.getX();
 				y += v.getY();
 			}
 			
 			if( ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
 				if(!inversecamera){
-					if(ctrlheld){
-						rotateV -= (oldy - e.getY()) / 2.0f;
-						if((dist+rotateV)<0){
-							rotateV = 1-dist;
-						}
-					} else {
-						rotateT -= (oldx - e.getX()) / 300.0f;
-					}
+						viewpoint.rotateBy((oldx-e.getX()) / 300.0f, (oldy-e.getY()) / 300.0f);
 				} else {
-					if(ctrlheld){
-						rotateV += (oldy - e.getY()) / 2.0f;
-						if((dist+rotateV)<0){
-							rotateV = 1-dist;
-						}
-					} else {
-						rotateT += (oldx - e.getX()) / 300.0f;
-					}
+						viewpoint.rotateBy((oldx-e.getX()) / 300.0f, (oldy-e.getY()) / 300.0f);
 				}
 			}
 			oldx = e.getX();
@@ -170,21 +158,6 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 			dist = Math.max(dist, 20);
 		}
 	}
-	
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode()==KeyEvent.VK_CONTROL){
-			ctrlheld = true;
-		}
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode()==KeyEvent.VK_CONTROL){
-			ctrlheld = false;
-		}
-	}
 
 	@Override
 	public void mouseMoved( MouseEvent e ){}
@@ -197,8 +170,5 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 
 	@Override
 	public void mouseExited( MouseEvent e ){}
-
-	@Override
-	public void keyTyped(KeyEvent e){}
 
 }
