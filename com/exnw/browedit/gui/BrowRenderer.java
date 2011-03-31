@@ -41,7 +41,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		this.mainFrame = mainFrame;
 		
 		double x = Math.PI / 2.0;
-		viewpoint = new Vector3(Math.cos(x),Math.cos(x/2),Math.sin(x));
+		viewpoint = new Vector3(Math.cos(x)*Math.sin(x/2),Math.cos(x/2),Math.sin(x)*Math.sin(x/2));
 		try
 		{
 			inversecamera = Settings.json.getBoolean("inversecamera");
