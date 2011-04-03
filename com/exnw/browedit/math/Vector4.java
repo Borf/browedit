@@ -56,4 +56,8 @@ public class Vector4{
 	public float[] getData(){
 		return this.data;
 	}
+	public String toString()
+	{
+		return "Vector4(" + data[0] + "," + data[1] + "," + data[2] + ", " + data[3] + ") ";
+	}
 }

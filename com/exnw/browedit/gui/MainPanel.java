@@ -10,9 +10,11 @@ import com.sun.opengl.util.Animator;
 
 public class MainPanel extends JPanel
 {
+	private static final long serialVersionUID = -5433542069926154067L;
 	BrushToolBar brushToolBar;
 	ToolToolBar toolToolBar;
 	ToolBar toolBar;
+	GLCanvas canvas;
 	
 	public MainPanel(MainFrame mainFrame)
 	{
@@ -24,7 +26,7 @@ public class MainPanel extends JPanel
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
 		
-		GLCanvas canvas = new GLCanvas();
+		canvas = new GLCanvas();
 		BrowRenderer renderer = new BrowRenderer(mainFrame);
 		canvas.addGLEventListener(renderer);
 		canvas.addMouseListener(renderer);
@@ -43,6 +45,11 @@ public class MainPanel extends JPanel
 	{
 		brushToolBar.setMap(currentMap);
 		
+	}
+
+	public GLCanvas getCanvas()
+	{
+		return canvas;
 	}
 	
 }

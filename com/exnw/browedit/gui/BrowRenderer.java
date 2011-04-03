@@ -1,7 +1,5 @@
 package com.exnw.browedit.gui;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -15,12 +13,9 @@ import javax.media.opengl.glu.GLU;
 
 import org.json.JSONException;
 
+import com.exnw.browedit.config.Settings;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
-
-import com.exnw.browedit.config.Settings;
-import com.exnw.browedit.grflib.GrfLib;
-import com.exnw.browedit.gui.ToolToolBar;
 
 public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener {
 	static GLU glu = new GLU();
@@ -64,7 +59,6 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		final GL gl = glDrawable.getGL();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-		float d = 100+(float) (Math.abs(Math.sin(dist))*1000.0);
 		gl.glLoadIdentity();
 		glu.gluLookAt(
 						x+dist*viewpoint.getX(), dist*viewpoint.getY(), y+dist*viewpoint.getZ(),
@@ -72,7 +66,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 						0,1,0);
 		gl.glEnable(GL.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
-		mainFrame.getCurrentMap().render(gl);
+		mainFrame.getCurrentMap().render(mainFrame, gl);
 		
 	}
 
@@ -88,8 +82,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		gl.glClearDepth(1.0f);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LEQUAL);
-		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, 
-			  GL.GL_NICEST);
+		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 	}
 
 	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height)
@@ -107,9 +100,12 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	}
 
 	public void mouseDragged( MouseEvent e ){
-		if(mainFrame.mainPanel.toolToolBar.isBasicViewSelected()){
+		mainFrame.mouseX = e.getX();
+		mainFrame.mouseY = e.getY();		
+
+		if(mainFrame.getMainPanel().toolToolBar.isBasicViewSelected()){
 			if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
-				Vector2 v = new Vector2((((oldx - e.getX())/300.0f)*dist), (((oldy - e.getY())/300.0f)*dist));
+				Vector2 v = new Vector2((((oldx - e.getX())/600.0f)*dist), (((oldy - e.getY())/600.0f)*dist));
 				float rot = (float) (viewpoint.getHorizontalAngle() - (Math.PI/2));
 				v.rotateBy(rot);
 				x += v.getX();
@@ -126,6 +122,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 			oldx = e.getX();
 			oldy = e.getY();
 		}
+		
 	}
 	
 	@Override
@@ -152,7 +149,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e){
-		if(mainFrame.mainPanel.toolToolBar.isBasicViewSelected()){
+		if(mainFrame.getMainPanel().toolToolBar.isBasicViewSelected()){
 			int notches = e.getWheelRotation();
 			dist += (notches*9);
 			dist = Math.max(dist, 20);
@@ -160,7 +157,11 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	}
 
 	@Override
-	public void mouseMoved( MouseEvent e ){}
+	public void mouseMoved( MouseEvent e )
+	{
+		mainFrame.mouseX = e.getX();
+		mainFrame.mouseY = e.getY();		
+	}
 
 	@Override
 	public void mouseClicked( MouseEvent e ){}

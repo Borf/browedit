@@ -60,7 +60,6 @@ public class Vbo<T extends Vertex>
 		gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * (size*BufferUtil.SIZEOF_FLOAT), size*BufferUtil.SIZEOF_FLOAT, tmpList.GenerateFloatBuffer());
 	}
 	
-	
 	public FloatBuffer getMap()
 	{
 		this.bind();

@@ -65,4 +65,8 @@ public class Vector2{
 	{
 		return (float) Math.sqrt(data[0]*data[0]+data[1]*data[1]);
 	}
+	public String toString()
+	{
+		return "Vector2(" + data[0] + "," + data[1] + ") ";
+	}
 }

@@ -9,10 +9,13 @@ import com.exnw.browedit.data.Map;
 
 public class MainFrame extends JFrame
 {
+	private static final long serialVersionUID = -418172863646438090L;
 	ArrayList<Map> maps = new ArrayList<Map>();
 	private Map currentMap = null;
 	MenuBar menuBar;
-	MainPanel mainPanel;
+	private MainPanel mainPanel;
+	
+	public int mouseX, mouseY;
 	
 	public MainFrame()
 	{
@@ -21,7 +24,7 @@ public class MainFrame extends JFrame
 		this.setContentPane(mainPanel = new MainPanel(this));
 
 		this.setJMenuBar(menuBar = new com.exnw.browedit.gui.MenuBar(this));
-		openMap("data\\hugel.rsw");
+		openMap("data\\prontera.rsw");
 		
 		
 		this.setSize(1280, 900);
@@ -45,6 +48,11 @@ public class MainFrame extends JFrame
 	{
 		this.currentMap = currentMap;
 		((MainPanel)this.getContentPane()).setMap(currentMap);
+	}
+
+	public MainPanel getMainPanel()
+	{
+		return mainPanel;
 	}
 	
 	

@@ -83,4 +83,8 @@ public class Vector3{
 		for(int i = 0; i < 3; i++)
 			this.data[i] += other.data[i];		
 	}
+	public String toString()
+	{
+		return "Vector3(" + data[0] + "," + data[1] + "," + data[2] + ") ";
+	}
 }

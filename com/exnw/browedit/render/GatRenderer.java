@@ -1,6 +1,7 @@
 package com.exnw.browedit.render;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -9,6 +10,7 @@ import javax.media.opengl.GLException;
 
 import com.exnw.browedit.data.Gat;
 import com.exnw.browedit.data.Gat.GatCell;
+import com.exnw.browedit.data.events.GatChange;
 import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
@@ -24,6 +26,7 @@ public class GatRenderer implements Observer, Renderer
 	Gat gat;
 	static Texture texture = null;	//same for all gat renderers
 	Vbo<VertexPNT> vbo;
+	ArrayList changes = new ArrayList();
 	
 	public GatRenderer(Gat gat)
 	{
@@ -68,6 +71,39 @@ public class GatRenderer implements Observer, Renderer
 			this.generateVbos(gl);
 		if(GatRenderer.texture == null)
 			GatRenderer.generateTexture();
+		
+		if(!changes.isEmpty())
+		{
+			for(Object arg : changes)
+			{
+				if(arg instanceof GatChange)
+				{
+					GatChange change = (GatChange)arg;
+					GatCell cell = gat.getCell(change.x, change.y);
+					
+					int textureIndex = cell.getType().ordinal();
+					
+					float tw = 0.25f;
+					float th = 0.25f;
+					float tx0 = (textureIndex%4)*tw;
+					float ty0 = (textureIndex/4)*th;
+					float tx1 = tx0+tw;
+					float ty1 = ty0+th;
+					Vector3 normal = new Vector3(0,1,0);				
+					vbo.put((change.x*gat.getHeight() + change.y) * 4+0, new VertexPNT(new Vector3(5*change.x+0, -cell.getHeight()[0], 5*(gat.getHeight()-change.y)+5), normal, new Vector2(tx0,ty0)));
+					vbo.put((change.x*gat.getHeight() + change.y) * 4+1, new VertexPNT(new Vector3(5*change.x+5, -cell.getHeight()[1], 5*(gat.getHeight()-change.y)+5), normal, new Vector2(tx1,ty0)));
+					vbo.put((change.x*gat.getHeight() + change.y) * 4+2, new VertexPNT(new Vector3(5*change.x+5, -cell.getHeight()[3], 5*(gat.getHeight()-change.y)+0), normal, new Vector2(tx1,ty1)));
+					vbo.put((change.x*gat.getHeight() + change.y) * 4+3, new VertexPNT(new Vector3(5*change.x+0, -cell.getHeight()[2], 5*(gat.getHeight()-change.y)+0), normal, new Vector2(tx0,ty1)));
+				}
+				else
+				{
+					System.out.println("uhoh");
+				}
+			}			
+			changes.clear();
+		}
+		
+		
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL.GL_BLEND);
 		
@@ -107,14 +143,12 @@ public class GatRenderer implements Observer, Renderer
 		}
 	}
 
+	
 	public void update(Observable o, Object arg)
 	{
 		if(o.equals(gat))
-		{
-			this.vbo.dispose();
-			this.vbo = null; // TODO: eep! this leaks!
-		}
+			changes.add(arg);
 		
 	}
-	
+
 }

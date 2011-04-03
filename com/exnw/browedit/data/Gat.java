@@ -1,8 +1,8 @@
 package com.exnw.browedit.data;
 
-import java.nio.IntBuffer;
 import java.util.Observable;
 
+import com.exnw.browedit.data.events.GatChange;
 import com.exnw.browedit.grflib.GrfLib;
 
 /**
@@ -49,11 +49,6 @@ public class Gat extends Observable
 	private int height;
 	
 	private java.util.List<Gat.GatCell> cells;
-	
-	//rendering
-	private IntBuffer vbos = null;
-	private static int texture;
-	
 	
 	public Gat( String filename ){
 		if( filename == null || filename.isEmpty() )
@@ -123,6 +118,18 @@ public class Gat extends Observable
 		return this.cells.get( x + y * this.getWidth() );
 	}
 	
+	public void setCellType(int x, int y, GatCellType newType)
+	{
+		this.cells.get(x+y*this.getWidth()).type = newType;
+		setChanged();
+		notifyObservers(new GatChange(x,y));
+	}
+	public void setCellHeight(int x, int y, int index, float newHeight)
+	{
+		this.cells.get(x+y*this.getWidth()).height[index] = newHeight;
+		setChanged();
+		notifyObservers(new GatChange(x,y));
+	}	
 	@Override
 	public String toString(){
 		return String.format( "Ragnarok Online GAT File(Version %01d.%01d): %s | %01d cells", this.version_major, this.version_minor, this.filename, this.cells.size() );
@@ -160,7 +167,7 @@ public class Gat extends Observable
 			int type = dis.readInt();
 			
 			try{
-				this.setType(Gat.GatCellType.values()[type]);
+				this.type = Gat.GatCellType.values()[type];
 			}catch( ArrayIndexOutOfBoundsException ex ){
 				throw new IllegalArgumentException( String.format( "Gat Celltype %01d is unknown.", type ) );
 			}
@@ -177,15 +184,12 @@ public class Gat extends Observable
 			return height;
 		}
 
-		public void setType(Gat.GatCellType type)
-		{
-			notifyObservers();
-			this.type = type;
-		}
-
 		public Gat.GatCellType getType()
 		{
 			return type;
 		}
 	}
+
+
+
 }

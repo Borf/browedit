@@ -1,6 +1,5 @@
 package com.exnw.browedit.render;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -9,9 +8,9 @@ import javax.media.opengl.GL;
 
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsm;
+import com.exnw.browedit.data.Rsw;
 import com.exnw.browedit.data.Rsm.RsmMesh;
 import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
-import com.exnw.browedit.data.Rsw;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
