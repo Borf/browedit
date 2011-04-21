@@ -1,8 +1,12 @@
 package com.exnw.browedit.data;
 
+import java.io.IOException;
+
+import com.exnw.browedit.io.Buffer;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Quaternion;
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.render.RsmRenderer;
 
 public class Rsm{
 	private static byte[] magic = "GRSM".getBytes();
@@ -39,6 +43,15 @@ public class Rsm{
 	
 	private long lastTick;
 	
+	private RsmRenderer renderer;
+	
+	public RsmRenderer getRSMRenderer(){
+		if( this.renderer == null ){
+			this.renderer = new RsmRenderer( this );
+		}
+		return this.renderer;
+	}
+	
 	public Rsm( String filename ){
 		if( filename == null || filename.isEmpty() )
 			throw new IllegalArgumentException("No empty filename allowed.");
@@ -62,6 +75,94 @@ public class Rsm{
 	}
 	
 	public void read(){
+		java.io.InputStream is = null;
+		Buffer buffer = null;
+		
+		try{
+			is = com.exnw.browedit.grflib.GrfLib.openFile( this.filename );
+			
+			byte [] buf = new byte[is.available()];
+			is.read( buf );
+			buffer = new Buffer( buf );
+		}catch( IOException ex ){
+			ex.printStackTrace();
+			return;
+		}finally{
+			if( is != null ){
+				try{
+					is.close();
+				}catch( IOException ex ){
+					ex.printStackTrace();
+					return;
+				}
+			}
+		}
+		
+		for( byte b : Rsm.magic ){
+			if( b != buffer.getByte() ){
+				throw new IllegalArgumentException("RSM file header is corrupted.");
+			}
+		}
+		
+		this.version_major = buffer.getByte();
+		this.version_minor = buffer.getByte();
+		
+		if( !Rsm.isSupported( this.version_major, this.version_minor ) )
+			throw new IllegalArgumentException( String.format( "RSM Version %01d.%01d not supported.", this.version_major, this.version_minor ) );
+		
+		this.animationlength = buffer.getInt();
+		this.shadetype = buffer.getInt();
+		
+		if( this.version_minor >= 4 ){ // Since RSM 1.4
+			this.alpha = buffer.getByte();
+		}else{
+			this.alpha = (byte)0xFF; // TODO: Check this, since you use 0 here.
+		}
+		
+		buffer.skip(16);
+		
+		this.setTextures(new java.util.ArrayList<String>());
+		
+		for( int i = 0, count = buffer.getInt(); i < count; i++ ){
+			this.getTextures().add( buffer.getString(40) );
+		}
+		
+		String rootname = buffer.getString(40);
+		
+		this.setMeshes( new java.util.ArrayList<Rsm.RsmMesh>() );
+		for( int i = 0, count = buffer.getInt(); i < count; i++ ){
+			Rsm.RsmMesh mesh = new Rsm.RsmMesh( buffer );
+			
+			if( mesh.name.equalsIgnoreCase( rootname ) )
+				this.setRoot( mesh );
+			
+			this.getMeshes().add( mesh );
+		}
+		
+		// Calculation for rendering process
+		for( Rsm.RsmMesh mesh : this.getMeshes() ){
+			for( Rsm.RsmMesh mesh2 : this.getMeshes() ){
+				if( mesh != mesh2 && mesh2.getParent().equalsIgnoreCase( mesh.getName() ) ){
+					mesh.subMeshes.add( mesh2 );
+				}
+			}
+		}
+		
+		this.animated = false;
+		
+		this.bbmin = new Vector3( 999999, 999999, 999999 );
+		this.bbmax = new Vector3(-999999,-999999,-999999 );
+		this.getRoot().setBoundingBox( this.bbmin, this.bbmax );
+		this.bbrange = new Vector3( ( this.bbmin.getX() + this.bbmax.getX() ) / 2.0f, ( this.bbmin.getY() + this.bbmax.getY() ) / 2.0f, ( this.bbmin.getZ() + this.bbmax.getZ() ) / 2.0f);
+
+		this.realbbmax = new Vector3(-999999,-999999,-999999 );
+		this.realbbmin = new Vector3( 999999, 999999, 999999 );
+		
+		this.getRoot().setRealBoundingBox( Matrix4.makeScale( 1, -1, 1 ), this.realbbmin, this.realbbmax );
+		this.realbbrange = new Vector3( ( this.realbbmin.getX() + this.realbbmax.getX() ) / 2.0f, ( this.realbbmin.getY() + this.realbbmax.getY() ) / 2.0f, ( this.realbbmin.getZ() + this.realbbmax.getZ() ) / 2.0f );
+	}
+	
+	public void Oldread(){
 		com.exnw.browedit.io.SwappedInputStream dis = null;
 		
 		try{
@@ -231,6 +332,80 @@ public class Rsm{
 		public RsmMesh( com.exnw.browedit.io.SwappedInputStream in ) throws java.io.IOException{
 			this();
 			this.read( in );
+		}
+		
+		public RsmMesh( Buffer buffer ){
+			this();
+			this.readFast(buffer);
+		}
+		
+		public void readFast( Buffer buffer ){
+			this.setName( buffer.getString( 40 ) );
+			this.setParent( buffer.getString( 40 ) );
+			
+			this.setTextureids(new java.util.ArrayList<Integer>());	
+			for( int i = 0, count = buffer.getInt(); i < count; i++ ){
+				this.getTextureids().add( buffer.getInt() );
+			}
+			
+			this.setMatrix( buffer.getMatrix4() );
+			this.setPosition( buffer.getVector3() );
+			this.setPosition2( buffer.getVector3() );
+			this.setRotationangle( buffer.getFloat() );
+			this.setRotationaxis( buffer.getVector3() );
+			this.setScale( buffer.getVector3() );
+			
+			this.setVertices(new java.util.ArrayList<com.exnw.browedit.math.Vector3>());
+			for( int i = 0, count = buffer.getInt(); i < count; i++ ){				
+				this.getVertices().add( buffer.getVector3() );
+			}
+			
+			this.setTextureCoordinats(new java.util.ArrayList<Rsm.RsmMesh.TextureCoordinate>());
+			for( int i = 0, count = buffer.getInt(); i < count; i++ ){
+				Rsm.RsmMesh.TextureCoordinate tv = new Rsm.RsmMesh.TextureCoordinate();
+				
+				if( Rsm.this.version_minor >= 2 )
+					tv.color = new java.awt.Color( buffer.getInt() );
+				else
+					tv.color = new java.awt.Color( 0xFFFFFFFF );
+				
+				tv.setCoodinates( buffer.getVector2() );
+				
+				this.getTextureCoordinats().add( tv );
+			}
+			
+			this.setSurfaces(new java.util.ArrayList<Rsm.RsmMesh.Surface>());
+			for( int i = 0, count = buffer.getInt(); i < count; i++ ){
+				Rsm.RsmMesh.Surface s = new Rsm.RsmMesh.Surface();
+				
+				for( int j = 0; j < 3; j++ )
+					s.getSurfacevertices()[j] = buffer.getShort();
+				
+				for( int j = 0; j < 3; j++ )
+					s.getTexturevertices()[j] = buffer.getShort();
+				
+				s.setTextureid(buffer.getShort());
+				s.padding = buffer.getShort();
+				s.twoside = buffer.getInt();
+				
+				if( Rsm.this.version_minor >= 2 ){
+					s.smoothgroup = buffer.getInt();
+				}else{
+					s.smoothgroup = 0;
+				}
+				
+				this.getSurfaces().add( s );
+			}
+			
+			this.setAnimationFrames(new java.util.ArrayList<Rsm.RsmMesh.AnimationFrame>());
+			for( int i = 0, count = buffer.getInt(); i < count; i++ ){
+				Rsm.RsmMesh.AnimationFrame rf = new Rsm.RsmMesh.AnimationFrame();
+				
+				rf.setTime(buffer.getInt());
+				rf.setQuat(buffer.getQuaternion());
+				
+				this.getAnimationFrames().add(rf);
+			}
 		}
 		
 		public void read( com.exnw.browedit.io.SwappedInputStream in ) throws java.io.IOException{

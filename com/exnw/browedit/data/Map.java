@@ -39,6 +39,7 @@ public class Map
 	
 	public void render(MainFrame mainFrame, GL gl)
 	{
+		/*
 		gatRenderer.render(gl);
 		
 		Vector3 mouse3D = get3DCursor(mainFrame, gl); 
@@ -50,9 +51,10 @@ public class Map
         	for(int i = 0; i < 4; i++)
         		gat.setCellHeight(tx, gat.getHeight()-1-ty, i, gat.getCell(tx, gat.getHeight()-1-ty).getHeight()[i]-0.1f);
         }
+        */
 		
-		//gndRenderer.render(gl);
-		//rswRenderer.render(gl);
+		gndRenderer.render(gl);
+		rswRenderer.render(gl);
 	}
 	
 	

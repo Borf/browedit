@@ -19,19 +19,14 @@ import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
 import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 
-public class RsmRenderer implements Renderer
-{
-	private Rsw.ModelResource modelProperties;
+public class RsmRenderer implements Renderer{
 	private Rsm rsm;
-	private Map map;
 	
 	private MeshRenderer root;
 	private List<Texture> textures = new ArrayList<Texture>();
-
-	RsmRenderer( Rsw.ModelResource resource, Map map ){
-		this.map = map;
-		this.modelProperties = resource;
-		this.rsm =  resource.getRsm();
+	
+	public RsmRenderer( Rsm rsm ){
+		this.rsm = rsm;
 		
 		for( String t : this.rsm.getTextures() )
 			this.textures.add( TextureCache.getTexture("data\\texture\\" + t) );
@@ -39,9 +34,9 @@ public class RsmRenderer implements Renderer
 		this.root = new RsmRenderer.MeshRenderer( this.rsm.getRoot(), this.rsm );
 	}
 	
-	public void render(GL gl)
-	{
+	public void render( GL gl, Map map, Rsw.ModelResource modelProperties ){
 		gl.glPushMatrix();
+		
 		gl.glTranslatef(5*map.getGnd().getWidth()+modelProperties.getPosition().getX(), -modelProperties.getPosition().getY(), -5*map.getGnd().getHeight()+modelProperties.getPosition().getZ());
 		gl.glRotatef(-modelProperties.getRotation().getZ(), 0, 0, 1);
 		gl.glRotatef(-modelProperties.getRotation().getX(), 1, 0, 0);
@@ -49,13 +44,15 @@ public class RsmRenderer implements Renderer
 		gl.glScalef(modelProperties.getScale().getX(), -modelProperties.getScale().getY(), modelProperties.getScale().getZ());
 		gl.glTranslatef(-this.rsm.getRealBBRange().getX(), this.rsm.getRealBBMin().getY(), -this.rsm.getRealBBRange().getZ());
 		gl.glEnable(GL.GL_TEXTURE_2D);
-		root.render(gl);
+		
+		this.root.render(gl);
+		
 		gl.glPopMatrix();
 	}
 	
 	public void update( Observable o, Object arg ){}
 	
-	class MeshRenderer{
+	public class MeshRenderer{
 		Rsm.RsmMesh rsmMesh;
 		List<Texture> textures = new ArrayList<Texture>();
 		private List<MeshRenderer> subMeshes;
@@ -133,5 +130,12 @@ public class RsmRenderer implements Renderer
 			}
 			
 		}	
+	}
+
+	@Override
+	public void render(GL gl)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

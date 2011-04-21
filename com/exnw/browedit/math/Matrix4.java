@@ -36,6 +36,30 @@ public class Matrix4{
 		this.data[15] = 0.0f;
 	}
 	
+	public Matrix4( Number m11, Number m12, Number m13, Number m14,	Number m21, Number m22, Number m23, Number m24,	Number m31, Number m32, Number m33, Number m34, Number m41, Number m42, Number m43, Number m44 ){
+		this();
+		
+		this.data[0] = m11.floatValue();
+		this.data[1] = m12.floatValue();
+		this.data[2] = m13.floatValue();
+		this.data[3] = m14.floatValue();
+		
+		this.data[4] = m21.floatValue();
+		this.data[5] = m22.floatValue();
+		this.data[6] = m23.floatValue();
+		this.data[7] = m24.floatValue();
+		
+		this.data[8] = m31.floatValue();
+		this.data[9] = m32.floatValue();
+		this.data[10] = m33.floatValue();
+		this.data[11] = m34.floatValue();
+		
+		this.data[12] = m41.floatValue();
+		this.data[13] = m42.floatValue();
+		this.data[14] = m43.floatValue();
+		this.data[15] = m44.floatValue();
+	}
+	
 	public Matrix4( Number[] data ){
 		this();
 		

@@ -19,7 +19,9 @@ public class TextureCache
 	
 	public static Texture getTexture(String fileName)
 	{
-		if(!textures.containsKey(fileName))
+		Texture t = TextureCache.textures.get( fileName );
+		
+		if( t == null )
 		{
 			try
 			{
@@ -39,7 +41,7 @@ public class TextureCache
 						dest.setRGB(x, y, rgb);
 					}
 				}
-				Texture t = TextureIO.newTexture(new TextureData(0,0,true,dest));
+				t = TextureIO.newTexture(new TextureData(0,0,true,dest));
 				t.setTexParameteri(GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);				
 //				Texture t = TextureIO.newTexture(GrfLib.openFile(fileName), true, fileName.substring(fileName.lastIndexOf('.')));
 				textures.put(fileName, t);
@@ -53,6 +55,6 @@ public class TextureCache
 				e.printStackTrace();
 			}
 		}
-		return textures.get(fileName);
+		return t;
 	}
 }
