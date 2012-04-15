@@ -27,6 +27,8 @@ public class TextureCache
 			{
 				//TODO: can't we do this quicker?
 				BufferedImage img = ImageIO.read(GrfLib.openFile(fileName));
+				if(img == null)
+					return null;
 				BufferedImage dest = new BufferedImage(
 					    img.getWidth(), img.getHeight(),
 					    BufferedImage.TYPE_INT_ARGB);

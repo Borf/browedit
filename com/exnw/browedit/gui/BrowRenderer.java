@@ -11,10 +11,9 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
-import org.json.JSONException;
-
-import com.exnw.browedit.config.Settings;
-import com.exnw.browedit.math.Vector2;
+import com.exnw.browedit.camera.BrowCamera;
+import com.exnw.browedit.camera.Camera;
+import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector3;
 
 public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener {
@@ -23,30 +22,19 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	float x = -1;
 	float y = -1;
 	MainFrame mainFrame;
-	boolean inversecamera;
 	
 	// Variables for mouse dragging
-	private int oldx = 0;
-	private int oldy = 0;
-	private boolean dragged = false;
-	private Vector3 viewpoint;
+	private Camera camera;
+	private MouseEvent lastMouseEvent;
+	
+	
+	float bla = 0;
 	
 	public BrowRenderer(MainFrame mainFrame)
 	{
 		this.mainFrame = mainFrame;
 		
-		double x = Math.PI / 2.0;
-		viewpoint = new Vector3(Math.cos(x)*Math.sin(x/2),Math.cos(x/2),Math.sin(x)*Math.sin(x/2));
-		try
-		{
-			inversecamera = Settings.json.getBoolean("inversecamera");
-		} catch (JSONException e)
-		{
-			System.err.println("No configuration for inversecamera in the settings.");
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
+		camera = new BrowCamera(new Vector3(500,50,500));		
 	}
 	
 	public void display(GLAutoDrawable glDrawable)
@@ -60,10 +48,10 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		glu.gluLookAt(
-						x+dist*viewpoint.getX(), dist*viewpoint.getY(), y+dist*viewpoint.getZ(),
-						x, 0,y,
-						0,1,0);
+		
+		Matrix4 cameraMatrix = camera.getMatrix();
+		gl.glMultMatrixf(cameraMatrix.getData(), 0);
+		
 		gl.glEnable(GL.GL_ALPHA_TEST);
 		gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
 		mainFrame.getCurrentMap().render(mainFrame, gl);
@@ -103,57 +91,36 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		mainFrame.mouseX = e.getX();
 		mainFrame.mouseY = e.getY();		
 
-		if(mainFrame.getMainPanel().toolToolBar.isBasicViewSelected()){
-			if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 ){
-				Vector2 v = new Vector2((((oldx - e.getX())/600.0f)*dist), (((oldy - e.getY())/600.0f)*dist));
-				float rot = (float) (viewpoint.getHorizontalAngle() - (Math.PI/2));
-				v.rotateBy(rot);
-				x += v.getX();
-				y += v.getY();
-			}
-			
-			if( ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
-				if(!inversecamera){
-						viewpoint.rotateBy((oldx-e.getX()) / 300.0f, (oldy-e.getY()) / 300.0f);
-				} else {
-						viewpoint.rotateBy(-((oldx-e.getX()) / 300.0f), -((oldy-e.getY()) / 300.0f));
-				}
-			}
-			oldx = e.getX();
-			oldy = e.getY();
+		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0 )
+		{
+			camera.useMouseDrag(lastMouseEvent, e);
 		}
-		
+		lastMouseEvent = e;
 	}
 	
 	@Override
 	public void mousePressed( MouseEvent e ){
-		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 || ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0 ){
-			if( !dragged ){
-				dragged = true;
-				oldx = e.getX();
-				oldy = e.getY();
+		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0 )
+		{
+			if( lastMouseEvent == null)
+			{
+				lastMouseEvent = e;
 			}
 		}
 	}
 
 	@Override
 	public void mouseReleased( MouseEvent e ){
-		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 || ( e.getModifiers() & MouseEvent.BUTTON3_MASK ) != 0){
-			if( dragged ){
-				dragged = false;
-				oldx = e.getX();
-				oldy = e.getY();
+		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0){
+			if( lastMouseEvent != null ){
+				lastMouseEvent = null;
 			}
 		}		
 	}
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e){
-		if(mainFrame.getMainPanel().toolToolBar.isBasicViewSelected()){
-			int notches = e.getWheelRotation();
-			dist += (notches*9);
-			dist = Math.max(dist, 20);
-		}
+		camera.useMouseWheel(e);
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 {
 	"readini" : false,
 	"ini" : "",
-    "grfs" : [ "/home/borf/Ragray/data.grf", "/home/borf/Ragray//rdata.grf" ],
+    "grfs" : [ "d:/games/RO/data.grf", "d:/games/RO/rdata.grf" ],
 	"readdata" : true,
-    "datadir" : [ "/home/borf/Ragray", "." ],
+    "datadir" : [ "d:/games/RO/", "." ],
     "inversecamera" : false
 }

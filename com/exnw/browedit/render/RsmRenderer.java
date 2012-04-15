@@ -86,7 +86,8 @@ public class RsmRenderer implements Renderer{
 			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
 
 			for( int i = 0; i < this.textures.size(); i++ ){
-				this.textures.get(i).bind();
+				if(this.textures.get(i) != null)
+					this.textures.get(i).bind();
 
 				vbos.get(i).bind();
 				vbos.get(i).setPointers();
