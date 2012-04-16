@@ -43,8 +43,8 @@ public class BrowCamera extends Camera
 		{
 			float angle = rotation.getY() / 180.0f * (float)Math.PI;
 			
-			float x = (event.getX() - lastEvent.getX()) / 2.0f;
-			float y = (event.getY() - lastEvent.getY()) / 2.0f;			
+			float x = -(event.getX() - lastEvent.getX()) / 2.0f;
+			float y = -(event.getY() - lastEvent.getY()) / 2.0f;			
 			viewPosition.add(new Vector3(x * (float)Math.cos(angle) + y * (float)Math.cos(angle+Math.PI/2), 0,  x * (float)Math.sin(angle) + y * (float)Math.sin(angle+Math.PI/2)));
 		}
 	}

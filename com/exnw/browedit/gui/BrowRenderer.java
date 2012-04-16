@@ -15,45 +15,37 @@ import com.exnw.browedit.camera.BrowCamera;
 import com.exnw.browedit.camera.Camera;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Shader;
 
 public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener {
 	static GLU glu = new GLU();
 	float dist = 200;
-	float x = -1;
-	float y = -1;
 	MainFrame mainFrame;
 	
 	// Variables for mouse dragging
 	private Camera camera;
 	private MouseEvent lastMouseEvent;
+	private Shader shader;
 	
-	
-	float bla = 0;
+
 	
 	public BrowRenderer(MainFrame mainFrame)
 	{
 		this.mainFrame = mainFrame;
-		
 		camera = new BrowCamera(new Vector3(500,50,500));		
 	}
 	
 	public void display(GLAutoDrawable glDrawable)
 	{
-		if(x == -1)
-		{
-			x = mainFrame.getCurrentMap().getGnd().getWidth()*5;
-			y = mainFrame.getCurrentMap().getGnd().getHeight()*5;
-		}
 		final GL gl = glDrawable.getGL();
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-		gl.glLoadIdentity();
-		
-		Matrix4 cameraMatrix = camera.getMatrix();
-		gl.glMultMatrixf(cameraMatrix.getData(), 0);
-		
-		gl.glEnable(GL.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+
+		if(shader == null)
+			shader = new Shader("shader.vert", "shader.frag", gl);
+
+		shader.use();
+		shader.getUniform("projectionMatrix").set(Matrix4.makePerspective(90, 1, 1, 1000));
+		shader.getUniform("viewMatrix").set(camera.getMatrix());
 		mainFrame.getCurrentMap().render(mainFrame, gl);
 		
 	}

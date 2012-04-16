@@ -1,10 +1,12 @@
-package com.exnw.browedit.render;
+package com.exnw.browedit.renderutils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.media.opengl.GL;
 
@@ -18,9 +20,15 @@ public class Shader
 	String vertexShaderFileName;
 	String fragmentShaderFileName;
 	
+	GL gl;
 	
-	public Shader(String vertexShader, String fragmentShader)
+	
+	Map<String, Uniform> uniforms = new HashMap<String, Uniform>();
+	
+	
+	public Shader(String vertexShader, String fragmentShader, GL gl)
 	{
+		this.gl = gl;
 		this.vertexShaderFileName = vertexShader;
 		this.fragmentShaderFileName = fragmentShader;
 		try
@@ -44,31 +52,31 @@ public class Shader
 		}
 	}
 	
-	void compile(GL gl)
+	void compile()
 	{
 		int v = gl.glCreateShader(GL.GL_VERTEX_SHADER);
 		int f = gl.glCreateShader(GL.GL_FRAGMENT_SHADER);
 		gl.glShaderSource(v, 1, new String[]{vsrc}, IntBuffer.wrap(new int[] { vsrc.length() }));
 		gl.glCompileShader(v);
-		printShaderInfoLog(gl,v,vertexShaderFileName);
+		printShaderInfoLog(v,vertexShaderFileName);
 		gl.glShaderSource(f, 1, new String[]{fsrc}, IntBuffer.wrap(new int[] { fsrc.length() }));
 		gl.glCompileShader(f);
-		printShaderInfoLog(gl,f, fragmentShaderFileName);
+		printShaderInfoLog(f, fragmentShaderFileName);
 
 		shaderprogram = gl.glCreateProgram();
 		gl.glAttachShader(shaderprogram, v);
 		gl.glAttachShader(shaderprogram, f);
+	}
 	
+	void link()
+	{
 		gl.glLinkProgram(shaderprogram);
 		gl.glValidateProgram(shaderprogram);
-
-		
 		gl.glUseProgram(shaderprogram);		
-
 	}
 	
 	
-	public void printShaderInfoLog(GL gl, int shader, String filename)
+	public void printShaderInfoLog(int shader, String filename)
 	{
 		IntBuffer b = IntBuffer.allocate(2);
 		gl.glGetShaderiv(shader, GL.GL_INFO_LOG_LENGTH,b);
@@ -79,21 +87,46 @@ public class Shader
 			gl.glGetShaderInfoLog(shader, b.get(0), b, ByteBuffer.wrap(info));
 			System.err.println("Error in " + filename + "\n" + new String(info));
 		}
-	}	
+	}
+	
+	public Uniform getUniform(String name)
+	{
+		if(!uniforms.containsKey(name))
+		{
+			int location = getUniformLocation(name);
+			if(location > 0)
+				uniforms.put(name, new Uniform(this, location));
+		}
+		if(uniforms.containsKey(name))
+			return uniforms.get(name);
+		return null;
+	}
 	
 	
-	public void use(GL gl)
+	int getUniformLocation(String location)
+	{
+		return gl.glGetUniformLocation(shaderprogram, location);
+	}
+	
+	void bindAttributeLocation(String name, int position)
+	{
+		gl.glBindAttribLocation(shaderprogram, position, name);
+	}
+	
+
+	public void use()
 	{
 		if(shaderprogram == 0)
-			compile(gl);
+		{
+			compile();
+			bindAttributeLocation("a_position", 0);
+			bindAttributeLocation("a_texcoord", 1);
+			bindAttributeLocation("a_normal", 2);
+			bindAttributeLocation("a_color", 3);
+			bindAttributeLocation("a_texcoord2", 2);
+			link();
+		}
 		gl.glUseProgram(shaderprogram);		
-		int location1, location2, location3;
-		location1=gl.glGetUniformLocation(shaderprogram, "Texture0"); 
-		location2=gl.glGetUniformLocation(shaderprogram, "Texture1"); 
-		location3=gl.glGetUniformLocation(shaderprogram, "Texture2"); 
-		gl.glUniform1i(location1, 0);
-		gl.glUniform1i(location2, 1);
-		gl.glUniform1i(location3, 2);
-		
 	}
 }
+

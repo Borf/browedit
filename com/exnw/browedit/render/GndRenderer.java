@@ -30,8 +30,6 @@ public class GndRenderer implements Renderer
 	ArrayList<Vbo<VertexPNCTT>> vbos = null;
 	final static int TEXTURESIZE = 2048;
 
-	Shader shader;
-
 	public GndRenderer(Gnd gnd)
 	{
 		this.gnd = gnd;
@@ -43,10 +41,6 @@ public class GndRenderer implements Renderer
 			this.loadTextures();
 		if (vbos == null)
 			this.generateVbos();
-		if (shader == null)
-			this.shader = new Shader("vertex.glsl", "fragment.glsl");
-
-		this.shader.use(gl);
 
 		gl.glEnableClientState(GL.GL_VERTEX_ARRAY); // activate vertex coords array
 

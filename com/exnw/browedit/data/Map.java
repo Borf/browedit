@@ -10,6 +10,7 @@ import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.render.GatRenderer;
 import com.exnw.browedit.render.GndRenderer;
 import com.exnw.browedit.render.RswRenderer;
+import com.exnw.browedit.renderutils.Shader;
 
 public class Map
 {
@@ -52,7 +53,7 @@ public class Map
         		gat.setCellHeight(tx, gat.getHeight()-1-ty, i, gat.getCell(tx, gat.getHeight()-1-ty).getHeight()[i]-0.1f);
         }
         */
-		
+
 		gndRenderer.render(gl);
 		rswRenderer.render(gl);
 	}

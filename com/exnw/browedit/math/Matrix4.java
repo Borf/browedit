@@ -201,5 +201,17 @@ public class Matrix4{
 	{
 		return new Matrix4(data.clone());
 	}
+
+	public static Matrix4 makePerspective(float fov, float aspect, float near, float far)
+	{
+		float f = (float)(1 / Math.tan(fov / 2));
+		return new Matrix4(new float[]
+		{
+			f/aspect,		0,		0,						0,
+			0,				f,		0,						0,
+			0,				0,		(far+near)/(near-far),	(2*far+near)/(near-far),
+			0,				0,		-1,						0
+		});
+	}
 	
 }
