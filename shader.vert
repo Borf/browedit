@@ -1,6 +1,8 @@
 attribute vec4 a_position;
 attribute vec2 a_texCoord;
+attribute vec2 a_texCoord2;
 attribute vec3 a_normal;
+attribute vec3 a_color;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -25,5 +27,5 @@ void main()
     eyeVec = -vec3(transformed);
 
     texCoord = a_texCoord;  
-    gl_Position = modelMatrix * viewMatrix * projectionMatrix * a_position;
+    gl_Position = projectionMatrix * modelMatrix * viewMatrix * a_position;
 }

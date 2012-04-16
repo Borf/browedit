@@ -1,7 +1,5 @@
 package com.exnw.browedit.data;
 
-import java.nio.FloatBuffer;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
 import javax.media.opengl.glu.GLU;
@@ -11,6 +9,7 @@ import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.render.GatRenderer;
 import com.exnw.browedit.render.GndRenderer;
 import com.exnw.browedit.render.RswRenderer;
+import com.exnw.browedit.renderutils.Shader;
 
 public class Map
 {
@@ -38,7 +37,7 @@ public class Map
 		setGat(new Gat(fileName + ".gat"));
 	}
 	
-	public void render(MainFrame mainFrame, GL4 gl)
+	public void render(MainFrame mainFrame, GL4 gl, Shader shader)
 	{
 		/*
 		gatRenderer.render(gl);
@@ -54,8 +53,8 @@ public class Map
         }
         */
 
-		gndRenderer.render(gl);
-		rswRenderer.render(gl);
+		gndRenderer.render(gl, shader);
+		rswRenderer.render(gl, shader);
 	}
 	
 	

@@ -97,6 +97,11 @@ public class Shader
 			int location = getUniformLocation(name);
 			if(location > 0)
 				uniforms.put(name, new Uniform(this, location));
+			else
+			{
+				System.err.println("Could not find uniform " + name + " in shader");
+				System.exit(-1);
+			}
 		}
 		if(uniforms.containsKey(name))
 			return uniforms.get(name);

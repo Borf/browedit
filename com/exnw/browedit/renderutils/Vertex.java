@@ -2,10 +2,22 @@ package com.exnw.browedit.renderutils;
 
 import java.nio.FloatBuffer;
 
-public interface Vertex
+import javax.media.opengl.GL4;
+
+import com.jogamp.common.nio.Buffers;
+
+public abstract class Vertex
 {
-	public int getSize();
-	public void fillBuffer(FloatBuffer buffer, int offset);
-	public <T extends Vertex> void setPointers(Vbo<T> vbo);
+	public abstract int getSize();
+	public abstract void fillBuffer(FloatBuffer buffer, int offset);
+	public abstract void setPointers(GL4 gl, Shader shader);
+	
+	public void setAttrib(GL4 gl, Shader shader, String name, int len, int offset)
+	{
+		int loc = shader.getAttribLocation(name);
+	    gl.glEnableVertexAttribArray(loc);
+	    gl.glVertexAttribPointer(loc, len, GL4.GL_FLOAT, false, getSize(), offset * Buffers.SIZEOF_FLOAT);
+		
+	}
 
 }

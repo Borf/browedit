@@ -8,12 +8,10 @@ import javax.imageio.ImageIO;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
 import javax.media.opengl.GLException;
-import javax.media.opengl.GLProfile;
 
 import com.exnw.browedit.grflib.GrfLib;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
-import com.jogamp.opengl.util.texture.awt.AWTTextureData;
+import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 public class TextureCache
 {
@@ -46,7 +44,7 @@ public class TextureCache
 					}
 				}
 				
-				t = TextureIO.newTexture(new AWTTextureData(gl.getGLProfile(), 0,0,true,dest));
+				t = AWTTextureIO.newTexture(gl.getGLProfile(), dest, true);
 				t.setTexParameteri(gl, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);				
 //				Texture t = TextureIO.newTexture(GrfLib.openFile(fileName), true, fileName.substring(fileName.lastIndexOf('.')));
 				textures.put(fileName, t);

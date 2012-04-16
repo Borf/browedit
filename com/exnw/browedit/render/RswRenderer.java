@@ -3,11 +3,11 @@ package com.exnw.browedit.render;
 import java.util.List;
 import java.util.Observable;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
 
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsw;
+import com.exnw.browedit.renderutils.Shader;
 
 public class RswRenderer implements Renderer
 {
@@ -20,7 +20,7 @@ public class RswRenderer implements Renderer
 		this.map = map;
 	}
 	
-	public void render(GL4 gl)
+	public void render(GL4 gl, Shader shader)
 	{		
 		/*gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL.GL_BLEND);

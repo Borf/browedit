@@ -16,6 +16,7 @@ import com.exnw.browedit.data.events.GatChange;
 import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Shader;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
@@ -36,7 +37,7 @@ public class GatRenderer implements Observer, Renderer
 		this.gat.addObserver(this);
 	}
 	
-	public void generateVbos(GL gl)
+	public void generateVbos(GL gl, Shader shader)
 	{
 		vbo = new Vbo<VertexPNT>();
 		
@@ -63,14 +64,14 @@ public class GatRenderer implements Observer, Renderer
 				vertexList.add(new VertexPNT(new Vector3(5*x+0, -cell.getHeight()[2], 5*(gat.getHeight()-y)+0), normal, new Vector2(tx0,ty1)));
 			}
 		}
-		vbo.generate(vertexList);
+		vbo.generate(vertexList, shader);
 	}
 	
 	
-	public void render(GL4 gl)
+	public void render(GL4 gl, Shader shader)
 	{
 		if(this.vbo == null)
-			this.generateVbos(gl);
+			this.generateVbos(gl, shader);
 		if(GatRenderer.texture == null)
 			GatRenderer.generateTexture(gl);
 		
@@ -113,7 +114,6 @@ public class GatRenderer implements Observer, Renderer
 		texture.bind(gl);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		
-		vbo.setPointers();
 		gl.glDrawArrays(GL2.GL_QUADS, 0, vbo.size()/Buffers.SIZEOF_FLOAT/8);
 
 		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);

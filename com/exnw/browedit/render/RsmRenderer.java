@@ -7,13 +7,12 @@ import java.util.Observable;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
 
-import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsm;
 import com.exnw.browedit.data.Rsm.RsmMesh;
 import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
-import com.exnw.browedit.data.Rsw;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Shader;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
@@ -34,7 +33,7 @@ public class RsmRenderer implements Renderer{
 		this.root = new RsmRenderer.MeshRenderer( this.rsm.getRoot(), this.rsm );
 	}
 	
-	public void render( GL4 gl )//, Map map, Rsw.ModelResource modelProperties )
+	public void render( GL4 gl, Shader shader )//, Map map, Rsw.ModelResource modelProperties )
 	{
 	/*	gl.glPushMatrix();
 		
@@ -73,7 +72,7 @@ public class RsmRenderer implements Renderer{
 				this.textures.add( RsmRenderer.this.textures.get( tid.intValue() ) );
 		}
 
-		public void render(GL4 gl)
+		public void render(GL4 gl, Shader shader)
 		{
 /*			gl.glMultMatrixf( this.rsmMesh.getMatrix1().getData(), 0);
 			gl.glPushMatrix();
@@ -108,7 +107,7 @@ public class RsmRenderer implements Renderer{
 			}*/
 		}
 		
-		private void generateVbos(GL gl){
+		private void generateVbos(GL gl, Shader shader){
 			vbos = new ArrayList<Vbo<VertexPNT>>();
 
 			for(int i = 0; i < textures.size(); i++)
@@ -128,7 +127,7 @@ public class RsmRenderer implements Renderer{
 						}
 					}
 				}
-				vbos.get(i).generate(vertices);
+				vbos.get(i).generate(vertices, shader);
 			}
 			
 		}	

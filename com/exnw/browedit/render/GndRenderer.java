@@ -15,12 +15,12 @@ import com.exnw.browedit.data.Gnd.GndCell;
 import com.exnw.browedit.data.Gnd.Surface;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.renderutils.Shader;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNCTT;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 public class GndRenderer implements Renderer
@@ -38,12 +38,12 @@ public class GndRenderer implements Renderer
 		this.gnd = gnd;
 	}
 
-	public void render(GL4 gl)
+	public void render(GL4 gl, Shader shader)
 	{
 		if (textures == null)
 			this.loadTextures(gl);
 		if (vbos == null)
-			this.generateVbos();
+			this.generateVbos(shader);
 
 		gl.glActiveTexture(GL.GL_TEXTURE2);
 		shadows.bind(gl);
@@ -59,7 +59,6 @@ public class GndRenderer implements Renderer
 			textures.get(i).bind(gl);
 
 			vbos.get(i).bind();
-			vbos.get(i).setPointers();
 			gl.glDrawArrays(GL2.GL_QUADS, 0, vbos.get(i).size()	/ Buffers.SIZEOF_FLOAT / 14); //TODO: replace with quads
 
 		}
@@ -96,7 +95,7 @@ public class GndRenderer implements Renderer
 		return null;
 	}
 
-	private void generateVbos()
+	private void generateVbos(Shader shader)
 	{
 		vbos = new ArrayList<Vbo<VertexPNCTT>>();
 
@@ -310,7 +309,7 @@ public class GndRenderer implements Renderer
 					}
 				}
 			}
-			vbos.get(i).generate(vertices);
+			vbos.get(i).generate(vertices, shader);
 		}
 
 	}

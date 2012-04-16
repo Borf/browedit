@@ -7,6 +7,9 @@ varying vec3 lightDir;
 
 void main()
 {
+    gl_FragColor = vec4(1,0,0,1);
+    return;
+    
     vec3 N = normalize(normal);
     vec3 L = normalize(lightDir);
     float nDotVP = dot(N, L);

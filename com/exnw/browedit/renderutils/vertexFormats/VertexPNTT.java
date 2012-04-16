@@ -2,13 +2,11 @@ package com.exnw.browedit.renderutils.vertexFormats;
 
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLContext;
+import javax.media.opengl.GL4;
 
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
-import com.exnw.browedit.renderutils.Vbo;
-import com.exnw.browedit.renderutils.Vertex;
+import com.exnw.browedit.renderutils.Shader;
 
 public class VertexPNTT extends VertexPNT
 {
@@ -36,9 +34,10 @@ public class VertexPNTT extends VertexPNT
 	}
 	
 	@Override
-	public <T extends Vertex> void setPointers(Vbo<T> vbo)
+	public void setPointers(GL4 gl, Shader shader)
 	{
-		super.setPointers(vbo);
-		GL gl = GLContext.getCurrent().getGL();
+		super.setPointers(gl, shader);
+		setAttrib(gl, shader, "a_texcoord", 2, 8);
+
 	}
 }

@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL4;
-import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.math.Vector3;
-import com.exnw.browedit.renderutils.Vbo;
-import com.exnw.browedit.renderutils.Vertex;
+import com.exnw.browedit.renderutils.Shader;
 
 public class VertexPNC extends VertexPN
 {
@@ -38,9 +36,10 @@ public class VertexPNC extends VertexPN
 	}
 	
 	@Override
-	public <T extends Vertex> void setPointers(Vbo<T> vbo)
+	public void setPointers(GL4 gl, Shader shader)
 	{
-		super.setPointers(vbo);
-		GL4 gl = GLContext.getCurrent().getGL().getGL4();
-	}	
+		super.setPointers(gl, shader);
+		setAttrib(gl, shader, "a_color", 3, 6);
+
+	}
 }

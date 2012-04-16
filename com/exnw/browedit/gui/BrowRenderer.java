@@ -48,7 +48,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		shader.use();
 		shader.getUniform("projectionMatrix").set(Matrix4.makePerspective(90, 1, 1, 1000));
 		shader.getUniform("viewMatrix").set(camera.getMatrix());
-		mainFrame.getCurrentMap().render(mainFrame, gl);
+		shader.getUniform("modelMatrix").set(new Matrix4());
+		mainFrame.getCurrentMap().render(mainFrame, gl, shader);
 		
 	}
 

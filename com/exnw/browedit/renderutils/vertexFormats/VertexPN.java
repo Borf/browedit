@@ -2,15 +2,13 @@ package com.exnw.browedit.renderutils.vertexFormats;
 
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
-import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.math.Vector3;
-import com.exnw.browedit.renderutils.Vbo;
+import com.exnw.browedit.renderutils.Shader;
 import com.exnw.browedit.renderutils.Vertex;
 
-public class VertexPN implements Vertex
+public class VertexPN extends Vertex
 {
 	Vector3 position;
 	Vector3 normal;
@@ -38,11 +36,12 @@ public class VertexPN implements Vertex
 		for(int i = 0; i < 3; i++)
 			buffer.put(offset+3+i, normal.getData()[i]);
 	}
-
+	
 	@Override
-	public <T extends Vertex> void setPointers(Vbo<T> vbo)
+	public void setPointers(GL4 gl, Shader shader)
 	{
-		GL4 gl = GLContext.getCurrent().getGL().getGL4();
+		setAttrib(gl, shader, "a_position", 3, 0);
+		setAttrib(gl, shader, "a_normal", 3, 3);
 	}
 
 }

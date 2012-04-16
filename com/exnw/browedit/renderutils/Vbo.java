@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL4;
 import javax.media.opengl.GLContext;
 
 import com.jogamp.common.nio.Buffers;
@@ -11,17 +12,17 @@ import com.jogamp.common.nio.Buffers;
 public class Vbo<T extends Vertex>
 {
 	private IntBuffer vbo;
+	private IntBuffer vertexArray;
 	private int length; // length in bytes
 	private T oneVertex;
-	private int _vertexArray;
 	
 	public Vbo()
 	{
-		GL gl = GLContext.getCurrent().getGL();
+		GL4 gl = GLContext.getCurrent().getGL().getGL4();
 		vbo = IntBuffer.allocate(1);
 		gl.glGenBuffers(1, vbo);
-		
-	//    gl.glGenVertexArrays(1, _vertexArray);
+		vertexArray = IntBuffer.allocate(1);
+		gl.glGenVertexArrays(1, vertexArray);
 		length = 0;
 	}
 	
@@ -37,24 +38,26 @@ public class Vbo<T extends Vertex>
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo.get(0));
 	}
 	
-	public void generate(VertexList<T> vertices)
+	public void generate(VertexList<T> vertices, Shader shader)
 	{
 		oneVertex = vertices.get(0);
-		generate(vertices.GenerateFloatBuffer());
+		generate(vertices.GenerateFloatBuffer(), shader);
 	}
 	
-	private void generate(FloatBuffer buffer)
+	private void generate(FloatBuffer buffer, Shader shader)
 	{
 		this.bind();
-		GL gl = GLContext.getCurrent().getGL();
+		GL4 gl = GLContext.getCurrent().getGL().getGL4();
 		//glBufferData automatically throws away the old one
 		
-	    //glBindVertexArray(_vertexArray);
-		
-		
-		
+	    gl.glBindVertexArray(vertexArray.get(0));
+		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo.get(0));
 		gl.glBufferData(GL.GL_ARRAY_BUFFER, buffer.limit()*Buffers.SIZEOF_FLOAT, buffer, GL.GL_STATIC_DRAW);
 		length = buffer.limit()*Buffers.SIZEOF_FLOAT;
+		
+		oneVertex.setPointers(gl, shader);
+		
+		gl.glBindVertexArray(0);
 	}
 	public void put(int index, T v)
 	{
@@ -85,12 +88,5 @@ public class Vbo<T extends Vertex>
 	public int size()
 	{
 		return length;
-	}
-
-	public void setPointers()
-	{
-		this.bind();
-		if(oneVertex != null)
-			oneVertex.setPointers(this);
 	}
 }
