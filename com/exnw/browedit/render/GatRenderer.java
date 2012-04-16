@@ -6,6 +6,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GL4;
 import javax.media.opengl.GLException;
 
 import com.exnw.browedit.data.Gat;
@@ -17,9 +19,9 @@ import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
-import com.sun.opengl.util.BufferUtil;
-import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureIO;
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class GatRenderer implements Observer, Renderer
 {
@@ -65,12 +67,12 @@ public class GatRenderer implements Observer, Renderer
 	}
 	
 	
-	public void render(GL gl)
+	public void render(GL4 gl)
 	{
 		if(this.vbo == null)
 			this.generateVbos(gl);
 		if(GatRenderer.texture == null)
-			GatRenderer.generateTexture();
+			GatRenderer.generateTexture(gl);
 		
 		if(!changes.isEmpty())
 		{
@@ -108,29 +110,29 @@ public class GatRenderer implements Observer, Renderer
 		gl.glEnable(GL.GL_BLEND);
 		
 		vbo.bind();
-		texture.bind();
+		texture.bind(gl);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		
 		vbo.setPointers();
-		gl.glDrawArrays(GL.GL_QUADS, 0, vbo.size()/BufferUtil.SIZEOF_FLOAT/8);
+		gl.glDrawArrays(GL2.GL_QUADS, 0, vbo.size()/Buffers.SIZEOF_FLOAT/8);
 
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-		gl.glDisableClientState(GL.GL_NORMAL_ARRAY);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 		
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
 	}
 
-	private static void generateTexture()
+	private static void generateTexture(GL4 gl)
 	{
 		try
 		{
 			texture = TextureIO.newTexture(GrfLib.openFile("gat.png"), true, "png");
-			texture.setTexParameteri(GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
-			texture.setTexParameteri(GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
-			texture.setTexParameteri(GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_BORDER);
-			texture.setTexParameteri(GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_BORDER);
+			texture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+			texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+			texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_BORDER);
+			texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_BORDER);
 			
 		} catch (GLException e)
 		{

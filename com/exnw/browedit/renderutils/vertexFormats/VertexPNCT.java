@@ -10,7 +10,6 @@ import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.Vertex;
-import com.sun.opengl.util.BufferUtil;
 
 public class VertexPNCT extends VertexPNC
 {
@@ -42,8 +41,5 @@ public class VertexPNCT extends VertexPNC
 	{
 		super.setPointers(vbo);
 		GL gl = GLContext.getCurrent().getGL();
-		gl.glClientActiveTexture(GL.GL_TEXTURE0);
-		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-		gl.glTexCoordPointer(2, GL.GL_FLOAT, getSize()*BufferUtil.SIZEOF_FLOAT, super.getSize()*BufferUtil.SIZEOF_FLOAT);
 	}	
 }

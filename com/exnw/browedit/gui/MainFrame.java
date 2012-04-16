@@ -2,6 +2,9 @@ package com.exnw.browedit.gui;
 
 import java.util.ArrayList;
 
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
 import com.exnw.browedit.data.Map;
@@ -21,6 +24,14 @@ public class MainFrame extends JFrame
 	{
 		super("BrowEdit");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		
+        GLProfile glprofile = GLProfile.getDefault();
+        GLCapabilities glcapabilities = new GLCapabilities( glprofile );
+        final GLCanvas glcanvas = new GLCanvas( glcapabilities );
+        
+        
+        
 		this.setContentPane(mainPanel = new MainPanel(this));
 
 		this.setJMenuBar(menuBar = new com.exnw.browedit.gui.MenuBar(this));

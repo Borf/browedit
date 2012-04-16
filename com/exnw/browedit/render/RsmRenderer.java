@@ -5,19 +5,19 @@ import java.util.List;
 import java.util.Observable;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL4;
 
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsm;
-import com.exnw.browedit.data.Rsw;
 import com.exnw.browedit.data.Rsm.RsmMesh;
 import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
+import com.exnw.browedit.data.Rsw;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
-import com.sun.opengl.util.BufferUtil;
-import com.sun.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.Texture;
 
 public class RsmRenderer implements Renderer{
 	private Rsm rsm;
@@ -29,13 +29,14 @@ public class RsmRenderer implements Renderer{
 		this.rsm = rsm;
 		
 		for( String t : this.rsm.getTextures() )
-			this.textures.add( TextureCache.getTexture("data\\texture\\" + t) );
+			this.textures.add( TextureCache.getTexture(null, "data\\texture\\" + t) ); //TODO: GL null here
 		
 		this.root = new RsmRenderer.MeshRenderer( this.rsm.getRoot(), this.rsm );
 	}
 	
-	public void render( GL gl, Map map, Rsw.ModelResource modelProperties ){
-		gl.glPushMatrix();
+	public void render( GL4 gl )//, Map map, Rsw.ModelResource modelProperties )
+	{
+	/*	gl.glPushMatrix();
 		
 		gl.glTranslatef(5*map.getGnd().getWidth()+modelProperties.getPosition().getX(), -modelProperties.getPosition().getY(), -5*map.getGnd().getHeight()+modelProperties.getPosition().getZ());
 		gl.glRotatef(-modelProperties.getRotation().getZ(), 0, 0, 1);
@@ -47,7 +48,7 @@ public class RsmRenderer implements Renderer{
 		
 		this.root.render(gl);
 		
-		gl.glPopMatrix();
+		gl.glPopMatrix();*/
 	}
 	
 	public void update( Observable o, Object arg ){}
@@ -72,9 +73,9 @@ public class RsmRenderer implements Renderer{
 				this.textures.add( RsmRenderer.this.textures.get( tid.intValue() ) );
 		}
 
-		public void render(GL gl)
+		public void render(GL4 gl)
 		{
-			gl.glMultMatrixf( this.rsmMesh.getMatrix1().getData(), 0);
+/*			gl.glMultMatrixf( this.rsmMesh.getMatrix1().getData(), 0);
 			gl.glPushMatrix();
 			gl.glMultMatrixf( this.rsmMesh.getMatrix2().getData(), 0);
 			
@@ -104,7 +105,7 @@ public class RsmRenderer implements Renderer{
 				gl.glPushMatrix();
 				renderer.render(gl);
 				gl.glPopMatrix();
-			}
+			}*/
 		}
 		
 		private void generateVbos(GL gl){
@@ -133,10 +134,4 @@ public class RsmRenderer implements Renderer{
 		}	
 	}
 
-	@Override
-	public void render(GL gl)
-	{
-		// TODO Auto-generated method stub
-		
-	}
 }

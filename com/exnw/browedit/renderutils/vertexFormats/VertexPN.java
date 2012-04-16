@@ -3,12 +3,12 @@ package com.exnw.browedit.renderutils.vertexFormats;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL4;
 import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.Vertex;
-import com.sun.opengl.util.BufferUtil;
 
 public class VertexPN implements Vertex
 {
@@ -42,11 +42,7 @@ public class VertexPN implements Vertex
 	@Override
 	public <T extends Vertex> void setPointers(Vbo<T> vbo)
 	{
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
-		gl.glEnableClientState(GL.GL_NORMAL_ARRAY);             // activate vertex coords array
-		gl.glVertexPointer(3, GL.GL_FLOAT, getSize()*BufferUtil.SIZEOF_FLOAT, 0);
-		gl.glNormalPointer(GL.GL_FLOAT, getSize()*BufferUtil.SIZEOF_FLOAT, 3*BufferUtil.SIZEOF_FLOAT);		
+		GL4 gl = GLContext.getCurrent().getGL().getGL4();
 	}
 
 }

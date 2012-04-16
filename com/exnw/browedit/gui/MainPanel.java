@@ -2,11 +2,11 @@ package com.exnw.browedit.gui;
 
 import java.awt.BorderLayout;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JPanel;
 
 import com.exnw.browedit.data.Map;
-import com.sun.opengl.util.Animator;
+import com.jogamp.opengl.util.Animator;
 
 public class MainPanel extends JPanel
 {
@@ -25,9 +25,10 @@ public class MainPanel extends JPanel
 		add(toolToolBar = new ToolToolBar(mainFrame), BorderLayout.WEST);
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
-		
 		canvas = new GLCanvas();
 		BrowRenderer renderer = new BrowRenderer(mainFrame);
+		
+		
 		canvas.addGLEventListener(renderer);
 		canvas.addMouseListener(renderer);
 		canvas.addMouseMotionListener(renderer);
@@ -35,9 +36,9 @@ public class MainPanel extends JPanel
 		
 		this.add(canvas, BorderLayout.CENTER);
 
-	    Animator animator = new Animator(canvas);
-	    animator.start();
-	    animator.setRunAsFastAsPossible(true);
+//	    Animator animator = new Animator(canvas);
+//	    animator.start();
+//	    animator.setRunAsFastAsPossible(true);
 	    canvas.requestFocus();
 	}
 

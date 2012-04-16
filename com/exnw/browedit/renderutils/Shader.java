@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL4;
 
 import com.exnw.browedit.grflib.GrfLib;
 
@@ -20,7 +21,7 @@ public class Shader
 	String vertexShaderFileName;
 	String fragmentShaderFileName;
 	
-	GL gl;
+	GL4 gl;
 	
 	
 	Map<String, Uniform> uniforms = new HashMap<String, Uniform>();
@@ -28,7 +29,7 @@ public class Shader
 	
 	public Shader(String vertexShader, String fragmentShader, GL gl)
 	{
-		this.gl = gl;
+		this.gl = gl.getGL4();
 		this.vertexShaderFileName = vertexShader;
 		this.fragmentShaderFileName = fragmentShader;
 		try
@@ -54,8 +55,8 @@ public class Shader
 	
 	void compile()
 	{
-		int v = gl.glCreateShader(GL.GL_VERTEX_SHADER);
-		int f = gl.glCreateShader(GL.GL_FRAGMENT_SHADER);
+		int v = gl.glCreateShader(GL4.GL_VERTEX_SHADER);
+		int f = gl.glCreateShader(GL4.GL_FRAGMENT_SHADER);
 		gl.glShaderSource(v, 1, new String[]{vsrc}, IntBuffer.wrap(new int[] { vsrc.length() }));
 		gl.glCompileShader(v);
 		printShaderInfoLog(v,vertexShaderFileName);
@@ -79,7 +80,7 @@ public class Shader
 	public void printShaderInfoLog(int shader, String filename)
 	{
 		IntBuffer b = IntBuffer.allocate(2);
-		gl.glGetShaderiv(shader, GL.GL_INFO_LOG_LENGTH,b);
+		gl.glGetShaderiv(shader, GL4.GL_INFO_LOG_LENGTH,b);
 		
 		if (b.get(0) > 1)
 		{
@@ -113,17 +114,25 @@ public class Shader
 		gl.glBindAttribLocation(shaderprogram, position, name);
 	}
 	
+	
+	private String[] attributes = { "a_position", "a_texcoord", "a_normal", "a_color", "a_texcoord2" };
+	
+	public int getAttribLocation(String name)
+	{
+		for(int i = 0; i < attributes.length; i++)
+			if(attributes[i].equals(name))
+				return i;
+		return -1;
+	}
+	
 
 	public void use()
 	{
 		if(shaderprogram == 0)
 		{
 			compile();
-			bindAttributeLocation("a_position", 0);
-			bindAttributeLocation("a_texcoord", 1);
-			bindAttributeLocation("a_normal", 2);
-			bindAttributeLocation("a_color", 3);
-			bindAttributeLocation("a_texcoord2", 2);
+			for(int i = 0; i < attributes.length; i++)
+				bindAttributeLocation(attributes[i], i);
 			link();
 		}
 		gl.glUseProgram(shaderprogram);		

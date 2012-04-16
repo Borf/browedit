@@ -3,13 +3,12 @@ package com.exnw.browedit.renderutils.vertexFormats;
 import java.awt.Color;
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL4;
 import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.Vertex;
-import com.sun.opengl.util.BufferUtil;
 
 public class VertexPNC extends VertexPN
 {
@@ -42,8 +41,6 @@ public class VertexPNC extends VertexPN
 	public <T extends Vertex> void setPointers(Vbo<T> vbo)
 	{
 		super.setPointers(vbo);
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glEnableClientState(GL.GL_COLOR_ARRAY);
-		gl.glColorPointer(4, GL.GL_FLOAT, getSize()*BufferUtil.SIZEOF_FLOAT, super.getSize()*BufferUtil.SIZEOF_FLOAT);
+		GL4 gl = GLContext.getCurrent().getGL().getGL4();
 	}	
 }

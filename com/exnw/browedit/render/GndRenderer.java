@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Observable;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GL4;
 
 import com.exnw.browedit.data.Gnd;
 import com.exnw.browedit.data.Gnd.GndCell;
@@ -16,9 +18,10 @@ import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNCTT;
-import com.sun.opengl.util.BufferUtil;
-import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureIO;
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 public class GndRenderer implements Renderer
 {
@@ -35,50 +38,34 @@ public class GndRenderer implements Renderer
 		this.gnd = gnd;
 	}
 
-	public void render(GL gl)
+	public void render(GL4 gl)
 	{
 		if (textures == null)
-			this.loadTextures();
+			this.loadTextures(gl);
 		if (vbos == null)
 			this.generateVbos();
 
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY); // activate vertex coords array
-
 		gl.glActiveTexture(GL.GL_TEXTURE2);
-		shadows.bind();
+		shadows.bind(gl);
 
 		gl.glActiveTexture(GL.GL_TEXTURE1);
-		colorLightmap.bind();
+		colorLightmap.bind(gl);
 
 		gl.glActiveTexture(GL.GL_TEXTURE0);
 
 		for (int i = 0; i < textures.size(); i++)
 		{
-			gl.glClientActiveTexture(GL.GL_TEXTURE0);
-			textures.get(i).bind();
+			gl.glActiveTexture(GL.GL_TEXTURE0);
+			textures.get(i).bind(gl);
 
 			vbos.get(i).bind();
 			vbos.get(i).setPointers();
-			gl.glDrawArrays(GL.GL_QUADS, 0, vbos.get(i).size()
-					/ BufferUtil.SIZEOF_FLOAT / 14);
+			gl.glDrawArrays(GL2.GL_QUADS, 0, vbos.get(i).size()	/ Buffers.SIZEOF_FLOAT / 14); //TODO: replace with quads
 
 		}
 
-		gl.glClientActiveTexture(GL.GL_TEXTURE1);
-		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
-		gl.glClientActiveTexture(GL.GL_TEXTURE0);
-		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-
-		gl.glActiveTexture(GL.GL_TEXTURE0);
-		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL.GL_COLOR_ARRAY);
-
-		gl.glUseProgram(0);
 	}
 
 	private Color mix(Color[] colors)
@@ -328,20 +315,17 @@ public class GndRenderer implements Renderer
 
 	}
 
-	private void loadTextures()
+	private void loadTextures(GL4 gl)
 	{
 		{
 			textures = new ArrayList<Texture>();
 			List<String> TextureFileNames = gnd.getTextures();
 			for (String s : TextureFileNames)
 			{
-				Texture texture = TextureCache
-						.getTexture("data\\texture\\" + s);
+				Texture texture = TextureCache.getTexture(gl, "data\\texture\\" + s);
 				// TODO: fix borders
-				texture.setTexParameteri(GL.GL_TEXTURE_WRAP_S,
-						GL.GL_MIRRORED_REPEAT);
-				texture.setTexParameteri(GL.GL_TEXTURE_WRAP_T,
-						GL.GL_MIRRORED_REPEAT);
+				texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_MIRRORED_REPEAT);
+				texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_MIRRORED_REPEAT);
 
 				textures.add(texture);
 			}
@@ -374,7 +358,8 @@ public class GndRenderer implements Renderer
 						y += 8;
 					}
 				}
-				shadows = TextureIO.newTexture(image, true);
+				
+				shadows = AWTTextureIO.newTexture(gl.getGLProfile(), image, true);
 			}
 			{
 				BufferedImage image = new BufferedImage(TEXTURESIZE,
@@ -399,7 +384,7 @@ public class GndRenderer implements Renderer
 						y += 8;
 					}
 				}
-				colorLightmap = TextureIO.newTexture(image, true);
+				colorLightmap = AWTTextureIO.newTexture(gl.getGLProfile(), image, true);
 			}
 
 		}

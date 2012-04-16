@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Observable;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL4;
 
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsw;
@@ -19,9 +20,9 @@ public class RswRenderer implements Renderer
 		this.map = map;
 	}
 	
-	public void render(GL gl)
+	public void render(GL4 gl)
 	{		
-		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		/*gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glPushMatrix();
@@ -32,7 +33,7 @@ public class RswRenderer implements Renderer
 		}
 		
 		gl.glPopMatrix();
-		gl.glDisable(GL.GL_BLEND);
+		gl.glDisable(GL.GL_BLEND);*/
 	}
 	
 	public void update(Observable arg0, Object arg1)

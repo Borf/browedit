@@ -5,19 +5,21 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GL4;
 import javax.media.opengl.GLException;
+import javax.media.opengl.GLProfile;
 
 import com.exnw.browedit.grflib.GrfLib;
-import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureData;
-import com.sun.opengl.util.texture.TextureIO;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+import com.jogamp.opengl.util.texture.awt.AWTTextureData;
 
 public class TextureCache
 {
 	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	
-	public static Texture getTexture(String fileName)
+	public static Texture getTexture(GL4 gl, String fileName)
 	{
 		Texture t = TextureCache.textures.get( fileName );
 		
@@ -43,8 +45,9 @@ public class TextureCache
 						dest.setRGB(x, y, rgb);
 					}
 				}
-				t = TextureIO.newTexture(new TextureData(0,0,true,dest));
-				t.setTexParameteri(GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);				
+				
+				t = TextureIO.newTexture(new AWTTextureData(gl.getGLProfile(), 0,0,true,dest));
+				t.setTexParameteri(gl, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);				
 //				Texture t = TextureIO.newTexture(GrfLib.openFile(fileName), true, fileName.substring(fileName.lastIndexOf('.')));
 				textures.put(fileName, t);
 			} catch (GLException e)

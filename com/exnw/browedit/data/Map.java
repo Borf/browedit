@@ -3,6 +3,7 @@ package com.exnw.browedit.data;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL4;
 import javax.media.opengl.glu.GLU;
 
 import com.exnw.browedit.gui.MainFrame;
@@ -10,7 +11,6 @@ import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.render.GatRenderer;
 import com.exnw.browedit.render.GndRenderer;
 import com.exnw.browedit.render.RswRenderer;
-import com.exnw.browedit.renderutils.Shader;
 
 public class Map
 {
@@ -38,7 +38,7 @@ public class Map
 		setGat(new Gat(fileName + ".gat"));
 	}
 	
-	public void render(MainFrame mainFrame, GL gl)
+	public void render(MainFrame mainFrame, GL4 gl)
 	{
 		/*
 		gatRenderer.render(gl);
@@ -61,7 +61,7 @@ public class Map
 	
 	private Vector3 get3DCursor(MainFrame mainFrame, GL gl)
 	{
-		int viewport[] = new int[4];
+/*		int viewport[] = new int[4];
 	    double mvmatrix[] = new double[16];
 	    double projmatrix[] = new double[16];
 	    double wcoord[] = new double[4];
@@ -78,7 +78,8 @@ public class Map
                 projmatrix, 0, 
                 viewport, 0, 
                 wcoord, 0);	
-        return new Vector3(wcoord[0], wcoord[1], wcoord[2]);
+        return new Vector3(wcoord[0], wcoord[1], wcoord[2]);*/
+		return null;
 	}
 
 	public void setGat(Gat gat)
