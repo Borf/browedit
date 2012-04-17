@@ -1,6 +1,5 @@
 package com.exnw.browedit.math;
 
-import com.jogamp.opengl.util.PMVMatrix;
 
 public class Matrix4{
 	private float[] data;
@@ -204,23 +203,8 @@ public class Matrix4{
 		return new Matrix4(data.clone());
 	}
 
-	@SuppressWarnings("unused")
 	public static Matrix4 makePerspective(float fov, float aspect, float near, float far)
 	{
-if(false)
-{
-		PMVMatrix pmvMatrix = new PMVMatrix();
-		pmvMatrix.glMatrixMode(PMVMatrix.GL_PROJECTION);
-		pmvMatrix.glLoadIdentity();
-		pmvMatrix.gluPerspective(fov, aspect, near, far);
-		pmvMatrix.update();
-		
-		float[] data = pmvMatrix.glGetPMatrixf().array(); 
-		
-		return new Matrix4(data);
-}
-else
-{
 		float f = (float)(1 / Math.tan(fov/180*Math.PI / 2));
 		return new Matrix4(new float[]
 		{
@@ -229,7 +213,6 @@ else
 			0,				0,		(far+near)/(near-far),	-1,
 			0,				0,		(2*far+near)/(near-far),0
 		});
-}
 	}
 	
 	

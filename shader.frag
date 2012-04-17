@@ -2,6 +2,7 @@ uniform sampler2D s_texture;
 uniform sampler2D s_textureShadow;
 uniform sampler2D s_textureLight;
 varying vec2 texCoord;
+varying vec2 texCoord2;
 
 varying vec3 normal;
 varying vec3 eyeVec;
@@ -9,7 +10,7 @@ varying vec3 lightDir;
 
 void main()
 {
-    vec3 N = normalize(normal);
+ /*   vec3 N = normalize(normal);
     vec3 L = normalize(lightDir);
     float nDotVP = dot(N, L);
 
@@ -26,8 +27,10 @@ void main()
     float diffuse = max(0.0, nDotVP);
 
 
-    vec4 col = (ambient + specular + diffuse) * texture2D(s_texture, texCoord);
+    vec4 col = (ambient + specular + diffuse) * texture2D(s_texture, texCoord);*/
     
-    col = texture2D(s_texture, texCoord);
+    vec4 col = texture2D(s_texture, texCoord);
+    
+//    col = vec4(texCoord2,1,0);
     gl_FragColor = col;
 }
