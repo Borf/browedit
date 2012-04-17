@@ -2,7 +2,7 @@ attribute vec4 a_position;
 attribute vec2 a_texCoord;
 attribute vec2 a_texCoord2;
 attribute vec3 a_normal;
-attribute vec3 a_color;
+attribute vec4 a_color;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -10,6 +10,7 @@ uniform mat4 modelMatrix;
 uniform mat3 normalMatrix;
 
 varying vec2 texCoord;
+varying vec2 texCoord2;
 
 varying vec3 normal;
 varying vec3 eyeVec;
@@ -21,11 +22,13 @@ void main()
     
     vec4 transformed = modelMatrix * viewMatrix * a_position;
 
-
     normal = normalMatrix * a_normal;
     lightDir = lightPosition-vec3(transformed);
     eyeVec = -vec3(transformed);
 
-    texCoord = a_texCoord;  
-    gl_Position = projectionMatrix * modelMatrix * viewMatrix * a_position;
+    texCoord = a_texCoord;
+    texCoord2 = a_texCoord;
+    
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * a_position;
+    
 }

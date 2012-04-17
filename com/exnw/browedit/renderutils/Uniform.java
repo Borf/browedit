@@ -6,6 +6,7 @@ import com.exnw.browedit.math.Vector3;
 
 public class Uniform
 {
+	String name;
 	Shader shader;
 	int location;
 	
@@ -16,15 +17,17 @@ public class Uniform
 	Vector3 valueVector3;
 	Vector2 valueVector2;
 	
-	public Uniform(Shader shader, int location)
+	public Uniform(Shader shader, int location, String name)
 	{
 		this.shader = shader;
+		this.location = location;
+		this.name = name;
 	}
 
 	public void set(Matrix4 matrix)
 	{
 		valueMatrix = matrix;
-		shader.gl.glUniformMatrix4fv(location, 4*4, false, matrix.getData(), 0);
+		shader.gl.glUniformMatrix4fv(location, 1, false, matrix.getData(), 0);
 	}
 	public void set(int value)
 	{

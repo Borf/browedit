@@ -73,7 +73,6 @@ public class Shader
 	{
 		gl.glLinkProgram(shaderprogram);
 		gl.glValidateProgram(shaderprogram);
-		gl.glUseProgram(shaderprogram);		
 	}
 	
 	
@@ -95,12 +94,12 @@ public class Shader
 		if(!uniforms.containsKey(name))
 		{
 			int location = getUniformLocation(name);
-			if(location > 0)
-				uniforms.put(name, new Uniform(this, location));
+			if(location >= 0)
+				uniforms.put(name, new Uniform(this, location, name));
 			else
 			{
-				System.err.println("Could not find uniform " + name + " in shader");
-				System.exit(-1);
+				System.err.println("Could not find uniform " + name + " in shader => " + location);
+			//	System.exit(-1);
 			}
 		}
 		if(uniforms.containsKey(name))
@@ -120,13 +119,14 @@ public class Shader
 	}
 	
 	
-	private String[] attributes = { "a_position", "a_texcoord", "a_normal", "a_color", "a_texcoord2" };
+	private String[] attributes = { "a_position", "a_normal", "a_color", "a_texcoord", "a_texcoord2" };
 	
 	public int getAttribLocation(String name)
 	{
 		for(int i = 0; i < attributes.length; i++)
 			if(attributes[i].equals(name))
 				return i;
+		System.err.println("THIS SHOULDN'T HAPPEN");
 		return -1;
 	}
 	

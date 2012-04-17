@@ -16,7 +16,7 @@ public abstract class Vertex
 	{
 		int loc = shader.getAttribLocation(name);
 	    gl.glEnableVertexAttribArray(loc);
-	    gl.glVertexAttribPointer(loc, len, GL4.GL_FLOAT, false, getSize(), offset * Buffers.SIZEOF_FLOAT);
+	    gl.glVertexAttribPointer(loc, len, GL4.GL_FLOAT, false, getSize() * Buffers.SIZEOF_FLOAT, offset * Buffers.SIZEOF_FLOAT);
 		
 	}
 

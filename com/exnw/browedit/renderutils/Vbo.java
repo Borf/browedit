@@ -19,10 +19,14 @@ public class Vbo<T extends Vertex>
 	public Vbo()
 	{
 		GL4 gl = GLContext.getCurrent().getGL().getGL4();
-		vbo = IntBuffer.allocate(1);
-		gl.glGenBuffers(1, vbo);
+
 		vertexArray = IntBuffer.allocate(1);
 		gl.glGenVertexArrays(1, vertexArray);
+		gl.glBindVertexArray(vertexArray.get(0));
+
+		vbo = IntBuffer.allocate(1);
+		gl.glGenBuffers(1, vbo);
+
 		length = 0;
 	}
 	
@@ -34,8 +38,9 @@ public class Vbo<T extends Vertex>
 	
 	public void bind()
 	{
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo.get(0));
+		GL4 gl = GLContext.getCurrent().getGL().getGL4();
+		gl.glBindVertexArray(vertexArray.get(0));
+		//gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo.get(0));
 	}
 	
 	public void generate(VertexList<T> vertices, Shader shader)

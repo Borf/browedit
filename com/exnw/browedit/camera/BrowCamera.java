@@ -16,7 +16,7 @@ public class BrowCamera extends Camera
 	public BrowCamera(Vector3 viewPosition)
 	{
 		this.viewPosition = viewPosition;
-		this.rotation = new Vector3(45,0,0);
+		this.rotation = new Vector3(0,0,0);
 		this.distance = 200;
 	}
 

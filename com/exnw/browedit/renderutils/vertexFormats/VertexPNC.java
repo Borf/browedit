@@ -39,7 +39,7 @@ public class VertexPNC extends VertexPN
 	public void setPointers(GL4 gl, Shader shader)
 	{
 		super.setPointers(gl, shader);
-		setAttrib(gl, shader, "a_color", 3, 6);
+		setAttrib(gl, shader, "a_color", 4, 6);
 
 	}
 }

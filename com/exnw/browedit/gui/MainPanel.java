@@ -8,6 +8,7 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JPanel;
 
 import com.exnw.browedit.data.Map;
+import com.jogamp.opengl.util.Animator;
 
 public class MainPanel extends JPanel
 {
@@ -27,7 +28,7 @@ public class MainPanel extends JPanel
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
 
-        GLProfile glprofile = GLProfile.getDefault();
+        GLProfile glprofile = GLProfile.get("GL4");
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
         canvas = new GLCanvas( glcapabilities );
 		
@@ -41,9 +42,9 @@ public class MainPanel extends JPanel
 		
 		this.add(canvas, BorderLayout.CENTER);
 
-//	    Animator animator = new Animator(canvas);
-//	    animator.start();
-//	    animator.setRunAsFastAsPossible(true);
+	    Animator animator = new Animator(canvas);
+	    animator.start();
+	    animator.setRunAsFastAsPossible(true);
 	    canvas.requestFocus();
 	}
 

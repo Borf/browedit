@@ -1,5 +1,7 @@
 package com.exnw.browedit.math;
 
+import com.jogamp.opengl.util.PMVMatrix;
+
 public class Matrix4{
 	private float[] data;
 	
@@ -202,16 +204,62 @@ public class Matrix4{
 		return new Matrix4(data.clone());
 	}
 
+	@SuppressWarnings("unused")
 	public static Matrix4 makePerspective(float fov, float aspect, float near, float far)
 	{
-		float f = (float)(1 / Math.tan(fov / 2));
+if(false)
+{
+		PMVMatrix pmvMatrix = new PMVMatrix();
+		pmvMatrix.glMatrixMode(PMVMatrix.GL_PROJECTION);
+		pmvMatrix.glLoadIdentity();
+		pmvMatrix.gluPerspective(fov, aspect, near, far);
+		pmvMatrix.update();
+		
+		float[] data = pmvMatrix.glGetPMatrixf().array(); 
+		
+		return new Matrix4(data);
+}
+else
+{
+		float f = (float)(1 / Math.tan(fov/180*Math.PI / 2));
 		return new Matrix4(new float[]
 		{
 			f/aspect,		0,		0,						0,
 			0,				f,		0,						0,
-			0,				0,		(far+near)/(near-far),	(2*far+near)/(near-far),
-			0,				0,		-1,						0
+			0,				0,		(far+near)/(near-far),	-1,
+			0,				0,		(2*far+near)/(near-far),0
+		});
+}
+	}
+	
+	
+	public static Matrix4 makeFrustum(float left, float right, float bottom, float top, float nearVal, float farVal)
+	{
+		float A = (right+left) / (right - left);
+		float B = (top+bottom)/(top-bottom);
+		float C = -(farVal+nearVal)/(farVal-nearVal);
+		float D = -(2*farVal*nearVal)/(farVal-nearVal);
+		
+		
+		
+		return new Matrix4(new float[]
+		{
+			(2*nearVal)/(right-left),	0,								A,				0,
+			0,							(2*nearVal)/(top-bottom),		B,				0,
+			0,							0,								C,				-1,
+			0,							0,								D,				0
 		});
 	}
 	
+	
+	public String toString()
+	{
+		return 
+				data[0] + ",\t" + data[4] + ",\t" + data[8] + ",\t" + data[12] + ",\n" +
+				data[1] + ",\t" + data[5] + ",\t" + data[9] + ",\t" + data[13] + ",\n" +
+				data[2] + ",\t" + data[6] + ",\t" + data[10] + ",\t" + data[14] + ",\n" +
+				data[3] + ",\t" + data[7] + ",\t" + data[11] + ",\t" + data[15] + ",\n";
+	}
+	
+
 }
