@@ -29,7 +29,7 @@ void main()
 
     vec4 col = (ambient + specular + diffuse) * texture2D(s_texture, texCoord);*/
     
-    vec4 col = texture2D(s_texture, texCoord);
+    vec4 col = (texture2D(s_texture, texCoord)+texture2D(s_textureLight, texCoord2)) * texture2D(s_textureShadow, texCoord2);
     
 //    col = vec4(texCoord2,1,0);
     gl_FragColor = col;

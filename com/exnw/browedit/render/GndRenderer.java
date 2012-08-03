@@ -2,10 +2,13 @@ package com.exnw.browedit.render;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
 
@@ -44,17 +47,17 @@ public class GndRenderer implements Renderer
 		if (vbos == null)
 			this.generateVbos(shader);
 
-		gl.glActiveTexture(GL.GL_TEXTURE2);
-		shadows.bind(gl);
-
-		gl.glActiveTexture(GL.GL_TEXTURE1);
+		gl.glActiveTexture(GL4.GL_TEXTURE2);
 		colorLightmap.bind(gl);
 
-		gl.glActiveTexture(GL.GL_TEXTURE0);
+		gl.glActiveTexture(GL4.GL_TEXTURE1);
+		shadows.bind(gl);
+
+		gl.glActiveTexture(GL4.GL_TEXTURE0);
 
 		for (int i = 0; i < textures.size(); i++)
 		{
-			gl.glActiveTexture(GL.GL_TEXTURE0);
+			gl.glActiveTexture(GL4.GL_TEXTURE0);
 			textures.get(i).bind(gl);
 
 			if(vbos.get(i) == null)
@@ -144,6 +147,7 @@ public class GndRenderer implements Renderer
 							{ getColor(x, y), getColor(x, y + 1),
 									getColor(x + 1, y), getColor(x + 1, y + 1) });
 
+							
 							// tr
 							vertices.add(new VertexPNCTT(new Vector3(10.0f * x,
 									-cell.getHeight()[2], 10.0f * (gnd
@@ -214,7 +218,7 @@ public class GndRenderer implements Renderer
 							ty1 += onePixel;
 							tx2 -= onePixel;
 							ty2 -= onePixel;
-
+							
 							vertices.add(new VertexPNCTT(
 											new Vector3(
 													10.0f * x + 10.0f,
@@ -301,7 +305,7 @@ public class GndRenderer implements Renderer
 							ty1 += onePixel;
 							tx2 -= onePixel;
 							ty2 -= onePixel;
-
+							
 							vertices
 									.add(new VertexPNCTT(
 											new Vector3(
@@ -391,6 +395,8 @@ public class GndRenderer implements Renderer
 				// TODO: fix borders
 				texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_MIRRORED_REPEAT);
 				texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_MIRRORED_REPEAT);
+				texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+				texture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
 
 				textures.add(texture);
 			}
@@ -424,7 +430,10 @@ public class GndRenderer implements Renderer
 					}
 				}
 				
-				shadows = AWTTextureIO.newTexture(gl.getGLProfile(), image, true);
+				shadows = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
+
+				shadows.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+				shadows.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
 			}
 			{
 				BufferedImage image = new BufferedImage(TEXTURESIZE,
@@ -449,7 +458,9 @@ public class GndRenderer implements Renderer
 						y += 8;
 					}
 				}
-				colorLightmap = AWTTextureIO.newTexture(gl.getGLProfile(), image, true);
+				colorLightmap = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
+				colorLightmap.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+				colorLightmap.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
 			}
 
 		}

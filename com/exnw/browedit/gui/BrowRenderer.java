@@ -31,7 +31,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	public BrowRenderer(MainFrame mainFrame)
 	{
 		this.mainFrame = mainFrame;
-		camera = new BrowCamera(new Vector3(500,50,500));		
+		camera = new BrowCamera(new Vector3(800,50,800));		
 	}
 	
 	public void display(GLAutoDrawable glDrawable)
@@ -49,8 +49,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		shader.getUniform("viewMatrix").set(camera.getMatrix());
 		shader.getUniform("modelMatrix").set(new Matrix4());
 		shader.getUniform("s_texture").set(0);		
-//		shader.getUniform("s_textureShadow").set(1);		
-//		shader.getUniform("s_textureLight").set(2);		
+		shader.getUniform("s_textureShadow").set(1);		
+		shader.getUniform("s_textureLight").set(2);		
 		}
 		catch(NullPointerException e){	}
 		

@@ -1,6 +1,6 @@
 attribute vec4 a_position;
-attribute vec2 a_texCoord;
-attribute vec2 a_texCoord2;
+attribute vec2 a_texcoord;
+attribute vec2 a_texcoord2;
 attribute vec3 a_normal;
 attribute vec4 a_color;
 
@@ -26,8 +26,8 @@ void main()
     lightDir = lightPosition-vec3(transformed);
     eyeVec = -vec3(transformed);
 
-    texCoord = a_texCoord;
-    texCoord2 = a_texCoord;
+    texCoord = a_texcoord;
+    texCoord2 = a_texcoord2;
     
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * a_position;
     

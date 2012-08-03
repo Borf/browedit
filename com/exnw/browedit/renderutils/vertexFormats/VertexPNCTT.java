@@ -38,7 +38,7 @@ public class VertexPNCTT extends VertexPNCT
 	public void setPointers(GL4 gl, Shader shader)
 	{
 		super.setPointers(gl, shader);
-		setAttrib(gl, shader, "a_texcoord", 2, 12);
+		setAttrib(gl, shader, "a_texcoord2", 2, 12);
 	
 	}
 }
