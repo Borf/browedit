@@ -2,6 +2,8 @@ package com.exnw.browedit.data;
 
 import java.io.IOException;
 
+import javax.media.opengl.GL4;
+
 import com.exnw.browedit.io.Buffer;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Quaternion;
@@ -45,9 +47,9 @@ public class Rsm{
 	
 	private RsmRenderer renderer;
 	
-	public RsmRenderer getRSMRenderer(){
+	public RsmRenderer getRSMRenderer(GL4 gl){
 		if( this.renderer == null ){
-			this.renderer = new RsmRenderer( this );
+			this.renderer = new RsmRenderer( this, gl );
 		}
 		return this.renderer;
 	}
@@ -524,8 +526,8 @@ public class Rsm{
 					v = myMat.mult(v);
 					
 					if( !this.isRoot() || this.subMeshes.size() != 0 ){
-						v.add( this.getPosition() );
-						v.add( this.getPosition2() );
+						v = v.add( this.getPosition() );
+						v = v.add( this.getPosition2() );
 					}
 					
 					for( int ii = 0; ii < 3; ii++ ){

@@ -37,7 +37,7 @@ public class BrowCamera extends Camera
 	{
 		if((event.getModifiers() & MouseEvent.SHIFT_MASK) != 0)
 		{
-			rotation.add(new Vector3((event.getY() - lastEvent.getY()) / 5.0, (event.getX() - lastEvent.getX()) / 5.0, 0));
+			rotation = rotation.add(new Vector3((event.getY() - lastEvent.getY()) / 5.0, (event.getX() - lastEvent.getX()) / 5.0, 0));
 		}
 		else
 		{
@@ -45,7 +45,7 @@ public class BrowCamera extends Camera
 			
 			float x = -(event.getX() - lastEvent.getX()) / 2.0f;
 			float y = -(event.getY() - lastEvent.getY()) / 2.0f;			
-			viewPosition.add(new Vector3(x * (float)Math.cos(angle) + y * (float)Math.cos(angle+Math.PI/2), 0,  x * (float)Math.sin(angle) + y * (float)Math.sin(angle+Math.PI/2)));
+			viewPosition = viewPosition.add(new Vector3(x * (float)Math.cos(angle) + y * (float)Math.cos(angle+Math.PI/2), 0,  x * (float)Math.sin(angle) + y * (float)Math.sin(angle+Math.PI/2)));
 		}
 	}
 

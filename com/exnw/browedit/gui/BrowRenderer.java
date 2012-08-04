@@ -15,6 +15,7 @@ import javax.media.opengl.glu.GLU;
 
 import com.exnw.browedit.camera.BrowCamera;
 import com.exnw.browedit.camera.Camera;
+import com.exnw.browedit.math.Matrix3;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Shader;
@@ -48,6 +49,17 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		{
 		shader.getUniform("viewMatrix").set(camera.getMatrix());
 		shader.getUniform("modelMatrix").set(new Matrix4());
+
+		
+		Matrix4 modelViewMatrix = camera.getMatrix();
+		
+		Matrix3 normalMatrix = new Matrix3(
+					modelViewMatrix.getValue(0,0), modelViewMatrix.getValue(0,1), modelViewMatrix.getValue(0,2),
+					modelViewMatrix.getValue(1,0), modelViewMatrix.getValue(1,1), modelViewMatrix.getValue(1,2),
+					modelViewMatrix.getValue(2,0), modelViewMatrix.getValue(2,1), modelViewMatrix.getValue(2,2));
+		normalMatrix = normalMatrix.invert().transpose();		
+		shader.getUniform("normalMatrix").set(normalMatrix);
+		
 		shader.getUniform("s_texture").set(0);		
 		shader.getUniform("s_textureShadow").set(1);		
 		shader.getUniform("s_textureLight").set(2);		

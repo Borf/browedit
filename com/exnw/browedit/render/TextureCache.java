@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
 import javax.media.opengl.GLException;
@@ -44,9 +45,17 @@ public class TextureCache
 					}
 				}
 				
+				if(gl == null)
+					System.out.println("argh");
+				if(dest == null)
+					System.out.println("argh2");
+					
 				t = AWTTextureIO.newTexture(gl.getGLProfile(), dest, true);
 				t.setTexParameteri(gl, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);				
-//				Texture t = TextureIO.newTexture(GrfLib.openFile(fileName), true, fileName.substring(fileName.lastIndexOf('.')));
+				t.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+				t.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+
+				//				Texture t = TextureIO.newTexture(GrfLib.openFile(fileName), true, fileName.substring(fileName.lastIndexOf('.')));
 				textures.put(fileName, t);
 			} catch (GLException e)
 			{

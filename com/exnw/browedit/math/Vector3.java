@@ -78,11 +78,41 @@ public class Vector3{
 		data[2] = (float) (Math.sin(hAngle)*Math.sin(vAngle));
 	}
 
-	public void add(Vector3 other)
+	public Vector3 add(Vector3 other)
 	{
-		for(int i = 0; i < 3; i++)
-			this.data[i] += other.data[i];		
+		return new Vector3(data[0]+other.data[0], data[1]+other.data[1], data[2]+other.data[2]);		
 	}
+	
+	public Vector3 sub(Vector3 other)
+	{
+		return new Vector3(data[0]-other.data[0], data[1]-other.data[1], data[2]-other.data[2]);		
+	}
+	
+	public Vector3 cross(Vector3 other)
+	{
+		return new Vector3(
+			data[1] * other.data[2] - data[2] * other.data[1],
+			data[2] * other.data[0] - data[0] * other.data[2],
+			data[0] * other.data[1] - data[1] * other.data[0]);
+	}
+
+	public float dot(Vector3 other)
+	{
+		return 	data[0] * other.data[0] + 
+				data[1] * other.data[1] +
+				data[2] * other.data[2];
+	}
+	
+	public Vector3 normalized()
+	{
+		return div(getLength());
+	}
+	
+	private Vector3 div(float length)
+	{
+		return new Vector3(data[0]/length, data[1]/length, data[2]/length);
+	}
+
 	public String toString()
 	{
 		return "Vector3(" + data[0] + "," + data[1] + "," + data[2] + ") ";

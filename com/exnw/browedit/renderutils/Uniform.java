@@ -1,5 +1,6 @@
 package com.exnw.browedit.renderutils;
 
+import com.exnw.browedit.math.Matrix3;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
@@ -10,12 +11,13 @@ public class Uniform
 	Shader shader;
 	int location;
 	
-	int 	valueInt;
-	boolean valueBool;
-	float	valueFloat;
-	Matrix4 valueMatrix;
-	Vector3 valueVector3;
-	Vector2 valueVector2;
+	public int 	valueInt;
+	public boolean valueBool;
+	public float	valueFloat;
+	public Matrix4 valueMatrix4;
+	public Matrix3 valueMatrix3;
+	public Vector3 valueVector3;
+	public Vector2 valueVector2;
 	
 	public Uniform(Shader shader, int location, String name)
 	{
@@ -26,8 +28,13 @@ public class Uniform
 
 	public void set(Matrix4 matrix)
 	{
-		valueMatrix = matrix;
+		valueMatrix4 = matrix;
 		shader.gl.glUniformMatrix4fv(location, 1, false, matrix.getData(), 0);
+	}
+	public void set(Matrix3 matrix)
+	{
+		valueMatrix3 = matrix;
+		shader.gl.glUniformMatrix3fv(location, 1, false, matrix.getData(), 0);
 	}
 	public void set(int value)
 	{

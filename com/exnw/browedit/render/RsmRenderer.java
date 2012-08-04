@@ -7,47 +7,52 @@ import java.util.Observable;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
 
+import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsm;
 import com.exnw.browedit.data.Rsm.RsmMesh;
 import com.exnw.browedit.data.Rsm.RsmMesh.Surface;
+import com.exnw.browedit.data.Rsw;
+import com.exnw.browedit.math.Matrix3;
+import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Shader;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNT;
+import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 
-public class RsmRenderer implements Renderer{
+public class RsmRenderer {// implements Renderer{
 	private Rsm rsm;
 	
 	private MeshRenderer root;
 	private List<Texture> textures = new ArrayList<Texture>();
 	
-	public RsmRenderer( Rsm rsm ){
+	public RsmRenderer( Rsm rsm, GL4 gl ){
 		this.rsm = rsm;
 		
 		for( String t : this.rsm.getTextures() )
-			this.textures.add( TextureCache.getTexture(null, "data\\texture\\" + t) ); //TODO: GL null here
+			this.textures.add( TextureCache.getTexture(gl, "data\\texture\\" + t) ); //TODO: GL null here
 		
 		this.root = new RsmRenderer.MeshRenderer( this.rsm.getRoot(), this.rsm );
 	}
 	
-	public void render( GL4 gl, Shader shader )//, Map map, Rsw.ModelResource modelProperties )
+	public void render( GL4 gl, Shader shader, Map map, Rsw.ModelResource modelProperties )
 	{
-	/*	gl.glPushMatrix();
 		
-		gl.glTranslatef(5*map.getGnd().getWidth()+modelProperties.getPosition().getX(), -modelProperties.getPosition().getY(), -5*map.getGnd().getHeight()+modelProperties.getPosition().getZ());
-		gl.glRotatef(-modelProperties.getRotation().getZ(), 0, 0, 1);
-		gl.glRotatef(-modelProperties.getRotation().getX(), 1, 0, 0);
-		gl.glRotatef(modelProperties.getRotation().getY(), 0, 1, 0);
-		gl.glScalef(modelProperties.getScale().getX(), -modelProperties.getScale().getY(), modelProperties.getScale().getZ());
-		gl.glTranslatef(-this.rsm.getRealBBRange().getX(), this.rsm.getRealBBMin().getY(), -this.rsm.getRealBBRange().getZ());
-		gl.glEnable(GL.GL_TEXTURE_2D);
+		Matrix4 modelMatrix = Matrix4.makeScale(1, 1, -1);
 		
-		this.root.render(gl);
 		
-		gl.glPopMatrix();*/
+		modelMatrix = modelMatrix.mult(Matrix4.makeTranslation(5*map.getGnd().getWidth()+modelProperties.getPosition().getX(), -modelProperties.getPosition().getY(), -5*map.getGnd().getHeight()+modelProperties.getPosition().getZ()));
+		modelMatrix = modelMatrix.mult(Matrix4.makeRotation(-modelProperties.getRotation().getZ(), 0, 0, 1));
+		modelMatrix = modelMatrix.mult(Matrix4.makeRotation(-modelProperties.getRotation().getX(), 1, 0, 0));
+		modelMatrix = modelMatrix.mult(Matrix4.makeRotation(modelProperties.getRotation().getY(), 0, 1, 0));
+		modelMatrix = modelMatrix.mult(Matrix4.makeScale(modelProperties.getScale().getX(), -modelProperties.getScale().getY(), modelProperties.getScale().getZ()));
+		modelMatrix = modelMatrix.mult(Matrix4.makeTranslation(-this.rsm.getRealBBRange().getX(), this.rsm.getRealBBMin().getY(), -this.rsm.getRealBBRange().getZ()));
+		
+		this.root.render(gl, shader, modelMatrix);
+		
 	}
 	
 	public void update( Observable o, Object arg ){}
@@ -72,39 +77,36 @@ public class RsmRenderer implements Renderer{
 				this.textures.add( RsmRenderer.this.textures.get( tid.intValue() ) );
 		}
 
-		public void render(GL4 gl, Shader shader)
+		public void render(GL4 gl, Shader shader, Matrix4 modelMatrix)
 		{
-/*			gl.glMultMatrixf( this.rsmMesh.getMatrix1().getData(), 0);
-			gl.glPushMatrix();
-			gl.glMultMatrixf( this.rsmMesh.getMatrix2().getData(), 0);
+			modelMatrix = modelMatrix.mult(this.rsmMesh.getMatrix1());
+			Matrix4 currentModelMatrix = modelMatrix.mult(this.rsmMesh.getMatrix2());
 			
 			if( vbos == null )
-				this.generateVbos(gl);
+				this.generateVbos(gl, shader);
 			
-			gl.glEnable(GL.GL_TEXTURE_2D);
-			gl.glEnableClientState(GL.GL_VERTEX_ARRAY);             // activate vertex coords array
-			gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
 
+			shader.getUniform("modelMatrix").set(currentModelMatrix);
+			Matrix4 modelViewMatrix = shader.getUniform("viewMatrix").valueMatrix4.mult(currentModelMatrix);
+			Matrix3 normalMatrix = new Matrix3(
+						modelViewMatrix.getValue(0,0), modelViewMatrix.getValue(0,1), modelViewMatrix.getValue(0,2),
+						modelViewMatrix.getValue(1,0), modelViewMatrix.getValue(1,1), modelViewMatrix.getValue(1,2),
+						modelViewMatrix.getValue(2,0), modelViewMatrix.getValue(2,1), modelViewMatrix.getValue(2,2));
+			normalMatrix = normalMatrix.invert().transpose();		
+			shader.getUniform("normalMatrix").set(normalMatrix);
+			
+			
 			for( int i = 0; i < this.textures.size(); i++ ){
 				if(this.textures.get(i) != null)
-					this.textures.get(i).bind();
+					this.textures.get(i).bind(gl);
 
 				vbos.get(i).bind();
-				vbos.get(i).setPointers();
-				gl.glDrawArrays(GL.GL_TRIANGLES, 0, vbos.get(i).size() /BufferUtil.SIZEOF_FLOAT/8);				
+				gl.glDrawArrays(GL.GL_TRIANGLES, 0, vbos.get(i).size() / Buffers.SIZEOF_FLOAT/8);				
 			}
-			gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-			gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-			
-			gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-			
-			gl.glPopMatrix();
 			
 			for( MeshRenderer renderer : this.subMeshes ){
-				gl.glPushMatrix();
-				renderer.render(gl);
-				gl.glPopMatrix();
-			}*/
+				renderer.render(gl, shader, modelMatrix);
+			}
 		}
 		
 		private void generateVbos(GL gl, Shader shader){
@@ -118,12 +120,14 @@ public class RsmRenderer implements Renderer{
 				{
 					if(surface.getTextureid() == i)
 					{
+						Vector3 normal = rsmMesh.getVertices().get(surface.getSurfacevertices()[0]).sub(rsmMesh.getVertices().get(surface.getSurfacevertices()[1])).cross(rsmMesh.getVertices().get(surface.getSurfacevertices()[0]).sub(rsmMesh.getVertices().get(surface.getSurfacevertices()[2])));
+						
 						for(int ii = 0; ii < 3; ii++)
 						{
 							Vector3 vec = rsmMesh.getVertices().get(surface.getSurfacevertices()[ii]);
 							Vector2 tex = rsmMesh.getTextureCoordinats().get(surface.getTexturevertices()[ii]).getCoodinates();
 							
-							vertices.add(new VertexPNT(vec, new Vector3(0,1,0), tex));
+							vertices.add(new VertexPNT(vec, normal, tex));
 						}
 					}
 				}

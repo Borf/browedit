@@ -7,6 +7,7 @@ import javax.media.opengl.GL4;
 
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.data.Rsw;
+import com.exnw.browedit.math.Matrix3;
 import com.exnw.browedit.renderutils.Shader;
 
 public class RswRenderer implements Renderer
@@ -22,18 +23,22 @@ public class RswRenderer implements Renderer
 	
 	public void render(GL4 gl, Shader shader)
 	{		
-		/*gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glEnable(GL.GL_BLEND);
-		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glPushMatrix();
-		gl.glScalef(1,1,-1);
+		gl.glBlendFunc(GL4.GL_SRC_ALPHA, GL4.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL4.GL_BLEND);
+		gl.glBlendFunc(GL4.GL_SRC_ALPHA, GL4.GL_ONE_MINUS_SRC_ALPHA);
+
+		Matrix3 oldNormalMatrix = shader.getUniform("normalMatrix").valueMatrix3; 
+		
+		shader.getUniform("lighting").set(false);
+		
 		
 		for( Rsw.ModelResource model : this.rsw.getModels() ){
-			model.getRsm().getRSMRenderer().render( gl, this.map, model );
+			model.getRsm().getRSMRenderer(gl).render( gl, shader, this.map, model );
 		}
+		shader.getUniform("lighting").set(true);
+		shader.getUniform("normalMatrix").set(oldNormalMatrix); 
 		
-		gl.glPopMatrix();
-		gl.glDisable(GL.GL_BLEND);*/
+		gl.glDisable(GL4.GL_BLEND);
 	}
 	
 	public void update(Observable arg0, Object arg1)
