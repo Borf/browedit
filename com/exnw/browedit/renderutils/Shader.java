@@ -21,15 +21,11 @@ public class Shader
 	String vertexShaderFileName;
 	String fragmentShaderFileName;
 	
-	GL4 gl;
-	
-	
 	Map<String, Uniform> uniforms = new HashMap<String, Uniform>();
 	
 	
-	public Shader(String vertexShader, String fragmentShader, GL gl)
+	public Shader(String vertexShader, String fragmentShader, GL4 gl)
 	{
-		this.gl = gl.getGL4();
 		this.vertexShaderFileName = vertexShader;
 		this.fragmentShaderFileName = fragmentShader;
 		try
@@ -53,30 +49,30 @@ public class Shader
 		}
 	}
 	
-	void compile()
+	void compile(GL4 gl)
 	{
 		int v = gl.glCreateShader(GL4.GL_VERTEX_SHADER);
 		int f = gl.glCreateShader(GL4.GL_FRAGMENT_SHADER);
 		gl.glShaderSource(v, 1, new String[]{vsrc}, IntBuffer.wrap(new int[] { vsrc.length() }));
 		gl.glCompileShader(v);
-		printShaderInfoLog(v,vertexShaderFileName);
+		printShaderInfoLog(v,vertexShaderFileName, gl);
 		gl.glShaderSource(f, 1, new String[]{fsrc}, IntBuffer.wrap(new int[] { fsrc.length() }));
 		gl.glCompileShader(f);
-		printShaderInfoLog(f, fragmentShaderFileName);
+		printShaderInfoLog(f, fragmentShaderFileName, gl);
 
 		shaderprogram = gl.glCreateProgram();
 		gl.glAttachShader(shaderprogram, v);
 		gl.glAttachShader(shaderprogram, f);
 	}
 	
-	void link()
+	void link(GL4 gl)
 	{
 		gl.glLinkProgram(shaderprogram);
 		gl.glValidateProgram(shaderprogram);
 	}
 	
 	
-	public void printShaderInfoLog(int shader, String filename)
+	public void printShaderInfoLog(int shader, String filename, GL4 gl)
 	{
 		IntBuffer b = IntBuffer.allocate(2);
 		gl.glGetShaderiv(shader, GL4.GL_INFO_LOG_LENGTH,b);
@@ -89,11 +85,11 @@ public class Shader
 		}
 	}
 	
-	public Uniform getUniform(String name)
+	public Uniform getUniform(String name, GL4 gl)
 	{
 		if(!uniforms.containsKey(name))
 		{
-			int location = getUniformLocation(name);
+			int location = getUniformLocation(name, gl);
 			if(location >= 0)
 				uniforms.put(name, new Uniform(this, location, name));
 			else
@@ -108,12 +104,12 @@ public class Shader
 	}
 	
 	
-	int getUniformLocation(String location)
+	int getUniformLocation(String location, GL4 gl)
 	{
 		return gl.glGetUniformLocation(shaderprogram, location);
 	}
 	
-	void bindAttributeLocation(String name, int position)
+	void bindAttributeLocation(String name, int position, GL4 gl)
 	{
 		gl.glBindAttribLocation(shaderprogram, position, name);
 	}
@@ -131,14 +127,14 @@ public class Shader
 	}
 	
 
-	public void use()
+	public void use(GL4 gl)
 	{
 		if(shaderprogram == 0)
 		{
-			compile();
+			compile(gl);
 			for(int i = 0; i < attributes.length; i++)
-				bindAttributeLocation(attributes[i], i);
-			link();
+				bindAttributeLocation(attributes[i], i, gl);
+			link(gl);
 		}
 		gl.glUseProgram(shaderprogram);		
 	}

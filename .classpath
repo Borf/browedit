@@ -5,5 +5,9 @@
 	<classpathentry exported="true" kind="lib" path="jogl/jogl.all.jar"/>
 	<classpathentry kind="lib" path="jogl/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="jogl/gluegen.jar"/>
+	<classpathentry kind="lib" path="substance/laf-plugin-6.3.jar"/>
+	<classpathentry kind="lib" path="substance/laf-widget-6.3.jar"/>
+	<classpathentry kind="lib" path="substance/substance-6.3.jar"/>
+	<classpathentry kind="lib" path="substance/trident-6.3.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -2,18 +2,17 @@ package com.exnw.browedit.render;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
+import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.data.Gnd;
 import com.exnw.browedit.data.Gnd.GndCell;
+import com.exnw.browedit.data.Gnd.Lightmap;
 import com.exnw.browedit.data.Gnd.Surface;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
@@ -56,7 +55,7 @@ public class GndRenderer implements Renderer
 		gl.glActiveTexture(GL4.GL_TEXTURE0);
 
 		
-		shader.getUniform("ground").set(true);
+		shader.getUniform("ground", gl).set(true, gl);
 		
 		for (int i = 0; i < textures.size(); i++)
 		{
@@ -69,7 +68,7 @@ public class GndRenderer implements Renderer
 			gl.glDrawArrays(GL4.GL_TRIANGLES, 0, vbos.get(i).size()	/ Buffers.SIZEOF_FLOAT / 14); //TODO: replace with quads
 
 		}
-		shader.getUniform("ground").set(false);
+		shader.getUniform("ground", gl).set(false, gl);
 
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
@@ -423,6 +422,15 @@ public class GndRenderer implements Renderer
 	public void update(Observable arg0, Object arg1)
 	{
 
+	}
+
+	public void destroy(GL4 gl)
+	{
+		for(Vbo<VertexPNCTT> vbo : vbos)
+			vbo.destroy(gl);
+		shadows.destroy(gl);
+		colorLightmap.destroy(gl);
+		textures.clear();
 	}
 
 }

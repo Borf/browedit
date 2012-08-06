@@ -51,5 +51,8 @@ void main()
 	if(col.w < 0.9)
 		discard;
     
+    //if(col.w > 0.9)
+    //	lightedCol = vec4(normal,1);
+    
     gl_FragColor = lightedCol;
 }

@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
+import javax.media.opengl.GLContext;
 import javax.media.opengl.GLException;
 
 import com.exnw.browedit.grflib.GrfLib;
@@ -68,5 +69,12 @@ public class TextureCache
 			}
 		}
 		return t;
+	}
+
+	public static void destroy(GL4 gl)
+	{
+		for(String t : textures.keySet())
+			textures.get(t).destroy(gl);
+		textures.clear();		
 	}
 }

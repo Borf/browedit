@@ -1,5 +1,6 @@
 package com.exnw.browedit.gui;
 
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -11,7 +12,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.glu.GLU;
+import javax.swing.SwingUtilities;
 
 import com.exnw.browedit.camera.BrowCamera;
 import com.exnw.browedit.camera.Camera;
@@ -21,7 +22,6 @@ import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Shader;
 
 public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener {
-	static GLU glu = new GLU();
 	MainFrame mainFrame;
 	
 	// Variables for mouse dragging
@@ -42,37 +42,44 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 
 		if(shader == null)
 			shader = new Shader("shader.vert", "shader.frag", gl);
-		shader.use();
+		shader.use(gl);
 		
 		
 		try
 		{
-		shader.getUniform("viewMatrix").set(camera.getMatrix());
-		shader.getUniform("modelMatrix").set(new Matrix4());
-
+		shader.getUniform("viewMatrix", gl).set(camera.getMatrix(), gl);
+		shader.getUniform("modelMatrix", gl).set(new Matrix4(), gl);
+		shader.getUniform("lighting", gl).set(true, gl);
+		float h = (float)glDrawable.getWidth()  / (float)glDrawable.getHeight();
+		if(shader != null)
+		{
+			if(shader.getUniform("projectionMatrix", gl) != null)
+				shader.getUniform("projectionMatrix", gl).set(Matrix4.makePerspective(90, h, 1, 5000), gl);
+		}
 		
-		Matrix4 modelViewMatrix = camera.getMatrix();
+		Matrix4 modelViewMatrix = new Matrix4();//camera.getMatrix();
 		
 		Matrix3 normalMatrix = new Matrix3(
 					modelViewMatrix.getValue(0,0), modelViewMatrix.getValue(0,1), modelViewMatrix.getValue(0,2),
 					modelViewMatrix.getValue(1,0), modelViewMatrix.getValue(1,1), modelViewMatrix.getValue(1,2),
 					modelViewMatrix.getValue(2,0), modelViewMatrix.getValue(2,1), modelViewMatrix.getValue(2,2));
 		normalMatrix = normalMatrix.invert().transpose();		
-		shader.getUniform("normalMatrix").set(normalMatrix);
+		shader.getUniform("normalMatrix", gl).set(normalMatrix, gl);
 		
-		shader.getUniform("s_texture").set(0);		
-		shader.getUniform("s_textureShadow").set(1);		
-		shader.getUniform("s_textureLight").set(2);		
+		shader.getUniform("s_texture", gl).set(0, gl);		
+		shader.getUniform("s_textureShadow", gl).set(1, gl);		
+		shader.getUniform("s_textureLight", gl).set(2, gl);		
 		}
 		catch(NullPointerException e){	}
 		
 		
-		mainFrame.getCurrentMap().render(mainFrame, gl, shader);
-		
+		if(mainFrame.getCurrentMap() != null)
+			mainFrame.getCurrentMap().render(mainFrame, gl, shader);
 	}
 
 	public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged)
 	{
+		System.err.println("DISPLAY CHANGED");
 	}
 
 	public void init(GLAutoDrawable gLDrawable)
@@ -88,12 +95,17 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 
 	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height)
 	{
+		GL4 gl = gLDrawable.getGL().getGL4();
+		gl.glViewport(0, 0, width, height);
 		if(height <= 0) {
 		    height = 1;
 		}
 		float h = (float)width / (float)height;
 		if(shader != null)
-			shader.getUniform("projectionMatrix").set(Matrix4.makePerspective(90, h, 1, 5000));
+		{
+			if(shader.getUniform("projectionMatrix",gl) != null)
+				shader.getUniform("projectionMatrix",gl).set(Matrix4.makePerspective(90, h, 1, 5000),gl);
+		}
 	}
 
 	public void mouseDragged( MouseEvent e ){

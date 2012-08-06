@@ -1,7 +1,14 @@
 package com.exnw.browedit;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import org.pushingpixels.substance.api.skin.BusinessBlackSteelSkin;
+import org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel;
 
 import com.exnw.browedit.config.Settings;
 import com.exnw.browedit.grflib.GrfLib;
@@ -86,24 +93,21 @@ public class BrowEdit{
 		
 		GrfLib.enableJar();
 		
-		try {
-		    // Set System L&F
-	        UIManager.setLookAndFeel(
-	            UIManager.getSystemLookAndFeelClassName());
-	    } 
-	    catch (UnsupportedLookAndFeelException e) {
-	       // handle exception
-	    }
-	    catch (ClassNotFoundException e) {
-	       // handle exception
-	    }
-	    catch (InstantiationException e) {
-	       // handle exception
-	    }
-	    catch (IllegalAccessException e) {
-	       // handle exception
-	    }
-		new MainFrame();
+
+	    JFrame.setDefaultLookAndFeelDecorated(true);
+	    JDialog.setDefaultLookAndFeelDecorated(true);
+	    SwingUtilities.invokeLater(new Runnable() {
+	      public void run() {
+	        try
+			{
+				UIManager.setLookAndFeel(new SubstanceGraphiteAquaLookAndFeel());
+			} catch (UnsupportedLookAndFeelException e)
+			{
+				e.printStackTrace();
+			}
+			new MainFrame();
+	      }
+	    });
 	}
 
 }

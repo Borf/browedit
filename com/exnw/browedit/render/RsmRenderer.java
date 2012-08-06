@@ -86,14 +86,14 @@ public class RsmRenderer {// implements Renderer{
 				this.generateVbos(gl, shader);
 			
 
-			shader.getUniform("modelMatrix").set(currentModelMatrix);
-			Matrix4 modelViewMatrix = shader.getUniform("viewMatrix").valueMatrix4.mult(currentModelMatrix);
+			shader.getUniform("modelMatrix", gl).set(currentModelMatrix, gl);
+			Matrix4 modelViewMatrix = currentModelMatrix;//shader.getUniform("viewMatrix").valueMatrix4.mult(currentModelMatrix);
 			Matrix3 normalMatrix = new Matrix3(
 						modelViewMatrix.getValue(0,0), modelViewMatrix.getValue(0,1), modelViewMatrix.getValue(0,2),
 						modelViewMatrix.getValue(1,0), modelViewMatrix.getValue(1,1), modelViewMatrix.getValue(1,2),
 						modelViewMatrix.getValue(2,0), modelViewMatrix.getValue(2,1), modelViewMatrix.getValue(2,2));
 			normalMatrix = normalMatrix.invert().transpose();		
-			shader.getUniform("normalMatrix").set(normalMatrix);
+			shader.getUniform("normalMatrix", gl).set(normalMatrix, gl);
 			
 			
 			for( int i = 0; i < this.textures.size(); i++ ){
@@ -134,7 +134,21 @@ public class RsmRenderer {// implements Renderer{
 				vbos.get(i).generate(vertices, shader);
 			}
 			
+		}
+
+		public void destroy(GL4 gl)
+		{
+			for(Vbo<VertexPNT> vbo : vbos)
+				vbo.destroy(gl);
+			for(MeshRenderer renderer : this.subMeshes)
+				renderer.destroy(gl);
 		}	
+	}
+
+	public void destroy(GL4 gl)
+	{
+		if(root != null)
+			root.destroy(gl);		
 	}
 
 }

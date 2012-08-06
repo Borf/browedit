@@ -18,7 +18,7 @@ varying vec3 lightDir;
 
 void main()
 {
-    vec3 lightPosition = vec3(0.0, 0.0, 0.0);
+    vec3 lightPosition = vec3(0.0, 100.0, 0.0);
     
     vec4 transformed = modelMatrix * viewMatrix * a_position;
 

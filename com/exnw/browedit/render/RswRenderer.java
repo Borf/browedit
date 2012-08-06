@@ -27,21 +27,26 @@ public class RswRenderer implements Renderer
 		gl.glEnable(GL4.GL_BLEND);
 		gl.glBlendFunc(GL4.GL_SRC_ALPHA, GL4.GL_ONE_MINUS_SRC_ALPHA);
 
-		Matrix3 oldNormalMatrix = shader.getUniform("normalMatrix").valueMatrix3; 
+		Matrix3 oldNormalMatrix = shader.getUniform("normalMatrix", gl).valueMatrix3; 
 		
-		shader.getUniform("lighting").set(false);
+		shader.getUniform("lighting", gl).set(false,gl);
 		
 		
 		for( Rsw.ModelResource model : this.rsw.getModels() ){
 			model.getRsm().getRSMRenderer(gl).render( gl, shader, this.map, model );
 		}
-		shader.getUniform("lighting").set(true);
-		shader.getUniform("normalMatrix").set(oldNormalMatrix); 
+		shader.getUniform("lighting", gl).set(true,gl);
+		shader.getUniform("normalMatrix", gl).set(oldNormalMatrix,gl); 
 		
 		gl.glDisable(GL4.GL_BLEND);
 	}
 	
 	public void update(Observable arg0, Object arg1)
 	{
+	}
+
+	public void destroy(GL4 gl)
+	{
+	
 	}
 }

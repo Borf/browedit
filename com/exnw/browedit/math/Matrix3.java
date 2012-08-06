@@ -123,7 +123,7 @@ public class Matrix3{
 	      }
 	      if(Math.abs(pivot) < 1.0E-10)
 	      {
-	        System.out.println("Matrix is singular !");
+	    	  new Exception("Matrix is singular !").printStackTrace();
 	        return;
 	      }
 	      hold = row[k];

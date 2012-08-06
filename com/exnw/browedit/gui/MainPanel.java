@@ -2,10 +2,11 @@ package com.exnw.browedit.gui;
 
 import java.awt.BorderLayout;
 
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
+import javax.media.opengl.GL4;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.ToolTipManager;
 
 import com.exnw.browedit.data.Map;
 import com.jogamp.opengl.util.Animator;
@@ -16,7 +17,7 @@ public class MainPanel extends JPanel
 	BrushToolBar brushToolBar;
 	ToolToolBar toolToolBar;
 	ToolBar toolBar;
-	GLCanvas canvas;
+	GLCanvas panel;
 	
 	public MainPanel(MainFrame mainFrame)
 	{
@@ -28,35 +29,38 @@ public class MainPanel extends JPanel
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
 
-        GLProfile glprofile = GLProfile.get("GL4");
-        GLCapabilities glcapabilities = new GLCapabilities( glprofile );
-        canvas = new GLCanvas( glcapabilities );
 		
+		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		
+		
+//        GLProfile glprofile = GLProfile.get("GL4");
+//        GLCapabilities glcapabilities = new GLCapabilities( glprofile );
+        
+        panel = new GLCanvas();
 		BrowRenderer renderer = new BrowRenderer(mainFrame);
 		
 		
-		canvas.addGLEventListener(renderer);
-		canvas.addMouseListener(renderer);
-		canvas.addMouseMotionListener(renderer);
-		canvas.addMouseWheelListener(renderer);
-		
-		this.add(canvas, BorderLayout.CENTER);
+		panel.addGLEventListener(renderer);
+		panel.addMouseListener(renderer);
+		panel.addMouseMotionListener(renderer);
+		panel.addMouseWheelListener(renderer);
+	
+		this.add(panel, BorderLayout.CENTER);
 
-	    Animator animator = new Animator(canvas);
+	    Animator animator = new Animator(panel);
 	    animator.start();
 	    animator.setRunAsFastAsPossible(true);
-	    canvas.requestFocus();
+	    panel.requestFocus();
 	}
 
 	public void setMap(Map currentMap)
 	{
 		brushToolBar.setMap(currentMap);
-		
-	}
-
-	public GLCanvas getCanvas()
-	{
-		return canvas;
 	}
 	
+	public GL4 getGL()
+	{
+		return panel.getGL().getGL4();
+	}
 }

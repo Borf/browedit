@@ -8,6 +8,7 @@ import java.util.Observer;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
+import javax.media.opengl.GLContext;
 import javax.media.opengl.GLException;
 
 import com.exnw.browedit.data.Gat;
@@ -151,6 +152,14 @@ public class GatRenderer implements Observer, Renderer
 		if(o.equals(gat))
 			changes.add(arg);
 		
+	}
+
+	public void destroy(GL4 gl)
+	{
+		if(texture != null)
+			texture.destroy(gl);
+		if(vbo != null)
+			vbo.destroy(gl);
 	}
 
 }

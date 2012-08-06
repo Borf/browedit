@@ -836,4 +836,11 @@ public class Rsm{
 			}
 		}
 	}
+
+	public void destroy(GL4 gl)
+	{
+		if(renderer != null)
+			renderer.destroy(gl);
+		renderer = null;		
+	}
 }

@@ -1,5 +1,7 @@
 package com.exnw.browedit.renderutils;
 
+import javax.media.opengl.GL4;
+
 import com.exnw.browedit.math.Matrix3;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector2;
@@ -26,40 +28,40 @@ public class Uniform
 		this.name = name;
 	}
 
-	public void set(Matrix4 matrix)
+	public void set(Matrix4 matrix, GL4 gl)
 	{
 		valueMatrix4 = matrix;
-		shader.gl.glUniformMatrix4fv(location, 1, false, matrix.getData(), 0);
+		gl.glUniformMatrix4fv(location, 1, false, matrix.getData(), 0);
 	}
-	public void set(Matrix3 matrix)
+	public void set(Matrix3 matrix, GL4 gl)
 	{
 		valueMatrix3 = matrix;
-		shader.gl.glUniformMatrix3fv(location, 1, false, matrix.getData(), 0);
+		gl.glUniformMatrix3fv(location, 1, false, matrix.getData(), 0);
 	}
-	public void set(int value)
+	public void set(int value, GL4 gl)
 	{
 		valueInt = value;
-		shader.gl.glUniform1i(location, value);
+		gl.glUniform1i(location, value);
 	}
-	public void set(float value)
+	public void set(float value, GL4 gl)
 	{
 		valueFloat = value;
-		shader.gl.glUniform1f(location, value);
+		gl.glUniform1f(location, value);
 	}
-	public void set(Vector3 value)
+	public void set(Vector3 value, GL4 gl)
 	{
 		valueVector3 = value;
-		shader.gl.glUniform3f(location, value.getX(), value.getY(), value.getZ());
+		gl.glUniform3f(location, value.getX(), value.getY(), value.getZ());
 	}
-	public void set(Vector2 value)
+	public void set(Vector2 value, GL4 gl)
 	{
 		valueVector2 = value;
-		shader.gl.glUniform2f(location, value.getX(), value.getY());
+		gl.glUniform2f(location, value.getX(), value.getY());
 	}
-	public void set(boolean value)
+	public void set(boolean value, GL4 gl)
 	{
 		valueBool = value;
-		shader.gl.glUniform1i(location, value ? 1 : 0);
+		gl.glUniform1i(location, value ? 1 : 0);
 	}
 	
 }

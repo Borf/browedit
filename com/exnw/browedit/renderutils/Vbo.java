@@ -30,12 +30,6 @@ public class Vbo<T extends Vertex>
 		length = 0;
 	}
 	
-	public void dispose()
-	{
-		GL gl = GLContext.getCurrent().getGL();
-		gl.glDeleteBuffers(1, vbo);
-	}
-	
 	public void bind()
 	{
 		GL4 gl = GLContext.getCurrent().getGL().getGL4();
@@ -93,5 +87,10 @@ public class Vbo<T extends Vertex>
 	public int size()
 	{
 		return length;
+	}
+
+	public void destroy(GL4 gl)
+	{
+		gl.glDeleteBuffers(1, vbo);
 	}
 }

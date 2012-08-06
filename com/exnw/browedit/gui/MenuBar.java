@@ -32,8 +32,6 @@ public class MenuBar extends JMenuBar
 		
 
 		add(tools = new JMenu("Tools"));
-		add(maps = new JMenu("Maps"));
-		
 		
 
 		fileOpen.addActionListener(new ActionListener()
@@ -58,11 +56,6 @@ public class MenuBar extends JMenuBar
 		});
 		
 		
-	}
-
-	public void addMap(String fileName)
-	{
-		maps.add(new JMenuItem(fileName));
 	}
 }
 

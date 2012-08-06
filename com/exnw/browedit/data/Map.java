@@ -9,6 +9,7 @@ import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.render.GatRenderer;
 import com.exnw.browedit.render.GndRenderer;
 import com.exnw.browedit.render.RswRenderer;
+import com.exnw.browedit.render.TextureCache;
 import com.exnw.browedit.renderutils.Shader;
 
 public class Map
@@ -104,6 +105,15 @@ public class Map
 	public Gnd getGnd()
 	{
 		return gnd;
+	}
+
+	public void destroy(GL4 gl)
+	{
+		gndRenderer.destroy(gl);
+		gatRenderer.destroy(gl);
+		rswRenderer.destroy(gl);
+		RsmCache.destroy(gl);
+		TextureCache.destroy(gl);
 	}
 
 
