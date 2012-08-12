@@ -55,7 +55,8 @@ public class Map
         */
 
 		gndRenderer.render(gl, shader);
-		rswRenderer.render(gl, shader);
+		if(mainFrame.getMainPanel().renderer.showObjects)
+			rswRenderer.render(gl, shader);
 	}
 	
 	

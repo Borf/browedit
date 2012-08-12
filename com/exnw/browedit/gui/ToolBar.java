@@ -8,12 +8,14 @@ import javax.swing.JToolBar;
 
 public class ToolBar extends JToolBar
 {
+	private static final long serialVersionUID = -5839738291507072960L;
 	JButton buttonOpen;
 	public ToolBar(final MainFrame mainFrame)
 	{
 		add(buttonOpen = new JButton("Open"));
+		add(buttonOpen = new JButton("Save"));
+		add(buttonOpen = new JButton("Save As"));
 
-	
 	
 	
 		buttonOpen.addActionListener(new ActionListener()

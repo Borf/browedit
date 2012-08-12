@@ -2,12 +2,13 @@ package com.exnw.browedit.gui;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 public class ToolToolBar extends JToolBar
 {
+	private static final long serialVersionUID = 2175329152653456454L;
+
 	JToggleButton basicview;
 	
 	JToggleButton select;

@@ -8,7 +8,6 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
 
 import com.exnw.browedit.grflib.GrfLib;

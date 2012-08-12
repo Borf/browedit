@@ -1,6 +1,7 @@
 package com.exnw.browedit.gui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import javax.media.opengl.GL4;
 import javax.media.opengl.awt.GLCanvas;
@@ -19,12 +20,18 @@ public class MainPanel extends JPanel
 	ToolBar toolBar;
 	GLCanvas panel;
 	
+	public BrowRenderer renderer;
+	
 	public MainPanel(MainFrame mainFrame)
 	{
 		this.setLayout(new BorderLayout());
-		
-		
-		add(toolBar = new ToolBar(mainFrame), BorderLayout.PAGE_START);
+
+	
+		JPanel northPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		add(northPanel, BorderLayout.NORTH);
+	
+		northPanel.add(toolBar = new ToolBar(mainFrame));
+		northPanel.add(new LayerToolBar(mainFrame));
 		add(toolToolBar = new ToolToolBar(mainFrame), BorderLayout.WEST);
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
@@ -38,7 +45,7 @@ public class MainPanel extends JPanel
 //        GLCapabilities glcapabilities = new GLCapabilities( glprofile );
         
         panel = new GLCanvas();
-		BrowRenderer renderer = new BrowRenderer(mainFrame);
+		renderer = new BrowRenderer(mainFrame);
 		
 		
 		panel.addGLEventListener(renderer);

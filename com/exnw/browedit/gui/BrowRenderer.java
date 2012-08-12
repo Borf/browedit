@@ -1,6 +1,5 @@
 package com.exnw.browedit.gui;
 
-import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -12,7 +11,6 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import javax.swing.SwingUtilities;
 
 import com.exnw.browedit.camera.BrowCamera;
 import com.exnw.browedit.camera.Camera;
@@ -28,6 +26,10 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	private Camera camera;
 	private MouseEvent lastMouseEvent;
 	private Shader shader;
+
+	public boolean showObjects = true;
+	public boolean showShadow = true;
+	public boolean showGrid = false;
 	
 	public BrowRenderer(MainFrame mainFrame)
 	{

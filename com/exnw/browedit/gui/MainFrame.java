@@ -1,13 +1,7 @@
 package com.exnw.browedit.gui;
 
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel;
 
 import com.exnw.browedit.data.Map;
 

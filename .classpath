@@ -9,5 +9,7 @@
 	<classpathentry kind="lib" path="substance/laf-widget-6.3.jar"/>
 	<classpathentry kind="lib" path="substance/substance-6.3.jar"/>
 	<classpathentry kind="lib" path="substance/trident-6.3.jar"/>
+	<classpathentry kind="lib" path="jogl/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="jogl/jogl-all-natives-windows-i586.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

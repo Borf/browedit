@@ -30,6 +30,10 @@ import com.exnw.browedit.grflib.GrfLib;
 
 public class BrushToolBar extends JToolBar
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6838263874597190071L;
 	private JSlider sizeSlider;
 	private JList layers;
 	private JCheckBox layersEnabled[];

@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
-import javax.media.opengl.GLContext;
 import javax.media.opengl.GLException;
 
 import com.exnw.browedit.grflib.GrfLib;
@@ -46,11 +45,6 @@ public class TextureCache
 					}
 				}
 				
-				if(gl == null)
-					System.out.println("argh");
-				if(dest == null)
-					System.out.println("argh2");
-					
 				t = AWTTextureIO.newTexture(gl.getGLProfile(), dest, true);
 				t.setTexParameteri(gl, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);				
 				t.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);

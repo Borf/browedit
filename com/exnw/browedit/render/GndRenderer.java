@@ -8,11 +8,9 @@ import java.util.Observable;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
-import javax.media.opengl.GLContext;
 
 import com.exnw.browedit.data.Gnd;
 import com.exnw.browedit.data.Gnd.GndCell;
-import com.exnw.browedit.data.Gnd.Lightmap;
 import com.exnw.browedit.data.Gnd.Surface;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;

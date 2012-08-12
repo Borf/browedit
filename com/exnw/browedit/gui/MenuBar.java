@@ -14,6 +14,7 @@ import com.exnw.browedit.grflib.GrfFileSystemView;
 
 public class MenuBar extends JMenuBar
 {
+	private static final long serialVersionUID = 4113918595080984089L;
 	JMenu file;
 	JMenuItem fileNew, fileOpen, fileSave, fileSaveAs, fileExit;
 	
