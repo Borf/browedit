@@ -35,7 +35,7 @@ public class BrushToolBar extends JToolBar
 	 */
 	private static final long serialVersionUID = 6838263874597190071L;
 	private JSlider sizeSlider;
-	private JList layers;
+	private JList<JCheckBox> layers;
 	private JCheckBox layersEnabled[];
 	
 	private JLabel currentTextureLabel;
@@ -79,7 +79,7 @@ public class BrushToolBar extends JToolBar
 				new JCheckBox("Sounds", true)
 		};
 		
-		layers = new JList(layersEnabled);
+		layers = new JList<JCheckBox>(layersEnabled);
 		layers.addMouseListener(new MouseAdapter()
 		{
 			public void mousePressed(MouseEvent e)
@@ -87,7 +87,7 @@ public class BrushToolBar extends JToolBar
 				int index = layers.locationToIndex(e.getPoint());
 				if (index != -1)
 				{
-					JCheckBox checkbox = (JCheckBox) layers.getModel().getElementAt(index);
+					JCheckBox checkbox = layers.getModel().getElementAt(index);
 					if(e.getPoint().x <= 20)
 					{
 						checkbox.setSelected(!checkbox.isSelected());
@@ -116,9 +116,9 @@ public class BrushToolBar extends JToolBar
 	
 	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 	private JPanel textures;
-	protected class LayerCellRenderer implements ListCellRenderer
+	protected class LayerCellRenderer implements ListCellRenderer<JCheckBox>
 	{
-		public Component getListCellRendererComponent(JList list, Object value,
+		public Component getListCellRendererComponent(JList<? extends JCheckBox> list, JCheckBox value,
 				int index, boolean isSelected, boolean cellHasFocus)
 		{
 			JCheckBox checkbox = (JCheckBox) value;
@@ -131,6 +131,7 @@ public class BrushToolBar extends JToolBar
 			checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 			return checkbox;
 		}
+		
 	}
 	
 	

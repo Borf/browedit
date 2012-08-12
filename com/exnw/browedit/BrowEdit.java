@@ -11,6 +11,7 @@ import org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel;
 import com.exnw.browedit.config.Settings;
 import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.gui.MainFrame;
+import com.exnw.browedit.server.BrowServer;
 
 public class BrowEdit{
 	/**
@@ -92,6 +93,8 @@ public class BrowEdit{
 		GrfLib.enableJar();
 		
 
+		new BrowServer();
+		
 	    JFrame.setDefaultLookAndFeelDecorated(true);
 	    JDialog.setDefaultLookAndFeelDecorated(true);
 	    SwingUtilities.invokeLater(new Runnable() {
