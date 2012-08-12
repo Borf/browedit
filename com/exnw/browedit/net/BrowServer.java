@@ -1,4 +1,4 @@
-package com.exnw.browedit.server;
+package com.exnw.browedit.net;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import com.exnw.browedit.data.Map;
+import com.exnw.browedit.packets.PacketClientServer;
+import com.exnw.browedit.packets.PacketServerClient;
 
 public class BrowServer implements Runnable
 {
@@ -60,5 +62,16 @@ public class BrowServer implements Runnable
 	public synchronized void removeClient(ServerClient serverClient)
 	{
 		clients.remove(serverClient);		
+	}
+
+	public synchronized void handlePacket(PacketClientServer packet, ServerClient serverClient)
+	{
+		packet.handlePacket(serverClient);		
+	}
+
+	public synchronized void sendAll(PacketServerClient packet)
+	{
+		for(ServerClient client : clients)
+			client.send(packet);
 	}
 }

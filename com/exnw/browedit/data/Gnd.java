@@ -1,6 +1,8 @@
 package com.exnw.browedit.data;
 
-public class Gnd{
+import java.io.Serializable;
+
+public class Gnd implements Serializable {
 	private static byte[] magic = "GRGN".getBytes();
 	private static byte[][] supportedVersions = new byte[][]{
 		{ 1, 7 }
@@ -142,7 +144,7 @@ public class Gnd{
 		return lightmaps;
 	}
 
-	public class Lightmap{
+	public class Lightmap implements Serializable{
 		private byte[][] brightness;
 		private java.awt.Color[][] color;
 		
@@ -191,7 +193,7 @@ public class Gnd{
 		}
 	}
 	
-	public class Surface{
+	public class Surface implements Serializable{
 		private float[] u;
 		private float[] v;
 		private short textureID;
@@ -271,7 +273,7 @@ public class Gnd{
 		}
 	}
 	
-	public class GndCell{
+	public class GndCell implements Serializable{
 		private float[] height;
 		private int[] surface;
 		

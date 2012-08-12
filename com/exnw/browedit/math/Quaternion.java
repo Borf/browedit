@@ -1,10 +1,11 @@
 package com.exnw.browedit.math;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.exnw.browedit.io.SwappedInputStream;
 
-public class Quaternion
+public class Quaternion implements Serializable
 {
 	private float data[];
 	

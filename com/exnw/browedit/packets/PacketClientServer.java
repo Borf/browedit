@@ -1,6 +1,6 @@
 package com.exnw.browedit.packets;
 
-import com.exnw.browedit.server.ServerClient;
+import com.exnw.browedit.net.ServerClient;
 
 
 public interface PacketClientServer extends Packet

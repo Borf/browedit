@@ -1,6 +1,8 @@
 package com.exnw.browedit.math;
 
-public class Vector3{
+import java.io.Serializable;
+
+public class Vector3 implements Serializable{
 	private float[] data;
 	
 	public Vector3(){

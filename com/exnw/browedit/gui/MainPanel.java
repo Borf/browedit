@@ -10,6 +10,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.ToolTipManager;
 
 import com.exnw.browedit.data.Map;
+import com.exnw.browedit.net.BrowClient;
+import com.exnw.browedit.packets.OpenMap;
 import com.jogamp.opengl.util.Animator;
 
 public class MainPanel extends JPanel
@@ -19,6 +21,9 @@ public class MainPanel extends JPanel
 	ToolToolBar toolToolBar;
 	ToolBar toolBar;
 	GLCanvas panel;
+	
+	public BrowClient client;
+	
 	
 	public BrowRenderer renderer;
 	
@@ -59,6 +64,10 @@ public class MainPanel extends JPanel
 	    animator.start();
 	    animator.setRunAsFastAsPossible(true);
 	    panel.requestFocus();
+	    
+	    client = new BrowClient("localhost", 8203, mainFrame);
+	    
+	    client.send(new OpenMap("data\\prontera.rsw"));
 	}
 
 	public void setMap(Map currentMap)

@@ -65,6 +65,7 @@ public class GrfLib {
 				}
 			}
 			
+			System.err.println("---------------\nCould not open " + file + "\n--------------\n");
 			return null;
 		}
 		

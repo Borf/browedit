@@ -1,8 +1,9 @@
 package com.exnw.browedit.data;
 
+import java.io.Serializable;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GL4;
-import javax.media.opengl.glu.GLU;
 
 import com.exnw.browedit.gui.MainFrame;
 import com.exnw.browedit.math.Vector3;
@@ -12,9 +13,8 @@ import com.exnw.browedit.render.RswRenderer;
 import com.exnw.browedit.render.TextureCache;
 import com.exnw.browedit.renderutils.Shader;
 
-public class Map
+public class Map implements Serializable
 {
-	static GLU glu = new GLU();
 	private Gat gat;
 	private Gnd gnd;
 	private Rsw rsw;
@@ -24,9 +24,9 @@ public class Map
 		return rsw;
 	}
 	
-	private GatRenderer gatRenderer;
+/*	private GatRenderer gatRenderer;
 	private GndRenderer gndRenderer;
-	private RswRenderer rswRenderer;
+	private RswRenderer rswRenderer;*/
 	
 	public Map(String fileName)
 	{
@@ -38,9 +38,8 @@ public class Map
 		setGat(new Gat(fileName + ".gat"));
 	}
 	
-	public void render(MainFrame mainFrame, GL4 gl, Shader shader)
+/*	public void render(MainFrame mainFrame, GL4 gl, Shader shader)
 	{
-		/*
 		gatRenderer.render(gl);
 		
 		Vector3 mouse3D = get3DCursor(mainFrame, gl); 
@@ -52,12 +51,11 @@ public class Map
         	for(int i = 0; i < 4; i++)
         		gat.setCellHeight(tx, gat.getHeight()-1-ty, i, gat.getCell(tx, gat.getHeight()-1-ty).getHeight()[i]-0.1f);
         }
-        */
 
 		gndRenderer.render(gl, shader);
 		if(mainFrame.getMainPanel().renderer.showObjects)
 			rswRenderer.render(gl, shader);
-	}
+	}*/
 	
 	
 	private Vector3 get3DCursor(MainFrame mainFrame, GL gl)
@@ -86,17 +84,14 @@ public class Map
 	public void setGat(Gat gat)
 	{
 		this.gat = gat;
-		this.gatRenderer = new GatRenderer(this.gat);
 	}
 	public void setRsw(Rsw rsw)
 	{
 		this.rsw = rsw;
-		this.rswRenderer = new RswRenderer(rsw,this);
 	}
 	public void setGnd(Gnd gnd)
 	{
 		this.gnd = gnd;
-		this.gndRenderer = new GndRenderer(this.gnd);
 	}		
 
 	public Gat getGat()
@@ -108,14 +103,14 @@ public class Map
 		return gnd;
 	}
 
-	public void destroy(GL4 gl)
+/*	public void destroy(GL4 gl)
 	{
 		gndRenderer.destroy(gl);
 		gatRenderer.destroy(gl);
 		rswRenderer.destroy(gl);
 		RsmCache.destroy(gl);
 		TextureCache.destroy(gl);
-	}
+	}*/
 
 
 }

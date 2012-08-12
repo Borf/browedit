@@ -1,4 +1,4 @@
-package com.exnw.browedit.server;
+package com.exnw.browedit.net;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import com.exnw.browedit.packets.PacketClientServer;
+import com.exnw.browedit.packets.PacketServerClient;
 
 public class ServerClient implements Runnable
 {
@@ -31,6 +32,7 @@ public class ServerClient implements Runnable
 
 	public void run()
 	{
+		System.err.println("Server: Handling connection from " + socket.getInetAddress());
 		try
 		{
 			server.addClient(this);
@@ -39,7 +41,7 @@ public class ServerClient implements Runnable
 			while(true)
 			{
 				PacketClientServer packet = (PacketClientServer) ois.readObject();
-				packet.handlePacket(this);				
+				server.handlePacket(packet, this);				
 			}			
 		} catch (IOException e)
 		{
@@ -51,7 +53,18 @@ public class ServerClient implements Runnable
 			e.printStackTrace();
 		}
 		server.removeClient(this);
-		
 	}
+	
+	public synchronized void send(PacketServerClient packet)
+	{
+		try
+		{
+			oos.writeObject(packet);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 
 }

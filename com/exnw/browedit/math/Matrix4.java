@@ -1,7 +1,9 @@
 package com.exnw.browedit.math;
 
+import java.io.Serializable;
 
-public class Matrix4{
+
+public class Matrix4 implements Serializable{
 	private float[] data;
 	
 	public Matrix4(){

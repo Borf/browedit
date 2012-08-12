@@ -73,10 +73,7 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		shader.getUniform("s_textureLight", gl).set(2, gl);		
 		}
 		catch(NullPointerException e){	}
-		
-		
-		if(mainFrame.getCurrentMap() != null)
-			mainFrame.getCurrentMap().render(mainFrame, gl, shader);
+				
 	}
 
 	public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged)

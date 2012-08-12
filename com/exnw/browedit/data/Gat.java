@@ -1,5 +1,6 @@
 package com.exnw.browedit.data;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 import com.exnw.browedit.data.events.GatChange;
@@ -11,7 +12,7 @@ import com.exnw.browedit.grflib.GrfLib;
  *  
  * @author Lemongrass
  */
-public class Gat extends Observable
+public class Gat extends Observable implements Serializable
 {
 	private static byte[] magic = "GRAT".getBytes();
 	private static byte[][] supportedVersions = new byte[][]{
@@ -148,7 +149,7 @@ public class Gat extends Observable
 	}
 
 
-	public class GatCell{
+	public class GatCell implements Serializable{
 		private float[] height;
 		private Gat.GatCellType type;
 		

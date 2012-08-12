@@ -1,6 +1,8 @@
 package com.exnw.browedit.data;
 
-public class Rsw{
+import java.io.Serializable;
+
+public class Rsw implements Serializable{
 	private static byte[] magic = "GRSW".getBytes();
 	private static byte[][] supportedVersions = new byte[][]{
 		{ 1, 2 },
@@ -148,7 +150,7 @@ public class Rsw{
 		return models;
 	}
 
-	private class Water{
+	private class Water implements Serializable{
 		private float level;
 		private int type;
 		private float waveHeight;
@@ -188,7 +190,7 @@ public class Rsw{
 		}
 	}
 	
-	private class Light{
+	private class Light implements Serializable{
 		private int longitude;
 		private int latitude;
 		private java.awt.Color diffusecolor;
@@ -222,7 +224,7 @@ public class Rsw{
 		}
 	}
 	
-	public class ModelResource{
+	public class ModelResource implements Serializable{
 		private String name;
 		private int animationType;
 		private float animationSpeed;
@@ -311,7 +313,7 @@ public class Rsw{
 		}
 	}
 	
-	private class LightResource{
+	private class LightResource implements Serializable{
 		private String name;
 		private com.exnw.browedit.math.Vector3 position;
 		private java.awt.Color color;
@@ -334,7 +336,7 @@ public class Rsw{
 		}
 	}
 	
-	private class SoundResource{
+	private class SoundResource implements Serializable{
 		private String name;
 		private String wavname;
 		private com.exnw.browedit.math.Vector3 position;
@@ -370,7 +372,7 @@ public class Rsw{
 		}
 	}
 	
-	private class EffectResource{
+	private class EffectResource implements Serializable{
 		private String name;
 		private com.exnw.browedit.math.Vector3 position;
 		private int type;

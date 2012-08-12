@@ -1,6 +1,7 @@
 package com.exnw.browedit.data;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.media.opengl.GL4;
 
@@ -10,7 +11,7 @@ import com.exnw.browedit.math.Quaternion;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.render.RsmRenderer;
 
-public class Rsm{
+public class Rsm implements Serializable{
 	private static byte[] magic = "GRSM".getBytes();
 	private static byte[][] supportedVersions = new byte[][]{
 		{ 1, 1 },
@@ -300,7 +301,7 @@ public class Rsm{
 		return this.textures;
 	}
 
-	public class RsmMesh{
+	public class RsmMesh implements Serializable{
 		private String name;
 		private String parent;
 		private java.util.List<Integer> textureids;
@@ -759,7 +760,7 @@ public class Rsm{
 			return animationFrames;
 		}
 
-		public class AnimationFrame
+		public class AnimationFrame implements Serializable
 		{
 			private int time;
 			private Quaternion quat;
@@ -790,7 +791,7 @@ public class Rsm{
 			private int frame;
 		}
 		
-		public class Surface{
+		public class Surface implements Serializable{
 			private short[] surfacevertices = new short[3];
 			private short[] texturevertices = new short[3];
 			private short textureid;
@@ -823,7 +824,7 @@ public class Rsm{
 			}
 		}
 		
-		public class TextureCoordinate{
+		public class TextureCoordinate implements Serializable{
 			private com.exnw.browedit.math.Vector2 coodinates;
 			private java.awt.Color color;
 			public void setCoodinates(com.exnw.browedit.math.Vector2 coodinates)

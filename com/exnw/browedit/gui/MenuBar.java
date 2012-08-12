@@ -32,7 +32,7 @@ public class MenuBar extends JMenuBar
 		file.add(fileExit = 	new JMenuItem("Exit"));
 		
 
-		add(tools = new JMenu("Tools"));
+	//	add(tools = new JMenu("Tools"));
 		
 
 		fileOpen.addActionListener(new ActionListener()
@@ -42,7 +42,7 @@ public class MenuBar extends JMenuBar
 				JFileChooser fileChooser = new JFileChooser(new GrfFileSystemView());
 				 if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 				 {
-					mainFrame.openMap(fileChooser.getSelectedFile().getPath());
+//					mainFrame.openMap(fileChooser.getSelectedFile().getPath());
 				 }			
 			}
 		});

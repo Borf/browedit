@@ -11,7 +11,7 @@ import org.pushingpixels.substance.api.skin.SubstanceGraphiteAquaLookAndFeel;
 import com.exnw.browedit.config.Settings;
 import com.exnw.browedit.grflib.GrfLib;
 import com.exnw.browedit.gui.MainFrame;
-import com.exnw.browedit.server.BrowServer;
+import com.exnw.browedit.net.BrowServer;
 
 public class BrowEdit{
 	/**
@@ -39,15 +39,13 @@ public class BrowEdit{
 					org.json.JSONArray grfs = Settings.json.getJSONArray( "grfs" );
 					
 					for( int i = 0; i < grfs.length(); i++ ){
-						//System.out.println("Initiating GRF["+i+"]: "+ grfs.getString(i) );
+						System.out.println("Initiating GRF["+i+"]: "+ grfs.getString(i) );
 						try{
 							GrfLib.addGrf( grfs.getString(i) );
 						}catch( java.io.FileNotFoundException e ){
 							System.err.println("Could not find GRF File \"" + grfs.getString(i) + "\".");
-							//e.printStackTrace();
 						}
-					}
-					
+					}					
 					System.out.println("Bench: " + (System.currentTimeMillis() - l));
 				}catch( org.json.JSONException e ){
 					System.err.println("No configuration for any grf file in the settings.");
@@ -73,7 +71,6 @@ public class BrowEdit{
 							GrfLib.addDir( dirs.getString( i ) );
 						}catch( java.io.FileNotFoundException e ){
 							System.err.println("Could not find data directory File \"" + dirs.getString(i) + "\".");
-							//e.printStackTrace();
 						}
 					}
 					
