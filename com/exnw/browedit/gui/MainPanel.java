@@ -5,8 +5,11 @@ import java.awt.FlowLayout;
 
 import javax.media.opengl.GL4;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
 import com.exnw.browedit.data.Map;
@@ -28,8 +31,10 @@ public class MainPanel extends JPanel
 	private Map currentMap = null;
 	public MapRenderer mapRenderer = null;
 	
+	public int mouseX, mouseY;
 	
 	public BrowRenderer renderer;
+	private JLabel lblCoordinats;
 	
 	public MainPanel(MainFrame mainFrame)
 	{
@@ -44,6 +49,14 @@ public class MainPanel extends JPanel
 		add(toolToolBar = new ToolToolBar(mainFrame), BorderLayout.WEST);
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
+		
+		JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 0,0));
+		statusBar.setBorder(BorderFactory.createEtchedBorder());
+		
+		add(statusBar, BorderLayout.SOUTH);
+
+		statusBar.add(lblCoordinats = new JLabel("0,0"));
+		lblCoordinats.setBorder(BorderFactory.createLoweredBevelBorder());
 
 		
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
@@ -84,11 +97,33 @@ public class MainPanel extends JPanel
 		return panel.getGL().getGL4();
 	}
 
+	public void setCoordinats(final int x, final int y, final int z)
+	{
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				lblCoordinats.setText(x + ", " + y + ", " + z);
+			}
+		});
+
+	}
+	
 	public void setNewMap(Map map)
 	{
 		this.currentMap = map;
 		if(this.mapRenderer != null)
 			this.mapRenderer.destroy(getGL());
 		this.mapRenderer = new MapRenderer(this.currentMap, this);		
+	}
+	
+	public int getRenderHeight()
+	{
+		return panel.getHeight();
+	}
+	
+	public int getRenderWidth()
+	{
+		return panel.getWidth();
 	}
 }

@@ -10,7 +10,6 @@ public class MainFrame extends JFrame
 	MenuBar menuBar;
 	private MainPanel mainPanel;
 	
-	public int mouseX, mouseY;
 	
 	public MainFrame()
 	{

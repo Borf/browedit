@@ -111,8 +111,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	}
 
 	public void mouseDragged( MouseEvent e ){
-		mainFrame.mouseX = e.getX();
-		mainFrame.mouseY = e.getY();		
+		mainFrame.getMainPanel().mouseX = e.getX();
+		mainFrame.getMainPanel().mouseY = e.getY();		
 
 		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0 )
 		{
@@ -149,8 +149,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	@Override
 	public void mouseMoved( MouseEvent e )
 	{
-		mainFrame.mouseX = e.getX();
-		mainFrame.mouseY = e.getY();		
+		mainFrame.getMainPanel().mouseX = e.getX();
+		mainFrame.getMainPanel().mouseY = e.getY();		
 	}
 
 	@Override

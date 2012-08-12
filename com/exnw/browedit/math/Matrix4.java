@@ -245,6 +245,134 @@ public class Matrix4 implements Serializable{
 				data[2] + ",\t" + data[6] + ",\t" + data[10] + ",\t" + data[14] + ",\n" +
 				data[3] + ",\t" + data[7] + ",\t" + data[11] + ",\t" + data[15] + ",\n";
 	}
+
+	
+	public Matrix4 invert()
+	{
+		double[][] dat = new double[][] { 
+			{ data[0], data[1], data[2], data[3], },
+			{ data[4], data[5], data[6], data[7], },
+			{ data[8], data[9], data[10], data[11], },
+			{ data[12], data[13], data[14], data[15], }
+		};
+			
+		blainvert(dat);
+		
+		return new Matrix4(
+				dat[0][0], dat[0][1], dat[0][2], dat[0][3],
+				dat[1][0], dat[1][1], dat[1][2], dat[1][3],
+				dat[2][0], dat[2][1], dat[2][2], dat[2][3],		
+				dat[3][0], dat[3][1], dat[3][2], dat[3][3]		
+				);	
+	}
+	
+	
+	
+	
+	  public static final void blainvert(double A[][])
+	  {
+	    int n = A.length;
+	    int row[] = new int[n];
+	    int col[] = new int[n];
+	    double temp[] = new double[n];
+	    int hold , I_pivot , J_pivot;
+	    double pivot, abs_pivot;
+
+	    if(A[0].length!=n)
+	    {
+	      System.out.println("Error in Matrix.invert, inconsistent array sizes.");
+	    }
+	    // set up row and column interchange vectors
+	    for(int k=0; k<n; k++)
+	    {
+	      row[k] = k ;
+	      col[k] = k ;
+	    }
+	    // begin main reduction loop
+	    for(int k=0; k<n; k++)
+	    {
+	      // find largest element for pivot
+	      pivot = A[row[k]][col[k]] ;
+	      I_pivot = k;
+	      J_pivot = k;
+	      for(int i=k; i<n; i++)
+	      {
+	        for(int j=k; j<n; j++)
+	        {
+	          abs_pivot = Math.abs(pivot) ;
+	          if(Math.abs(A[row[i]][col[j]]) > abs_pivot)
+	          {
+	            I_pivot = i ;
+	            J_pivot = j ;
+	            pivot = A[row[i]][col[j]] ;
+	          }
+	        }
+	      }
+	      if(Math.abs(pivot) < 1.0E-10)
+	      {
+	    	  new Exception("Matrix is singular !").printStackTrace();
+	        return;
+	      }
+	      hold = row[k];
+	      row[k]= row[I_pivot];
+	      row[I_pivot] = hold ;
+	      hold = col[k];
+	      col[k]= col[J_pivot];
+	      col[J_pivot] = hold ;
+	       // reduce about pivot
+	      A[row[k]][col[k]] = 1.0 / pivot ;
+	      for(int j=0; j<n; j++)
+	      {
+	        if(j != k)
+	        {
+	          A[row[k]][col[j]] = A[row[k]][col[j]] * A[row[k]][col[k]];
+	        }
+	      }
+	      // inner reduction loop
+	      for(int i=0; i<n; i++)
+	      {
+	        if(k != i)
+	        {
+	          for(int j=0; j<n; j++)
+	          {
+	            if( k != j )
+	            {
+	              A[row[i]][col[j]] = A[row[i]][col[j]] - A[row[i]][col[k]] *
+	                                   A[row[k]][col[j]] ;
+	            }
+	          }
+	          A[row[i]][col [k]] = - A[row[i]][col[k]] * A[row[k]][col[k]] ;
+	        }
+	      }
+	    }
+	    // end main reduction loop
+
+	    // unscramble rows
+	    for(int j=0; j<n; j++)
+	    {
+	      for(int i=0; i<n; i++)
+	      {
+	        temp[col[i]] = A[row[i]][j];
+	      }
+	      for(int i=0; i<n; i++)
+	      {
+	        A[i][j] = temp[i] ;
+	      }
+	    }
+	    // unscramble columns
+	    for(int i=0; i<n; i++)
+	    {
+	      for(int j=0; j<n; j++)
+	      {
+	        temp[row[j]] = A[i][col[j]] ;
+	      }
+	      for(int j=0; j<n; j++)
+	      {
+	        A[i][j] = temp[j] ;
+	      }
+	    }
+	  } // end invert
+	
 	
 
 }
