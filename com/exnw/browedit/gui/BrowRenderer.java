@@ -74,6 +74,9 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		}
 		catch(NullPointerException e){	}
 				
+		
+		if(mainFrame.getMainPanel().mapRenderer != null)
+			mainFrame.getMainPanel().mapRenderer.render(gl, shader);
 	}
 
 	public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged)

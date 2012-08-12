@@ -11,6 +11,7 @@ varying vec3 lightDir;
 
 uniform bool ground;
 uniform bool lighting;
+uniform bool showFloorShadow;
 
 void main()
 {
@@ -33,7 +34,7 @@ void main()
     
     vec4 col;
     
-    if(ground)
+    if(ground && showFloorShadow)
 	    col = (texture2D(s_texture, texCoord)+texture2D(s_textureLight, texCoord2)) * texture2D(s_textureShadow, texCoord2);
 	else
 	    col = texture2D(s_texture, texCoord);

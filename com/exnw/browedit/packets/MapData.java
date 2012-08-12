@@ -15,6 +15,7 @@ public class MapData implements PacketServerClient
 	public void handlePacket(MainFrame mainFrame)
 	{
 		System.err.println("Client: Got a new map");
+		mainFrame.getMainPanel().setNewMap(map);
 	}
 
 }

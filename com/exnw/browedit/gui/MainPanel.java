@@ -12,6 +12,7 @@ import javax.swing.ToolTipManager;
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.net.BrowClient;
 import com.exnw.browedit.packets.OpenMap;
+import com.exnw.browedit.render.MapRenderer;
 import com.jogamp.opengl.util.Animator;
 
 public class MainPanel extends JPanel
@@ -23,6 +24,9 @@ public class MainPanel extends JPanel
 	GLCanvas panel;
 	
 	public BrowClient client;
+	
+	private Map currentMap = null;
+	public MapRenderer mapRenderer = null;
 	
 	
 	public BrowRenderer renderer;
@@ -78,5 +82,13 @@ public class MainPanel extends JPanel
 	public GL4 getGL()
 	{
 		return panel.getGL().getGL4();
+	}
+
+	public void setNewMap(Map map)
+	{
+		this.currentMap = map;
+		if(this.mapRenderer != null)
+			this.mapRenderer.destroy(getGL());
+		this.mapRenderer = new MapRenderer(this.currentMap, this);		
 	}
 }
