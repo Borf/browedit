@@ -14,6 +14,7 @@ import javax.media.opengl.GLEventListener;
 
 import com.exnw.browedit.camera.BrowCamera;
 import com.exnw.browedit.camera.Camera;
+import com.exnw.browedit.edittools.EditTool;
 import com.exnw.browedit.math.Matrix3;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector3;
@@ -26,10 +27,15 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	private Camera camera;
 	private MouseEvent lastMouseEvent;
 	private Shader shader;
+	Vector3 mouse3d;
 
 	public boolean showObjects = true;
 	public boolean showShadow = true;
 	public boolean showGrid = false;
+	
+	
+	public EditTool currentTool;
+	
 	
 	public BrowRenderer(MainFrame mainFrame)
 	{
@@ -81,18 +87,18 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 
 	public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged)
 	{
-		System.err.println("DISPLAY CHANGED");
+		System.err.println("Client: DISPLAY CHANGED");
 	}
 
 	public void init(GLAutoDrawable gLDrawable)
 	{
 		GL4 gl = gLDrawable.getGL().getGL4();
 //		gl.glShadeModel(GL2.GL_SMOOTH);
+//		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 		gl.glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
 		gl.glClearDepth(1.0f);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LEQUAL);
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 	}
 
 	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height)
@@ -123,26 +129,25 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	
 	@Override
 	public void mousePressed( MouseEvent e ){
+		if( lastMouseEvent == null)
+			lastMouseEvent = e;
 		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0 )
 		{
-			if( lastMouseEvent == null)
-			{
-				lastMouseEvent = e;
-			}
 		}
 	}
 
 	@Override
 	public void mouseReleased( MouseEvent e ){
-		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0){
-			if( lastMouseEvent != null ){
-				lastMouseEvent = null;
-			}
-		}		
+		if( lastMouseEvent != null )
+			lastMouseEvent = null;
+		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0)
+		{
+		}
 	}
 	
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e){
+	public void mouseWheelMoved(MouseWheelEvent e)
+	{
 		camera.useMouseWheel(e);
 	}
 
@@ -154,13 +159,22 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	}
 
 	@Override
-	public void mouseClicked( MouseEvent e ){}
+	public void mouseClicked( MouseEvent e )
+	{
+		
+	}
 
 	@Override
-	public void mouseEntered( MouseEvent e ){}
+	public void mouseEntered( MouseEvent e )
+	{
+		
+	}
 
 	@Override
-	public void mouseExited( MouseEvent e ){}
+	public void mouseExited( MouseEvent e )
+	{
+		
+	}
 
 	@Override
 	public void dispose(GLAutoDrawable arg0)

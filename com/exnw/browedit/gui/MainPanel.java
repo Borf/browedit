@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
 import com.exnw.browedit.data.Map;
+import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.net.BrowClient;
 import com.exnw.browedit.packets.OpenMap;
 import com.exnw.browedit.render.MapRenderer;
@@ -97,13 +98,14 @@ public class MainPanel extends JPanel
 		return panel.getGL().getGL4();
 	}
 
-	public void setCoordinats(final int x, final int y, final int z)
+	public void setCoordinats(final float x, final float y, final float z)
 	{
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
 			{
-				lblCoordinats.setText(x + ", " + y + ", " + z);
+				lblCoordinats.setText(Math.round(x) + ", " + Math.round(y) + ", " + Math.round(z));
+				renderer.mouse3d = new Vector3(x,y,z);
 			}
 		});
 

@@ -39,6 +39,10 @@ public class BrowCamera extends Camera
 		{
 			rotation = rotation.add(new Vector3((event.getY() - lastEvent.getY()) / 5.0, (event.getX() - lastEvent.getX()) / 5.0, 0));
 		}
+		else if((event.getModifiers() & MouseEvent.CTRL_MASK) != 0)
+		{
+			viewPosition.getData()[1] += (event.getY() - lastEvent.getY()) / 2.0f;
+		}
 		else
 		{
 			float angle = rotation.getY() / 180.0f * (float)Math.PI;
@@ -53,8 +57,8 @@ public class BrowCamera extends Camera
 	public void useMouseWheel(MouseWheelEvent event)
 	{
 		distance += event.getWheelRotation() * 9;
-		if(distance < 10)
-			distance = 10;
+		if(distance < 0)
+			distance = 0;
 	}
 	
 

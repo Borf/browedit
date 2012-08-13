@@ -1,9 +1,12 @@
 package com.exnw.browedit.net;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import com.exnw.browedit.packets.PacketClientServer;
 import com.exnw.browedit.packets.PacketServerClient;
@@ -14,6 +17,7 @@ public class ServerClient implements Runnable
 	Socket socket;
 	Thread thread;
 	ObjectOutputStream oos;
+	GZIPOutputStream gzipos;
 	
 	public ServerClient(Socket clientSocket, BrowServer server)
 	{
@@ -21,7 +25,8 @@ public class ServerClient implements Runnable
 		socket = clientSocket;
 		try
 		{
-			oos = new ObjectOutputStream(socket.getOutputStream());
+			gzipos = new GZIPOutputStream(socket.getOutputStream());
+			oos = new ObjectOutputStream(gzipos);
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -36,16 +41,16 @@ public class ServerClient implements Runnable
 		try
 		{
 			server.addClient(this);
-			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			ObjectInputStream ois = new ObjectInputStream(new GZIPInputStream(socket.getInputStream()));
 
 			while(true)
 			{
 				PacketClientServer packet = (PacketClientServer) ois.readObject();
 				server.handlePacket(packet, this);				
 			}			
-		} catch (IOException e)
+		} catch(EOFException e)	{	}
+		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e)
 		{
@@ -60,6 +65,9 @@ public class ServerClient implements Runnable
 		try
 		{
 			oos.writeObject(packet);
+			oos.flush();
+			gzipos.flush();
+			gzipos.finish();
 		} catch (IOException e)
 		{
 			e.printStackTrace();

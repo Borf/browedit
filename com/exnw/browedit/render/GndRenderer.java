@@ -44,6 +44,9 @@ public class GndRenderer implements Renderer
 		if (vbos == null)
 			this.generateVbos(shader);
 
+		
+		gl.glEnable(GL4.GL_CULL_FACE);
+		
 		gl.glActiveTexture(GL4.GL_TEXTURE2);
 		colorLightmap.bind(gl);
 
@@ -69,6 +72,7 @@ public class GndRenderer implements Renderer
 		shader.getUniform("ground", gl).set(false, gl);
 
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+		gl.glDisable(GL4.GL_CULL_FACE);
 
 	}
 
@@ -135,20 +139,10 @@ public class GndRenderer implements Renderer
 							tx2 -= onePixel;
 							ty2 -= onePixel;
 
-							Color c1 = mix(new Color[]
-							{ getColor(x, y), getColor(x, y + 1),
-									getColor(x - 1, y), getColor(x - 1, y + 1) });
-							Color c2 = mix(new Color[]
-							{ getColor(x, y), getColor(x, y - 1),
-									getColor(x - 1, y), getColor(x - 1, y - 1) });
-							Color c3 = mix(new Color[]
-							{ getColor(x, y), getColor(x, y - 1),
-									getColor(x + 1, y), getColor(x + 1, y - 1) });
-							Color c4 = mix(new Color[]
-							{ getColor(x, y), getColor(x, y + 1),
-									getColor(x + 1, y), getColor(x + 1, y + 1) });
-
-							
+							Color c1 = mix(new Color[] { getColor(x, y), getColor(x, y + 1), getColor(x - 1, y), getColor(x - 1, y + 1) });
+							Color c2 = mix(new Color[] { getColor(x, y), getColor(x, y - 1), getColor(x - 1, y), getColor(x - 1, y - 1) });
+							Color c3 = mix(new Color[] { getColor(x, y), getColor(x, y - 1), getColor(x + 1, y), getColor(x + 1, y - 1) });
+							Color c4 = mix(new Color[] { getColor(x, y), getColor(x, y + 1), getColor(x + 1, y), getColor(x + 1, y + 1) });
 							
 							Vector3 tr = new Vector3(10.0f * x, -cell.getHeight()[2], 10.0f * (gnd.getHeight() - y) - 10);
 							Vector3 tl = new Vector3(10.0f * x,-cell.getHeight()[0], 10.0f * (gnd.getHeight() - y));
@@ -157,7 +151,6 @@ public class GndRenderer implements Renderer
 							
 							Vector3 n1 = tl.sub(bl).cross(tl.sub(tr)).normalized();
 							Vector3 n2 = br.sub(tr).cross(br.sub(bl)).normalized();						
-							
 							
 							// tr
 							vertices.add(new VertexPNCTT(
@@ -276,10 +269,8 @@ public class GndRenderer implements Renderer
 							int lightmap = surface.getLightmapID();
 
 							float onePixel = (1.0f / (TEXTURESIZE / 8.0f)) / 8.0f;
-							float tx1 = (lightmap % (TEXTURESIZE / 8))
-									* (1.0f / (TEXTURESIZE / 8.0f));
-							float ty1 = (lightmap / (TEXTURESIZE / 8))
-									* (1.0f / (TEXTURESIZE / 8.0f));
+							float tx1 = (lightmap % (TEXTURESIZE / 8)) * (1.0f / (TEXTURESIZE / 8.0f));
+							float ty1 = (lightmap / (TEXTURESIZE / 8)) * (1.0f / (TEXTURESIZE / 8.0f));
 							float tx2 = tx1 + 1.0f / (TEXTURESIZE / 8.0f);
 							float ty2 = ty1 + 1.0f / (TEXTURESIZE / 8.0f);
 							tx1 += onePixel;
