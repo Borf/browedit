@@ -12,11 +12,14 @@ import javax.media.opengl.GL4;
 import com.exnw.browedit.data.Gnd;
 import com.exnw.browedit.data.Gnd.GndCell;
 import com.exnw.browedit.data.Gnd.Surface;
+import com.exnw.browedit.gui.BrowRenderer;
+import com.exnw.browedit.gui.MainPanel;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Shader;
 import com.exnw.browedit.renderutils.Vbo;
 import com.exnw.browedit.renderutils.VertexList;
+import com.exnw.browedit.renderutils.vertexFormats.VertexPC;
 import com.exnw.browedit.renderutils.vertexFormats.VertexPNCTT;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
@@ -30,11 +33,19 @@ public class GndRenderer implements Renderer
 	Texture shadows = null;
 	Texture colorLightmap = null;
 	ArrayList<Vbo<VertexPNCTT>> vbos = null;
+	
+	Vbo<VertexPC> textureGrid = null;
+	Vbo<VertexPC> grid = null;
+
+	private BrowRenderer renderer;	
+	
+	
 	final static int TEXTURESIZE = 2048;
 
-	public GndRenderer(Gnd gnd)
+	public GndRenderer(Gnd gnd, BrowRenderer renderer)
 	{
 		this.gnd = gnd;
+		this.renderer = renderer;
 	}
 
 	public void render(GL4 gl, Shader shader)
@@ -71,9 +82,189 @@ public class GndRenderer implements Renderer
 		}
 		shader.getUniform("ground", gl).set(false, gl);
 
+
+		if(renderer.showGrid)
+		{
+			gl.glLineWidth(2);
+			shader.getUniform("colorOnly", gl).set(true, gl);
+			buildTextureGrid(gl, shader);
+			textureGrid.bind();
+			gl.glDrawArrays(GL4.GL_LINES, 0, textureGrid.size()	/ Buffers.SIZEOF_FLOAT / 7);
+			gl.glLineWidth(1);	
+			shader.getUniform("colorOnly", gl).set(false, gl);
+		}
+
+		if(renderer.showGrid2)
+		{
+			gl.glLineWidth(1);
+			shader.getUniform("colorOnly", gl).set(true, gl);
+			if(grid == null)
+				buildGrid(gl, shader);
+			grid.bind();
+			gl.glDrawArrays(GL4.GL_LINES, 0, grid.size()	/ Buffers.SIZEOF_FLOAT / 7);
+			gl.glLineWidth(1);	
+			shader.getUniform("colorOnly", gl).set(false, gl);
+		}
+		
+		
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 		gl.glDisable(GL4.GL_CULL_FACE);
+	}
 
+	private void buildGrid(GL4 gl, Shader shader)
+	{
+		VertexList<VertexPC> vertices = new VertexList<VertexPC>();
+
+		for(int x = 0; x < gnd.getWidth()-1; x++)
+		{
+			for(int y = 0; y < gnd.getHeight()-1; y++)
+			{
+				vertices.add(new VertexPC(new Vector3(10*x, -gnd.getCell(x, y).getHeight()[0] + 0.01f, gnd.getHeight()*10 - 10*y), new Color(255,0,255)));
+				vertices.add(new VertexPC(new Vector3(10*x, -gnd.getCell(x, y).getHeight()[2] + 0.01f, gnd.getHeight()*10 - 10*y-10), new Color(255,0,255)));
+
+				vertices.add(new VertexPC(new Vector3(10*x,		-gnd.getCell(x, y).getHeight()[0] + 0.01f,gnd.getHeight()*10 - 10*y), new Color(255,0,255)));
+				vertices.add(new VertexPC(new Vector3(10*x+10,	-gnd.getCell(x, y).getHeight()[1] + 0.01f,gnd.getHeight()*10 - 10*y), new Color(255,0,255)));
+			
+			}
+		}
+		
+		if(grid == null)
+			grid = new Vbo<VertexPC>();
+		grid.generate(vertices, shader);
+	}
+
+	private Surface getSurface(int x, int y)
+	{
+		if(x < 0 || y < 0 || x >= gnd.getWidth() || y >= gnd.getHeight())
+			return null;
+		
+		GndCell cell = gnd.getCell(x,y);
+		int surfaceId = cell.getSurface()[0]; 
+		if(surfaceId == -1)
+			return null;
+		//TODO: test if surfaceId <= size
+		return gnd.getSurfaces().get(surfaceId);		
+	}
+	
+	
+	private void buildTextureGrid(GL4 gl, Shader shader)
+	{
+		VertexList<VertexPC> vertices = new VertexList<VertexPC>();
+		
+		for (int x = 0; x < gnd.getWidth(); x++)
+		{
+			for (int y = 0; y < gnd.getHeight(); y++)
+			{
+				Surface surface = getSurface(x,y);
+				if(surface != null)
+				{
+					{
+						Surface left = getSurface(x-1,y);
+						boolean ok = true;
+						if(left != null)
+						{
+							if(left.getTextureID() == surface.getTextureID())
+							{
+								if(!((Math.abs(gnd.getCell(x,y).getHeight()[0] - gnd.getCell(x-1,y).getHeight()[1]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[0] - gnd.getCell(x-1,y).getHeight()[1])-1 < 0.05) && 
+									(Math.abs(gnd.getCell(x,y).getHeight()[2] - gnd.getCell(x-1,y).getHeight()[3]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[2] - gnd.getCell(x-1,y).getHeight()[3])-1 < 0.05)))
+									ok = false;
+							}
+							else
+								ok = false;
+						}
+						else
+							ok = false;
+	
+						if(!ok)
+						{
+							vertices.add(new VertexPC(new Vector3(10*x, -gnd.getCell(x, y).getHeight()[0] + 0.01f, gnd.getHeight()*10 - 10*y), new Color(255,0,0)));
+							vertices.add(new VertexPC(new Vector3(10*x, -gnd.getCell(x, y).getHeight()[2] + 0.01f,gnd.getHeight()*10 - 10*y-10), new Color(255,0,0)));
+						}
+					}
+
+					{
+						Surface right = getSurface(x+1,y);
+						boolean ok = true;
+						if(right != null)
+						{
+							if(right.getTextureID() == surface.getTextureID())
+							{
+								if(!((Math.abs(gnd.getCell(x,y).getHeight()[1] - gnd.getCell(x+1,y).getHeight()[0]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[1] - gnd.getCell(x+1,y).getHeight()[0])-1 < 0.05) && 
+										(Math.abs(gnd.getCell(x,y).getHeight()[3] - gnd.getCell(x+1,y).getHeight()[2]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[3] - gnd.getCell(x+1,y).getHeight()[2])-1 < 0.05)))
+									ok = false;
+							}
+							else
+								ok = false;
+						}
+						else
+							ok = false;
+	
+						if(!ok)
+						{
+							vertices.add(new VertexPC(new Vector3(10*x+10, -gnd.getCell(x, y).getHeight()[1] + 0.01f, gnd.getHeight()*10 - 10*y), new Color(255,0,0)));
+							vertices.add(new VertexPC(new Vector3(10*x+10, -gnd.getCell(x, y).getHeight()[3] + 0.01f, gnd.getHeight()*10 - 10*y-10), new Color(255,0,0)));
+						}
+					}
+					
+					{
+						Surface top = getSurface(x,y-1);
+						boolean ok = true;
+						if(top != null)
+						{
+							if(top.getTextureID() == surface.getTextureID())
+							{
+								if(!((Math.abs(gnd.getCell(x,y).getHeight()[0] - gnd.getCell(x,y-1).getHeight()[2]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[0] - gnd.getCell(x,y-1).getHeight()[2])-1 < 0.05) && // [2] could be [3], unsure
+										(Math.abs(gnd.getCell(x,y).getHeight()[1] - gnd.getCell(x,y-1).getHeight()[3]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[1] - gnd.getCell(x,y-1).getHeight()[3])-1 < 0.05)))
+									ok = false;
+							}
+							else
+								ok = false;
+						}
+						else
+							ok = false;
+	
+						if(!ok)
+						{
+							vertices.add(new VertexPC(new Vector3(10*x,		-gnd.getCell(x, y).getHeight()[0] + 0.01f,gnd.getHeight()*10 - 10*y), new Color(255,0,0)));
+							vertices.add(new VertexPC(new Vector3(10*x+10,	-gnd.getCell(x, y).getHeight()[1] + 0.01f,gnd.getHeight()*10 - 10*y), new Color(255,0,0)));
+						}
+					}					
+					
+					{
+						Surface bottom = getSurface(x,y+1);
+						boolean ok = true;
+						if(bottom != null)
+						{
+							if(bottom.getTextureID() == surface.getTextureID())
+							{
+								if(!((Math.abs(gnd.getCell(x,y).getHeight()[2] - gnd.getCell(x,y-1).getHeight()[0]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[2] - gnd.getCell(x,y-1).getHeight()[0])-1 < 0.05) && // [2] could be [3], unsure
+										(Math.abs(gnd.getCell(x,y).getHeight()[3] - gnd.getCell(x,y-1).getHeight()[1]) < 0.05 || Math.abs(gnd.getCell(x,y).getHeight()[3] - gnd.getCell(x,y-1).getHeight()[1])-1 < 0.05)))
+									ok = false;
+							}
+							else
+								ok = false;
+						}
+						else
+							ok = false;
+	
+						if(!ok)
+						{
+							vertices.add(new VertexPC(new Vector3(10*x,		-gnd.getCell(x, y).getHeight()[2] + 0.01f,gnd.getHeight()*10 - 10*y-10), new Color(255,0,0)));
+							vertices.add(new VertexPC(new Vector3(10*x+10,	-gnd.getCell(x, y).getHeight()[3] + 0.01f,gnd.getHeight()*10 - 10*y-10), new Color(255,0,0)));
+						}
+					}					
+					
+				
+				}
+				
+				
+			}
+		}
+		
+		if(textureGrid == null)
+			textureGrid = new Vbo<VertexPC>();
+		textureGrid.generate(vertices, shader);
+		
 	}
 
 	private Color mix(Color[] colors)
@@ -218,11 +409,11 @@ public class GndRenderer implements Renderer
 							ty2 -= onePixel;
 							
 							vertices.add(new VertexPNCTT(
-									new Vector3(10.0f * x + 10.0f,-otherCell.getHeight()[2],10.0f * (gnd.getHeight() - y) - 10),
+									new Vector3(10.0f * x + 10.0f, -cell.getHeight()[1],10.0f * (gnd.getHeight() - y)),
 									new Vector3(0, 1, 0), 
 									surface.getColor(), 
-									new Vector2(surface.getU()[3], surface.getV()[3]),
-									new Vector2(tx1, ty2)));
+									new Vector2(surface.getU()[0], surface.getV()[0]),
+									new Vector2(tx2, ty1)));
 
 							vertices.add(new VertexPNCTT(
 									new Vector3(10.0f * x + 10.0f,-otherCell.getHeight()[0], 10.0f * (gnd.getHeight() - y)), 
@@ -232,19 +423,19 @@ public class GndRenderer implements Renderer
 									new Vector2(tx2, ty2)));
 
 							vertices.add(new VertexPNCTT(
-									new Vector3(10.0f * x + 10.0f, -cell.getHeight()[1],10.0f * (gnd.getHeight() - y)),
+									new Vector3(10.0f * x + 10.0f,-otherCell.getHeight()[2],10.0f * (gnd.getHeight() - y) - 10),
 									new Vector3(0, 1, 0), 
 									surface.getColor(), 
-									new Vector2(surface.getU()[0], surface.getV()[0]),
-									new Vector2(tx2, ty1)));
+									new Vector2(surface.getU()[3], surface.getV()[3]),
+									new Vector2(tx1, ty2)));
 							
 							vertices.add(new VertexPNCTT(
-									new Vector3(10.0f * x + 10.0f, -cell.getHeight()[1],10.0f * (gnd.getHeight() - y)),
+									new Vector3(10.0f * x + 10.0f,-otherCell.getHeight()[2],10.0f * (gnd.getHeight() - y) - 10),
 									new Vector3(0, 1, 0), 
 									surface.getColor(), 
-									new Vector2(surface.getU()[0], surface.getV()[0]),
-									new Vector2(tx2, ty1)));
-							
+									new Vector2(surface.getU()[3], surface.getV()[3]),
+									new Vector2(tx1, ty2)));
+
 							vertices.add(new VertexPNCTT(
 									new Vector3(10.0f * x + 10.0f,-cell.getHeight()[3],10.0f * (gnd.getHeight() - y) - 10),
 									new Vector3(0, 1, 0), 
@@ -253,11 +444,11 @@ public class GndRenderer implements Renderer
 									new Vector2(tx1, ty1)));
 
 							vertices.add(new VertexPNCTT(
-									new Vector3(10.0f * x + 10.0f,-otherCell.getHeight()[2],10.0f * (gnd.getHeight() - y) - 10),
+									new Vector3(10.0f * x + 10.0f, -cell.getHeight()[1],10.0f * (gnd.getHeight() - y)),
 									new Vector3(0, 1, 0), 
 									surface.getColor(), 
-									new Vector2(surface.getU()[3], surface.getV()[3]),
-									new Vector2(tx1, ty2)));
+									new Vector2(surface.getU()[0], surface.getV()[0]),
+									new Vector2(tx2, ty1)));
 						}
 					}
 					if (surfaces[1] != -1) // front surfaces

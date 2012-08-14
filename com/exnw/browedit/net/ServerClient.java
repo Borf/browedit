@@ -25,7 +25,7 @@ public class ServerClient implements Runnable
 		socket = clientSocket;
 		try
 		{
-			gzipos = new GZIPOutputStream(socket.getOutputStream());
+			gzipos = new GZIPOutputStream(socket.getOutputStream(), true);
 			oos = new ObjectOutputStream(gzipos);
 		} catch (IOException e)
 		{
@@ -67,7 +67,7 @@ public class ServerClient implements Runnable
 			oos.writeObject(packet);
 			oos.flush();
 			gzipos.flush();
-			gzipos.finish();
+			//gzipos.finish();
 		} catch (IOException e)
 		{
 			e.printStackTrace();

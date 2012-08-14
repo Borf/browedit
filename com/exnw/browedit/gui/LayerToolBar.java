@@ -14,6 +14,7 @@ public class LayerToolBar extends JToolBar
 	JToggleButton showObjects;
 	JToggleButton showShadow;
 	JToggleButton showGrid;
+	JToggleButton showGrid2;
 	
 	public LayerToolBar(final MainFrame mainFrame)
 	{
@@ -21,6 +22,7 @@ public class LayerToolBar extends JToolBar
 		add(showObjects = new JToggleButton(new ImageIcon(getClass().getClassLoader().getResource("icons/layer_object.png"))), true);
 		add(showShadow = new JToggleButton(new ImageIcon(getClass().getClassLoader().getResource("icons/layer_shadow.png"))), true);
 		add(showGrid = new JToggleButton(new ImageIcon(getClass().getClassLoader().getResource("icons/layer_grid.png"))), true);
+		add(showGrid2 = new JToggleButton(new ImageIcon(getClass().getClassLoader().getResource("icons/layer_grid2.png"))), true);
 		
 		showObjects.setSelected(true);
 		showShadow.setSelected(true);
@@ -45,6 +47,13 @@ public class LayerToolBar extends JToolBar
 			public void actionPerformed(ActionEvent arg0)
 			{
 				mainFrame.getMainPanel().renderer.showGrid = LayerToolBar.this.showGrid.isSelected();
+			}
+		});
+		showGrid2.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent arg0)
+			{
+				mainFrame.getMainPanel().renderer.showGrid2 = LayerToolBar.this.showGrid2.isSelected();
 			}
 		});
 	}

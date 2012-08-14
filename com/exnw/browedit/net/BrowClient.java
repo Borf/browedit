@@ -27,7 +27,7 @@ public class BrowClient implements Runnable
 		try
 		{
 			socket = new Socket(host, port);
-			gzipos = new GZIPOutputStream(socket.getOutputStream());
+			gzipos = new GZIPOutputStream(socket.getOutputStream(), true);
 			oos = new ObjectOutputStream(gzipos);
 			
 			thread = new Thread(this);
@@ -67,7 +67,7 @@ public class BrowClient implements Runnable
 			oos.writeObject(packet);
 			oos.flush();
 			gzipos.flush();
-			gzipos.finish();
+		//	gzipos.finish();
 		} catch (IOException e)
 		{
 			e.printStackTrace();

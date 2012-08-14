@@ -4,6 +4,7 @@ uniform sampler2D s_textureLight;
 varying vec2 texCoord;
 varying vec2 texCoord2;
 
+varying vec4 color;
 varying vec3 normal;
 varying vec3 eyeVec;
 varying vec3 lightDir;
@@ -12,6 +13,7 @@ varying vec3 lightDir;
 uniform bool ground;
 uniform bool lighting;
 uniform bool showFloorShadow;
+uniform bool colorOnly;
 
 void main()
 {
@@ -34,14 +36,17 @@ void main()
     
     vec4 col;
     
-    if(ground && showFloorShadow)
+    if(colorOnly)
+    	col = color; 
+    else if(ground && showFloorShadow)
 	    col = (texture2D(s_texture, texCoord)+texture2D(s_textureLight, texCoord2)) * texture2D(s_textureShadow, texCoord2);
 	else
 	    col = texture2D(s_texture, texCoord);
 	
 	
+	
 	vec4 lightedCol;
-	if(lighting)
+	if(lighting && !colorOnly)
 	{
 		lightedCol = (ambient + specular + diffuse) * col;
 		lightedCol.w = col.w;

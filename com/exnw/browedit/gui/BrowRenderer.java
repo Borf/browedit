@@ -32,9 +32,11 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	public boolean showObjects = true;
 	public boolean showShadow = true;
 	public boolean showGrid = false;
+	public boolean showGrid2 = false;
 	
 	
 	public EditTool currentTool;
+
 	
 	
 	public BrowRenderer(MainFrame mainFrame)

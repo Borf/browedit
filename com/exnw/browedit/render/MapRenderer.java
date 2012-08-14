@@ -28,7 +28,7 @@ public class MapRenderer implements Renderer
 	{
 		this.mainPanel = mainPanel;
 		
-		gndRenderer = new GndRenderer(map.getGnd());
+		gndRenderer = new GndRenderer(map.getGnd(), mainPanel.renderer);
 		rswRenderer = new RswRenderer(map.getRsw(), map);
 		gatRenderer = new GatRenderer(map.getGat());
 	}

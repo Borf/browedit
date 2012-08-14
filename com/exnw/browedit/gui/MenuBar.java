@@ -10,6 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import com.exnw.browedit.grflib.GrfFileSystemView;
+import com.exnw.browedit.packets.OpenMap;
 
 
 public class MenuBar extends JMenuBar
@@ -31,6 +32,9 @@ public class MenuBar extends JMenuBar
 		file.add(fileSaveAs = 	new JMenuItem("Save As"));
 		file.add(fileExit = 	new JMenuItem("Exit"));
 		
+		
+		
+		
 
 	//	add(tools = new JMenu("Tools"));
 		
@@ -43,6 +47,7 @@ public class MenuBar extends JMenuBar
 				 if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 				 {
 //					mainFrame.openMap(fileChooser.getSelectedFile().getPath());
+					 mainFrame.getMainPanel().client.send(new OpenMap("data\\" + fileChooser.getSelectedFile().getPath()));
 				 }			
 			}
 		});

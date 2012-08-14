@@ -11,6 +11,7 @@ uniform mat3 normalMatrix;
 
 varying vec2 texCoord;
 varying vec2 texCoord2;
+varying vec4 color;
 
 varying vec3 normal;
 varying vec3 eyeVec;
@@ -28,6 +29,7 @@ void main()
 
     texCoord = a_texcoord;
     texCoord2 = a_texcoord2;
+    color = a_color;
     
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * a_position;
     
