@@ -2,6 +2,7 @@ package com.exnw.browedit.render;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -13,7 +14,6 @@ import com.exnw.browedit.data.Gnd;
 import com.exnw.browedit.data.Gnd.GndCell;
 import com.exnw.browedit.data.Gnd.Surface;
 import com.exnw.browedit.gui.BrowRenderer;
-import com.exnw.browedit.gui.MainPanel;
 import com.exnw.browedit.math.Vector2;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.renderutils.Shader;
@@ -37,7 +37,9 @@ public class GndRenderer implements Renderer
 	Vbo<VertexPC> textureGrid = null;
 	Vbo<VertexPC> grid = null;
 
-	private BrowRenderer renderer;	
+	private BrowRenderer renderer;
+
+	public boolean selectionChanged = false;	
 	
 	
 	final static int TEXTURESIZE = 2048;
@@ -55,6 +57,11 @@ public class GndRenderer implements Renderer
 		if (vbos == null)
 			this.generateVbos(shader);
 
+		if(selectionChanged)
+		{
+			selectionChanged = false;
+			changeSelection(null, gl, shader);
+		}
 		
 		gl.glEnable(GL4.GL_CULL_FACE);
 		
@@ -516,9 +523,28 @@ public class GndRenderer implements Renderer
 			else
 				vbos.set(i, null);
 		}
-
 	}
 
+	public void changeSelection(ArrayList<ArrayList<Boolean>> selection, GL4 gl, Shader shader)
+	{
+		//generateVbos(shader);
+		for(Vbo<VertexPNCTT> vbo : vbos)
+		{
+			FloatBuffer buf = vbo.getMap(gl);
+			
+			for(int i = 0; i < buf.limit(); i+=vbo.elementSize())
+			{
+				float x = buf.get(i);
+				float z = buf.get(i+1);
+				
+				buf.put(i+3+3+0, 1);
+				buf.put(i+3+3+1, 0);
+				buf.put(i+3+3+2, 0);
+			}
+			vbo.unMap(gl);
+		}
+	}
+	
 	private void loadTextures(GL4 gl)
 	{
 		{
@@ -528,12 +554,12 @@ public class GndRenderer implements Renderer
 			{
 				Texture texture = TextureCache.getTexture(gl, "data\\texture\\" + s);
 				// TODO: fix borders
-				texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_MIRRORED_REPEAT);
-				texture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_MIRRORED_REPEAT);
+				texture.setTexParameteri(gl, GL4.GL_TEXTURE_WRAP_S, GL4.GL_MIRRORED_REPEAT);
+				texture.setTexParameteri(gl, GL4.GL_TEXTURE_WRAP_T, GL4.GL_MIRRORED_REPEAT);
 
 				textures.add(texture);
+				gl.glGetError();
 			}
-
 			{
 				BufferedImage image = new BufferedImage(TEXTURESIZE,
 						TEXTURESIZE, BufferedImage.TYPE_INT_ARGB);
@@ -592,8 +618,10 @@ public class GndRenderer implements Renderer
 					}
 				}
 				colorLightmap = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
+
 				colorLightmap.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
 				colorLightmap.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+				
 			}
 
 		}

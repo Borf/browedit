@@ -14,6 +14,8 @@ import com.exnw.browedit.gui.MainFrame;
 import com.exnw.browedit.net.BrowServer;
 
 public class BrowEdit{
+	public static BrowServer server;
+
 	/**
 	 * @param args
 	 */
@@ -90,7 +92,7 @@ public class BrowEdit{
 		GrfLib.enableJar();
 		
 
-		new BrowServer();
+		server = new BrowServer();
 		
 	    JFrame.setDefaultLookAndFeelDecorated(true);
 	    JDialog.setDefaultLookAndFeelDecorated(true);

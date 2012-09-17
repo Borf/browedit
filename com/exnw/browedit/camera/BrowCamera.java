@@ -60,6 +60,12 @@ public class BrowCamera extends Camera
 		if(distance < 0)
 			distance = 0;
 	}
+
+
+	public void useMouseDoubleClick(MouseEvent e)
+	{
+		this.rotation = new Vector3(45,0,0);
+	}
 	
 
 }

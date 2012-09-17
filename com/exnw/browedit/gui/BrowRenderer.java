@@ -5,9 +5,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
 import javax.media.opengl.GL4;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -18,6 +18,7 @@ import com.exnw.browedit.edittools.EditTool;
 import com.exnw.browedit.math.Matrix3;
 import com.exnw.browedit.math.Matrix4;
 import com.exnw.browedit.math.Vector3;
+import com.exnw.browedit.render.MapRenderer;
 import com.exnw.browedit.renderutils.Shader;
 
 public class BrowRenderer implements GLEventListener, MouseMotionListener, MouseListener, MouseWheelListener {
@@ -27,16 +28,19 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	private Camera camera;
 	private MouseEvent lastMouseEvent;
 	private Shader shader;
-	Vector3 mouse3d;
+	public Vector3 mouse3d;
 
 	public boolean showObjects = true;
 	public boolean showShadow = true;
 	public boolean showGrid = false;
 	public boolean showGrid2 = false;
 	
+	public MapRenderer lastMapRenderer = null;
 	
 	public EditTool currentTool;
 
+	
+	public ArrayList<ArrayList<Boolean>> selection = new ArrayList<ArrayList<Boolean>>();
 	
 	
 	public BrowRenderer(MainFrame mainFrame)
@@ -85,6 +89,20 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		
 		if(mainFrame.getMainPanel().mapRenderer != null)
 			mainFrame.getMainPanel().mapRenderer.render(gl, shader);
+		
+		if(lastMapRenderer != mainFrame.getMainPanel().mapRenderer)
+		{
+			selection = new ArrayList<ArrayList<Boolean>>();
+			for(int y = 0; y < mainFrame.getMainPanel().currentMap.getGnd().getHeight(); y++)
+			{
+				ArrayList<Boolean> row = new ArrayList<Boolean>();
+				for(int x = 0; x < mainFrame.getMainPanel().currentMap.getGnd().getWidth(); x++)
+					row.add(false);
+				selection.add(row);
+			}
+		}
+		
+		lastMapRenderer = mainFrame.getMainPanel().mapRenderer;
 	}
 
 	public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged)
@@ -123,9 +141,12 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 		mainFrame.getMainPanel().mouseY = e.getY();		
 
 		if( ( e.getModifiers() & MouseEvent.BUTTON2_MASK ) != 0 )
-		{
 			camera.useMouseDrag(lastMouseEvent, e);
-		}
+		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 )
+			currentTool.useLeftMouseDrag(lastMouseEvent, e);
+		if( ( e.getModifiers() & MouseEvent.BUTTON1_MASK ) != 0 )
+			currentTool.useRightMouseDrag(lastMouseEvent, e);
+	
 		lastMouseEvent = e;
 	}
 	
@@ -163,7 +184,8 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	@Override
 	public void mouseClicked( MouseEvent e )
 	{
-		
+		if(e.getClickCount() == 2)
+			camera.useMouseDoubleClick(e);
 	}
 
 	@Override
@@ -181,6 +203,11 @@ public class BrowRenderer implements GLEventListener, MouseMotionListener, Mouse
 	@Override
 	public void dispose(GLAutoDrawable arg0)
 	{
+	}
+
+	public void changeSelection()
+	{
+		mainFrame.getMainPanel().mapRenderer.gndRenderer.selectionChanged = true;
 	}
 
 }

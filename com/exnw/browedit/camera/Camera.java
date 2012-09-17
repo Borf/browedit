@@ -10,4 +10,5 @@ public abstract class Camera
 	public abstract Matrix4 getMatrix();
 	public abstract void useMouseDrag(MouseEvent lastEvent, MouseEvent event);
 	public abstract void useMouseWheel(MouseWheelEvent event);
+	public abstract void useMouseDoubleClick(MouseEvent e);
 }

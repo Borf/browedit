@@ -44,7 +44,10 @@ void main()
 	    col = texture2D(s_texture, texCoord);
 	
 	
-	
+	if(col.w < 0.9)
+		discard;
+		
+			
 	vec4 lightedCol;
 	if(lighting && !colorOnly)
 	{
@@ -54,8 +57,13 @@ void main()
 	else
 		lightedCol = col;
 	
-	if(col.w < 0.9)
-		discard;
+
+    if(ground)
+    {
+	    lightedCol.x = lightedCol.x * color.x;
+	    lightedCol.y = lightedCol.y * color.y;
+	    lightedCol.z = lightedCol.z * color.z;
+	}    
     
     //if(col.w > 0.9)
     //	lightedCol = vec4(normal,1);

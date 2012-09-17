@@ -45,7 +45,7 @@ public class BrowServer implements Runnable
 			try
 			{
 				clientSocket = listener.accept();
-				new ServerClient(clientSocket, this);
+				new NetServerClient(clientSocket, this);
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -59,7 +59,7 @@ public class BrowServer implements Runnable
 		clients.add(serverClient);
 	}
 
-	public synchronized void removeClient(ServerClient serverClient)
+	public synchronized void removeClient(NetServerClient serverClient)
 	{
 		clients.remove(serverClient);		
 	}

@@ -18,9 +18,9 @@ public class MapRenderer implements Renderer
 	private GLU glu = new GLU();
 
 	private GatRenderer gatRenderer;
-	private GndRenderer gndRenderer;
-	private RswRenderer rswRenderer;
-	private MainPanel mainPanel;
+	public GndRenderer gndRenderer;
+	public RswRenderer rswRenderer;
+	public MainPanel mainPanel;
 	
 	
 
@@ -47,7 +47,7 @@ public class MapRenderer implements Renderer
 		calc3dMouseCoords(gl, shader);
 	
 		if(mainPanel.renderer.showObjects)
-			rswRenderer.render(gl, shader);		
+			rswRenderer.render(gl, shader);	
 	}
 
 	private void calc3dMouseCoords(GL4 gl, Shader shader)

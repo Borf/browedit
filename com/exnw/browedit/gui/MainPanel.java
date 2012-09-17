@@ -12,9 +12,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
+import com.exnw.browedit.BrowEdit;
 import com.exnw.browedit.data.Map;
 import com.exnw.browedit.math.Vector3;
 import com.exnw.browedit.net.BrowClient;
+import com.exnw.browedit.net.LocalBrowClient;
 import com.exnw.browedit.packets.OpenMap;
 import com.exnw.browedit.render.MapRenderer;
 import com.jogamp.opengl.util.Animator;
@@ -29,7 +31,7 @@ public class MainPanel extends JPanel
 	
 	public BrowClient client;
 	
-	private Map currentMap = null;
+	Map currentMap = null;
 	public MapRenderer mapRenderer = null;
 	
 	public int mouseX, mouseY;
@@ -41,13 +43,20 @@ public class MainPanel extends JPanel
 	{
 		this.setLayout(new BorderLayout());
 
-	
+		
+//      GLProfile glprofile = GLProfile.get("GL4");
+//      GLCapabilities glcapabilities = new GLCapabilities( glprofile );
+      
+		panel = new GLCanvas();
+		renderer = new BrowRenderer(mainFrame);
+		
+		
 		JPanel northPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		add(northPanel, BorderLayout.NORTH);
 	
 		northPanel.add(toolBar = new ToolBar(mainFrame));
 		northPanel.add(new LayerToolBar(mainFrame));
-		add(toolToolBar = new ToolToolBar(mainFrame), BorderLayout.WEST);
+		add(toolToolBar = new ToolToolBar(this), BorderLayout.WEST);
 		add(brushToolBar = new BrushToolBar(mainFrame), BorderLayout.EAST);
 		
 		
@@ -63,14 +72,7 @@ public class MainPanel extends JPanel
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
-		
-//        GLProfile glprofile = GLProfile.get("GL4");
-//        GLCapabilities glcapabilities = new GLCapabilities( glprofile );
-        
-        panel = new GLCanvas();
-		renderer = new BrowRenderer(mainFrame);
-		
-		
+	
 		panel.addGLEventListener(renderer);
 		panel.addMouseListener(renderer);
 		panel.addMouseMotionListener(renderer);
@@ -83,9 +85,15 @@ public class MainPanel extends JPanel
 	    animator.setRunAsFastAsPossible(true);
 	    panel.requestFocus();
 	    
-	    client = new BrowClient("localhost", 8203, mainFrame);
-	    
-	    client.send(new OpenMap("data\\prontera.rsw"));
+	    //client = new BrowClient("localhost", 8203, mainFrame);
+	    client = new LocalBrowClient(BrowEdit.server, mainFrame);
+	    SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+			    client.send(new OpenMap("data\\prontera.rsw"));
+			}
+		});
 	}
 
 	public void setMap(Map currentMap)
