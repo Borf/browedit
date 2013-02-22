@@ -5,9 +5,10 @@
 #include <BroLib/Log.h>
 #include <BroLib/fs.h>
 #include <json/json.h>
+#include "BrowEdit.h"
 
 Log logger;
-Json::Value config;
+BrowEdit* browEdit;
 
 
 #ifdef WIN32
@@ -18,34 +19,42 @@ HWND GetConsoleHwnd();
 
 void display()
 {
+	browEdit->draw();
 	glutSwapBuffers();
+}
+
+void update()
+{
+	browEdit->update();
 }
 
 void reshape(int w, int h)
 {
-
+	browEdit->reshape(w,h);
 }
 
 void keyboard(unsigned char key, int x, int y)
 {
 	if(key == 27)
-		exit(0);
+		glutLeaveMainLoop();
+	browEdit->keyboard(key);
 }
 
 
 
 int main(int argc, char* argv[])
 {
+	browEdit = BrowEdit::getInstance();
 	File::registerFileLoader(new PhysicalFileLoader());
 
-	config = File::getJson("data/configs/config.borf.json");
+	browEdit->config = File::getJson("data/configs/config.borf.json");
 #ifdef WIN32
-	if(config["moveconsole"].asBool() && GetSystemMetrics(80) > 1)
+	if(browEdit->config["moveconsole"].asBool() && GetSystemMetrics(80) > 1)
 		SetWindowPos(GetConsoleHwnd(), GetConsoleHwnd(), GetSystemMetrics(SM_CXSCREEN),0,0,0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 #endif
 
 	glutInit(&argc, argv);
-	glutInitWindowSize(1920, 1080);
+	glutInitWindowSize(1900, 1000);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutCreateWindow("Browedit 2.0");
 	if(int errorCode = glewInit() != GLEW_OK)
@@ -54,14 +63,14 @@ int main(int argc, char* argv[])
 		logger<<"Initialized Glew "<<(char*)glewGetString(GLEW_VERSION)<<", OpenGL Version "<<(char*)glGetString(GL_VERSION)<<Log::newline;
 
 
-	
-
+	glutIdleFunc(update);
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 
 	glutMainLoop();
-	config = Json::nullValue;
+
+	delete browEdit;
 	return 0;
 }
 

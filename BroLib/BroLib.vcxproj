@@ -12,8 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BroLib\BroLib.h" />
+    <ClInclude Include="BroLib\Camera.h" />
     <ClInclude Include="Brolib\fs.h" />
     <ClInclude Include="BroLib\Log.h" />
+    <ClInclude Include="BroLib\Singleton.h" />
     <ClInclude Include="json\assertions.h" />
     <ClInclude Include="json\autolink.h" />
     <ClInclude Include="json\config.h" />
@@ -27,6 +29,7 @@
     <ClInclude Include="json\writer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BroLib\Camera.cpp" />
     <ClCompile Include="Brolib\fs.cpp" />
     <ClCompile Include="BroLib\Log.cpp" />
     <ClCompile Include="json\json_reader.cpp" />
@@ -75,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../external/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

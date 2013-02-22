@@ -60,6 +60,12 @@
     <ClInclude Include="Brolib\fs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BroLib\Singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BroLib\Log.cpp">
@@ -75,6 +81,9 @@
       <Filter>json</Filter>
     </ClCompile>
     <ClCompile Include="Brolib\fs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroLib\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
