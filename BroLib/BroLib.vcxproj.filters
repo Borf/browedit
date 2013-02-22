@@ -15,16 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="BroLib\BroLib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BroLib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="BroLib\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

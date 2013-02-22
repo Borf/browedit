@@ -10,7 +10,6 @@
 #include <windows.h>
 #endif
 
-
 Log::EndLine Log::newline;
 
 Log::Log()

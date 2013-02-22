@@ -1,8 +1,6 @@
 #pragma once
 
 #include "brolib.h"
-
-
 class Log
 {
 	bool endline;
@@ -21,3 +19,4 @@ public:
 };
 
 
+extern Log logger;

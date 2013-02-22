@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Log.cpp" />
+    <ClInclude Include="BroLib\BroLib.h" />
+    <ClInclude Include="BroLib\Log.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BroLib.h" />
-    <ClInclude Include="Log.h" />
+    <ClCompile Include="BroLib\Log.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DD1DBDA9-D27B-4025-B687-8DEC4808D6CC}</ProjectGuid>

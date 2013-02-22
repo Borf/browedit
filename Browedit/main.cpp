@@ -2,13 +2,14 @@
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#include <Log.h>
+#include <BroLib/Log.h>
 
-Log log;
+
+Log logger;
 
 
 #ifdef WIN32
-#include <Windows.h>
+#include <windows.h>
 HWND GetConsoleHwnd();
 #endif
 
@@ -43,9 +44,9 @@ int main(int argc, char* argv[])
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutCreateWindow("Browedit 2.0");
 	if(int errorCode = glewInit() != GLEW_OK)
-		log<<"Error initializing glew: "<<(char*)glewGetErrorString(errorCode)<<Log::newline;
+		logger<<"Error initializing glew: "<<(char*)glewGetErrorString(errorCode)<<Log::newline;
 	else
-		log<<"Initialized Glew "<<(char*)glewGetString(GLEW_VERSION)<<", OpenGL Version "<<(char*)glGetString(GL_VERSION)<<Log::newline;
+		logger<<"Initialized Glew "<<(char*)glewGetString(GLEW_VERSION)<<", OpenGL Version "<<(char*)glGetString(GL_VERSION)<<Log::newline;
 
 
 	
