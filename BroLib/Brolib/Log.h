@@ -1,6 +1,9 @@
 #pragma once
 
 #include "brolib.h"
+
+#include <string>
+
 class Log
 {
 	bool endline;
@@ -14,6 +17,7 @@ public:
 	static EndLine newline;
 
 	Log& operator <<(char* txt);
+	Log& operator <<(std::string txt);
 	Log& operator <<(int txt);
 	Log& operator <<(const EndLine& endline);
 };

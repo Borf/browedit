@@ -57,6 +57,14 @@ Log& Log::operator<<(int txt)
 	return *this;
 }
 
+
+Log& Log::operator<<(std::string txt)
+{
+	logString("%s", txt.c_str());
+	return *this;
+}
+
+
 Log& Log::operator<<(const EndLine& e)
 {
 	logString("%s", "\n");

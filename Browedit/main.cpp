@@ -3,9 +3,11 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <BroLib/Log.h>
-
+#include <BroLib/fs.h>
+#include <json/json.h>
 
 Log logger;
+Json::Value config;
 
 
 #ifdef WIN32
@@ -34,8 +36,11 @@ void keyboard(unsigned char key, int x, int y)
 
 int main(int argc, char* argv[])
 {
+	File::registerFileLoader(new PhysicalFileLoader());
+
+	config = File::getJson("data/configs/config.borf.json");
 #ifdef WIN32
-	if(GetSystemMetrics(80) > 1)
+	if(config["moveconsole"].asBool() && GetSystemMetrics(80) > 1)
 		SetWindowPos(GetConsoleHwnd(), GetConsoleHwnd(), GetSystemMetrics(SM_CXSCREEN),0,0,0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 #endif
 
@@ -56,6 +61,7 @@ int main(int argc, char* argv[])
 	glutKeyboardFunc(keyboard);
 
 	glutMainLoop();
+	config = Json::nullValue;
 	return 0;
 }
 

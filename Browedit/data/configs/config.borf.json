@@ -1,0 +1,13 @@
+{
+	"data" :
+	{
+		"ropath" : "C:/Users/Borf/Desktop/Cookie_Full_Client_3.0_",
+		"grfs" :
+		[
+			"C:/Users/Borf/Desktop/Cookie_Full_Client_3.0_/data.grf",
+			"C:/Users/Borf/Desktop/Cookie_Full_Client_3.0_/cookie.grf"
+		]
+	},
+	"moveconsole" : true,
+	"defaultmap" : "prontera"
+}
