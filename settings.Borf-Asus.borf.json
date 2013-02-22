@@ -1,8 +1,0 @@
-{
-	"readini" : false,
-	"ini" : "",
-    "grfs" : [ "c:/program files (x86)/RO/data.grf", "c:/program files (x86)/RO/rdata.grf" ],
-	"readdata" : true,
-    "datadir" : [ "c:/program files (x86)/RO/", "." ],
-    "inversecamera" : false
-}

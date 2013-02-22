@@ -1,8 +1,0 @@
-{
-	"readini" : false,
-	"ini" : "",
-    "grfs" : [ "C:\\Users\\Avenar\\Desktop\\Spil\\avrore\\data.grf", "C:\\Users\\Avenar\\Desktop\\Spil\\avrore\\rdata.grf" ],
-	"readdata" : true,
-    "datadir" : [ "C:\\Users\\Avenar\\Desktop\\Spil\\avrore", "." ],
-    "inversecamera" : true
-}

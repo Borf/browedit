@@ -1,8 +1,0 @@
-{
-	"readini" : false,
-	"ini" : "D:\\Users\\Lemongrass\\Desktop\\RO\\data.ini",
-    "grfs" : [ "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\data.grf", "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\hdata.grf", "D:\\Users\\Lemongrass\\Desktop\\RO\\data.grf" ],
-    "readdata" : false,
-    "datadir" : [ "F:\\Users\\Lemongrass\\Desktop\\RO\\Client\\data\\", "D:\\Users\\Lemongrass\\Desktop\\RO\\data\\" ],
-    "inversecamera" : false
-}
