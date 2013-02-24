@@ -1,21 +1,42 @@
 #include "BrowEdit.h"
+#include "BrowCamera.h"
+
 #include <gl/glew.h>
 #include <gl/GL.h>
+
+#include <Brolib/Log.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 
 
 BrowEdit::BrowEdit(void)
 {
+	worldShader = NULL;
+	world = NULL;
 }
 
 
 BrowEdit::~BrowEdit(void)
 {
 	config = Json::nullValue;
+	if(worldShader)
+		delete worldShader;
 }
 
 
+
+void BrowEdit::init()
+{
+	worldShader = new WorldShader();
+	camera = new BrowCamera();
+
+	world = new World("prontera");
+
+	int err = glGetError();
+	if(err != 0)
+		logger<<"OpenGL Error "<<err<<" at end of initialisation"<<Log::newline;
+
+}
 
 
 
@@ -33,6 +54,17 @@ void BrowEdit::draw()
 	modelMatrix = glm::mat4();
 
 
+	worldShader->use();
+	worldShader->setProjectionMatrix(projectionMatrix);
+
+	if(world)
+		world->draw(camera, worldShader);
+
+
+	int err = glGetError();
+	if(err != 0)
+		logger<<"OpenGL Error "<<err<<" at end of frame"<<Log::newline;
+	glUseProgram(0);
 
 }
 

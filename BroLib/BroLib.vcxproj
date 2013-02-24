@@ -15,7 +15,12 @@
     <ClInclude Include="BroLib\Camera.h" />
     <ClInclude Include="Brolib\fs.h" />
     <ClInclude Include="BroLib\Log.h" />
+    <ClInclude Include="BroLib\Shader.h" />
     <ClInclude Include="BroLib\Singleton.h" />
+    <ClInclude Include="BroLib\VBO.h" />
+    <ClInclude Include="Brolib\Vertex.h" />
+    <ClInclude Include="BroLib\World.h" />
+    <ClInclude Include="BroLib\WorldShader.h" />
     <ClInclude Include="json\assertions.h" />
     <ClInclude Include="json\autolink.h" />
     <ClInclude Include="json\config.h" />
@@ -29,9 +34,11 @@
     <ClInclude Include="json\writer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BroLib\Camera.cpp" />
     <ClCompile Include="Brolib\fs.cpp" />
     <ClCompile Include="BroLib\Log.cpp" />
+    <ClCompile Include="BroLib\Shader.cpp" />
+    <ClCompile Include="BroLib\World.cpp" />
+    <ClCompile Include="BroLib\WorldShader.cpp" />
     <ClCompile Include="json\json_reader.cpp" />
     <ClCompile Include="json\json_value.cpp" />
     <ClCompile Include="json\json_writer.cpp" />

@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{fd0a03b5-e1eb-461b-9e3b-fca74094203f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\shaders">
+      <UniqueIdentifier>{d0213343-482c-4d02-a84b-a24587394436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\configs">
+      <UniqueIdentifier>{1d0dd072-0dd5-4aaf-b3e2-efdb6995ec25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,10 +30,27 @@
     <ClCompile Include="BrowEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BrowCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BrowCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\configs\config.borf.json">
+      <Filter>data\configs</Filter>
+    </None>
+    <None Include="data\shaders\world.vert">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="data\shaders\world.frag">
+      <Filter>data\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -50,7 +50,10 @@ std::string File::getData(std::string fileName)
 	std::string data;
 	InFile* file = File::openRead(fileName);
 	if(!file)
+	{
+		logger<<"Error opening file '"<<fileName<<"'"<<Log::newline;
 		return "";
+	}
 
 	while(!file->eof())
 	{

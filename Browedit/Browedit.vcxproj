@@ -82,11 +82,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BrowCamera.cpp" />
     <ClCompile Include="BrowEdit.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BrowCamera.h" />
     <ClInclude Include="BrowEdit.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\configs\config.borf.json" />
+    <None Include="data\shaders\world.frag" />
+    <None Include="data\shaders\world.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

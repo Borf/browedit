@@ -26,6 +26,7 @@ void display()
 void update()
 {
 	browEdit->update();
+	glutPostRedisplay();
 }
 
 void reshape(int w, int h)
@@ -68,7 +69,9 @@ int main(int argc, char* argv[])
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 
+	browEdit->init();
 	glutMainLoop();
+
 
 	delete browEdit;
 	return 0;

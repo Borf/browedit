@@ -66,6 +66,21 @@
     <ClInclude Include="BroLib\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BroLib\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\WorldShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Brolib\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\VBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BroLib\Log.cpp">
@@ -83,7 +98,13 @@
     <ClCompile Include="Brolib\fs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BroLib\Camera.cpp">
+    <ClCompile Include="BroLib\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroLib\WorldShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroLib\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
