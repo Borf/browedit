@@ -1,0 +1,51 @@
+[
+	{
+		"name" : "file",
+		"type" : "menu",
+		"subitems" :
+		[
+
+
+		]
+	},
+	{
+		"name" : "window",
+		"type" : "menu",
+		"subitems" :
+		[
+
+
+		]
+
+	},
+	{
+		"name" : "display",
+		"type" : "menu",
+		"subitems" :
+		[
+
+
+		]
+
+	},
+	{
+		"name" : "editmode",
+		"type" : "menu",
+		"subitems" :
+		[
+
+
+		]
+
+	},
+	{
+		"name" : "tools",
+		"type" : "menu",
+		"subitems" :
+		[
+
+
+		]
+
+	}
+]
