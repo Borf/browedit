@@ -1,0 +1,12 @@
+{
+	"data" :
+	{
+		"ropath" : "c:/games/cookiero",
+		"grfs" :
+		[
+			"c:/games/cookiero/data.grf",
+			"c:/games/cookiero/cookie.grf"
+		]
+	},
+	"defaultmap" : "prontera"
+}

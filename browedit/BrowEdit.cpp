@@ -1,10 +1,14 @@
 #include "BrowEdit.h"
 
+#include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
 
-#include <blib/wm/WM.h>
 #include <blib/Renderer.h>
 #include <blib/SpriteBatch.h>
+#include <blib/BackgroundTask.h>
+
+#include <blib/wm/WM.h>
+#include <blib/util/FileSystem.h>
 
 
 BrowEdit::BrowEdit(void)
@@ -30,7 +34,18 @@ void BrowEdit::init()
 	wm = blib::wm::WM::getInstance();
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
 
-	loadMap("prontera");
+	config = blib::util::FileSystem::getJson("assets/configs/config.laptop.json");
+
+	std::list<blib::BackgroundTask*> tasks;
+	for(Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
+		tasks.push_back(new blib::BackgroundTask(NULL, [this,i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); }));
+	for(blib::BackgroundTask* task : tasks)
+		task->waitForTermination();
+	//TODO: make sure registerHandle is threadsafe!
+
+
+
+	loadMap("data/prontera");
 }
 
 void BrowEdit::update( double elapsedTime )

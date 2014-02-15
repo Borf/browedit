@@ -2,6 +2,7 @@
 
 #include <blib/App.h>
 #include <BroLib/MapRenderer.h>
+#include <json/value.h>
 
 namespace blib { 
 	class Texture; 
@@ -17,6 +18,7 @@ class BrowEdit : public blib::App
 
 	Map* map;
 	MapRenderer mapRenderer;
+	Json::Value config;
 
 public:
 	BrowEdit(void);

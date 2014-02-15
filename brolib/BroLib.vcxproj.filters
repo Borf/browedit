@@ -16,6 +16,9 @@
     <Filter Include="grflib">
       <UniqueIdentifier>{28b994a2-0c46-40ba-a0b8-b11ac699a4cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="grflib\zlib">
+      <UniqueIdentifier>{c4698e74-5483-49f1-b05c-e21e66892e11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BroLib\Map.cpp">
@@ -41,6 +44,51 @@
     </ClCompile>
     <ClCompile Include="BroLib\GrfFileSystemHandler.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\crc32.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\deflate.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\gzclose.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\gzlib.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\gzread.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\gzwrite.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\infback.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\inffast.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\inflate.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\inftrees.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\trees.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\uncompr.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\zutil.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\adler32.c">
+      <Filter>grflib\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\zlib\compress.c">
+      <Filter>grflib\zlib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +118,39 @@
     </ClInclude>
     <ClInclude Include="BroLib\GrfFileSystemHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\crc32.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\deflate.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\gzguts.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\inffast.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\inffixed.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\inflate.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\inftrees.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\trees.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\zconf.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\zlib.h">
+      <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\zlib\zutil.h">
+      <Filter>grflib\zlib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

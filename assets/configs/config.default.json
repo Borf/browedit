@@ -1,0 +1,14 @@
+{
+	"data" :
+	{
+		"ropath" : "c:/Program Files (x86)/Gravity/RO/",
+		"grfs" :
+		[
+			"c:/Program Files (x86)/Gravity/RO/"
+		]
+	},
+	"moveconsole" : true,
+	"hideconsole" : false,
+	"defaultmap" : "prontera",
+	"skiploadingscreen" : true
+}

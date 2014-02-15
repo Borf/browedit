@@ -2,8 +2,25 @@
 #include <blib/util/Log.h>
 using blib::util::Log;
 
+#include <algorithm>
+#include <cctype>
+
+std::string GrfFileSystemHandler::sanitizeFileName(std::string fileName)
+{
+	std::transform(fileName.begin(), fileName.end(), fileName.begin(), std::tolower);
+	std::replace(fileName.begin(), fileName.end(), '/', '\\');
+
+	int index;
+	while((index = fileName.find("\\\\")) != -1)
+		fileName = fileName.substr(0, index) + fileName.substr(index + 1);
+	return fileName;
+}
+
+
 GrfFileSystemHandler::GrfFileSystemHandler( const std::string &grfFile ) : blib::util::FileSystemHandler("Grf")
 {
+	grf = NULL;
+
 	GrfError error;
 	grf = grf_open(grfFile.c_str(), "rb", &error);
 	if (grf == NULL)
@@ -11,20 +28,31 @@ GrfFileSystemHandler::GrfFileSystemHandler( const std::string &grfFile ) : blib:
 		Log::err<<"Error opening GRF file: "<<Log::newline;
 		return;
 	}
-/*	for(unsigned int i = 0; i < grf->nfiles; i++)
-	{
-		lookup[File::sanitizeFileName(grf->files[i].name)] = i;
-	}*/
+	Log::out<<"Loaded GRF file "<<grfFile<<Log::newline;
+	for(unsigned int i = 0; i < grf->nfiles; i++)
+		lookup[sanitizeFileName(grf->files[i].name)] = i;
 }
 
 
 blib::util::StreamInFile* GrfFileSystemHandler::openRead( const std::string &fileName )
 {
-	throw std::exception("The method or operation is not implemented.");
+	if(!grf)
+		return NULL;
+	auto it = lookup.find(sanitizeFileName(fileName));
+	if(it == lookup.end())
+		return NULL;
+
+	GrfError error;
+	unsigned int size = 0;
+	char* data = (char*)grf_index_get(grf, it->second, &size, &error);
+
+
+	blib::util::StreamInFile* f = new blib::util::MemoryFile(data, size, true);
+	delete data;
+	return f;
 }
 
 void GrfFileSystemHandler::getFileList( const std::string &path, std::vector<std::string> &files )
 {
-	throw std::exception("The method or operation is not implemented.");
-}
 
+}
