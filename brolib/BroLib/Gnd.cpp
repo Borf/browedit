@@ -2,6 +2,7 @@
 
 #include <blib/util/FileSystem.h>
 #include <blib/util/Log.h>
+#include <blib/Texture.h>
 using blib::util::Log;
 
 Gnd::Gnd( const std::string &fileName )

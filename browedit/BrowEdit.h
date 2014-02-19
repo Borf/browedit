@@ -1,6 +1,7 @@
 #pragma once
 
 #include <blib/App.h>
+#include <blib/MouseListener.h>
 #include <BroLib/MapRenderer.h>
 #include <json/value.h>
 
@@ -10,15 +11,19 @@ namespace blib {
 }
 
 class Map;
+class Camera;
 
-class BrowEdit : public blib::App
+class BrowEdit : public blib::App, public blib::MouseListener
 {
 	blib::wm::WM* wm;
 	blib::wm::Menu* rootMenu;
 
 	Map* map;
+	Camera* camera;
 	MapRenderer mapRenderer;
 	Json::Value config;
+
+	blib::MouseState lastMouseState;
 
 public:
 	BrowEdit(void);
@@ -30,6 +35,8 @@ public:
 
 	void loadMap(std::string fileName);
 	void saveMap(std::string fileName);
+
+	virtual void onScroll( int delta );
 
 };
 

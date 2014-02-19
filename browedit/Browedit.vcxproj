@@ -85,10 +85,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h" />
+    <ClInclude Include="Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\assets\shaders\gnd.frag" />
+    <None Include="..\assets\shaders\gnd.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
