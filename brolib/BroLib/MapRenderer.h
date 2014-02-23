@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 #include <blib/RenderState.h>
+#include <map>
+
 
 namespace blib { class ResourceManager; class Shader; class Renderer; };
 class Map;
@@ -11,6 +13,8 @@ class MapRenderer
 private:
 	blib::ResourceManager* resourceManager;
 	blib::RenderState gndRenderState;
+	blib::VBO* gndVbo;
+	std::map<int, std::pair<int, int> > gndVertIndices;
 public:
 	glm::mat4 cameraMatrix;
 

@@ -39,7 +39,7 @@ void BrowEdit::init()
 	wm = blib::wm::WM::getInstance();
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
 	addMouseListener(this);
-	config = blib::util::FileSystem::getJson("assets/configs/config.laptop.json");
+	config = blib::util::FileSystem::getJson("assets/configs/config.borf.json");
 	
 	std::list<blib::BackgroundTask*> tasks;
 	for(Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
