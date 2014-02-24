@@ -51,10 +51,12 @@ void BrowEdit::init()
 
 
 
-	loadMap("data/prontera");
+	loadMap("data/c_tower1");
+//	loadMap("data/prontera");
 
 	mapRenderer.init(resourceManager, this);
 	camera = new Camera();
+
 }
 
 void BrowEdit::update( double elapsedTime )
@@ -83,8 +85,9 @@ void BrowEdit::draw()
 	renderer->clear(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), blib::Renderer::Color | blib::Renderer::Depth);
 
 	if(map)
+	{
 		mapRenderer.render(renderer);
-
+	}
 
 	spriteBatch->begin();
 	wm->draw(*spriteBatch);

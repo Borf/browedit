@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-namespace blib { class ResourceManager; class Shader; class Renderer; class App; };
+namespace blib { class ResourceManager; class Shader; class Renderer; class App; class Texture; };
 class Map;
 class Gnd;
 
@@ -15,6 +15,7 @@ class Gnd;
 class MapRenderer
 {
 private:
+	typedef blib::VertexP3T2T2 GndVertex;
 	class GndChunk
 	{
 	public:
@@ -22,7 +23,9 @@ private:
 		bool rebuilding;
 		blib::VBO* vbo;
 		std::map<int, std::pair<int, int> > vertIndices;
-				std::vector<blib::VertexP3T2> allVerts;
+
+		std::vector<GndVertex> allVerts;
+		std::map<int, std::pair<int, int> > newVertIndices;
 
 		int x, y;
 
@@ -40,6 +43,8 @@ private:
 //gnd
 	blib::RenderState gndRenderState;
 	std::vector<std::vector<GndChunk*> > gndChunks;
+	blib::Texture* gndShadow;
+
 public:
 	glm::mat4 cameraMatrix;
 
