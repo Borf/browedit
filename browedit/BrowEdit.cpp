@@ -20,8 +20,8 @@ BrowEdit::BrowEdit(const Json::Value &config)
 {
 	this->config = config;
 
-	appSetup.width = 1280;
-	appSetup.height = 720;
+	appSetup.width = config["resolution"][0u].asInt();
+	appSetup.height = config["resolution"][1u].asInt();
 	appSetup.vsync = false;
 	appSetup.icon = 0;
 	appSetup.renderer = blib::AppSetup::GlRenderer;
