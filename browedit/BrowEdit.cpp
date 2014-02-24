@@ -39,7 +39,7 @@ void BrowEdit::init()
 	wm = blib::wm::WM::getInstance();
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
 	addMouseListener(this);
-	config = blib::util::FileSystem::getJson("assets/configs/config.borf.json");
+	config = blib::util::FileSystem::getJson("assets/configs/config.laptop.json");
 	
 	std::list<blib::BackgroundTask*> tasks;
 	for(Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
@@ -67,11 +67,11 @@ void BrowEdit::update( double elapsedTime )
 	{
 		if(keyState.isPressed(blib::KEY_SHIFT))
 		{
-			camera->direction += mouseState.x - lastMouseState.x;
-			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y), 0.0f, 90.0f);
+			camera->direction += (mouseState.x - lastMouseState.x) / 2.0f;
+			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y) / 2.0f, 0.0f, 90.0f);
 		}
 		else
-			camera->position += glm::vec2(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y);
+			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y,0,0) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0,0,1)));
 	}
 
 	lastMouseState = mouseState;

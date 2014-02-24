@@ -5,7 +5,7 @@ Camera::Camera(void)
 {
 	position = glm::vec2(0,0);
 	direction = 0;
-	angle = 45;
+	angle = 60;
 	distance = 1000;
 }
 

@@ -23,7 +23,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager )
 	gndRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/gnd");
 	gndRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture", 1);
-	gndRenderState.activeShader->setUniform("projectionMatrix", glm::perspective(80.0f, 1.0f, 0.01f, 5000.0f));
+	gndRenderState.activeShader->setUniform("projectionMatrix", glm::perspective(60.0f, 1.0f, 0.01f, 5000.0f));
 	gndRenderState.activeShader->setUniform("s_texture", 0);
 	gndRenderState.blendEnabled = true;
 	gndRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
