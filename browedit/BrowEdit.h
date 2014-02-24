@@ -26,7 +26,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	blib::MouseState lastMouseState;
 
 public:
-	BrowEdit(void);
+	BrowEdit(const Json::Value &config);
 	~BrowEdit(void);
 
 	virtual void init();

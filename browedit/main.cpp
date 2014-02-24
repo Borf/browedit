@@ -1,9 +1,20 @@
+#ifdef WIN32
+#include <Windows.h>
+#include <blib/platform/win32/Registry.h>
+#include <iostream>
+#endif
+
 #include <blib/util/FileSystem.h>
 #include <blib/Util.h>
 #include "BrowEdit.h"
 #include <BroLib/GrfFileSystemHandler.h>
 #include <blib/util/Log.h>
 using blib::util::Log;
+
+
+
+void mergeConfig(Json::Value &config, const Json::Value &newConfig);
+
 
 int main()
 {
@@ -41,8 +52,46 @@ int main()
 	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(".."));
 	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler("../blib"));
 
-	BrowEdit* app = new BrowEdit();
+	Log::out<<"Loading configuration..."<<Log::newline;
+	Json::Value config = blib::util::FileSystem::getJson("assets/configs/config.default.json");
+#ifdef WIN32
+	blib::platform::win32::RegistryKey key( HKEY_CURRENT_USER, "Software\\Browedit" );
+	if( !key.exists() && !key.create() ){
+		// Something went wrong
+	}
+	blib::platform::win32::RegistryValue value( key, "config" );
+	std::string configFileName = value.readString( "" );
+	while( !blib::util::FileSystem::exists( "assets/configs/" + configFileName ) )
+	{
+		// we ask him for his choice
+		Log::err<< "Unable to find configuration file, please type the configuration filename" << Log::newline;
+		std::getline( std::cin, configFileName );
+	}
+//TODO	value.writeString( config );
+
+	mergeConfig( config, blib::util::FileSystem::getJson( "assets/configs/" + configFileName ) );
+#endif
+
+
+
+
+	BrowEdit* app = new BrowEdit(config);
 	app->start();
 	delete app;
 	return 0;
 }
+
+
+
+	void mergeConfig(Json::Value &config, const Json::Value &newConfig)
+	{
+		Json::Value::Members values = newConfig.getMemberNames();
+		for(size_t i = 0; i < values.size(); i++)
+			if(config.isMember(values[i]))
+				if(config[values[i]].isObject())
+					mergeConfig(config[values[i]], newConfig[values[i]]);
+				else
+					config[values[i]] = newConfig[values[i]];
+			else
+				config[values[i]] = newConfig[values[i]];
+	}

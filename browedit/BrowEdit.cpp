@@ -16,8 +16,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-BrowEdit::BrowEdit(void)
+BrowEdit::BrowEdit(const Json::Value &config)
 {
+	this->config = config;
+
 	appSetup.width = 1280;
 	appSetup.height = 720;
 	appSetup.vsync = false;
@@ -39,7 +41,6 @@ void BrowEdit::init()
 	wm = blib::wm::WM::getInstance();
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
 	addMouseListener(this);
-	config = blib::util::FileSystem::getJson("assets/configs/config.laptop.json");
 	
 	std::list<blib::BackgroundTask*> tasks;
 	for(Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
@@ -52,7 +53,7 @@ void BrowEdit::init()
 
 	loadMap("data/prontera");
 
-	mapRenderer.init(resourceManager);
+	mapRenderer.init(resourceManager, this);
 	camera = new Camera();
 }
 
@@ -82,7 +83,7 @@ void BrowEdit::draw()
 	renderer->clear(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), blib::Renderer::Color | blib::Renderer::Depth);
 
 	if(map)
-		mapRenderer.render(renderer, map);
+		mapRenderer.render(renderer);
 
 
 	spriteBatch->begin();
@@ -100,7 +101,9 @@ void BrowEdit::loadMap(std::string fileName)
 
 	runBackground(	[newMap, fileName] () { *newMap = new Map(fileName); }, 
 					[this, newMap] () { map = *newMap; delete newMap;
-										camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5); } );
+										camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
+										mapRenderer.setMap(map);
+	} );
 }
 
 void BrowEdit::onScroll( int delta )
