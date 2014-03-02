@@ -2,10 +2,12 @@
 
 #include <string>
 class Gnd;
+class Rsw;
 
 class Map
 {
 	Gnd* gnd;
+	Rsw* rsw;
 public:
 	Map(const std::string &fileName);
 

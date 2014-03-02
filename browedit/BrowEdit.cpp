@@ -28,6 +28,10 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.border = true;
 	appSetup.title = "BrowEdit 2.0";
 
+	appSetup.threaded = true;
+	appSetup.vsync = false;
+
+
 	map = NULL;
 }
 
@@ -42,17 +46,17 @@ void BrowEdit::init()
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
 	addMouseListener(this);
 	
-	std::list<blib::BackgroundTask*> tasks;
+	std::list<blib::BackgroundTask<int>*> tasks;
 	for(Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
-		tasks.push_back(new blib::BackgroundTask(NULL, [this,i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); }));
-	for(blib::BackgroundTask* task : tasks)
+		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this,i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
+	for(blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();
-	//TODO: make sure registerHandle is threadsafe!
+	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
 
 
 
-	loadMap("data/c_tower1");
-//	loadMap("data/prontera");
+//	loadMap("data/c_tower1");
+	loadMap("data/prontera");
 
 	mapRenderer.init(resourceManager, this);
 	camera = new Camera();
@@ -99,11 +103,10 @@ void BrowEdit::loadMap(std::string fileName)
 {
 	if(map)
 		delete map;
+	map = NULL;
 
-	Map** newMap = new Map*;
-
-	runBackground(	[newMap, fileName] () { *newMap = new Map(fileName); }, 
-					[this, newMap] () { map = *newMap; delete newMap;
+	runBackground<Map*>(	[fileName] () { return new Map(fileName); }, 
+							[this] (Map* param) { map = param;
 										camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
 										mapRenderer.setMap(map);
 	} );

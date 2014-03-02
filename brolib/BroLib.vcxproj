@@ -34,6 +34,8 @@
     <ClCompile Include="BroLib\grflib\rgz.c" />
     <ClCompile Include="BroLib\Map.cpp" />
     <ClCompile Include="BroLib\MapRenderer.cpp" />
+    <ClCompile Include="BroLib\Rsm.cpp" />
+    <ClCompile Include="BroLib\Rsw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\externals\zlib\crc32.h" />
@@ -56,6 +58,8 @@
     <ClInclude Include="BroLib\grflib\rgz.h" />
     <ClInclude Include="BroLib\Map.h" />
     <ClInclude Include="BroLib\MapRenderer.h" />
+    <ClInclude Include="BroLib\Rsm.h" />
+    <ClInclude Include="BroLib\Rsw.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E6E72CDE-7DAD-4576-825E-AB65026E0820}</ProjectGuid>

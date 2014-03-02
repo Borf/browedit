@@ -7,6 +7,9 @@
 #include <blib/gl/Vertex.h>
 #include <blib/Renderer.h>
 #include <blib/BackgroundTask.h>
+#include <blib/util/Log.h>
+
+using blib::util::Log;
 
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,6 +18,7 @@
 void MapRenderer::render( blib::Renderer* renderer )
 {
 	renderGnd(renderer);
+	renderRsw(renderer);
 }
 
 void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
@@ -57,41 +61,46 @@ void MapRenderer::setMap(const Map* map)
 			gndChunks[y][x] = new GndChunk(x*CHUNKSIZE,y*CHUNKSIZE, resourceManager);
 }
 
+#pragma region GND
 
 void MapRenderer::renderGnd(blib::Renderer* renderer)
 {
 	static bool bla = false;
 	if(!bla)
 	{
-		char* data = new char[2048*2048*4];
-		for(int i = 0; i < 2048*2048*4; i++)
-			data[i] = rand()%256;
-		renderer->setTextureSubImage(gndShadow, 0, 0, 2048, 2048, data);
-
-		int x = 0; int y = 0;
-		for(size_t i = 0; i < map->getGnd()->lightmaps.size(); i++)
-		{
-			Gnd::Lightmap* lightMap = map->getGnd()->lightmaps[i];
-			char data[8*8*4];
-			for(int xx = 0; xx < 8; xx++)
-			{
-				for(int yy = 0; yy < 8; yy++)
+		new blib::BackgroundTask<char*>(app, 
+			[this, renderer] {
+				char* data = new char[2048*2048*4];
+				int x = 0; int y = 0;
+				for(size_t i = 0; i < map->getGnd()->lightmaps.size(); i++)
 				{
-					data[4*(xx+8*yy)+0] = lightMap->data[64+3*(xx+8*yy)+0];
-					data[4*(xx+8*yy)+1] = lightMap->data[64+3*(xx+8*yy)+1];
-					data[4*(xx+8*yy)+2] = lightMap->data[64+3*(xx+8*yy)+2];
-					data[4*(xx+8*yy)+3] = lightMap->data[xx+8*yy];
-				}
-			}
-			renderer->setTextureSubImage(gndShadow, 8*x, 8*y, 8, 8, data);
-			x++;
-			if(x*8 >= 2048)
-			{
-				x = 0;
-				y++;
-			}
-		}
+					Gnd::Lightmap* lightMap = map->getGnd()->lightmaps[i];
+					for(int xx = 0; xx < 8; xx++)
+					{
+						for(int yy = 0; yy < 8; yy++)
+						{
+							int xxx = 8*x + xx;
+							int yyy = 8*y + yy;
 
+							data[4*(xxx+2048*yyy)+0] = lightMap->data[64+3*(xx+8*yy)+0];
+							data[4*(xxx+2048*yyy)+1] = lightMap->data[64+3*(xx+8*yy)+1];
+							data[4*(xxx+2048*yyy)+2] = lightMap->data[64+3*(xx+8*yy)+2];
+							data[4*(xxx+2048*yyy)+3] = lightMap->data[xx+8*yy];
+						}
+					}
+					x++;
+					if(x*8 >= 2048)
+					{
+						x = 0;
+						y++;
+					}
+				}
+				return data;
+			}, [renderer, this](char* data)
+			{
+				renderer->setTextureSubImage(gndShadow, 0, 0, 2048, 2048, data);
+
+			});
 
 		bla = true;
 	}
@@ -143,12 +152,19 @@ void MapRenderer::GndChunk::render( const Gnd* gnd, blib::App* app, blib::Render
 
 void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Renderer* renderer )
 {
+	Log::out<<"Rebuilding chunk "<<x<<", "<<y<<Log::newline;
 	rebuilding = true;
 	
 
-	new blib::BackgroundTask(app, [this, gnd, renderer] () {
-		std::map<int, std::vector<GndVertex> > verts;
+	struct NewChunkData
+	{
+		std::vector<GndVertex> allVerts;
+		std::map<int, std::pair<int, int> > newVertIndices;
+	};
 
+	new blib::BackgroundTask<NewChunkData>(app, [this, gnd, renderer] () {
+		std::map<int, std::vector<GndVertex> > verts;
+		NewChunkData ret;
 		for(int y = this->y; y < glm::min(this->y+CHUNKSIZE, (int)gnd->cubes.size()); y++)
 		{
 			for(int x = this->x; x < glm::min(this->x+CHUNKSIZE, (int)gnd->cubes[y].size()); x++)
@@ -203,22 +219,29 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 				}
 			}
 		}
-		newVertIndices.clear();
-		allVerts.clear();
+		ret.newVertIndices.clear();
+		ret.allVerts.clear();
 		for(auto it : verts)
 		{
-			newVertIndices[it.first] = std::pair<int,int>(allVerts.size(), it.second.size());
-			allVerts.insert(allVerts.end(), it.second.begin(), it.second.end());
+			ret.newVertIndices[it.first] = std::pair<int,int>(ret.allVerts.size(), it.second.size());
+			ret.allVerts.insert(ret.allVerts.end(), it.second.begin(), it.second.end());
 		}
+
+		return ret;
 	},
-		[this, renderer] () {
-			if(!allVerts.empty())
-				renderer->setVbo(vbo, allVerts);
-			vertIndices = newVertIndices;
-			allVerts.clear();
-			newVertIndices.clear();
+		[this, renderer] (const NewChunkData& data) {
+			if(!data.allVerts.empty())
+				renderer->setVbo(vbo, data.allVerts);
+			vertIndices = data.newVertIndices;
 			dirty = false;
 			rebuilding = false;
 	});
 
+}
+
+#pragma endregion GND
+
+
+void MapRenderer::renderRsw( blib::Renderer* renderer )
+{
 }

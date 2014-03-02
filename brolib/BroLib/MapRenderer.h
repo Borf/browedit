@@ -24,9 +24,6 @@ private:
 		blib::VBO* vbo;
 		std::map<int, std::pair<int, int> > vertIndices;
 
-		std::vector<GndVertex> allVerts;
-		std::map<int, std::pair<int, int> > newVertIndices;
-
 		int x, y;
 
 
@@ -59,6 +56,6 @@ public:
 
 	void render(blib::Renderer* renderer);
 	void renderGnd(blib::Renderer* renderer);
-
+	void renderRsw( blib::Renderer* renderer );
 
 };

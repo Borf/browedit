@@ -90,6 +90,12 @@
     <ClCompile Include="..\externals\zlib\compress.c">
       <Filter>grflib\zlib</Filter>
     </ClCompile>
+    <ClCompile Include="BroLib\Rsm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroLib\Rsw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BroLib\Map.h">
@@ -151,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="..\externals\zlib\zutil.h">
       <Filter>grflib\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\Rsm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\Rsw.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

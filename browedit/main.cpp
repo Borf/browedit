@@ -67,7 +67,7 @@ int main()
 		Log::err<< "Unable to find configuration file, please type the configuration filename" << Log::newline;
 		std::getline( std::cin, configFileName );
 	}
-//TODO	value.writeString( config );
+	value.writeString( configFileName );
 
 	mergeConfig( config, blib::util::FileSystem::getJson( "assets/configs/" + configFileName ) );
 #endif
