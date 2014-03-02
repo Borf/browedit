@@ -15,4 +15,8 @@ public:
 	{
 		return gnd;
 	}
+	inline Rsw* getRsw() const
+	{
+		return rsw;
+	}
 };

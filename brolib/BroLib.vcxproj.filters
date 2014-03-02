@@ -164,5 +164,8 @@
     <ClInclude Include="BroLib\Rsw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BroLib\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -103,7 +103,7 @@ Rsw::Rsw(const std::string &fileName)
 				model->rotation = file->readVec3();
 				model->scale = file->readVec3();
 
-				//model->model = getRsw(model->fileName);
+				model->model = getRsw(model->fileName);
 				objects.push_back(model);
 			}
 			break;
@@ -142,9 +142,9 @@ Rsm* Rsw::getRsw( const std::string &fileName )
 	if(it == rsmCache.end())
 	{
 		Rsm* rsm = new Rsm("data/model/" + fileName);
-		//rsmCache[fileName] = rsm->loaded ? rsm : NULL;
-		//if(!rsm->loaded)
-		//	delete rsm;
+		rsmCache[fileName] = rsm->loaded ? rsm : NULL;
+		if(!rsm->loaded)
+			delete rsm;
 		it = rsmCache.find(fileName);
 	}	
 	return it->second;

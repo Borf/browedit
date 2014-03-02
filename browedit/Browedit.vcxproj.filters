@@ -46,5 +46,11 @@
     <None Include="..\assets\shaders\gnd.vert">
       <Filter>assets\shaders</Filter>
     </None>
+    <None Include="..\assets\shaders\rsw.vert">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\rsw.frag">
+      <Filter>assets\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
