@@ -11,6 +11,7 @@
 #include <blib/Renderer.h>
 #include <blib/BackgroundTask.h>
 #include <blib/util/Log.h>
+#include <blib/VBO.h>
 
 using blib::util::Log;
 
@@ -266,7 +267,9 @@ void MapRenderer::renderRsw( blib::Renderer* renderer )
 	rswRenderState.activeShader->setUniform("cameraMatrix", cameraMatrix);
 	rswRenderState.activeTexture[1] = gndShadow;
 
-	for (size_t i = 0; i < glm::min(100u, map->getRsw()->objects.size()); i++)
+	renderer->setShaderState(rswRenderState.activeShader);
+	rswRenderState.activeShader->state.clear();
+	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
 		if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
 		{
@@ -293,18 +296,62 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 		model->matrixCached = true;
 	}
 
-
-	rswRenderState.activeShader->setUniform("modelMatrix", model->matrixCache);
-
 	
-	static std::vector<blib::VertexP3T2> verts;
-	if (verts.empty())
+	std::map<Rsm*, RsmModelRenderInfo*>::iterator it = rsmModelInfo.find(model->model);
+	if (it == rsmModelInfo.end())
 	{
-		verts.push_back(blib::VertexP3T2(glm::vec3(-10, -10, -10), glm::vec2(0, 0)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(10, -10, -10), glm::vec2(0, 0)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(-10, -10, 10), glm::vec2(0, 0)));
+		RsmModelRenderInfo* modelInfo = new RsmModelRenderInfo();
+		for (size_t i = 0; i < model->model->textures.size(); i++)
+			modelInfo->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + model->model->textures[i]));
+		rsmModelInfo[model->model] = modelInfo;
+		it = rsmModelInfo.find(model->model);
 	}
-	renderer->drawTriangles(verts, rswRenderState);
+
+	renderMesh(model->model->rootMesh, model->matrixCache, it->second, renderer);
+}
+
+void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderInfo* renderInfo, blib::Renderer* renderer)
+{
+	matrix *= mesh->matrix1;
+	rswRenderState.activeShader->setUniform("modelMatrix", matrix * mesh->matrix2);
+
+
+
+	std::map<Rsm::Mesh*, RsmMeshRenderInfo*>::iterator it = rsmMeshInfo.find(mesh);
+	if (it == rsmMeshInfo.end())
+	{
+		RsmMeshRenderInfo* meshInfo = new RsmMeshRenderInfo();
+		meshInfo->vbo = resourceManager->getResource<blib::VBO>();
+		meshInfo->vbo->setVertexFormat<blib::VertexP3T2>();
+
+		std::map<int, std::vector<blib::VertexP3T2> > verts;
+		for (size_t i = 0; i < mesh->faces.size(); i++)
+		{
+			for (int ii = 0; ii < 3; ii++)
+				verts[mesh->faces[i]->texIndex].push_back(blib::VertexP3T2(mesh->vertices[mesh->faces[i]->vertices[ii]], mesh->texCoords[mesh->faces[i]->texvertices[ii]]));
+		}
+
+		std::vector<blib::VertexP3T2> allVerts;
+		for (std::map<int, std::vector<blib::VertexP3T2> >::iterator it2 = verts.begin(); it2 != verts.end(); it2++)
+		{
+			meshInfo->indices[it2->first] = std::pair<int, int>(allVerts.size(), it2->second.size());
+			allVerts.insert(allVerts.end(), it2->second.begin(), it2->second.end());
+		}
+
+		renderer->setVbo(meshInfo->vbo, allVerts);
+		rsmMeshInfo[mesh] = meshInfo;
+		it = rsmMeshInfo.find(mesh);
+	}
+	RsmMeshRenderInfo* meshInfo = it->second;
+
+	rswRenderState.activeVbo = meshInfo->vbo;
+
+	for (std::map<int, std::pair<int, int> >::iterator it2 = meshInfo->indices.begin(); it2 != meshInfo->indices.end(); it2++)
+	{
+		rswRenderState.activeTexture[0] = renderInfo->textures[mesh->textures[it2->first]];
+		renderer->drawTriangles<blib::VertexP3T2>(it2->second.first, it2->second.second, rswRenderState);
+	}
+
 
 }
 

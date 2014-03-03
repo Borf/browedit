@@ -17,7 +17,7 @@ namespace blib
 
 class Rsm
 {
-private:
+public:
 	class Mesh
 	{
 	public:
@@ -54,7 +54,7 @@ private:
 		glm::vec3						rotaxis;
 		glm::vec3						scale;
 
-		std::vector<blib::Texture*>			textures;
+		std::vector<int>				textures;
 		std::vector<glm::vec3>			vertices;
 		std::vector<glm::vec2>			texCoords;
 		std::vector<Face*>				faces;

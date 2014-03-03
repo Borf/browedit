@@ -7,8 +7,9 @@
 #include <vector>
 
 #include "Rsw.h"
+#include "Rsm.h"
 
-namespace blib { class ResourceManager; class Shader; class Renderer; class App; class Texture; };
+namespace blib { class ResourceManager; class Shader; class Renderer; class App; class Texture; class VBO; };
 class Map;
 class Gnd;
 class Rsw;
@@ -45,6 +46,23 @@ private:
 #pragma region RSW
 	blib::RenderState rswRenderState;
 
+	class RsmMeshRenderInfo
+	{
+	public:
+		blib::VBO* vbo;
+		std::map<int, std::pair<int, int> > indices;
+	};
+
+	class RsmModelRenderInfo
+	{
+	public:
+		std::vector<blib::Texture*> textures;
+	};
+
+
+
+	std::map<Rsm::Mesh*, RsmMeshRenderInfo*>	rsmMeshInfo;
+	std::map<Rsm*, RsmModelRenderInfo*>			rsmModelInfo;
 
 #pragma endregion
 
@@ -70,4 +88,5 @@ public:
 	void renderGnd(blib::Renderer* renderer);
 	void renderRsw( blib::Renderer* renderer );
 	void renderModel(Rsw::Model* model, blib::Renderer* renderer);
+	void renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
 };

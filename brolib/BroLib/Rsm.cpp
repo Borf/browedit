@@ -263,7 +263,7 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 	int textureCount = rsmFile->readInt();
 //TODO!
 	for (int i = 0; i < textureCount; i++)
-		/*textures.push_back(model->textures[*/rsmFile->readInt();// ]);
+		textures.push_back(rsmFile->readInt());
 
 #if 1
 	offset[0][0] = rsmFile->readFloat();//rotation

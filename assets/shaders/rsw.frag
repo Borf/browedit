@@ -5,5 +5,5 @@ varying vec2 texCoord;
 
 void main()
 {
-	gl_FragColor = glm::vec4(1,1,0,1);
+	gl_FragColor = texture2D(s_texture, texCoord);
 }
