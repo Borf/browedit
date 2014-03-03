@@ -55,8 +55,8 @@ void BrowEdit::init()
 
 
 
-	loadMap("data/c_tower1");
-//	loadMap("data/prontera");
+//	loadMap("data/c_tower1");
+	loadMap("data/prontera");
 
 	mapRenderer.init(resourceManager, this);
 	camera = new Camera();

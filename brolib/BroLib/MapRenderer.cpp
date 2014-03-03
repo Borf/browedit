@@ -266,7 +266,7 @@ void MapRenderer::renderRsw( blib::Renderer* renderer )
 	rswRenderState.activeShader->setUniform("cameraMatrix", cameraMatrix);
 	rswRenderState.activeTexture[1] = gndShadow;
 
-	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+	for (size_t i = 0; i < glm::min(100u, map->getRsw()->objects.size()); i++)
 	{
 		if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
 		{
@@ -300,9 +300,9 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 	static std::vector<blib::VertexP3T2> verts;
 	if (verts.empty())
 	{
-		verts.push_back(blib::VertexP3T2(glm::vec3(-10, 1, -10), glm::vec2(0, 0)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(10, 1, -10), glm::vec2(0, 0)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(-10, 1, 10), glm::vec2(0, 0)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(-10, -10, -10), glm::vec2(0, 0)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(10, -10, -10), glm::vec2(0, 0)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(-10, -10, 10), glm::vec2(0, 0)));
 	}
 	renderer->drawTriangles(verts, rswRenderState);
 
