@@ -34,9 +34,15 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture", 1);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture2", 2);
-	gndRenderState.activeShader->setUniform("projectionMatrix", glm::perspective(90.0f, 1.0f, 0.01f, 5000.0f));
-	gndRenderState.activeShader->setUniform("s_texture", 0);
-	gndRenderState.activeShader->setUniform("s_lighting", 1);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::ModelViewMatrix, "modelViewMatrix", blib::Shader::Mat4);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::s_lighting, "s_lighting", blib::Shader::Int);
+	gndRenderState.activeShader->finishUniformSetup();
+
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, glm::perspective(90.0f, 1.0f, 0.01f, 5000.0f));
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_texture, 0);
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_lighting, 1);
 	gndRenderState.blendEnabled = true;
 	gndRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
 	gndRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
@@ -50,8 +56,15 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/rsw");
 	rswRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	rswRenderState.activeShader->bindAttributeLocation("a_texture", 1);
-	rswRenderState.activeShader->setUniform("projectionMatrix", glm::perspective(90.0f, 1.0f, 0.01f, 5000.0f));
-	rswRenderState.activeShader->setUniform("s_texture", 0);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::CameraMatrix, "cameraMatrix", blib::Shader::Mat4);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix, "modelMatrix", blib::Shader::Mat4);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
+	rswRenderState.activeShader->finishUniformSetup();
+
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(90.0f, 1.0f, 0.01f, 5000.0f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
 	rswRenderState.blendEnabled = true;
 	rswRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
 	rswRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
@@ -128,7 +141,7 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 			map->getGnd()->textures[i]->texture = resourceManager->getResource<blib::Texture>("data/texture/" + map->getGnd()->textures[i]->file);
 
 	//render gnd chunks
-	gndRenderState.activeShader->setUniform("modelViewMatrix", cameraMatrix);
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::ModelViewMatrix, cameraMatrix);
 	gndRenderState.activeTexture[1] = gndShadow;
 	for(auto r : gndChunks)
 		for(auto c : r)
@@ -264,11 +277,11 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 
 void MapRenderer::renderRsw( blib::Renderer* renderer )
 {
-	rswRenderState.activeShader->setUniform("cameraMatrix", cameraMatrix);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, cameraMatrix);
 	rswRenderState.activeTexture[1] = gndShadow;
 
-	renderer->setShaderState(rswRenderState.activeShader);
-	rswRenderState.activeShader->state.clear();
+//	renderer->setShaderState(rswRenderState.activeShader);
+//	rswRenderState.activeShader->state.clear();
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
 		if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
@@ -313,7 +326,7 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderInfo* renderInfo, blib::Renderer* renderer)
 {
 	matrix *= mesh->matrix1;
-	rswRenderState.activeShader->setUniform("modelMatrix", matrix * mesh->matrix2);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, matrix * mesh->matrix2);
 
 
 

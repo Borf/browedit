@@ -40,11 +40,33 @@ private:
 	};
 	//gnd
 	blib::RenderState gndRenderState;
+	class GndShaderAttributes
+	{
+	public:
+		enum
+		{
+			ProjectionMatrix,
+			ModelViewMatrix,
+			s_texture,
+			s_lighting,
+		};
+	};	
 	std::vector<std::vector<GndChunk*> > gndChunks;
 	blib::Texture* gndShadow;
 #pragma endregion
 #pragma region RSW
 	blib::RenderState rswRenderState;
+	class RswShaderAttributes
+	{
+	public:
+		enum
+		{
+			ProjectionMatrix,
+			CameraMatrix,
+			ModelMatrix,
+			s_texture,
+		};
+	};
 
 	class RsmMeshRenderInfo
 	{
