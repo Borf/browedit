@@ -15,6 +15,9 @@ namespace blib
 	namespace util { class StreamInFile; }
 }
 
+class RsmModelRenderInfo;
+class RsmMeshRenderInfo;
+
 class Rsm
 {
 public:
@@ -60,6 +63,8 @@ public:
 		std::vector<Face*>				faces;
 		std::vector<Frame*>				frames;
 
+
+		RsmMeshRenderInfo*				renderer;
 		Mesh* parent;
 		Rsm* model;
 		std::vector<Mesh*> children;
@@ -99,6 +104,7 @@ public:
 	float maxRange;
 
 	Mesh* rootMesh;
+	RsmModelRenderInfo*					renderer;
 
 	enum eShadeType
 	{

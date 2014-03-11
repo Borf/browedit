@@ -173,10 +173,10 @@ void MapRenderer::GndChunk::render( const Gnd* gnd, blib::App* app, blib::Render
 	if(vbo && !rebuilding)
 	{
 		gndRenderState.activeVbo = vbo;
-		for(auto it : vertIndices)
+		for (VboIndex& it : vertIndices)
 		{
-			gndRenderState.activeTexture[0] = gnd->textures[it.first]->texture;
-			renderer->drawTriangles<GndVertex>(it.second.first, it.second.second, gndRenderState);
+			gndRenderState.activeTexture[0] = gnd->textures[it.texture]->texture;
+			renderer->drawTriangles<GndVertex>(it.begin, it.count, gndRenderState);
 		}
 	}
 }
@@ -190,7 +190,7 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 	struct NewChunkData
 	{
 		std::vector<GndVertex> allVerts;
-		std::map<int, std::pair<int, int> > newVertIndices;
+		std::vector<VboIndex> newVertIndices;
 	};
 
 	new blib::BackgroundTask<NewChunkData>(app, [this, gnd, renderer] () {
@@ -254,7 +254,7 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 		ret.allVerts.clear();
 		for(auto it : verts)
 		{
-			ret.newVertIndices[it.first] = std::pair<int,int>(ret.allVerts.size(), it.second.size());
+			ret.newVertIndices.push_back(VboIndex(it.first, ret.allVerts.size(), it.second.size()));
 			ret.allVerts.insert(ret.allVerts.end(), it.second.begin(), it.second.end());
 		}
 
@@ -309,18 +309,13 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 		model->matrixCached = true;
 	}
 
-	
-	std::map<Rsm*, RsmModelRenderInfo*>::iterator it = rsmModelInfo.find(model->model);
-	if (it == rsmModelInfo.end())
+	if (model->model->renderer == NULL)
 	{
-		RsmModelRenderInfo* modelInfo = new RsmModelRenderInfo();
+		model->model->renderer = new RsmModelRenderInfo();
 		for (size_t i = 0; i < model->model->textures.size(); i++)
-			modelInfo->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + model->model->textures[i]));
-		rsmModelInfo[model->model] = modelInfo;
-		it = rsmModelInfo.find(model->model);
+			model->model->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + model->model->textures[i]));
 	}
-
-	renderMesh(model->model->rootMesh, model->matrixCache, it->second, renderer);
+	renderMesh(model->model->rootMesh, model->matrixCache, model->model->renderer, renderer);
 }
 
 void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderInfo* renderInfo, blib::Renderer* renderer)
@@ -328,14 +323,11 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderIn
 	matrix *= mesh->matrix1;
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, matrix * mesh->matrix2);
 
-
-
-	std::map<Rsm::Mesh*, RsmMeshRenderInfo*>::iterator it = rsmMeshInfo.find(mesh);
-	if (it == rsmMeshInfo.end())
+	if (mesh->renderer == NULL)
 	{
-		RsmMeshRenderInfo* meshInfo = new RsmMeshRenderInfo();
-		meshInfo->vbo = resourceManager->getResource<blib::VBO>();
-		meshInfo->vbo->setVertexFormat<blib::VertexP3T2>();
+		mesh->renderer = new RsmMeshRenderInfo();
+		mesh->renderer->vbo = resourceManager->getResource<blib::VBO>();
+		mesh->renderer->vbo->setVertexFormat<blib::VertexP3T2>();
 
 		std::map<int, std::vector<blib::VertexP3T2> > verts;
 		for (size_t i = 0; i < mesh->faces.size(); i++)
@@ -347,22 +339,20 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderIn
 		std::vector<blib::VertexP3T2> allVerts;
 		for (std::map<int, std::vector<blib::VertexP3T2> >::iterator it2 = verts.begin(); it2 != verts.end(); it2++)
 		{
-			meshInfo->indices[it2->first] = std::pair<int, int>(allVerts.size(), it2->second.size());
+			mesh->renderer->indices.push_back(VboIndex(it2->first, allVerts.size(), it2->second.size()));
 			allVerts.insert(allVerts.end(), it2->second.begin(), it2->second.end());
 		}
 
-		renderer->setVbo(meshInfo->vbo, allVerts);
-		rsmMeshInfo[mesh] = meshInfo;
-		it = rsmMeshInfo.find(mesh);
+		renderer->setVbo(mesh->renderer->vbo, allVerts);
 	}
-	RsmMeshRenderInfo* meshInfo = it->second;
+	RsmMeshRenderInfo* meshInfo = mesh->renderer;
 
 	rswRenderState.activeVbo = meshInfo->vbo;
 
-	for (std::map<int, std::pair<int, int> >::iterator it2 = meshInfo->indices.begin(); it2 != meshInfo->indices.end(); it2++)
+	for (VboIndex& it : meshInfo->indices)
 	{
-		rswRenderState.activeTexture[0] = renderInfo->textures[mesh->textures[it2->first]];
-		renderer->drawTriangles<blib::VertexP3T2>(it2->second.first, it2->second.second, rswRenderState);
+		rswRenderState.activeTexture[0] = renderInfo->textures[mesh->textures[it.texture]];
+		renderer->drawTriangles<blib::VertexP3T2>(it.begin, it.count, rswRenderState);
 	}
 
 

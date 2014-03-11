@@ -12,6 +12,7 @@ using blib::util::Log;
 
 Rsm::Rsm(std::string fileName)
 {
+	renderer = NULL;
 	loaded = false;
 	blib::util::StreamInFile* rsmFile = new blib::util::StreamInFile(fileName);
 	if(!rsmFile)
@@ -256,6 +257,7 @@ void Rsm::Mesh::setBoundingBox2( glm::mat4& mat, glm::vec3& bbmin_, glm::vec3& b
 
 Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 {
+	renderer = NULL;
 	this->model = model;
 	name = rsmFile->readString(40);
 	parentName = rsmFile->readString(40);

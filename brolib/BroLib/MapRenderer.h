@@ -17,6 +17,33 @@ class Rsm;
 
 #define CHUNKSIZE 64
 
+class VboIndex
+{
+public:
+	int texture;
+	int begin;
+	int count;
+	VboIndex(int texture, int begin, int count)
+	{
+		this->texture = texture;
+		this->begin = begin;
+		this->count = count;
+	}
+};
+
+class RsmMeshRenderInfo
+{
+public:
+	blib::VBO* vbo;
+	std::vector<VboIndex> indices;		//TODO; use a different datatype for this
+};
+
+class RsmModelRenderInfo
+{
+public:
+	std::vector<blib::Texture*> textures;
+};
+
 class MapRenderer
 {
 private:
@@ -25,10 +52,12 @@ private:
 	class GndChunk
 	{
 	public:
+
+
 		bool dirty;
 		bool rebuilding;
 		blib::VBO* vbo;
-		std::map<int, std::pair<int, int> > vertIndices;
+		std::vector<VboIndex> vertIndices;
 
 		int x, y;
 
@@ -68,18 +97,7 @@ private:
 		};
 	};
 
-	class RsmMeshRenderInfo
-	{
-	public:
-		blib::VBO* vbo;
-		std::map<int, std::pair<int, int> > indices;
-	};
 
-	class RsmModelRenderInfo
-	{
-	public:
-		std::vector<blib::Texture*> textures;
-	};
 
 
 
