@@ -300,7 +300,7 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 	{
 		model->matrixCache = glm::mat4();
 		model->matrixCache = glm::scale(model->matrixCache, glm::vec3(1, 1, -1));
-		model->matrixCache = glm::translate(model->matrixCache, glm::vec3(5 * map->getGnd()->width + model->position.x, -model->position.y, -5 * map->getGnd()->height + model->position.z));
+		model->matrixCache = glm::translate(model->matrixCache, glm::vec3(5 * map->getGnd()->width + model->position.x, -model->position.y, -10-5 * map->getGnd()->height + model->position.z));
 		model->matrixCache = glm::rotate(model->matrixCache, -model->rotation.z, glm::vec3(0, 0, 1));
 		model->matrixCache = glm::rotate(model->matrixCache, -model->rotation.x, glm::vec3(1, 0, 0));
 		model->matrixCache = glm::rotate(model->matrixCache, model->rotation.y, glm::vec3(0, 1, 0));
