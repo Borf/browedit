@@ -1,0 +1,20 @@
+{
+	"size" : [ 300, 100 ],
+	"resizable" : false,
+	"widgets" :
+	{
+		"lblMessage" :
+		{
+			"type" : "label",
+			"position" : [ 0, 0 ],
+			"size" : [ 300, 100 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		}
+	}
+}

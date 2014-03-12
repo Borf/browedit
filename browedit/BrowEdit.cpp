@@ -1,5 +1,6 @@
 #include "BrowEdit.h"
 #include "Camera.h"
+#include "windows/FileOpenWindow.h"
 
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
@@ -14,6 +15,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
 
 
 BrowEdit::BrowEdit(const Json::Value &config)
@@ -33,6 +35,7 @@ BrowEdit::BrowEdit(const Json::Value &config)
 
 
 	map = NULL;
+	wm = blib::wm::WM::getInstance();
 }
 
 
@@ -42,10 +45,15 @@ BrowEdit::~BrowEdit(void)
 
 void BrowEdit::init()
 {
-	wm = blib::wm::WM::getInstance();
+	wm->setSkin("assets/skins/ro.json", resourceManager);
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
 	addMouseListener(wm);
 	addKeyListener(wm);
+
+
+	wm->addWindow(new FileOpenWindow(resourceManager));
+
+
 	addMouseListener(this);
 	
 	std::list<blib::BackgroundTask<int>*> tasks;
@@ -115,7 +123,8 @@ void BrowEdit::loadMap(std::string fileName)
 	} );
 }
 
-void BrowEdit::onScroll( int delta )
+bool BrowEdit::onScroll( int delta )
 {
 	camera->distance -= delta/10.0f;
+	return true;
 }

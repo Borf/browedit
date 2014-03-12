@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blib", "..\blib\blib.vcxproj", "{22D5CA69-1AFF-4025-AC86-A4F056D79B53}"
 EndProject
@@ -14,6 +14,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BroLib", "..\brolib\BroLib.vcxproj", "{E6E72CDE-7DAD-4576-825E-AB65026E0820}"
 	ProjectSection(ProjectDependencies) = postProject
 		{22D5CA69-1AFF-4025-AC86-A4F056D79B53} = {22D5CA69-1AFF-4025-AC86-A4F056D79B53}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FEBB9CD-69D6-4056-8390-2984E1CF83BB}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
 Global

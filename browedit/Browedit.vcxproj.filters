@@ -19,6 +19,12 @@
     <Filter Include="assets\shaders">
       <UniqueIdentifier>{38ecfdaa-7143-4282-ba62-6c2efe6e91f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="windows">
+      <UniqueIdentifier>{e9cc6a4d-8800-4225-8f4c-1dc2b0409e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\skins">
+      <UniqueIdentifier>{57fe00b3-e599-467a-9ebb-51c0a4806726}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
@@ -26,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\FileOpenWindow.h">
+      <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +46,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\FileOpenWindow.cpp">
+      <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +63,12 @@
     </None>
     <None Include="..\assets\shaders\rsw.frag">
       <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\menu.json">
+      <Filter>assets</Filter>
+    </None>
+    <None Include="..\assets\skins\ro.json">
+      <Filter>assets\skins</Filter>
     </None>
   </ItemGroup>
 </Project>

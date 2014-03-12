@@ -36,7 +36,7 @@ public:
 	void loadMap(std::string fileName);
 	void saveMap(std::string fileName);
 
-	virtual void onScroll( int delta );
+	virtual bool onScroll( int delta );
 
 };
 

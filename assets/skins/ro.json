@@ -1,0 +1,416 @@
+{
+	"menubar" : 
+	{
+		"color" : "FFFFFFFF",
+		"fontcolor" : "000000FF",
+		"highlight" : "3333E5FF",
+		"menu" : 
+		{
+			"color" : "FFFFFF",
+			"fontcolor" : "000000",
+			"highlight" : "3333E5",
+			"targetopacity" : 0.75,
+			"startopacity" : 0
+		}
+	},
+	"color" : "FFFFFFFF",
+	"colorblurred" : "FFFFFFAA",
+	"texture" : "assets/textures/skins/ro.png",
+	"font" : "assets/fonts/tahoma.tga",
+	"window" : 
+	{
+		"title" : 
+		{
+			"fontcolor" : "000000",
+			"xoff" : 15,
+			"yoff" : 4
+		},
+		"fontcolor" : "000000",
+		"top" :
+		{
+			"height" : 19,
+			"pos" : 0
+		},
+		"left" :
+		{
+			"width" : 14,
+			"pos" : 0
+		},
+		"right" :
+		{
+			"width" : 3,
+			"pos" : 15
+		},
+		"bottom" :
+		{
+			"height" : 30,
+			"pos" : 21
+		},
+		"offsets" : 
+		{
+			"top" : 20,
+			"bottom" : 8,
+			"left" : 8,
+			"right" : 8
+		}
+	},
+	"button" : 
+	{
+		"fontcolor" : "000000",
+		"top" :
+		{
+			"height" : 9,
+			"pos" : 60
+		},
+		"left" :
+		{
+			"width" : 7,
+			"pos" : 0
+		},
+		"right" :
+		{
+			"width" : 7,
+			"pos" : 14
+		},
+		"bottom" :
+		{
+			"height" : 9,
+			"pos" : 71
+		}
+	},
+	"miniwindow" : 
+	{
+		"fontcolor" : "000000",
+		"top" :
+		{
+			"height" : 9,
+			"pos" : 60
+		},
+		"left" :
+		{		
+			"width" : 7,
+			"pos" : 0
+		},
+		"right" :
+		{
+			"width" : 7,
+			"pos" : 14
+		},
+		"bottom" : 
+		{
+			"height" : 9,
+			"pos" : 71
+		},
+		"offsets" : 
+		{
+			"top" : 7,
+			"bottom" : 5,
+			"left" : 2,
+			"right" : 2
+		}
+	},
+	"input" : 
+	{
+		"fontcolor" : "000000",
+		"top" :
+		{
+			"height" : 2,
+			"pos" : 90
+		},
+		"left" :
+		{
+			"width" : 2,
+			"pos" : 0
+		},
+		"right" :
+		{
+			"width" : 2,
+			"pos" : 3
+		},
+		"bottom" :
+		{
+			"height" : 2,
+			"pos" : 93
+		},
+		"defaultheight" : 20
+	},
+	"list" : 
+	{
+		"fontcolor" : "000000",
+		"top" :
+		{
+			"height" : 2,
+			"pos" : 90
+		},
+		"left" :
+		{
+			"width" : 2,
+			"pos" : 0
+		},
+		"right" :
+		{
+			"width" : 2,
+			"pos" : 3
+		},
+		"bottom" :
+		{
+			"height" : 2,
+			"pos" : 93
+		},
+		"selectcolor" : "6666FF",
+		"selectfontcolor" : "FFFFFF",
+		"scroll" : 
+		{
+			"width" : 13,
+			"left" : 23,
+			"centerheight" : 0,
+			"background" : 
+			{
+				"left" : 23,
+				"top" : 21,
+				"height" : 1
+			},
+			"buttonup" : 
+			{
+				"left" : 23,
+				"top" : 10,
+				"height" : 10
+			},
+			"buttondown" : 
+			{
+				"left" : 23,
+				"top" : 41,
+				"height" : 10
+			},
+			"top" :
+			{
+				"height" : 4,
+				"pos" : 27
+			},
+			"bottom" :
+			{
+				"height" : 4,
+				"pos" : 35
+			}
+		}
+	},
+	"frame" : 
+	{
+		"fontcolor" : "000000",
+		"top" :
+		{
+			"height" : 2,
+			"pos" : 90
+		},
+		"left" :
+		{
+			"width" : 2,
+			"pos" : 0
+		},
+		"right" :
+		{
+			"width" : 2,
+			"pos" : 3
+		},
+		"bottom" :
+		{
+			"height" : 2,
+			"pos" : 93
+		}
+	},
+	"checkbox" : 
+	{
+		"width" : 10,
+		"height" : 10,
+		"unchecked" : 
+		{
+			"left" : 40,
+			"top" : 30
+		},
+		"checked" : 
+		{
+			"left" : 51,
+			"top" : 30
+		}
+	},
+	"tabstrip" : 
+	{
+		"fontcolor" : "000000",
+		"fontoffx" : 3,
+		"fontoffy" : -1,
+		"tabselected" : 
+		{
+			"top" :
+			{
+				"pos" : 0,
+				"height" : 16
+			},
+			"left" :
+			{
+				"width" : 7,
+				"pos" : 40
+			},
+			"right" :
+			{
+				"width" : 7,
+				"pos" : 51
+			},
+			"overlapleft" : 5,
+			"overlapright" : 5
+		},
+		"tabunselected" : 
+		{
+			"top" :
+			{
+				"pos" : 2,
+				"height" : 13
+			},
+			"left" :
+			{
+				"width" : 2,
+				"pos" : 72
+			},
+			"right" :
+			{
+				"width" : 6,
+				"pos" : 80
+			},
+			"overlapleft" : 0,
+			"overlapright" : 4
+		},
+		"top" :
+		{
+			"height" : 2,
+			"pos" : 90
+		},
+		"left" :
+		{
+			"width" : 2,
+			"pos" : 0
+		},
+		"right" :
+		{
+			"width" : 2,
+			"pos" : 3
+		},
+		"bottom" :
+		{
+			"height" : 2,
+			"pos" : 93
+		}
+	},
+	"closebutton" : 
+	{
+		"top" :
+		{
+			"height" : 9,
+			"pos" : 0
+		},
+		"left" :
+		{
+			"width" : 9,
+			"pos" : 30
+		},
+		"right" :
+		{
+			"width" : 0,
+			"pos" : 39
+		},
+		"bottom" :
+		{
+			"height" : 0,
+			"pos" : 9
+		},
+		"width" : 9,
+		"height" : 9,
+		"offsetx" : 0,
+		"offsety" : -16
+	},
+	"collapsebutton" : 
+	{
+		"top" :
+		{
+			"height" : 9,
+			"pos" : 0
+		},
+		"left" :
+		{
+			"width" : 9,
+			"pos" : 20
+		},
+		"right" :
+		{
+			"width" : 0,
+			"pos" : 29
+		},
+		"bottom" :
+		{
+			"height" : 0,
+			"pos" : 9
+		},
+		"width" : 9,
+		"height" : 9,
+		"offsetx" : 15,
+		"offsety" : -16
+	},
+	"progress" : 
+	{
+		"back" : 
+		{
+			"top" :
+			{
+				"height" : 9,
+				"pos" : 60
+			},
+			"left" :
+			{
+				"width" : 4,
+				"pos" : 25
+			},
+			"right" :
+			{
+				"width" : 4,
+				"pos" : 45
+			}
+		},
+		"bars" :
+		[
+			{
+				"cond" : 50,
+				"top" :
+				{
+					"height" : 9,
+					"pos" : 80
+				},
+				"left" :
+				{
+					"width" : 4,
+					"pos" : 25
+				},
+				"right" :
+				{
+					"width" : 4,
+					"pos" : 45
+				}
+			},
+			{
+				"cond" : 100,
+				"top" :
+				{
+					"height" : 9,
+					"pos" : 70
+				},
+				"left" :
+				{
+					"width" : 4,
+					"left" : 25
+				},
+				"right" :
+				{
+					"width" : 4,
+					"right" : 45
+				}
+			}
+		]
+	}
+}

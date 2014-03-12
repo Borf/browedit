@@ -1,0 +1,35 @@
+{
+	"size" : [ 200, 800 ],
+	"modal" : false,
+	"resizable" : true,
+	"widgets" :
+	{
+		"lstTextures" :
+		{
+			"type" : "scrollpanel",
+			"position" : [ 0, 0 ],
+			"size" : [ 209, 775 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"btnExpand" :
+		{
+			"type" : "button",
+			"text" : ">",
+			"position" : [ 150, 775],
+			"size" : [ 50, 25 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "bottom",
+				"bottom" : "bottom"
+			}
+		}
+	}
+}

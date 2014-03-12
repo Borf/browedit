@@ -1,0 +1,52 @@
+{
+	"size" : [ 200, 300 ],
+	"modal" : true,
+	"resizable" : true,
+	"widgets" :
+	{
+		"btnOpen" :
+		{
+			"type" : "button",
+			"text" : "Open",
+
+			"position" : [ 100, 275 ],
+			"size" : [ 100, -1],
+			"positionhelp" :
+			{
+				"left" : "right",
+				"right" : "right",
+				"top" : "bottom",
+				"bottom" : "bottom"
+			}
+		},
+		"lstOptions" :
+		{
+			"type" : "list",
+			
+			"position" : [ 0, 0 ],
+			"size" : [ 200, 250],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"txtFilter" :
+		{
+			"type" : "textbox",
+			"emptytext" : "filter",
+			
+			"position" : [ 0, 250 ],
+			"size" : [ 200, 25 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "bottom",
+				"bottom" : "bottom"
+			}
+		}
+	}
+}

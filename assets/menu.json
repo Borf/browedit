@@ -4,8 +4,22 @@
 		"type" : "menu",
 		"subitems" :
 		[
-
-
+			{
+				"name" : "new",
+				"type" : "item"
+			},
+			{
+				"name" : "open",
+				"type" : "item"
+			},
+			{
+				"name" : "save",
+				"type" : "item"
+			},
+			{
+				"name" : "save as",
+				"type" : "item"
+			}
 		]
 	},
 	{
@@ -13,6 +27,18 @@
 		"type" : "menu",
 		"subitems" :
 		[
+			{
+				"name" : "textures",
+				"type" : "item"
+			},
+			{
+				"name" : "models",
+				"type" : "item"
+			},
+			{
+				"name" : "[references",
+				"type" : "item"
+			}
 
 
 		]
