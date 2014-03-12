@@ -44,6 +44,8 @@ void BrowEdit::init()
 {
 	wm = blib::wm::WM::getInstance();
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
+	addMouseListener(wm);
+	addKeyListener(wm);
 	addMouseListener(this);
 	
 	std::list<blib::BackgroundTask<int>*> tasks;
