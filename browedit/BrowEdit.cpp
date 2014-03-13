@@ -11,6 +11,7 @@
 #include <blib/BackgroundTask.h>
 
 #include <blib/wm/WM.h>
+#include <blib/wm/Menu.h>
 #include <blib/util/FileSystem.h>
 
 #include <glm/glm.hpp>
@@ -54,12 +55,9 @@ void BrowEdit::init()
 
 
 	wm->setSkin("assets/skins/ro.json", resourceManager);
-	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
+	wm->setRadialMenu(rootMenu = wm->loadMenu("assets/menu.json"));
 	addMouseListener(wm);
 	addKeyListener(wm);
-
-
-	//new FileOpenWindow(resourceManager, this);
 
 
 	addMouseListener(this);
@@ -73,6 +71,12 @@ void BrowEdit::init()
 
 	mapRenderer.init(resourceManager, this);
 	camera = new Camera();
+
+
+
+	rootMenu->setAction("file/open", [this](){
+		new FileOpenWindow(resourceManager, this);
+	});
 
 }
 
