@@ -66,7 +66,7 @@ void BrowEdit::init()
 
 
 //	loadMap("data/c_tower1");
-	loadMap("data/prontera");
+	loadMap("data/" + config["defaultmap"].asString());
 //	loadMap("data/yuno");
 
 	mapRenderer.init(resourceManager, this);

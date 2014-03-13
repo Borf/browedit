@@ -25,6 +25,9 @@
     <Filter Include="assets\skins">
       <UniqueIdentifier>{57fe00b3-e599-467a-9ebb-51c0a4806726}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assets\configs">
+      <UniqueIdentifier>{8b9f0813-130d-47f9-89db-03001a7165eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
@@ -69,6 +72,15 @@
     </None>
     <None Include="..\assets\skins\ro.json">
       <Filter>assets\skins</Filter>
+    </None>
+    <None Include="..\assets\configs\config.default.json">
+      <Filter>assets\configs</Filter>
+    </None>
+    <None Include="..\assets\configs\config.laptop.json">
+      <Filter>assets\configs</Filter>
+    </None>
+    <None Include="..\assets\configs\config.borf.json">
+      <Filter>assets\configs</Filter>
     </None>
   </ItemGroup>
 </Project>

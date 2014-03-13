@@ -95,6 +95,9 @@
     <ClCompile Include="windows\FileOpenWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\assets\configs\config.borf.json" />
+    <None Include="..\assets\configs\config.default.json" />
+    <None Include="..\assets\configs\config.laptop.json" />
     <None Include="..\assets\menu.json" />
     <None Include="..\assets\shaders\gnd.frag" />
     <None Include="..\assets\shaders\gnd.vert" />

@@ -47,7 +47,6 @@ int main()
 	Log::out<<"       Not really a release, don't bug about any bugs..."<<Log::newline;
 	Log::out<<Log::newline;
 
-	blib::util::fixConsole();
 	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(""));
 	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(".."));
 	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler("../blib"));
@@ -71,6 +70,10 @@ int main()
 
 	mergeConfig( config, blib::util::FileSystem::getJson( "assets/configs/" + configFileName ) );
 #endif
+
+	if (config["moveconsole"].asBool())
+		blib::util::fixConsole();
+
 
 
 
