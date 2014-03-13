@@ -14,5 +14,5 @@
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
 	"fov" : 45,
-	"vsync" : true
+	"vsync" : false
 }
