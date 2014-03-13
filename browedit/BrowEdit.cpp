@@ -33,12 +33,16 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.icon = 0;
 	appSetup.renderer = blib::AppSetup::GlRenderer;
 	appSetup.border = true;
+	
 
 
 
 	appSetup.title = "BrowEdit 2.0";
 
 #ifdef BLIB_WIN
+
+	appSetup.icon = IDI_ICON1;
+
 	HINSTANCE hInst = GetModuleHandle(0);
 	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA1), "data");
 	HGLOBAL hMem = LoadResource(NULL, hRes);

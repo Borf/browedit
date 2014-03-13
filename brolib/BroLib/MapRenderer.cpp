@@ -357,6 +357,9 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderIn
 		renderer->drawTriangles<blib::VertexP3T2>(it.begin, it.count, rswRenderState);
 	}
 
+	for (size_t i = 0; i < mesh->children.size(); i++)
+		renderMesh(mesh->children[i], matrix, renderInfo, renderer);
+
 
 }
 
