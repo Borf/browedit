@@ -22,6 +22,7 @@ using blib::util::Log;
 
 void MapRenderer::render( blib::Renderer* renderer )
 {
+
 	renderGnd(renderer);
 	renderRsw(renderer);
 }
@@ -32,7 +33,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	this->app = app;
 	
 
-	float fov = 65;
+	float fov = 45;
 
 	gndRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/gnd");
 	gndRenderState.activeShader->bindAttributeLocation("a_position", 0);
@@ -44,7 +45,6 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndRenderState.activeShader->setUniformName(GndShaderAttributes::s_lighting, "s_lighting", blib::Shader::Int);
 	gndRenderState.activeShader->finishUniformSetup();
 
-	gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, glm::perspective(fov, app->window->getWidth() / (float)app->window->getHeight(), 0.1f, 5000.0f));
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_texture, 0);
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_lighting, 1);
 	gndRenderState.blendEnabled = true;
@@ -63,11 +63,9 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::CameraMatrix, "cameraMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix, "modelMatrix", blib::Shader::Mat4);
-	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
 	rswRenderState.activeShader->finishUniformSetup();
 
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(fov, app->window->getWidth() / (float)app->window->getHeight(), 0.1f, 5000.0f));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
 	rswRenderState.blendEnabled = true;
 	rswRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
@@ -360,6 +358,14 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderIn
 	}
 
 
+}
+
+void MapRenderer::resizeGl(int width, int height)
+{
+	if (gndRenderState.activeShader)
+		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, glm::perspective(45.0f, width / (float)height, 0.1f, 5000.0f));
+	if (rswRenderState.activeShader)
+		rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(45.0f, width / (float)height, 0.1f, 5000.0f));
 }
 
 

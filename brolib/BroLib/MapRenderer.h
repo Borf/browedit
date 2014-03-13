@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <blib/RenderState.h>
 #include <blib/gl/Vertex.h>
+#include <blib/gl/GlResizeRegister.h>
 #include <map>
 #include <vector>
 
@@ -44,7 +45,7 @@ public:
 	std::vector<blib::Texture*> textures;
 };
 
-class MapRenderer
+class MapRenderer : public blib::gl::GlResizeRegister
 {
 private:
 #pragma region GND
@@ -129,4 +130,7 @@ public:
 	void renderRsw( blib::Renderer* renderer );
 	void renderModel(Rsw::Model* model, blib::Renderer* renderer);
 	void renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
+
+	virtual void resizeGl(int width, int height);
+
 };
