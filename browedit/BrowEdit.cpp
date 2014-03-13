@@ -10,6 +10,7 @@
 #include <blib/SpriteBatch.h>
 #include <blib/BackgroundTask.h>
 
+#include <blib/config.h>
 #include <blib/wm/WM.h>
 #include <blib/wm/Menu.h>
 #include <blib/util/FileSystem.h>
@@ -17,6 +18,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#ifdef BLIB_WIN
+#include "resource.h"
+#endif
 
 
 BrowEdit::BrowEdit(const Json::Value &config)
@@ -29,7 +33,29 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.icon = 0;
 	appSetup.renderer = blib::AppSetup::GlRenderer;
 	appSetup.border = true;
+
+
+
 	appSetup.title = "BrowEdit 2.0";
+
+#ifdef BLIB_WIN
+	HINSTANCE hInst = GetModuleHandle(0);
+	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA1), "data");
+	HGLOBAL hMem = LoadResource(NULL, hRes);
+	DWORD size = SizeofResource(NULL, hRes);
+	char* resText = (char*)LockResource(hMem);
+	char* text = (char*)malloc(size + 1);
+	memcpy(text, resText, size);
+	text[size] = 0;
+	FreeResource(hMem);
+
+	appSetup.title += " Version ";
+	appSetup.title += text;
+	free(text);
+#endif
+
+
+
 
 	appSetup.threaded = config["threadedrendering"].asBool();
 	appSetup.backgroundTasks = config["backgroundworkers"].asBool();

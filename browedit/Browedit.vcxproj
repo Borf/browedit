@@ -20,14 +20,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -61,6 +61,9 @@
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>brolib.lib;blib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>svnversion "$(ProjectPath)" &gt; $(MSBuildProjectDirectory)\version.h</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -86,6 +89,8 @@
   <ItemGroup>
     <ClInclude Include="BrowEdit.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="version.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +109,9 @@
     <None Include="..\assets\shaders\rsw.frag" />
     <None Include="..\assets\shaders\rsw.vert" />
     <None Include="..\assets\skins\ro.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Browedit.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
