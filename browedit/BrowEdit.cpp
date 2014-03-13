@@ -31,8 +31,9 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.border = true;
 	appSetup.title = "BrowEdit 2.0";
 
-	appSetup.threaded = true;
-	appSetup.vsync = false;
+	appSetup.threaded = config["threadedrendering"].asBool();
+	appSetup.backgroundTasks = config["backgroundworkers"].asBool();
+	appSetup.vsync = config["vsync"].asBool();
 
 
 	map = NULL;
@@ -70,6 +71,7 @@ void BrowEdit::init()
 //	loadMap("data/yuno");
 
 	mapRenderer.init(resourceManager, this);
+	mapRenderer.fov = config["fov"].asFloat();
 	camera = new Camera();
 
 

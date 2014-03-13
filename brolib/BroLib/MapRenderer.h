@@ -83,6 +83,7 @@ private:
 	};	
 	std::vector<std::vector<GndChunk*> > gndChunks;
 	blib::Texture* gndShadow;
+	bool gndShadowDirty;
 #pragma endregion
 #pragma region RSW
 	blib::RenderState rswRenderState;
@@ -97,13 +98,6 @@ private:
 			s_texture,
 		};
 	};
-
-
-
-
-
-	std::map<Rsm::Mesh*, RsmMeshRenderInfo*>	rsmMeshInfo;
-	std::map<Rsm*, RsmModelRenderInfo*>			rsmModelInfo;
 
 #pragma endregion
 
@@ -121,6 +115,9 @@ public:
 	bool drawTextureGrid;
 	bool drawObjectGrid;
 	bool drawQuadTree;
+
+	float fov;
+
 
 	void init( blib::ResourceManager* resourceManager, blib::App* app );
 	void setMap(const Map* map);

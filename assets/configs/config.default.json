@@ -11,5 +11,9 @@
 	"moveconsole" : true,
 	"hideconsole" : false,
 	"defaultmap" : "prontera",
-	"skiploadingscreen" : true
+	"skiploadingscreen" : false,
+	"threadedrendering" : true,
+	"backgroundworkers" : true,
+	"fov" : 45,
+	"vsync" : true
 }

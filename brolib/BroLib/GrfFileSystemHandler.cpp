@@ -48,7 +48,6 @@ blib::util::StreamInFile* GrfFileSystemHandler::openRead( const std::string &fil
 
 
 	blib::util::StreamInFile* f = new blib::util::MemoryFile(data, size, true);
-	delete data;
 	return f;
 }
 

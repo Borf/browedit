@@ -10,5 +10,9 @@
 		]
 	},
 	"moveconsole" : true,
-	"defaultmap" : "prt_sewb1"
+	"defaultmap" : "malaya",
+	"threadedrendering" : true,
+	"backgroundworkers" : true,
+	"fov" : 45,
+	"vsync" : true
 }

@@ -33,8 +33,6 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	this->app = app;
 	
 
-	float fov = 45;
-
 	gndRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/gnd");
 	gndRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture", 1);
@@ -74,6 +72,8 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
 	rswRenderState.depthTest = true;
 
+	gndShadowDirty = false;
+
 }
 
 void MapRenderer::setMap(const Map* map)
@@ -92,14 +92,14 @@ void MapRenderer::setMap(const Map* map)
 	for(size_t y = 0; y < gndChunks.size(); y++)
 		for(size_t x = 0; x < gndChunks[y].size(); x++)
 			gndChunks[y][x] = new GndChunk(x*CHUNKSIZE,y*CHUNKSIZE, resourceManager);
+	gndShadowDirty = true;
 }
 
 #pragma region GND
 
 void MapRenderer::renderGnd(blib::Renderer* renderer)
 {
-	static bool bla = false;
-	if(!bla)
+	if (gndShadowDirty)
 	{
 		new blib::BackgroundTask<char*>(app, 
 			[this, renderer] {
@@ -135,7 +135,7 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 
 			});
 
-		bla = true;
+			gndShadowDirty = false;
 	}
 	//load textures if needed
 	if(map->getGnd()->textures[0]->texture == NULL)
@@ -363,9 +363,9 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderIn
 void MapRenderer::resizeGl(int width, int height)
 {
 	if (gndRenderState.activeShader)
-		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, glm::perspective(45.0f, width / (float)height, 0.1f, 5000.0f));
+		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, glm::perspective(fov, width / (float)height, 0.1f, 5000.0f));
 	if (rswRenderState.activeShader)
-		rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(45.0f, width / (float)height, 0.1f, 5000.0f));
+		rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(fov, width / (float)height, 0.1f, 5000.0f));
 }
 
 
