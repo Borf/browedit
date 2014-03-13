@@ -45,23 +45,25 @@ BrowEdit::~BrowEdit(void)
 
 void BrowEdit::init()
 {
+	std::list<blib::BackgroundTask<int>*> tasks;
+	for (Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
+		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
+	for (blib::BackgroundTask<int>* task : tasks)
+		task->waitForTermination();
+	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
+
+
 	wm->setSkin("assets/skins/ro.json", resourceManager);
 	wm->setRadialMenu(wm->loadMenu("assets/menu.json"));
 	addMouseListener(wm);
 	addKeyListener(wm);
 
 
-	wm->addWindow(new FileOpenWindow(resourceManager));
+	//new FileOpenWindow(resourceManager, this);
 
 
 	addMouseListener(this);
 	
-	std::list<blib::BackgroundTask<int>*> tasks;
-	for(Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
-		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this,i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
-	for(blib::BackgroundTask<int>* task : tasks)
-		task->waitForTermination();
-	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
 
 
 

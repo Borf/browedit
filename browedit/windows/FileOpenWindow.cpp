@@ -1,4 +1,5 @@
 #include "FileOpenWindow.h"
+#include "../BrowEdit.h"
 
 #include <blib/wm/WM.h>
 #include <blib/wm/widgets/textbox.h>
@@ -8,8 +9,9 @@
 
 
 
-FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager) : blib::wm::Window("Open File", "OpenWindow.json", resourceManager)
+FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Open File", "OpenWindow.json", resourceManager)
 {
+	this->browEdit = browEdit;
 	blib::wm::WM::getInstance()->center(this);
 
 	lstFiles = getComponent<blib::wm::widgets::List>("lstFiles");
@@ -35,6 +37,7 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager) : blib::w
 	selectedWidget = getComponent("txtFilter");
 	selectedWidget->selected = true;
 
+	filter('\0');
 
 }
 
@@ -61,5 +64,9 @@ void FileOpenWindow::btnOpenClick(int x, int y)
 {
 //	if (lstFiles->selectedItem != -1)
 //		BrowEdit::getInstance()->initWorld(lstFiles->items[lstFiles->selectedItem]);
+	
+	std::string fileName = "data\\" + lstFiles->items[lstFiles->selectedItem];
+
+	browEdit->loadMap(fileName);
 	close();
 }

@@ -54,5 +54,10 @@ blib::util::StreamInFile* GrfFileSystemHandler::openRead( const std::string &fil
 
 void GrfFileSystemHandler::getFileList( const std::string &path, std::vector<std::string> &files )
 {
-
+	std::string directory = sanitizeFileName(path);
+	for (std::map<std::string, int>::iterator it = lookup.begin(); it != lookup.end(); it++)
+	{
+		if (it->first.substr(0, directory.length()) == directory && it->first.find("\\", directory.size() + 1) == -1)
+			files.push_back(it->first);
+	}
 }
