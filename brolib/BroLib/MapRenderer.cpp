@@ -61,6 +61,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::CameraMatrix, "cameraMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix, "modelMatrix", blib::Shader::Mat4);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix2, "modelMatrix2", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
 	rswRenderState.activeShader->finishUniformSetup();
 
@@ -317,14 +318,13 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 		for (size_t i = 0; i < model->model->textures.size(); i++)
 			model->model->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + model->model->textures[i]));
 	}
-	renderMesh(model->model->rootMesh, model->matrixCache, model->model->renderer, renderer);
+
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, model->matrixCache);
+	renderMesh(model->model->rootMesh, glm::mat4(), model->model->renderer, renderer);
 }
 
-void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderInfo* renderInfo, blib::Renderer* renderer)
+void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelRenderInfo* renderInfo, blib::Renderer* renderer)
 {
-	matrix *= mesh->matrix1;
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, matrix * mesh->matrix2);
-
 	if (mesh->renderer == NULL)
 	{
 		mesh->renderer = new RsmMeshRenderInfo();
@@ -344,12 +344,14 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderIn
 			mesh->renderer->indices.push_back(VboIndex(it2->first, allVerts.size(), it2->second.size()));
 			allVerts.insert(allVerts.end(), it2->second.begin(), it2->second.end());
 		}
-
+		mesh->renderer->matrix = matrix * mesh->matrix1 * mesh->matrix2;
+		mesh->renderer->matrixSub = matrix * mesh->matrix1;
 		renderer->setVbo(mesh->renderer->vbo, allVerts);
 	}
 	RsmMeshRenderInfo* meshInfo = mesh->renderer;
 
 	rswRenderState.activeVbo = meshInfo->vbo;
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, meshInfo->matrix);
 
 	for (VboIndex& it : meshInfo->indices)
 	{
@@ -358,7 +360,7 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderIn
 	}
 
 	for (size_t i = 0; i < mesh->children.size(); i++)
-		renderMesh(mesh->children[i], matrix, renderInfo, renderer);
+		renderMesh(mesh->children[i], meshInfo->matrixSub, renderInfo, renderer);
 
 
 }

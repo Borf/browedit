@@ -36,7 +36,9 @@ class RsmMeshRenderInfo
 {
 public:
 	blib::VBO* vbo;
-	std::vector<VboIndex> indices;		//TODO; use a different datatype for this
+	std::vector<VboIndex> indices;
+	glm::mat4 matrix;
+	glm::mat4 matrixSub;
 };
 
 class RsmModelRenderInfo
@@ -95,6 +97,7 @@ private:
 			ProjectionMatrix,
 			CameraMatrix,
 			ModelMatrix,
+			ModelMatrix2,
 			s_texture,
 		};
 	};
@@ -126,7 +129,7 @@ public:
 	void renderGnd(blib::Renderer* renderer);
 	void renderRsw( blib::Renderer* renderer );
 	void renderModel(Rsw::Model* model, blib::Renderer* renderer);
-	void renderMesh(Rsm::Mesh* mesh, glm::mat4 matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
+	void renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
 
 	virtual void resizeGl(int width, int height);
 
