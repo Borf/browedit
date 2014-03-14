@@ -1,5 +1,5 @@
 {
-	"size" : [ 200, 800 ],
+	"size" : [ 200, 600 ],
 	"modal" : false,
 	"resizable" : true,
 	"widgets" :
@@ -8,7 +8,7 @@
 		{
 			"type" : "scrollpanel",
 			"position" : [ 0, 0 ],
-			"size" : [ 209, 775 ],
+			"size" : [ 209, 575 ],
 			"positionhelp" :
 			{
 				"left" : "left",
@@ -21,7 +21,7 @@
 		{
 			"type" : "button",
 			"text" : ">",
-			"position" : [ 150, 775],
+			"position" : [ 150, 575],
 			"size" : [ 50, 25 ],
 			"positionhelp" :
 			{

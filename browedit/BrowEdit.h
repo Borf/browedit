@@ -12,6 +12,8 @@ namespace blib {
 
 class Map;
 class Camera;
+class TextureWindow;
+
 
 class BrowEdit : public blib::App, public blib::MouseListener
 {
@@ -25,6 +27,8 @@ class BrowEdit : public blib::App, public blib::MouseListener
 
 	blib::MouseState lastMouseState;
 
+
+	TextureWindow* textureWindow;
 public:
 	BrowEdit(const Json::Value &config);
 	~BrowEdit(void);

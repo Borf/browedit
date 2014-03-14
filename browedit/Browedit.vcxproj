@@ -92,12 +92,14 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
+    <ClInclude Include="windows\TextureWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
+    <ClCompile Include="windows\TextureWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\configs\config.borf.json" />
@@ -109,6 +111,10 @@
     <None Include="..\assets\shaders\rsw.frag" />
     <None Include="..\assets\shaders\rsw.vert" />
     <None Include="..\assets\skins\ro.json" />
+    <None Include="..\assets\windows\MenuFilterWindow.json" />
+    <None Include="..\assets\windows\MessageWindow.json" />
+    <None Include="..\assets\windows\OpenWindow.json" />
+    <None Include="..\assets\windows\TextureWindow.json" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Browedit.rc" />

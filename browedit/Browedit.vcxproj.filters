@@ -28,6 +28,9 @@
     <Filter Include="assets\configs">
       <UniqueIdentifier>{8b9f0813-130d-47f9-89db-03001a7165eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assets\windows">
+      <UniqueIdentifier>{574b8356-0f1c-4a5d-af9a-210b1587bf52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
@@ -45,6 +48,9 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="windows\TextureWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -57,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="windows\FileOpenWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\TextureWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,6 +96,18 @@
     </None>
     <None Include="..\assets\configs\config.borf.json">
       <Filter>assets\configs</Filter>
+    </None>
+    <None Include="..\assets\windows\TextureWindow.json">
+      <Filter>assets\windows</Filter>
+    </None>
+    <None Include="..\assets\windows\MenuFilterWindow.json">
+      <Filter>assets\windows</Filter>
+    </None>
+    <None Include="..\assets\windows\MessageWindow.json">
+      <Filter>assets\windows</Filter>
+    </None>
+    <None Include="..\assets\windows\OpenWindow.json">
+      <Filter>assets\windows</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

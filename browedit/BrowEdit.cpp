@@ -1,6 +1,7 @@
 #include "BrowEdit.h"
 #include "Camera.h"
 #include "windows/FileOpenWindow.h"
+#include "windows/TextureWindow.h"
 
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
@@ -106,6 +107,9 @@ void BrowEdit::init()
 
 
 
+	textureWindow = new TextureWindow(resourceManager);
+
+
 	rootMenu->setAction("file/open", [this](){
 		new FileOpenWindow(resourceManager, this);
 	});
@@ -158,6 +162,7 @@ void BrowEdit::loadMap(std::string fileName)
 							[this] (Map* param) { map = param;
 										camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
 										mapRenderer.setMap(map);
+										textureWindow->updateTextures(map); //TODO: textures aren't loaded here yet!
 	} );
 }
 
