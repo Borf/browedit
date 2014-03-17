@@ -108,7 +108,7 @@ void BrowEdit::init()
 
 
 
-	textureWindow = new TextureWindow(resourceManager);
+	textureWindow = new TextureWindow(resourceManager, this);
 	textureWindow->setPosition(window->getWidth() - textureWindow->getWidth(), 10);
 
 

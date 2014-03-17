@@ -1,5 +1,5 @@
 {
-	"size" : [ 200, 600 ],
+	"size" : [ 212, 600 ],
 	"modal" : false,
 	"resizable" : true,
 	"widgets" :
@@ -8,7 +8,7 @@
 		{
 			"type" : "scrollpanel",
 			"position" : [ 0, 0 ],
-			"size" : [ 209, 575 ],
+			"size" : [ 212, 575 ],
 			"positionhelp" :
 			{
 				"left" : "left",
@@ -28,6 +28,19 @@
 				"left" : "left",
 				"right" : "left",
 				"top" : "bottom",
+				"bottom" : "bottom"
+			}
+		},
+		"lstAllTextures" :
+		{
+			"type" : "scrollpanel",
+			"position" : [ 212, 0 ],
+			"size" : [ 0, 575 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
 				"bottom" : "bottom"
 			}
 		}

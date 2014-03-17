@@ -12,6 +12,9 @@
 class Map;
 namespace blib { class Texture; }
 
+class TextureWindow;
+class BrowEdit;
+
 class SelectableImage : public blib::wm::widgets::Image
 {
 	int selectX1;
@@ -24,8 +27,10 @@ class SelectableImage : public blib::wm::widgets::Image
 	int gridY;
 
 	int index;
+
+	TextureWindow* textureWindow;
 public:
-	SelectableImage(blib::Texture* texture, int index);
+	SelectableImage(blib::Texture* texture, int index, TextureWindow* textureWindow);
 	virtual void draw(blib::SpriteBatch &shader, glm::mat4 matrix);
 	virtual void mousedown(int x, int y);
 	virtual void mouseup(int x, int y);
@@ -45,15 +50,14 @@ class TextureWindow : public blib::wm::Window
 	int largeWidth;
 
 	std::vector<SelectableImage*> images;
-
+	BrowEdit* browEdit;
 public:
-	TextureWindow(blib::ResourceManager* resourceManager);
+	TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit);
 	~TextureWindow();
 
 	void updateTextures(Map* map);
 	SelectableImage* getImage();
-
+	void setActiveTexture(int index);
 	int selectedImage;
-
 };
 
