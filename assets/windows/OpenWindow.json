@@ -19,6 +19,21 @@
 				"bottom" : "bottom"
 			}
 		},
+		"btnCancel" :
+		{
+			"type" : "button",
+			"text" : "Cancel",
+
+			"position" : [ 0, 275 ],
+			"size" : [ 100, -1],
+			"positionhelp" :
+			{
+				"left" : "right",
+				"right" : "right",
+				"top" : "bottom",
+				"bottom" : "bottom"
+			}
+		},
 		"lstFiles" :
 		{
 			"type" : "list",

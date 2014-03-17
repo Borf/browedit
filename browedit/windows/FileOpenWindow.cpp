@@ -4,7 +4,6 @@
 #include <blib/wm/WM.h>
 #include <blib/wm/widgets/textbox.h>
 #include <blib/util/FileSystem.h>
-#include <blib/util/FastDelegate.h>
 #include <algorithm>
 
 
@@ -32,10 +31,13 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 	}
 //	lstFiles->addClickHandler(fastdelegate::MakeDelegate(this, &FileOpenWindow::btnOpenClick));
 
-	getComponent("txtFilter")->addKeyHandler(fastdelegate::MakeDelegate(this, &FileOpenWindow::filter));
+	getComponent("txtFilter")->addKeyHandler(std::bind(&FileOpenWindow::filter, this, std::placeholders::_1));
 //	getComponent("btnOpen")->addClickHandler(fastdelegate::MakeDelegate(this, &FileOpenWindow::btnOpenClick));
 	selectedWidget = getComponent("txtFilter");
 	selectedWidget->selected = true;
+
+
+	getComponent("btnCancel")->addClickHandler([this](blib::wm::Widget*, int,int,int) { close(); });
 
 	filter('\0');
 

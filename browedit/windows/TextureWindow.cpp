@@ -20,7 +20,25 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager) : Window("T
 {
 	x = 1000;
 	y = 10;
-	//getComponent("btnExpand")->addClickHandler(MakeDelegate(this, &TextureWindow::expandButton));
+	getComponent("btnExpand")->addClickHandler([this](blib::wm::Widget* widget, int x, int y, int clickCount)
+	{
+		blib::wm::widgets::Button* expandButton = getComponent<blib::wm::widgets::Button>("btnExpand");
+
+		if (expandButton->text == ">")
+		{
+			smallWidth = rootPanel->width;
+			setSize(largeWidth, rootPanel->height);
+			expandButton->text = "<";
+			resizable = true;
+		}
+		else
+		{
+			largeWidth = rootPanel->width;
+			setSize(smallWidth, rootPanel->height);
+			expandButton->text = ">";
+			resizable = false;
+		}
+	});
 	largeWidth = 1300;
 	selectedImage = -1;
 }
@@ -39,29 +57,9 @@ void TextureWindow::updateTextures(Map* map)
 		panel->add(img);
 		images.push_back(img);
 	}
+	panel->internalHeight = 192 * (map->getGnd()->textures.size() + 1);
 }
 
-
-
-void TextureWindow::expandButton(int x, int y)
-{
-	blib::wm::widgets::Button* expandButton = getComponent<blib::wm::widgets::Button>("btnExpand");
-
-	if (expandButton->text == ">")
-	{
-		smallWidth = rootPanel->width;
-		setSize(largeWidth, rootPanel->height);
-		expandButton->text = "<";
-		resizable = true;
-	}
-	else
-	{
-		largeWidth = rootPanel->width;
-		setSize(smallWidth, rootPanel->height);
-		expandButton->text = ">";
-		resizable = false;
-	}
-}
 
 SelectableImage* TextureWindow::getImage()
 {
@@ -95,33 +93,15 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index) : Image(text
 	gridY = 4;
 }
 
-/*void SelectableImage::draw(OverlayShader* shader)
+void SelectableImage::draw(blib::SpriteBatch &shader, glm::mat4 matrix)
 {
-	Image::draw(shader);
-	shader->setColor(glm::vec4(1, 1, 1, 0.25));
-	shader->useTexture(false);
-	glBegin(GL_QUADS);
-	glVertexAttrib3f(0, (float)(x + selectX1), (float)(y + selectY1), 0);
-	glVertexAttrib3f(0, (float)(x + selectX2), (float)(y + selectY1), 0);
-	glVertexAttrib3f(0, (float)(x + selectX2), (float)(y + selectY2), 0);
-	glVertexAttrib3f(0, (float)(x + selectX1), (float)(y + selectY2), 0);
-	glEnd();
+	Image::draw(shader, matrix);
 
-	if (BrowEdit::getInstance()->activeTexture == texture)
-		shader->setColor(glm::vec4(0.5f, 1, 0.5f, 1));
-	else
-		shader->setColor(glm::vec4(1, 0, 0, 1));
-	glLineWidth(3);
-	glBegin(GL_LINE_LOOP);
-	glVertexAttrib3f(0, (float)(x + selectX1), (float)(y + selectY1), 0);
-	glVertexAttrib3f(0, (float)(x + selectX2), (float)(y + selectY1), 0);
-	glVertexAttrib3f(0, (float)(x + selectX2), (float)(y + selectY2), 0);
-	glVertexAttrib3f(0, (float)(x + selectX1), (float)(y + selectY2), 0);
-	glEnd();
-	glLineWidth(1);
-	shader->setColor(glm::vec4(1, 1, 1, 1));
+
+
+
 }
-*/
+
 void SelectableImage::mousedown(int x, int y)
 {
 	selectX1 = x - this->x;

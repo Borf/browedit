@@ -53,6 +53,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndRenderState.depthTest = true;
 
 	gndShadow = resourceManager->getResource<blib::Texture>(2048, 2048);
+	gndNoShadow = resourceManager->getResource<blib::Texture>(1,1);
 
 
 	rswRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/rsw");
@@ -94,6 +95,12 @@ void MapRenderer::setMap(const Map* map)
 		for(size_t x = 0; x < gndChunks[y].size(); x++)
 			gndChunks[y][x] = new GndChunk(x*CHUNKSIZE,y*CHUNKSIZE, resourceManager);
 	gndShadowDirty = true;
+
+
+	//load textures if needed
+	if (map->getGnd()->textures[0]->texture == NULL)
+		for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
+			map->getGnd()->textures[i]->texture = resourceManager->getResource<blib::Texture>("data/texture/" + map->getGnd()->textures[i]->file);
 }
 
 #pragma region GND
@@ -102,7 +109,10 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 {
 	if (gndShadowDirty)
 	{
-		new blib::BackgroundTask<char*>(app, 
+		char shadowData[4] = { 0, 0, 0, 0xffu };
+		renderer->setTextureSubImage(gndNoShadow, 0, 0, 1, 1, shadowData);
+
+		new blib::BackgroundTask<char*>(app,
 			[this, renderer] {
 				char* data = new char[2048*2048*4];
 				int x = 0; int y = 0;
@@ -138,15 +148,14 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 
 			gndShadowDirty = false;
 	}
-	//load textures if needed
-	if(map->getGnd()->textures[0]->texture == NULL)
-		for(size_t i = 0; i < map->getGnd()->textures.size(); i++)
-			map->getGnd()->textures[i]->texture = resourceManager->getResource<blib::Texture>("data/texture/" + map->getGnd()->textures[i]->file);
 
 	//render gnd chunks
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::ModelViewMatrix, cameraMatrix);
-	gndRenderState.activeTexture[1] = gndShadow;
-	for(auto r : gndChunks)
+	if (drawShadows)
+		gndRenderState.activeTexture[1] = gndShadow;
+	else
+		gndRenderState.activeTexture[1] = gndNoShadow;
+	for (auto r : gndChunks)
 		for(auto c : r)
 			c->render(map->getGnd(), app, gndRenderState, renderer);
 
@@ -287,7 +296,7 @@ void MapRenderer::renderRsw( blib::Renderer* renderer )
 //	rswRenderState.activeShader->state.clear();
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
-		if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
+		if (drawObjects && map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
 		{
 			renderModel(static_cast<Rsw::Model*>(map->getRsw()->objects[i]), renderer);
 		}

@@ -34,7 +34,6 @@ int main()
 	Log::out<<"||            - blib                                        ||"<<Log::newline;
 	Log::out<<"||            - zlib                                        ||"<<Log::newline;
 	Log::out<<"||            - grflib                                      ||"<<Log::newline;
-	Log::out<<"||            - fastdeligate                                ||"<<Log::newline;
 	Log::out<<"||            - glew                                        ||"<<Log::newline;
 	Log::out<<"||            - glm                                         ||"<<Log::newline;
 	Log::out<<"||            - jsoncpp                                     ||"<<Log::newline;

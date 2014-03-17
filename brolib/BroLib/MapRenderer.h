@@ -85,6 +85,7 @@ private:
 	};	
 	std::vector<std::vector<GndChunk*> > gndChunks;
 	blib::Texture* gndShadow;
+	blib::Texture* gndNoShadow;
 	bool gndShadowDirty;
 #pragma endregion
 #pragma region RSW

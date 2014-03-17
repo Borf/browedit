@@ -10,7 +10,7 @@
 		]
 	},
 	"moveconsole" : true,
-	"defaultmap" : "malaya",
+	"defaultmap" : "prontera",
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
 	"fov" : 45,

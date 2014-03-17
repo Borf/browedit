@@ -49,8 +49,16 @@
 		"type" : "menu",
 		"subitems" :
 		[
-
-
+			{
+				"name" : "objects",
+				"type" : "toggle",
+				"initial" : true
+			},
+			{
+				"name" : "shadows",
+				"type" : "toggle",
+				"initial" : true
+			}
 		]
 
 	},

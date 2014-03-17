@@ -20,8 +20,6 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "grftypes.h"
 #include "grfsupport.h"
 

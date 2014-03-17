@@ -26,7 +26,7 @@ class SelectableImage : public blib::wm::widgets::Image
 	int index;
 public:
 	SelectableImage(blib::Texture* texture, int index);
-//	virtual void draw(OverlayShader* shader);
+	virtual void draw(blib::SpriteBatch &shader, glm::mat4 matrix);
 	virtual void mousedown(int x, int y);
 	virtual void mouseup(int x, int y);
 	virtual void mousedrag(int x, int y);
@@ -34,6 +34,7 @@ public:
 	void alignToGrid();
 	glm::vec2 topLeft();
 	glm::vec2 bottomRight();
+
 
 };
 
@@ -51,8 +52,6 @@ public:
 
 	void updateTextures(Map* map);
 	SelectableImage* getImage();
-
-	void expandButton(int x, int y);
 
 	int selectedImage;
 

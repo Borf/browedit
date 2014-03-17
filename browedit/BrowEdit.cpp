@@ -15,6 +15,7 @@
 #include <blib/wm/WM.h>
 #include <blib/wm/Menu.h>
 #include <blib/util/FileSystem.h>
+#include <blib/Window.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -108,11 +109,18 @@ void BrowEdit::init()
 
 
 	textureWindow = new TextureWindow(resourceManager);
+	textureWindow->setPosition(window->getWidth() - textureWindow->getWidth(), 10);
+
 
 
 	rootMenu->setAction("file/open", [this](){
 		new FileOpenWindow(resourceManager, this);
 	});
+
+
+
+	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
+	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
 
 }
 
@@ -169,5 +177,7 @@ void BrowEdit::loadMap(std::string fileName)
 bool BrowEdit::onScroll( int delta )
 {
 	camera->distance -= delta/10.0f;
+	if (camera->distance < 0)
+		camera->distance = 0;
 	return true;
 }
