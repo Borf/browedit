@@ -7,6 +7,8 @@
 
 #include <list>
 #include <string>
+#include <map>
+
 
 
 class Map;
@@ -49,8 +51,14 @@ class TextureWindow : public blib::wm::Window
 	int smallWidth;
 	int largeWidth;
 
+	blib::ResourceManager* resourceManager;
+
 	std::vector<SelectableImage*> images;
 	BrowEdit* browEdit;
+
+
+	std::map<std::string, std::string> textureFiles;
+
 public:
 	TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit);
 	~TextureWindow();
@@ -58,6 +66,10 @@ public:
 	void updateTextures(Map* map);
 	SelectableImage* getImage();
 	void setActiveTexture(int index);
+	void setDirectory(std::string directory);
+
+	virtual void arrangeComponents(int oldWidth, int oldHeight);
+
 	int selectedImage;
 };
 

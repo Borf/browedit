@@ -12,6 +12,9 @@
 #include <blib/wm/widgets/ScrollPanel.h>
 #include <blib/wm/WM.h>
 #include <blib/util/Log.h>
+#include <blib/util/FileSystem.h>
+#include <blib/ResourceManager.h>
+
 
 using blib::util::Log;
 
@@ -23,6 +26,7 @@ using blib::util::Log;
 TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : Window("Texture", "TextureWindow.json", resourceManager)
 {
 	this->browEdit = browEdit;
+	this->resourceManager = resourceManager;
 	x = 1000;
 	y = 10;
 	largeWidth = 1300;
@@ -41,6 +45,7 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 			setSize(largeWidth, rootPanel->height);
 			expandButton->text = "<";
 			resizable = true;
+			arrangeComponents(smallWidth, height);
 
 		}
 		else
@@ -53,8 +58,22 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 			expandButton->text = ">";
 
 			resizable = false;
+			arrangeComponents(largeWidth, height);
 		}
 	});
+
+
+	blib::util::StreamInFile* pFile = new blib::util::StreamInFile("assets/rotextures.txt");
+
+	while (!pFile->eof())
+	{
+		std::string line = pFile->readLine();
+		textureFiles[line.substr(0, line.find("|"))] = line.substr(line.find("|") + 1);
+	}
+	delete pFile;
+
+
+	setDirectory("RO/splen/");
 }
 
 
@@ -83,6 +102,73 @@ SelectableImage* TextureWindow::getImage()
 void TextureWindow::setActiveTexture(int index)
 {
 	selectedImage = index;
+}
+
+void TextureWindow::setDirectory(std::string directory)
+{
+	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+	panel->clear();
+	panel->internalWidth = panel->width;
+
+
+	int px = 0;
+	int py = 0;
+
+	for (auto it : textureFiles)
+	{
+		if (it.first.substr(0, directory.size()) == directory && it.first.find("/", directory.size() + 1) == -1)
+		{
+			blib::wm::widgets::Image* image = new blib::wm::widgets::Image(resourceManager->getResource<blib::Texture>("data/texture/" + it.second));
+			image->width = 64;
+			image->height = 64;
+			image->x = px;
+			image->y = py;
+			panel->add(image);
+
+			px += 64;
+
+			if (px + 64 > panel->width)
+			{
+				py += 64;
+				px = 0;
+			}
+		}
+	}
+	panel->internalHeight = py + 64;
+
+
+}
+
+void TextureWindow::arrangeComponents(int oldWidth, int oldHeight)
+{
+	Window::arrangeComponents(oldWidth, oldHeight);
+
+	if (width != oldWidth || height != oldHeight)
+	{
+
+		int px = 0;
+		int py = 0;
+
+	//	setDirectory("RO/splen/");
+		blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+		for (std::list<blib::wm::Widget*>::iterator it = panel->children.begin(); it != panel->children.end(); it++)
+		{
+			(*it)->x = px;
+			(*it)->y = py;
+
+			px += 64;
+			if (px + 64 > panel->width)
+			{
+				py += 64;
+				px = 0;
+			}
+		}
+		panel->internalHeight = py + 64;
+
+
+
+
+	}
 }
 
 
