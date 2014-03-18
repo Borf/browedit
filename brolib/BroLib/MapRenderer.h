@@ -113,6 +113,7 @@ private:
 
 public:
 	glm::mat4 cameraMatrix;
+	glm::mat4 projectionMatrix;
 
 	bool drawShadows;
 	bool drawObjects;
@@ -123,10 +124,13 @@ public:
 	float fov;
 
 
+	glm::vec3 mouse3d;
+
+
 	void init( blib::ResourceManager* resourceManager, blib::App* app );
 	void setMap(const Map* map);
 
-	void render(blib::Renderer* renderer);
+	void render(blib::Renderer* renderer, glm::vec2 mousePosition);
 	void renderGnd(blib::Renderer* renderer);
 	void renderRsw( blib::Renderer* renderer );
 	void renderModel(Rsw::Model* model, blib::Renderer* renderer);

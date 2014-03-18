@@ -16,6 +16,9 @@
 #include <blib/wm/Menu.h>
 #include <blib/util/FileSystem.h>
 #include <blib/Window.h>
+#include <blib/Color.h>
+#include <blib/Math.h>
+#include <blib/Util.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -151,10 +154,20 @@ void BrowEdit::draw()
 
 	if(map)
 	{
-		mapRenderer.render(renderer);
+		mapRenderer.render(renderer, glm::vec2(mouseState.x, mouseState.y));
 	}
 
 	spriteBatch->begin();
+
+
+	char statusText[256];
+	sprintf(statusText, "Mouse: %.2f,%.2f,%.2f", mapRenderer.mouse3d.x, mapRenderer.mouse3d.y, mapRenderer.mouse3d.z);
+
+	spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(5, window->getHeight() - 18)), blib::Color::black);
+	spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(3, window->getHeight() - 20)), blib::Color::black);
+	spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(4, window->getHeight() - 19)), blib::Color::white);
+
+
 	wm->draw(*spriteBatch);
 	spriteBatch->end();
 

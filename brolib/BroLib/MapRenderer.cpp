@@ -20,11 +20,16 @@ using blib::util::Log;
 #include <glm/gtc/matrix_transform.hpp>
 
 
-void MapRenderer::render( blib::Renderer* renderer )
+void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
 
 	renderGnd(renderer);
+
+	renderer->unproject(mousePosition, &mouse3d, cameraMatrix, projectionMatrix);
+
+
 	renderRsw(renderer);
+
 }
 
 void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
@@ -376,10 +381,11 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 
 void MapRenderer::resizeGl(int width, int height)
 {
+	projectionMatrix = glm::perspective(fov, width / (float)height, 5.0f, 5000.0f);
 	if (gndRenderState.activeShader)
-		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, glm::perspective(fov, width / (float)height, 0.1f, 5000.0f));
+		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, projectionMatrix);
 	if (rswRenderState.activeShader)
-		rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(fov, width / (float)height, 0.1f, 5000.0f));
+		rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
 }
 
 
