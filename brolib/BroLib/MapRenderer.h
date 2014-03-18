@@ -124,7 +124,7 @@ public:
 	float fov;
 
 
-	glm::vec3 mouse3d;
+	glm::vec4 mouse3d;
 
 
 	void init( blib::ResourceManager* resourceManager, blib::App* app );

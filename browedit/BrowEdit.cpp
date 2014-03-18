@@ -142,7 +142,7 @@ void BrowEdit::update( double elapsedTime )
 			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y) / 2.0f, 0.0f, 90.0f);
 		}
 		else
-			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y,0,0) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0,0,1)));
+			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y,0,0) * 0.001f * camera->distance * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0,0,1)));
 	}
 
 	lastMouseState = mouseState;
@@ -160,13 +160,15 @@ void BrowEdit::draw()
 	spriteBatch->begin();
 
 
-	char statusText[256];
-	sprintf(statusText, "Mouse: %.2f,%.2f,%.2f", mapRenderer.mouse3d.x, mapRenderer.mouse3d.y, mapRenderer.mouse3d.z);
+	if (mapRenderer.mouse3d.w < 1 && map)
+	{
+		char statusText[256];
+		sprintf(statusText, "Mouse: %3i, %3i,   -> %.2f,%.2f,%.2f", (int)glm::floor(mapRenderer.mouse3d.x / 10), map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10), mapRenderer.mouse3d.x, mapRenderer.mouse3d.y, mapRenderer.mouse3d.z);
 
-	spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(5, window->getHeight() - 18)), blib::Color::black);
-	spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(3, window->getHeight() - 20)), blib::Color::black);
-	spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(4, window->getHeight() - 19)), blib::Color::white);
-
+		spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(5, window->getHeight() - 18)), blib::Color::black);
+		spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(3, window->getHeight() - 20)), blib::Color::black);
+		spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(4, window->getHeight() - 19)), blib::Color::white);
+	}
 
 	wm->draw(*spriteBatch);
 	spriteBatch->end();
