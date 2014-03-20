@@ -29,7 +29,7 @@ class SelectableImage : public blib::wm::widgets::Image
 	int gridY;
 
 	int index;
-
+	bool dragging;
 	TextureWindow* textureWindow;
 public:
 	SelectableImage(blib::Texture* texture, int index, TextureWindow* textureWindow);
@@ -58,6 +58,10 @@ class TextureWindow : public blib::wm::Window
 
 
 	std::map<std::string, std::string> textureFiles;
+
+
+
+	int textureSize;
 
 public:
 	TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit);

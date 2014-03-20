@@ -150,6 +150,6 @@ Gnd::Texture::Texture()
 Gnd::Texture::~Texture()
 {
 	if(texture)
-		delete texture;
+		texture->unload();
 	texture = NULL;
 }

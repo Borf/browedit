@@ -9,12 +9,14 @@
 #include <blib/wm/widgets/button.h>
 #include <blib/wm/widgets/textbox.h>
 #include <blib/wm/widgets/Image.h>
+#include <blib/wm/widgets/list.h>
 #include <blib/wm/widgets/ScrollPanel.h>
+#include <blib/wm/widgets/Label.h>
 #include <blib/wm/WM.h>
 #include <blib/util/Log.h>
 #include <blib/util/FileSystem.h>
 #include <blib/ResourceManager.h>
-
+#include <blib/util/Profiler.h>
 
 using blib::util::Log;
 
@@ -29,7 +31,8 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	this->resourceManager = resourceManager;
 	x = 1000;
 	y = 10;
-	largeWidth = 1300;
+	textureSize = 100;
+	largeWidth = glm::min(1300, blib::wm::WM::getInstance()->screenSize.x-100);
 	selectedImage = -1;
 	resizable = false;
 
@@ -65,15 +68,29 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 
 	blib::util::StreamInFile* pFile = new blib::util::StreamInFile("assets/rotextures.txt");
 
+	std::map<std::string, bool> dirLookup;
+
 	while (!pFile->eof())
 	{
 		std::string line = pFile->readLine();
-		textureFiles[line.substr(0, line.find("|"))] = line.substr(line.find("|") + 1);
+		std::string dir = line.substr(0, line.find("|"));
+		textureFiles[dir] = line.substr(line.find("|") + 1);
+		dir = dir.substr(0, dir.rfind("/"));
+		dirLookup[dir] = true;
 	}
 	delete pFile;
 
+	std::vector<std::string> dirs;
+	for (auto d : dirLookup)
+		dirs.push_back(d.first);
+	getComponent<blib::wm::widgets::List>("lstFolders")->items = dirs;
+	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](blib::wm::Widget*, int, int, int) {
+		blib::wm::widgets::List* l = getComponent<blib::wm::widgets::List>("lstFolders");
+		if (l->selectedItem >= 0 && l->selectedItem < l->items.size())
+			setDirectory(l->items[l->selectedItem] + "/");
+	});
 
-	setDirectory("RO/splen/");
+	setDirectory("RO/ÇÊµå¹Ù´Ú/");
 }
 
 
@@ -113,28 +130,89 @@ void TextureWindow::setDirectory(std::string directory)
 
 	int px = 0;
 	int py = 0;
+	
+	if (directory != "/")
+	{
+		blib::wm::widgets::Image* image = new blib::wm::widgets::Image(resourceManager->getResource<blib::Texture>("assets/textures/folder.png"));
+		image->width = textureSize;
+		image->height = textureSize;
+		image->x = px;
+		image->y = py;
+		panel->add(image);
+
+		px += textureSize;
+
+		if (px + textureSize > panel->width)
+		{
+			py += textureSize+12;
+			px = 0;
+		}
+	}
+
+	double start = blib::util::Profiler::getAppTime();
+	for (auto it : textureFiles)
+	{
+		if (it.first.substr(0, directory.size()) == directory && it.first.find("/", directory.size() + 1) == -1)
+		{
+			blib::wm::widgets::Image* image = new blib::wm::widgets::Image(resourceManager->getResource<blib::Texture>(blib::Texture::LoadLater, "data/texture/" + it.second));
+			image->width = textureSize;
+			image->height = textureSize;
+			image->x = px;
+			image->y = py;
+			panel->add(image);
+
+			px += textureSize;
+
+			if (px + textureSize > panel->width)
+			{
+				py += textureSize+12;
+				px = 0;
+			}
+		}
+	}
+
+	px = 0;
+	py = 0;
+
+	blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
+	label->text = "Up";
+	label->width = textureSize;
+	label->height = 12;
+	label->x = px;
+	label->y = py + 100;
+	panel->add(label);
+	px += textureSize;
+	if (px + textureSize > panel->width)
+	{
+		py += textureSize + 12;
+		px = 0;
+	}
 
 	for (auto it : textureFiles)
 	{
 		if (it.first.substr(0, directory.size()) == directory && it.first.find("/", directory.size() + 1) == -1)
 		{
-			blib::wm::widgets::Image* image = new blib::wm::widgets::Image(resourceManager->getResource<blib::Texture>("data/texture/" + it.second));
-			image->width = 64;
-			image->height = 64;
-			image->x = px;
-			image->y = py;
-			panel->add(image);
-
-			px += 64;
-
-			if (px + 64 > panel->width)
+			blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
+			label->text = it.first.substr(directory.size());
+			label->width = textureSize;
+			label->height = 12;
+			label->x = px;
+			label->y = py + textureSize;
+			panel->add(label);
+			px += textureSize;
+			if (px + textureSize > panel->width)
 			{
-				py += 64;
+				py += textureSize + 12;
 				px = 0;
 			}
 		}
 	}
-	panel->internalHeight = py + 64;
+
+
+	Log::out << "Time taken: " << blib::util::Profiler::getAppTime() - start << Log::newline;
+	panel->scrollX = 0;
+	panel->scrollY = 0;
+	panel->internalHeight = py + textureSize+12;
 
 
 }
@@ -149,25 +227,33 @@ void TextureWindow::arrangeComponents(int oldWidth, int oldHeight)
 		int px = 0;
 		int py = 0;
 
-	//	setDirectory("RO/splen/");
+
+		int i = 0;
+
 		blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
 		for (std::list<blib::wm::Widget*>::iterator it = panel->children.begin(); it != panel->children.end(); it++)
 		{
+			if (i == panel->children.size() / 2 && (px != 0 || py != 0))
+			{
+				px = 0;
+				py = 0;
+			}
+
 			(*it)->x = px;
 			(*it)->y = py;
+			if (i >= panel->children.size() / 2)
+				(*it)->y = py+textureSize;
 
-			px += 64;
-			if (px + 64 > panel->width)
+			px += textureSize;
+			if (px + textureSize > panel->width)
 			{
-				py += 64;
+				py += textureSize + 12;
 				px = 0;
 			}
+			i++;
+
 		}
-		panel->internalHeight = py + 64;
-
-
-
-
+		panel->internalHeight = py + textureSize+12;
 	}
 }
 
@@ -190,6 +276,7 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 
 	gridX = 4;
 	gridY = 4;
+	dragging = false;
 }
 
 void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix)
@@ -207,6 +294,7 @@ void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix)
 
 void SelectableImage::mousedown(int x, int y)
 {
+	dragging = true;
 	selectX1 = x - this->x;
 	selectY1 = y - this->y;
 	selectX2 = x - this->x;
@@ -217,22 +305,30 @@ void SelectableImage::mousedown(int x, int y)
 
 void SelectableImage::mouseup(int x, int y)
 {
-	selectX2 = x - this->x;
-	selectY2 = y - this->y;
-	alignToGrid();
-	textureWindow->setActiveTexture(index);
+	if (dragging)
+	{
+		dragging = false;
+		selectX2 = x - this->x;
+		selectY2 = y - this->y;
+		alignToGrid();
+		textureWindow->setActiveTexture(index);
+	}
 }
 
 void SelectableImage::mousedrag(int x, int y)
 {
-	selectX2 = x - this->x;
-	selectY2 = y - this->y;
-	alignToGrid();
-	textureWindow->setActiveTexture(index);
+	if (dragging)
+	{
+		selectX2 = x - this->x;
+		selectY2 = y - this->y;
+		alignToGrid();
+		textureWindow->setActiveTexture(index);
+	}
 }
 
 void SelectableImage::mouseclick(int x, int y)
 {
+	dragging = false;
 	selectX1 = 0;
 	selectY1 = 0;
 	selectX2 = width;
