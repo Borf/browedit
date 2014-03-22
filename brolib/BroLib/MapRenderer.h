@@ -137,5 +137,5 @@ public:
 	void renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
 
 	virtual void resizeGl(int width, int height);
-
+	void setTileDirty(int xx, int yy);
 };

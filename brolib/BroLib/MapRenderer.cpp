@@ -187,7 +187,7 @@ void MapRenderer::GndChunk::render( const Gnd* gnd, blib::App* app, blib::Render
 	if((dirty || !vbo) && !rebuilding)
 		rebuild(gnd, app, renderer);
 
-	if(vbo && !rebuilding)
+	if(vbo)
 	{
 		gndRenderState.activeVbo = vbo;
 		for (VboIndex& it : vertIndices)
@@ -386,6 +386,12 @@ void MapRenderer::resizeGl(int width, int height)
 		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, projectionMatrix);
 	if (rswRenderState.activeShader)
 		rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
+}
+
+void MapRenderer::setTileDirty(int xx, int yy)
+{
+	gndChunks[yy / CHUNKSIZE][xx / CHUNKSIZE]->dirty = true;
+	
 }
 
 

@@ -312,6 +312,9 @@ void SelectableImage::mouseup(int x, int y)
 		selectY2 = y - this->y;
 		alignToGrid();
 		textureWindow->setActiveTexture(index);
+		textureWindow->tx1 = glm::vec2(selectX1, selectY1) / glm::vec2(width, height); 
+		textureWindow->tx2 = glm::vec2(selectX2, selectY2) / glm::vec2(width, height);
+
 	}
 }
 

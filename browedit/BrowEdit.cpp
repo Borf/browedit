@@ -19,6 +19,7 @@
 #include <blib/Color.h>
 #include <blib/Math.h>
 #include <blib/Util.h>
+#include <blib/ResourceManager.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -65,6 +66,13 @@ BrowEdit::BrowEdit(const Json::Value &config)
 
 
 
+	editMode = EditMode::TextureEdit;
+
+	textureTargetSize = glm::ivec2(2, 2);
+	textureRot = 0;
+	textureFlipH = false;
+	textureFlipV = false;
+
 
 	appSetup.threaded = config["threadedrendering"].asBool();
 	appSetup.backgroundTasks = config["backgroundworkers"].asBool();
@@ -110,6 +118,25 @@ void BrowEdit::init()
 	camera = new Camera();
 
 
+	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/highlight");
+	highlightRenderState.activeShader->bindAttributeLocation("a_position", 0);
+	highlightRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::color, "color", blib::Shader::Vec4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::texMult, "texMult", blib::Shader::Vec4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::modelviewMatrix, "modelviewMatrix", blib::Shader::Mat4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::projectionMatrix, "projectionMatrix", blib::Shader::Mat4);
+	highlightRenderState.activeShader->finishUniformSetup();
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::s_texture, 0);
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+
+	highlightRenderState.depthTest = true;
+	highlightRenderState.blendEnabled = true;
+	highlightRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
+	highlightRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
+	highlightRenderState.dstBlendColor = blib::RenderState::ONE_MINUS_SRC_ALPHA;
+	highlightRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
+
 
 	textureWindow = new TextureWindow(resourceManager, this);
 	textureWindow->setPosition(window->getWidth() - textureWindow->getWidth(), 10);
@@ -142,9 +169,72 @@ void BrowEdit::update( double elapsedTime )
 			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y) / 2.0f, 0.0f, 90.0f);
 		}
 		else
-			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y,0,0) * 0.001f * camera->distance * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0,0,1)));
+			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y,0,0) * 0.003f * (camera->distance+10) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0,0,1)));
 	}
 
+
+	if (editMode == EditMode::TextureEdit)
+	{
+		if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
+			textureRot = (textureRot + 1) % 4;
+		if (keyState.isPressed('H') && !lastKeyState.isPressed('H'))
+			textureFlipH = !textureFlipH;
+		if (keyState.isPressed('V') && !lastKeyState.isPressed('V'))
+			textureFlipV = !textureFlipV;
+		if (keyState.isPressed('+') && !lastKeyState.isPressed('+'))
+			textureTargetSize += glm::ivec2(1,1);
+		if (keyState.isPressed('-') && !lastKeyState.isPressed('-'))
+			textureTargetSize += glm::ivec2(1, 1);
+
+		int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
+		int cursorY = map->getGnd()->height +1-(int)glm::floor(mapRenderer.mouse3d.z / 10);
+		int mapHeight = map->getGnd()->height;
+
+
+		if (mouseState.leftButton && !lastMouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y))
+		{
+			int cursorWidth = 4;
+			int cursorHeight = 4;
+
+			int cursorTopLeftX = cursorX - cursorWidth / 2;
+			int cursorTopLeftY = cursorY - cursorHeight / 2;
+
+			glm::vec2 texStart = glm::vec2(textureWindow->tx1.x, textureWindow->tx2.y);
+			glm::vec2 texInc = (textureWindow->tx2 - textureWindow->tx1) / glm::vec2(cursorWidth, -cursorHeight);
+			glm::vec2 texCenter = (textureWindow->tx1 + textureWindow->tx2) / 2.0f;
+
+			glm::mat4 rot;
+			rot = glm::translate(rot, glm::vec3(texCenter, 0));
+			rot = glm::rotate(rot, 90.0f * textureRot, glm::vec3(0, 0, 1));
+			rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
+			rot = glm::translate(rot, glm::vec3(-texCenter, 0));
+
+			for (int x = 0; x < cursorWidth; x++)
+			{
+				for (int y = 0; y < cursorHeight; y++)
+				{
+					int xx = x + cursorTopLeftX;
+					int yy = y + cursorTopLeftY;
+					if (xx < 0 || yy < 0 || xx >= map->getGnd()->width || yy >= map->getGnd()->height)
+						continue;
+
+					glm::vec2 t1 = texStart + glm::vec2(x, y) * texInc;
+					glm::vec2 t2 = t1 + texInc;
+
+					Gnd::Cube* cube = map->getGnd()->cubes[xx][yy];
+					Gnd::Tile* tile = map->getGnd()->tiles[cube->tileUp];
+					tile->textureIndex = textureWindow->selectedImage;
+					tile->v1 = glm::vec2(rot * glm::vec4(t1.x, t1.y, 0, 1));
+					tile->v2 = glm::vec2(rot * glm::vec4(t2.x, t1.y, 0, 1));
+					tile->v3 = glm::vec2(rot * glm::vec4(t1.x, t2.y, 0, 1));
+					tile->v4 = glm::vec2(rot * glm::vec4(t2.x, t2.y, 0, 1));
+					mapRenderer.setTileDirty(xx, yy);
+				}
+			}
+		}
+
+	}
+	lastKeyState = keyState;
 	lastMouseState = mouseState;
 }
 
@@ -152,23 +242,100 @@ void BrowEdit::draw()
 {
 	renderer->clear(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), blib::Renderer::Color | blib::Renderer::Depth);
 
-	if(map)
+	if (map)
 	{
 		mapRenderer.render(renderer, glm::vec2(mouseState.x, mouseState.y));
+
+		int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
+		int cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
+		int mapHeight = map->getGnd()->height;
+
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, camera->getMatrix());
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+
+		if (editMode == EditMode::TextureEdit && mapRenderer.mouse3d.w < 1 && map && cursorX >= 0 && cursorX < map->getGnd()->width && cursorY >= 0 && cursorY < mapHeight && textureWindow->selectedImage != -1)
+		{
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.75f));
+			highlightRenderState.activeTexture[0] = map->getGnd()->textures[textureWindow->selectedImage]->texture;
+			std::vector<blib::VertexP3T2> verts;
+
+			int cursorWidth = 4;
+			int cursorHeight = 4;
+
+			int cursorTopLeftX = cursorX - cursorWidth / 2;
+			int cursorTopLeftY = cursorY - cursorHeight / 2;
+
+			glm::vec2 texStart = glm::vec2(textureWindow->tx1.x, textureWindow->tx2.y);
+			glm::vec2 texInc = (textureWindow->tx2 - textureWindow->tx1) / glm::vec2(cursorWidth, -cursorHeight);
+			glm::vec2 texCenter = (textureWindow->tx1 + textureWindow->tx2) / 2.0f;
+
+			glm::mat4 rot;
+			rot = glm::translate(rot, glm::vec3(texCenter, 0));
+			rot = glm::rotate(rot, 90.0f * textureRot, glm::vec3(0, 0, 1));
+			rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
+			rot = glm::translate(rot, glm::vec3(-texCenter, 0));
+
+			for (int x = 0; x < cursorWidth; x++)
+			{
+				for (int y = 0; y < cursorHeight; y++)
+				{
+					int xx = x + cursorTopLeftX;
+					int yy = y + cursorTopLeftY;
+
+					glm::vec2 t1 = texStart + glm::vec2(x, y) * texInc;
+					glm::vec2 t2 = t1 + texInc;
+
+					Gnd::Cube* cube = map->getGnd()->cubes[xx][yy];
+
+					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx,			-cube->h3 + 0.1f, 10 * (mapHeight - yy)),		glm::vec2(rot * glm::vec4(t1.x,t1.y,0,1))));
+					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx,			-cube->h1 + 0.1f, 10 * (mapHeight - yy)-10),	glm::vec2(rot * glm::vec4(t1.x,t2.y,0,1))));
+					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx + 10,	-cube->h4 + 0.1f, 10 * (mapHeight - yy)),		glm::vec2(rot * glm::vec4(t2.x,t1.y,0,1))));
+
+					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx + 10,	-cube->h4 + 0.1f, 10 * (mapHeight - yy)),		glm::vec2(rot * glm::vec4(t2.x,t1.y,0,1))));
+					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx + 10,	-cube->h2 + 0.1f, 10 * (mapHeight - yy)-10),	glm::vec2(rot * glm::vec4(t2.x,t2.y,0,1))));
+					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx,			-cube->h1 + 0.1f, 10 * (mapHeight - yy)-10),	glm::vec2(rot * glm::vec4(t1.x,t2.y,0,1))));
+				}
+			}
+
+
+			renderer->drawTriangles(verts, highlightRenderState);
+
+
+
+
+		}
+
+
+
+		spriteBatch->begin();
+
+
+		if (mapRenderer.mouse3d.w < 1 && map)
+		{
+			char statusText[256];
+			sprintf(statusText, "Mouse: %3i, %3i,   -> %3.2f,%3.2f,%3.2f", cursorX, cursorY, mapRenderer.mouse3d.x, mapRenderer.mouse3d.y, mapRenderer.mouse3d.z);
+
+			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(5, window->getHeight() - 18)), blib::Color::black);
+			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(3, window->getHeight() - 20)), blib::Color::black);
+			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(4, window->getHeight() - 19)), blib::Color::white);
+		}
+		std::string editModeString = "";
+		if (editMode == EditMode::TextureEdit)
+			editModeString = "Texture Edit";
+		else if (editMode == EditMode::ObjectEdit)
+			editModeString = "Object Edit";
+		else if (editMode == EditMode::GatEdit)
+			editModeString = "GAT Edit";
+		else
+			editModeString = "Unknown editmode: " + blib::util::toString((int)editMode);
+
+		spriteBatch->draw(wm->font, editModeString, blib::math::easyMatrix(glm::vec2(301, window->getHeight() - 18)), blib::Color::black);
+		spriteBatch->draw(wm->font, editModeString, blib::math::easyMatrix(glm::vec2(299, window->getHeight() - 20)), blib::Color::black);
+		spriteBatch->draw(wm->font, editModeString, blib::math::easyMatrix(glm::vec2(300, window->getHeight() - 19)), blib::Color::white);
 	}
-
-	spriteBatch->begin();
-
-
-	if (mapRenderer.mouse3d.w < 1 && map)
-	{
-		char statusText[256];
-		sprintf(statusText, "Mouse: %3i, %3i,   -> %.2f,%.2f,%.2f", (int)glm::floor(mapRenderer.mouse3d.x / 10), map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10), mapRenderer.mouse3d.x, mapRenderer.mouse3d.y, mapRenderer.mouse3d.z);
-
-		spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(5, window->getHeight() - 18)), blib::Color::black);
-		spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(3, window->getHeight() - 20)), blib::Color::black);
-		spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(4, window->getHeight() - 19)), blib::Color::white);
-	}
+	else
+		spriteBatch->begin();
 
 	wm->draw(*spriteBatch);
 	spriteBatch->end();

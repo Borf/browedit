@@ -26,7 +26,17 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	Json::Value config;
 
 	blib::MouseState lastMouseState;
+	blib::KeyState lastKeyState;
 
+	blib::RenderState highlightRenderState;
+	enum class HighlightShaderUniforms
+	{
+		s_texture,
+		modelviewMatrix,
+		projectionMatrix,
+		color,
+		texMult,
+	};
 
 	TextureWindow* textureWindow;
 public:
@@ -41,6 +51,24 @@ public:
 	void saveMap(std::string fileName);
 
 	virtual bool onScroll( int delta );
+
+
+
+	enum class EditMode
+	{
+		TextureEdit,
+		ObjectEdit,
+		GatEdit,
+		WallEdit,
+	};
+
+	EditMode editMode;
+
+
+	glm::ivec2 textureTargetSize;
+	int textureRot;
+	bool textureFlipH;
+	bool textureFlipV;
 
 };
 

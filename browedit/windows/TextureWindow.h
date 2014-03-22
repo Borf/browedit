@@ -75,5 +75,7 @@ public:
 	virtual void arrangeComponents(int oldWidth, int oldHeight);
 
 	int selectedImage;
+	glm::vec2 tx1;
+	glm::vec2 tx2;
 };
 

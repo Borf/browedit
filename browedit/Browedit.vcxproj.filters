@@ -109,6 +109,12 @@
     <None Include="..\assets\windows\OpenWindow.json">
       <Filter>assets\windows</Filter>
     </None>
+    <None Include="..\assets\shaders\highlight.vert">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\highlight.frag">
+      <Filter>assets\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Browedit.rc">

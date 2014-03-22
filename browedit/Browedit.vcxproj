@@ -110,6 +110,8 @@
     <None Include="..\assets\menu.json" />
     <None Include="..\assets\shaders\gnd.frag" />
     <None Include="..\assets\shaders\gnd.vert" />
+    <None Include="..\assets\shaders\highlight.frag" />
+    <None Include="..\assets\shaders\highlight.vert" />
     <None Include="..\assets\shaders\rsw.frag" />
     <None Include="..\assets\shaders\rsw.vert" />
     <None Include="..\assets\skins\ro.json" />
