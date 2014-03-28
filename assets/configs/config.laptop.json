@@ -8,5 +8,7 @@
 			"c:/games/cookiero/cookie.grf"
 		]
 	},
-	"defaultmap" : "prontera"
+	"defaultmap" : "prontera",
+	"threadedrendering" : true,
+	"backgroundworkers" : true
 }

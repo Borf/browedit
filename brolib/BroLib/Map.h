@@ -11,7 +11,7 @@ class Map
 public:
 	Map(const std::string &fileName);
 
-	const inline Gnd* getGnd() const
+	inline Gnd* getGnd() const
 	{
 		return gnd;
 	}
