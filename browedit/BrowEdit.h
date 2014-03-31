@@ -20,6 +20,16 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	blib::wm::WM* wm;
 	blib::wm::Menu* rootMenu;
 
+	enum class EditMode
+	{
+		TextureEdit,
+		ObjectEdit,
+		GatEdit,
+		WallEdit,
+	};
+
+	EditMode editMode;
+
 	Map* map;
 	Camera* camera;
 	MapRenderer mapRenderer;
@@ -53,16 +63,9 @@ public:
 	virtual bool onScroll( int delta );
 
 
+	void setEditMode(EditMode newMode);
 
-	enum class EditMode
-	{
-		TextureEdit,
-		ObjectEdit,
-		GatEdit,
-		WallEdit,
-	};
 
-	EditMode editMode;
 
 
 	glm::ivec2 textureTargetSize;

@@ -151,6 +151,8 @@ void BrowEdit::init()
 
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
+	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
+	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
 
 }
 
@@ -382,4 +384,15 @@ bool BrowEdit::onScroll( int delta )
 	if (camera->distance < 0)
 		camera->distance = 0;
 	return true;
+}
+
+
+
+void BrowEdit::setEditMode(EditMode newMode)
+{
+	this->editMode = newMode;
+	rootMenu->setEnabled("editmode/textureedit", editMode == EditMode::TextureEdit);
+	rootMenu->setEnabled("editmode/objectedit", editMode == EditMode::ObjectEdit);
+
+
 }

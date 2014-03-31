@@ -67,7 +67,16 @@
 		"type" : "menu",
 		"subitems" :
 		[
-
+			{
+				"name" : "textureedit",
+				"type" : "toggle",
+				"initial" : true
+			},
+			{
+				"name" : "objectedit",
+				"type" : "toggle",
+				"initial" : false
+			}
 
 		]
 
