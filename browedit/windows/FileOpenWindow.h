@@ -16,6 +16,7 @@ class FileOpenWindow : public blib::wm::Window
 public:
 	FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit);
 
-	void btnOpenClick(int x, int y);
+	void btnOpenClick(blib::wm::Widget*, int, int, int);
+	void listClick(blib::wm::Widget*, int, int, int);
 	void filter(char key);
 };

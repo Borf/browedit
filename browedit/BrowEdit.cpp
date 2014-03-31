@@ -171,77 +171,86 @@ void BrowEdit::update( double elapsedTime )
 		else
 			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y,0,0) * 0.003f * (camera->distance+10) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0,0,1)));
 	}
-
-
-	if (editMode == EditMode::TextureEdit)
+	if (map)
 	{
-		if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
-			textureRot = (textureRot + 1) % 4;
-		if (keyState.isPressed('H') && !lastKeyState.isPressed('H'))
-			textureFlipH = !textureFlipH;
-		if (keyState.isPressed('V') && !lastKeyState.isPressed('V'))
-			textureFlipV = !textureFlipV;
-		if (keyState.isPressed('+') && !lastKeyState.isPressed('+'))
-			textureTargetSize += glm::ivec2(1,1);
-		if (keyState.isPressed('-') && !lastKeyState.isPressed('-'))
-			textureTargetSize = glm::max(glm::ivec2(1,1), textureTargetSize + glm::ivec2(-1, -1));
-		if (keyState.isPressed(blib::KEY_LEFT) && !lastKeyState.isPressed(blib::KEY_LEFT))
-			textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(-1, 0));
-		if (keyState.isPressed(blib::KEY_RIGHT) && !lastKeyState.isPressed(blib::KEY_RIGHT))
-			textureTargetSize += glm::ivec2(1, 0);
-		if (keyState.isPressed(blib::KEY_UP) && !lastKeyState.isPressed(blib::KEY_UP))
-			textureTargetSize += glm::ivec2(0, 1);
-		if (keyState.isPressed(blib::KEY_DOWN) && !lastKeyState.isPressed(blib::KEY_DOWN))
-			textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(0, -1));
 
-		int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
-		int cursorY = map->getGnd()->height +1-(int)glm::floor(mapRenderer.mouse3d.z / 10);
-		int mapHeight = map->getGnd()->height;
-
-
-		if (mouseState.leftButton && !lastMouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && textureWindow->selectedImage != -1)
+		if (editMode == EditMode::TextureEdit)
 		{
-			int cursorWidth = textureTargetSize.x;
-			int cursorHeight = textureTargetSize.y;
+			if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
+				textureRot = (textureRot + 1) % 4;
+			if (keyState.isPressed('H') && !lastKeyState.isPressed('H'))
+				textureFlipH = !textureFlipH;
+			if (keyState.isPressed('V') && !lastKeyState.isPressed('V'))
+				textureFlipV = !textureFlipV;
+			if (keyState.isPressed(blib::KEY_PLUS) && !lastKeyState.isPressed(blib::KEY_PLUS))
+				textureTargetSize += glm::ivec2(1, 1);
+			if (keyState.isPressed(blib::KEY_MINUS) && !lastKeyState.isPressed(blib::KEY_MINUS))
+				textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(-1, -1));
+			if (keyState.isPressed(blib::KEY_LEFT) && !lastKeyState.isPressed(blib::KEY_LEFT))
+				textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(-1, 0));
+			if (keyState.isPressed(blib::KEY_RIGHT) && !lastKeyState.isPressed(blib::KEY_RIGHT))
+				textureTargetSize += glm::ivec2(1, 0);
+			if (keyState.isPressed(blib::KEY_UP) && !lastKeyState.isPressed(blib::KEY_UP))
+				textureTargetSize += glm::ivec2(0, 1);
+			if (keyState.isPressed(blib::KEY_DOWN) && !lastKeyState.isPressed(blib::KEY_DOWN))
+				textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(0, -1));
 
-			glm::ivec2 cursorTopLeft = glm::ivec2(cursorX, cursorY) - textureTargetSize / 2;
+			int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
+			int cursorY = map->getGnd()->height + 1 - (int)glm::floor(mapRenderer.mouse3d.z / 10);
+			int mapHeight = map->getGnd()->height;
 
-			glm::vec2 texStart = glm::vec2(textureWindow->tx1.x, textureWindow->tx2.y);
-			glm::vec2 texInc = (textureWindow->tx2 - textureWindow->tx1) / glm::vec2(cursorWidth, -cursorHeight);
-			glm::vec2 texCenter = (textureWindow->tx1 + textureWindow->tx2) / 2.0f;
 
-			glm::mat4 rot;
-			rot = glm::translate(rot, glm::vec3(texCenter, 0));
-			rot = glm::rotate(rot, 90.0f * textureRot, glm::vec3(0, 0, 1));
-			rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
-			rot = glm::translate(rot, glm::vec3(-texCenter, 0));
-
-			for (int x = 0; x < cursorWidth; x++)
+			if (mouseState.leftButton && !lastMouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && textureWindow->selectedImage != -1)
 			{
-				for (int y = 0; y < cursorHeight; y++)
+				int cursorWidth = textureTargetSize.x;
+				int cursorHeight = textureTargetSize.y;
+
+				glm::ivec2 cursorTopLeft = glm::ivec2(cursorX, cursorY) - textureTargetSize / 2;
+
+				glm::vec2 texStart = glm::vec2(textureWindow->tx1.x, textureWindow->tx2.y);
+				glm::vec2 texInc = (textureWindow->tx2 - textureWindow->tx1) / glm::vec2(cursorWidth, -cursorHeight);
+				glm::vec2 texCenter = (textureWindow->tx1 + textureWindow->tx2) / 2.0f;
+
+				glm::mat4 rot;
+				rot = glm::translate(rot, glm::vec3(texCenter, 0));
+				rot = glm::rotate(rot, 90.0f * textureRot, glm::vec3(0, 0, 1));
+				rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
+				rot = glm::translate(rot, glm::vec3(-texCenter, 0));
+
+				for (int x = 0; x < cursorWidth; x++)
 				{
-					int xx = x + cursorTopLeft.x;
-					int yy = y + cursorTopLeft.y;
-					if (xx < 0 || yy < 0 || xx >= map->getGnd()->width || yy >= map->getGnd()->height)
-						continue;
+					for (int y = 0; y < cursorHeight; y++)
+					{
+						int xx = x + cursorTopLeft.x;
+						int yy = y + cursorTopLeft.y;
+						if (xx < 0 || yy < 0 || xx >= map->getGnd()->width || yy >= map->getGnd()->height)
+							continue;
 
-					glm::vec2 t1 = texStart + glm::vec2(x, y) * texInc;
-					glm::vec2 t2 = t1 + texInc;
+						glm::vec2 t1 = texStart + glm::vec2(x, y) * texInc;
+						glm::vec2 t2 = t1 + texInc;
 
-					Gnd::Cube* cube = map->getGnd()->cubes[xx][yy];
-					Gnd::Tile* tile = new Gnd::Tile(*map->getGnd()->tiles[cube->tileUp]);
-					cube->tileUp = map->getGnd()->tiles.size();
-					map->getGnd()->tiles.push_back(tile);
-					tile->textureIndex = textureWindow->selectedImage;
-					tile->v1 = glm::vec2(rot * glm::vec4(t1.x, t1.y, 0, 1));
-					tile->v2 = glm::vec2(rot * glm::vec4(t2.x, t1.y, 0, 1));
-					tile->v3 = glm::vec2(rot * glm::vec4(t1.x, t2.y, 0, 1));
-					tile->v4 = glm::vec2(rot * glm::vec4(t2.x, t2.y, 0, 1));
-					mapRenderer.setTileDirty(xx, yy);
+						Gnd::Cube* cube = map->getGnd()->cubes[xx][yy];
+						Gnd::Tile* tile = NULL;
+						if (cube->tileUp != -1)
+							tile = new Gnd::Tile(*map->getGnd()->tiles[cube->tileUp]);
+						else
+						{
+							tile = new Gnd::Tile();
+							tile->lightmapIndex = 0;
+						}
+						cube->tileUp = map->getGnd()->tiles.size();
+						map->getGnd()->tiles.push_back(tile);
+						tile->textureIndex = textureWindow->selectedImage;
+						tile->v1 = glm::vec2(rot * glm::vec4(t1.x, t1.y, 0, 1));
+						tile->v2 = glm::vec2(rot * glm::vec4(t2.x, t1.y, 0, 1));
+						tile->v3 = glm::vec2(rot * glm::vec4(t1.x, t2.y, 0, 1));
+						tile->v4 = glm::vec2(rot * glm::vec4(t2.x, t2.y, 0, 1));
+						mapRenderer.setTileDirty(xx, yy);
+					}
 				}
 			}
-		}
 
+		}
 	}
 	lastKeyState = keyState;
 	lastMouseState = mouseState;
@@ -290,6 +299,9 @@ void BrowEdit::draw()
 				{
 					int xx = x + cursorTopLeft.x;
 					int yy = y + cursorTopLeft.y;
+
+					if (xx < 0 || yy < 0 || xx >= map->getGnd()->width || yy >= map->getGnd()->height)
+						continue;
 
 					glm::vec2 t1 = texStart + glm::vec2(x, y) * texInc;
 					glm::vec2 t2 = t1 + texInc;

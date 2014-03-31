@@ -16,7 +16,8 @@
 	"color" : "FFFFFFFF",
 	"colorblurred" : "FFFFFFAA",
 	"texture" : "assets/textures/skins/ro.png",
-	"font" : "assets/fonts/tahoma.tga",
+	"font" : "assets/fonts/tahoma",
+	"radialfont" : "tahomabig",
 	"window" : 
 	{
 		"title" : 

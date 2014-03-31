@@ -29,10 +29,9 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 			files.push_back(name);
 		}
 	}
-//	lstFiles->addClickHandler(fastdelegate::MakeDelegate(this, &FileOpenWindow::btnOpenClick));
-
 	getComponent("txtFilter")->addKeyHandler(std::bind(&FileOpenWindow::filter, this, std::placeholders::_1));
-//	getComponent("btnOpen")->addClickHandler(fastdelegate::MakeDelegate(this, &FileOpenWindow::btnOpenClick));
+	lstFiles->addClickHandler(std::bind(&FileOpenWindow::listClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	getComponent("btnOpen")->addClickHandler(std::bind(&FileOpenWindow::btnOpenClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 	selectedWidget = getComponent("txtFilter");
 	selectedWidget->selected = true;
 
@@ -47,7 +46,7 @@ void FileOpenWindow::filter(char key)
 {
 	if (key == '\r' || key == '\n')
 	{
-		btnOpenClick(0, 0);
+		btnOpenClick(NULL, 0, 0,1);
 		return;
 	}
 
@@ -62,11 +61,19 @@ void FileOpenWindow::filter(char key)
 	lstFiles->selectedItem = lstFiles->items.size() == 0 ? -1 : 0;
 }
 
-void FileOpenWindow::btnOpenClick(int x, int y)
+
+void FileOpenWindow::listClick(blib::wm::Widget*, int, int, int clickCount)
 {
-//	if (lstFiles->selectedItem != -1)
-//		BrowEdit::getInstance()->initWorld(lstFiles->items[lstFiles->selectedItem]);
-	
+	if (clickCount == 2)
+		btnOpenClick(NULL, 0, 0, 0);
+}
+
+void FileOpenWindow::btnOpenClick(blib::wm::Widget*, int, int, int)
+{
+
+	if (lstFiles->selectedItem == -1)
+		return;
+
 	std::string fileName = "data\\" + lstFiles->items[lstFiles->selectedItem];
 
 	browEdit->loadMap(fileName);
