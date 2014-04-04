@@ -337,7 +337,15 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 	{
 		frames[i] = new Frame();
 		frames[i]->time = rsmFile->readInt();
-		frames[i]->quaternion = glm::quat(rsmFile->readFloat(), rsmFile->readFloat(), rsmFile->readFloat(), rsmFile->readFloat());
+
+		float x,y,z,w;
+
+		x = rsmFile->readFloat();
+		y = rsmFile->readFloat();
+		z = rsmFile->readFloat();
+		w = rsmFile->readFloat();
+
+		frames[i]->quaternion = glm::quat( w, x, y, z );
 	}
 //	calcVbos();
 }
