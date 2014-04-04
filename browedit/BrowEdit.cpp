@@ -175,7 +175,6 @@ void BrowEdit::update( double elapsedTime )
 	}
 	if (map)
 	{
-
 		if (editMode == EditMode::TextureEdit)
 		{
 			if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
@@ -327,7 +326,6 @@ void BrowEdit::draw()
 
 
 		}
-
 
 
 		spriteBatch->begin();

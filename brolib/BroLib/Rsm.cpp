@@ -2,12 +2,12 @@
 
 #include <blib/util/FileSystem.h>
 #include <blib/util/Log.h>
+#include <blib/util/Profiler.h>
 
 using blib::util::Log;
 
 #include <map>
 #include <glm/gtc/matrix_transform.hpp>
-
 
 
 Rsm::Rsm(std::string fileName)
@@ -99,8 +99,6 @@ Rsm::~Rsm()
 }
 
 
-int lastTick = 0;
-
 void Rsm::Mesh::calcMatrix1()
 {
 	matrix1 = glm::mat4();
@@ -122,12 +120,14 @@ void Rsm::Mesh::calcMatrix1()
 	}
 	else
 	{
-		if(false)
+		if(true)
 		{
+			int tick = (int)(blib::util::Profiler::getAppTime() * 1000) % frames[frames.size() - 1]->time;
+
 			int current = 0;
 			for(unsigned int i = 0; i < frames.size(); i++)
 			{
-				if(frames[i]->time > lastTick)
+				if(frames[i]->time > tick)
 				{
 					current = i-1;
 					break;
@@ -140,7 +140,7 @@ void Rsm::Mesh::calcMatrix1()
 			if(next >= (int)frames.size())
 				next = 0;
 
-			float interval = ((float) (lastTick-frames[current]->time)) / ((float) (frames[next]->time-frames[current]->time));
+			float interval = ((float) (tick-frames[current]->time)) / ((float) (frames[next]->time-frames[current]->time));
 #if 1
 			glm::quat quat = glm::mix(frames[current]->quaternion, frames[next]->quaternion, interval);
 #else
@@ -155,9 +155,6 @@ void Rsm::Mesh::calcMatrix1()
 
 			matrix1 = matrix1 * glm::toMat4(quat);
 
-//			lastTick += cGraphicsBase::getFrameTicks();
-//			while(lastTick > animationFrames[nAnimationFrames-1].time)
-//				lastTick -= animationFrames[nAnimationFrames-1].time;
 		}
 		else
 		{

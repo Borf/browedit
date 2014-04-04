@@ -358,10 +358,17 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 			mesh->renderer->indices.push_back(VboIndex(it2->first, allVerts.size(), it2->second.size()));
 			allVerts.insert(allVerts.end(), it2->second.begin(), it2->second.end());
 		}
+		renderer->setVbo(mesh->renderer->vbo, allVerts);
 		mesh->renderer->matrix = matrix * mesh->matrix1 * mesh->matrix2;
 		mesh->renderer->matrixSub = matrix * mesh->matrix1;
-		renderer->setVbo(mesh->renderer->vbo, allVerts);
 	}
+	if (!mesh->frames.empty())
+	{
+		mesh->calcMatrix1();
+		mesh->renderer->matrix = matrix * mesh->matrix1 * mesh->matrix2;
+		mesh->renderer->matrixSub = matrix * mesh->matrix1;
+	}
+
 	RsmMeshRenderInfo* meshInfo = mesh->renderer;
 
 	rswRenderState.activeVbo = meshInfo->vbo;
