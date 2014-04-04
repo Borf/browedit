@@ -28,3 +28,5 @@ Map::Map( const std::string &fileName )
 
 }
 
+template class blib::BackgroundTask<int>;
+

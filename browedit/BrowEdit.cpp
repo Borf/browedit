@@ -368,7 +368,7 @@ void BrowEdit::loadMap(std::string fileName)
 		delete map;
 	map = NULL;
 
-	runBackground<Map*>(	[fileName] () { return new Map(fileName); }, 
+	new blib::BackgroundTask<Map*>(this, 	[fileName] () { return new Map(fileName); }, 
 							[this] (Map* param) { map = param;
 										camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
 										mapRenderer.setMap(map);

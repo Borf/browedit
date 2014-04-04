@@ -402,4 +402,7 @@ void MapRenderer::setTileDirty(int xx, int yy)
 }
 
 
+
+template class blib::BackgroundTask<char*>;
+
 #pragma endregion
