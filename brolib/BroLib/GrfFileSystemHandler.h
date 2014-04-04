@@ -18,5 +18,5 @@ public:
 	virtual void getFileList( const std::string &path, std::vector<std::string> &files );
 
 private:
-	std::string GrfFileSystemHandler::sanitizeFileName(std::string fileName);
+	std::string sanitizeFileName(std::string fileName);
 };

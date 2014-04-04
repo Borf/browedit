@@ -5,9 +5,10 @@ using blib::util::Log;
 #include <algorithm>
 #include <cctype>
 
+
 std::string GrfFileSystemHandler::sanitizeFileName(std::string fileName)
 {
-	std::transform(fileName.begin(), fileName.end(), fileName.begin(), std::tolower);
+	std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
 	std::replace(fileName.begin(), fileName.end(), '/', '\\');
 
 	int index;
