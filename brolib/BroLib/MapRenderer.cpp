@@ -48,12 +48,12 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
 						{
-							verts.push_back(blib::VertexP3(glm::vec3(10 * x+10, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x+10, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x+10, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
 						}
 					}
 
-					/*{
+					{
 						Gnd::Tile* t1 = NULL;
 						Gnd::Tile* t2 = NULL;
 						if (gnd->cubes[x][y]->tileUp != -1)
@@ -63,24 +63,46 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
 						{
-							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
-							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h1 + 0.1f, 10 * gnd->height - 10 * y + 10)));
 						}
-					}*/
+					}
 
-					/*
-					verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
-					verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
+					{
+						Gnd::Tile* t1 = NULL;
+						Gnd::Tile* t2 = NULL;
+						if (gnd->cubes[x][y]->tileUp != -1)
+							t1 = gnd->tiles[gnd->cubes[x][y]->tileUp];
+						if (gnd->cubes[x][y + 1]->tileUp != -1)
+							t2 = gnd->tiles[gnd->cubes[x][y + 1]->tileUp];
+
+						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						{
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
+						}
+					}
 					
-					verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
-					verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
-					*/
+					{
+						Gnd::Tile* t1 = NULL;
+						Gnd::Tile* t2 = NULL;
+						if (gnd->cubes[x][y]->tileUp != -1)
+							t1 = gnd->tiles[gnd->cubes[x][y]->tileUp];
+						if (gnd->cubes[x][y - 1]->tileUp != -1)
+							t2 = gnd->tiles[gnd->cubes[x][y - 1]->tileUp];
+
+						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						{
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h1 + 0.1f, 10 * gnd->height - 10 * y + 10)));
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
+						}
+					}
 				}
 			}
 			renderer->setVbo(gndTextureGridVbo, verts);
 			gndGridDirty = false;
 		}
-
+		//highlightRenderState.depthTest = false;
 		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMatrix);
 		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, projectionMatrix);
 		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1));
@@ -486,7 +508,7 @@ void MapRenderer::resizeGl(int width, int height)
 void MapRenderer::setTileDirty(int xx, int yy)
 {
 	gndChunks[yy / CHUNKSIZE][xx / CHUNKSIZE]->dirty = true;
-	
+	gndGridDirty = true;
 }
 
 
