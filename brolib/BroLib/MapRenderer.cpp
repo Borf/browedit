@@ -24,9 +24,74 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
 
 	renderGnd(renderer);
-
 	renderer->unproject(mousePosition, &mouse3d, cameraMatrix, projectionMatrix);
 
+
+	if (drawTextureGrid)
+	{
+		if (gndGridDirty)
+		{
+			std::vector<blib::VertexP3> verts;
+			Gnd* gnd = map->getGnd();
+
+			for (int x = 1; x < gnd->width-1; x++)
+			{
+				for (int y = 1; y < gnd->height-1; y++)
+				{
+					{
+						Gnd::Tile* t1 = NULL;
+						Gnd::Tile* t2 = NULL;
+						if (gnd->cubes[x][y]->tileUp != -1)
+							t1 = gnd->tiles[gnd->cubes[x][y]->tileUp];
+						if (gnd->cubes[x+1][y]->tileUp != -1)
+							t2 = gnd->tiles[gnd->cubes[x+1][y]->tileUp];
+
+						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						{
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x+10, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x+10, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
+						}
+					}
+
+					/*{
+						Gnd::Tile* t1 = NULL;
+						Gnd::Tile* t2 = NULL;
+						if (gnd->cubes[x][y]->tileUp != -1)
+							t1 = gnd->tiles[gnd->cubes[x][y]->tileUp];
+						if (gnd->cubes[x - 1][y]->tileUp != -1)
+							t2 = gnd->tiles[gnd->cubes[x - 1][y]->tileUp];
+
+						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						{
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
+							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
+						}
+					}*/
+
+					/*
+					verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
+					verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
+					
+					verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
+					verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
+					*/
+				}
+			}
+			renderer->setVbo(gndTextureGridVbo, verts);
+			gndGridDirty = false;
+		}
+
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMatrix);
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, projectionMatrix);
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1));
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+		highlightRenderState.activeTexture[0] = NULL;
+
+		highlightRenderState.activeVbo = gndTextureGridVbo;
+		renderer->drawLines<blib::VertexP3>(gndTextureGridVbo->getLength(), highlightRenderState);
+		highlightRenderState.activeVbo = NULL;
+
+	}
 
 	renderRsw(renderer);
 
@@ -59,6 +124,8 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 	gndShadow = resourceManager->getResource<blib::Texture>(2048, 2048);
 	gndNoShadow = resourceManager->getResource<blib::Texture>(1,1);
+	gndTextureGridVbo = resourceManager->getResource<blib::VBO>();
+	gndTextureGridVbo->setVertexFormat<blib::VertexP3>();
 
 
 	rswRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/rsw");
@@ -79,8 +146,28 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
 	rswRenderState.depthTest = true;
 
-	gndShadowDirty = false;
+	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/highlight");
+	highlightRenderState.activeShader->bindAttributeLocation("a_position", 0);
+	highlightRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::color, "color", blib::Shader::Vec4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::texMult, "texMult", blib::Shader::Vec4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::modelviewMatrix, "modelviewMatrix", blib::Shader::Mat4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::projectionMatrix, "projectionMatrix", blib::Shader::Mat4);
+	highlightRenderState.activeShader->finishUniformSetup();
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::s_texture, 0);
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 
+	highlightRenderState.depthTest = true;
+	highlightRenderState.blendEnabled = true;
+	highlightRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
+	highlightRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
+	highlightRenderState.dstBlendColor = blib::RenderState::ONE_MINUS_SRC_ALPHA;
+	highlightRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
+
+
+	gndShadowDirty = false;
+	gndGridDirty = false;
 }
 
 void MapRenderer::setMap(const Map* map)
@@ -100,6 +187,7 @@ void MapRenderer::setMap(const Map* map)
 		for(size_t x = 0; x < gndChunks[y].size(); x++)
 			gndChunks[y][x] = new GndChunk(x*CHUNKSIZE,y*CHUNKSIZE, resourceManager);
 	gndShadowDirty = true;
+	gndGridDirty = true;
 
 
 	//load textures if needed

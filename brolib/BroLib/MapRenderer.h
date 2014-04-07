@@ -16,7 +16,7 @@ class Gnd;
 class Rsw;
 class Rsm;
 
-#define CHUNKSIZE 64
+#define CHUNKSIZE 16
 
 class VboIndex
 {
@@ -102,6 +102,20 @@ private:
 			s_texture,
 		};
 	};
+
+	blib::RenderState highlightRenderState;
+	enum class HighlightShaderUniforms
+	{
+		s_texture,
+		modelviewMatrix,
+		projectionMatrix,
+		color,
+		texMult,
+	};
+
+
+	blib::VBO* gndTextureGridVbo;
+	bool gndGridDirty;
 
 #pragma endregion
 
