@@ -8,7 +8,7 @@
 			"c:/games/cookiero/cookie.grf"
 		]
 	},
-	"defaultmap" : "prontera",
+	"defaultmap" : "alberta",
 	"threadedrendering" : true,
 	"backgroundworkers" : true
 }
