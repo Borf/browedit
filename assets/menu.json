@@ -52,17 +52,20 @@
 			{
 				"name" : "objects",
 				"type" : "toggle",
-				"initial" : true
+				"initial" : true,
+				"key" : "o"
 			},
 			{
 				"name" : "shadows",
 				"type" : "toggle",
-				"initial" : true
+				"initial" : true,
+				"key" : "s"
 			},
 			{
 				"name" : "grid",
 				"type" : "toggle",
-				"initial" : true
+				"initial" : true,
+				"key" : "g"
 			}
 		]
 
@@ -75,12 +78,14 @@
 			{
 				"name" : "textureedit",
 				"type" : "toggle",
-				"initial" : true
+				"initial" : true,
+				"key" : "f1"
 			},
 			{
 				"name" : "objectedit",
 				"type" : "toggle",
-				"initial" : false
+				"initial" : false,
+				"key" : "f2"
 			}
 
 		]
