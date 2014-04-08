@@ -66,6 +66,21 @@
 				"type" : "toggle",
 				"initial" : true,
 				"key" : "g"
+			},
+			{
+				"name" : "lights",
+				"type" : "toggle",
+				"initial" : true
+			},
+			{
+				"name" : "sounds",
+				"type" : "toggle",
+				"initial" : true
+			},
+			{
+				"name" : "effects",
+				"type" : "toggle",
+				"initial" : true
 			}
 		]
 

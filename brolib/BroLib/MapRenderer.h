@@ -117,6 +117,10 @@ private:
 	blib::VBO* gndTextureGridVbo;
 	bool gndGridDirty;
 
+	blib::Texture* rswLightTexture;
+	blib::Texture* rswEffectTexture;
+	blib::Texture* rswSoundTexture;
+
 #pragma endregion
 
 	blib::ResourceManager* resourceManager;
@@ -131,6 +135,9 @@ public:
 
 	bool drawShadows;
 	bool drawObjects;
+	bool drawLights;
+	bool drawEffects;
+	bool drawSounds;
 	bool drawTextureGrid;
 	bool drawObjectGrid;
 	bool drawQuadTree;

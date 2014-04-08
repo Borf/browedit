@@ -51,6 +51,9 @@
     <ClInclude Include="windows\TextureWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\ObjectWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -66,6 +69,9 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="windows\TextureWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\ObjectWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,6 +120,9 @@
     </None>
     <None Include="..\assets\shaders\highlight.frag">
       <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\windows\ObjectWindow.json">
+      <Filter>assets\windows</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

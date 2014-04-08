@@ -13,6 +13,7 @@ namespace blib {
 class Map;
 class Camera;
 class TextureWindow;
+class ObjectWindow;
 
 
 class BrowEdit : public blib::App, public blib::MouseListener
@@ -30,8 +31,6 @@ class BrowEdit : public blib::App, public blib::MouseListener
 
 	EditMode editMode;
 
-	Map* map;
-	Camera* camera;
 	MapRenderer mapRenderer;
 	Json::Value config;
 
@@ -49,6 +48,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	};
 
 	TextureWindow* textureWindow;
+	ObjectWindow* objectWindow;
 public:
 	BrowEdit(const Json::Value &config);
 	~BrowEdit(void);
@@ -67,6 +67,8 @@ public:
 
 
 
+	Map* map;
+	Camera* camera;
 
 	glm::ivec2 textureTargetSize;
 	int textureRot;

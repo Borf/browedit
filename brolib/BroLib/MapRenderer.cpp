@@ -246,6 +246,10 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	highlightRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
 
 
+	rswLightTexture = resourceManager->getResource<blib::Texture>("assets/light.png");
+	rswEffectTexture= resourceManager->getResource<blib::Texture>("assets/effect.png");
+	rswSoundTexture = resourceManager->getResource<blib::Texture>("assets/sound.png");
+
 	gndShadowDirty = false;
 	gndGridDirty = false;
 }
