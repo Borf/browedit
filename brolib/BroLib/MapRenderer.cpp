@@ -20,6 +20,24 @@ using blib::util::Log;
 #include <glm/gtc/matrix_transform.hpp>
 
 
+float mod(float x, float m)
+{
+	while (x > m)
+		x -= m;
+	while (x < 0)
+		x += m;
+	return x;
+}
+glm::vec2 mod(const glm::vec2 &a, float m)
+{
+	return glm::vec2(mod(a.x, m), mod(a.y, m));
+}
+float dist(const glm::vec2 &a, const glm::vec2 &b)
+{
+	return glm::length(glm::min(mod(a - b, 1), mod(b - a, 1)));
+}
+
+
 void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
 
@@ -46,7 +64,17 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 						if (gnd->cubes[x+1][y]->tileUp != -1)
 							t2 = gnd->tiles[gnd->cubes[x+1][y]->tileUp];
 
-						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						bool drawLine = false;
+						if ((t1 == NULL) != (t2 == NULL)) // NULL next to a tile
+							drawLine = true;
+						else if (t1 == NULL)
+							drawLine = false; // both tiles are NULL
+						else if (t1->textureIndex != t2->textureIndex) // 2 different textures
+							drawLine = true;
+						else if (dist(t1->v2, t2->v1) > 0.1 || dist(t1->v4, t2->v3) > 0.1)
+							drawLine = true;
+
+						if (drawLine)
 						{
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x+10, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x+10, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));
@@ -61,7 +89,17 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 						if (gnd->cubes[x - 1][y]->tileUp != -1)
 							t2 = gnd->tiles[gnd->cubes[x - 1][y]->tileUp];
 
-						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						bool drawLine = false;
+						if ((t1 == NULL) != (t2 == NULL)) // NULL next to a tile
+							drawLine = true;
+						else if (t1 == NULL)
+							drawLine = false; // both tiles are NULL
+						else if (t1->textureIndex != t2->textureIndex) // 2 different textures
+							drawLine = true;
+						else if (dist(t1->v1, t2->v2) > 0.1 || dist(t1->v3, t2->v4) > 0.1)
+							drawLine = true;
+
+						if (drawLine)
 						{
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h1 + 0.1f, 10 * gnd->height - 10 * y + 10)));
@@ -76,7 +114,17 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 						if (gnd->cubes[x][y + 1]->tileUp != -1)
 							t2 = gnd->tiles[gnd->cubes[x][y + 1]->tileUp];
 
-						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						bool drawLine = false;
+						if ((t1 == NULL) != (t2 == NULL)) // NULL next to a tile
+							drawLine = true;
+						else if (t1 == NULL)
+							drawLine = false; // both tiles are NULL
+						else if (t1->textureIndex != t2->textureIndex) // 2 different textures
+							drawLine = true;
+						else if (dist(t1->v3, t2->v1) > 0.1 || dist(t1->v4, t2->v2) > 0.1)
+							drawLine = true;
+
+						if (drawLine)
 						{
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h3 + 0.1f, 10 * gnd->height - 10 * y)));
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h4 + 0.1f, 10 * gnd->height - 10 * y)));
@@ -91,7 +139,17 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 						if (gnd->cubes[x][y - 1]->tileUp != -1)
 							t2 = gnd->tiles[gnd->cubes[x][y - 1]->tileUp];
 
-						if ((t1 == NULL) != (t2 == NULL) || (t1 != NULL && t1->textureIndex != t2->textureIndex))
+						bool drawLine = false;
+						if ((t1 == NULL) != (t2 == NULL)) // NULL next to a tile
+							drawLine = true;
+						else if (t1 == NULL)
+							drawLine = false; // both tiles are NULL
+						else if (t1->textureIndex != t2->textureIndex) // 2 different textures
+							drawLine = true;
+						else if (dist(t1->v1, t2->v3) > 0.1 || dist(t1->v2, t2->v4) > 0.1)
+							drawLine = true;
+
+						if (drawLine)
 						{
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x, -gnd->cubes[x][y]->h1 + 0.1f, 10 * gnd->height - 10 * y + 10)));
 							verts.push_back(blib::VertexP3(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h2 + 0.1f, 10 * gnd->height - 10 * y + 10)));

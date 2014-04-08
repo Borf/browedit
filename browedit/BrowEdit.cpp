@@ -20,6 +20,7 @@
 #include <blib/Math.h>
 #include <blib/Util.h>
 #include <blib/ResourceManager.h>
+#include <blib/wm/ToggleMenuItem.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -162,6 +163,7 @@ void BrowEdit::update( double elapsedTime )
 		running = false;
 
 	mapRenderer.cameraMatrix = camera->getMatrix();
+	mapRenderer.drawTextureGrid = mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue(); // TODO: fix this
 
 	if(mouseState.middleButton)
 	{

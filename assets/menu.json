@@ -58,6 +58,11 @@
 				"name" : "shadows",
 				"type" : "toggle",
 				"initial" : true
+			},
+			{
+				"name" : "grid",
+				"type" : "toggle",
+				"initial" : true
 			}
 		]
 
