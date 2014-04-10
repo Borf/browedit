@@ -131,6 +131,7 @@ private:
 
 
 public:
+	MapRenderer();
 	glm::mat4 cameraMatrix;
 	glm::mat4 projectionMatrix;
 

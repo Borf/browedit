@@ -21,6 +21,19 @@ using blib::util::Log;
 #include <glm/gtc/matrix_transform.hpp>
 
 
+MapRenderer::MapRenderer()
+{
+	drawShadows = true;
+	drawObjects = true;
+	drawLights = true;
+	drawEffects = true;
+	drawSounds = true;
+	drawTextureGrid = true;
+	drawObjectGrid = true;
+	drawQuadTree = true;
+
+}
+
 float mod(float x, float m)
 {
 	while (x > m)

@@ -1,3 +1,5 @@
+#extension GL_EXT_gpu_shader4 : enable
+
 uniform sampler2D s_texture;
 uniform sampler2D s_texture2;
 
@@ -25,5 +27,5 @@ void main()
 	vec4 fac = vec4(edge, -edge, -edge, 1.0);
 
 
-	gl_FragColor = clamp(texColor + fac, 0, 1);
+	gl_FragColor = clamp(texColor + fac, 0.0, 1.0);
 }
