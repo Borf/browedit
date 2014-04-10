@@ -114,13 +114,6 @@ void BrowEdit::init()
 
 
 
-//	loadMap("data/c_tower1");
-#ifdef WIN32
-	loadMap("data/" + config["defaultmap"].asString());
-#else
-	loadMap("data/prontera");
-#endif
-//	loadMap("data/yuno");
 
 	mapRenderer.init(resourceManager, this);
 	mapRenderer.fov = config["fov"].asFloat();
@@ -174,6 +167,15 @@ void BrowEdit::init()
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
 	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
+
+
+//	loadMap("data/c_tower1");
+#ifdef WIN32
+	loadMap("data/" + config["defaultmap"].asString());
+#else
+	loadMap("data/prontera");
+#endif
+//	loadMap("data/yuno");
 
 }
 

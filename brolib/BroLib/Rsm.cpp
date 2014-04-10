@@ -15,7 +15,7 @@ Rsm::Rsm(std::string fileName)
 	renderer = NULL;
 	loaded = false;
 	blib::util::StreamInFile* rsmFile = new blib::util::StreamInFile(fileName);
-	if(!rsmFile)
+	if(!rsmFile || !rsmFile->opened())
 	{
 		Log::out<<"Unable to open "<<fileName<<Log::newline;
 		return;
