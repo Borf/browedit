@@ -507,6 +507,8 @@ void MapRenderer::renderRsw( blib::Renderer* renderer )
 
 void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 {
+	if (!model)
+		return;
 	glm::mat4 matrix;
 	if (!model->matrixCached)
 	{
