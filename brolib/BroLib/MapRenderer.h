@@ -128,6 +128,7 @@ private:
 	const Map* map;
 	blib::App* app;
 
+	blib::FBO* fbo;
 
 public:
 	glm::mat4 cameraMatrix;

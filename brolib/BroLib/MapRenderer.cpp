@@ -13,6 +13,7 @@
 #include <blib/util/Log.h>
 #include <blib/VBO.h>
 #include <blib/Window.h>
+#include <blib/FBO.h>
 
 using blib::util::Log;
 
@@ -182,6 +183,11 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	this->resourceManager = resourceManager;
 	this->app = app;
 	
+	fbo = resourceManager->getResource<blib::FBO>();
+	fbo->setSize(1920, 1080);
+	fbo->depth = true;
+	fbo->textureCount = 2;
+	fbo->stencil = false;
 
 	gndRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/gnd");
 	gndRenderState.activeShader->bindAttributeLocation("a_position", 0);
@@ -195,6 +201,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_texture, 0);
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_lighting, 1);
+	gndRenderState.activeFbo.push(fbo);
 	gndRenderState.blendEnabled = true;
 	gndRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
 	gndRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
@@ -219,6 +226,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->finishUniformSetup();
 
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
+	rswRenderState.activeFbo.push(fbo);
 	rswRenderState.blendEnabled = true;
 	rswRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
 	rswRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
@@ -238,6 +246,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::s_texture, 0);
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 
+	highlightRenderState.activeFbo.push(fbo);
 	highlightRenderState.depthTest = true;
 	highlightRenderState.blendEnabled = true;
 	highlightRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
@@ -560,6 +569,7 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 
 void MapRenderer::resizeGl(int width, int height)
 {
+	//fbo->setSize(width, height);
 	projectionMatrix = glm::perspective(fov, width / (float)height, 5.0f, 5000.0f);
 	if (gndRenderState.activeShader)
 		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, projectionMatrix);
