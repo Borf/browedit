@@ -23,9 +23,13 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	getComponent<blib::wm::widgets::List>("lstObjects")->addClickHandler([this, browEdit](blib::wm::Widget*, int, int, int)
 	{
 		int index = getComponent<blib::wm::widgets::List>("lstObjects")->selectedItem;
-		browEdit->camera->position = glm::vec2(
+		browEdit->camera->targetPosition = glm::vec2(
 			5 * browEdit->map->getGnd()->width + browEdit->map->getRsw()->objects[index]->position.x, 
-			5 * browEdit->map->getGnd()->height + browEdit->map->getRsw()->objects[index]->position.z);
+			5 * browEdit->map->getGnd()->height - browEdit->map->getRsw()->objects[index]->position.z);
+
+		for (size_t i = 0; i < browEdit->map->getRsw()->objects.size(); i++)
+			browEdit->map->getRsw()->objects[i]->selected = i == index;
+
 	});
 
 }

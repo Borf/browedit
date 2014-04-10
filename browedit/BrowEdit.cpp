@@ -177,6 +177,8 @@ void BrowEdit::update( double elapsedTime )
 	if(keyState.isPressed(blib::KEY_ESC))
 		running = false;
 
+	camera->update(elapsedTime);
+
 	mapRenderer.cameraMatrix = camera->getMatrix();
 	mapRenderer.drawTextureGrid = mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue(); // TODO: fix this
 
@@ -188,7 +190,10 @@ void BrowEdit::update( double elapsedTime )
 			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y) / 2.0f, 0.0f, 90.0f);
 		}
 		else
-			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y,0,0) * 0.003f * (camera->distance+10) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0,0,1)));
+		{
+			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y, 0, 0) * 0.003f * (camera->distance + 10) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0, 0, 1)));
+			camera->targetPosition = camera->position;
+		}
 	}
 	if (map)
 	{
@@ -418,6 +423,7 @@ void BrowEdit::loadMap(std::string fileName)
 	new blib::BackgroundTask<Map*>(this, 	[fileName] () { return new Map(fileName); }, 
 							[this] (Map* param) { map = param;
 										camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
+										camera->targetPosition = camera->position;
 										mapRenderer.setMap(map);
 										textureWindow->updateTextures(map); //TODO: textures aren't loaded here yet!
 										objectWindow->updateObjects(map);

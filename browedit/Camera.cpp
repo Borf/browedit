@@ -25,3 +25,20 @@ glm::mat4 Camera::getMatrix() const
 
 	return ret;
 }
+
+void Camera::update(double elapsedTime)
+{
+	glm::vec2 diff = targetPosition - position;
+
+	float length = glm::length(diff);
+
+	float dist = (float)elapsedTime * 1000;
+
+
+	if (length < dist)
+		position = targetPosition;
+	else
+		position += diff / length * dist;
+
+	
+}
