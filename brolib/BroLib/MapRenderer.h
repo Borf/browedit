@@ -128,7 +128,6 @@ private:
 	const Map* map;
 	blib::App* app;
 
-	blib::FBO* fbo;
 
 public:
 	glm::mat4 cameraMatrix;
@@ -145,7 +144,7 @@ public:
 
 	float fov;
 
-
+	blib::FBO* fbo;
 	glm::vec4 mouse3d;
 
 

@@ -41,7 +41,7 @@ float dist(const glm::vec2 &a, const glm::vec2 &b)
 
 void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
-
+	renderer->clear(glm::vec4(0, 0, 0, 1), blib::Renderer::Color | blib::Renderer::Depth, gndRenderState);
 	renderGnd(renderer);
 	renderer->unproject(mousePosition, &mouse3d, cameraMatrix, projectionMatrix);
 
@@ -184,7 +184,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	this->app = app;
 	
 	fbo = resourceManager->getResource<blib::FBO>();
-	fbo->setSize(1920, 1080);
+	fbo->setSize(1280, 720);
 	fbo->depth = true;
 	fbo->textureCount = 2;
 	fbo->stencil = false;
@@ -201,7 +201,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_texture, 0);
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_lighting, 1);
-	gndRenderState.activeFbo.push(fbo);
+	gndRenderState.activeFbo = fbo;
 	gndRenderState.blendEnabled = true;
 	gndRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
 	gndRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
@@ -226,7 +226,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->finishUniformSetup();
 
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
-	rswRenderState.activeFbo.push(fbo);
+	rswRenderState.activeFbo = fbo;
 	rswRenderState.blendEnabled = true;
 	rswRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
 	rswRenderState.srcBlendAlpha = blib::RenderState::SRC_ALPHA;
@@ -246,7 +246,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::s_texture, 0);
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 
-	highlightRenderState.activeFbo.push(fbo);
+	highlightRenderState.activeFbo = fbo;
 	highlightRenderState.depthTest = true;
 	highlightRenderState.blendEnabled = true;
 	highlightRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
@@ -482,10 +482,46 @@ void MapRenderer::renderRsw( blib::Renderer* renderer )
 //	rswRenderState.activeShader->state.clear();
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
-		if (drawObjects && map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
+		Rsw::Object* o = map->getRsw()->objects[i];
+		if (o->type == Rsw::Object::Type::Model)
 		{
-			renderModel(static_cast<Rsw::Model*>(map->getRsw()->objects[i]), renderer);
+			if (drawObjects)
+				renderModel(static_cast<Rsw::Model*>(o), renderer);
 		}
+		else
+		{
+			blib::Texture* t = NULL;
+			if (o->type == Rsw::Object::Type::Light)
+				t = rswLightTexture;
+			else if (o->type == Rsw::Object::Type::Effect)
+				t = rswEffectTexture;
+			else if (o->type == Rsw::Object::Type::Sound)
+				t = rswSoundTexture;
+			else
+			{
+				Log::err << "Unknown rsw object type" << Log::newline;
+				continue;
+			}
+			static blib::VertexP3T2 verts[6] =
+			{
+				blib::VertexP3T2(glm::vec3(-50, -50, 0), glm::vec2(0, 0)),
+				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
+				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
+
+				blib::VertexP3T2(glm::vec3(50, 50, 0), glm::vec2(1, 1)),
+				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
+				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
+			};
+
+			rswRenderState.activeTexture[0] = t;
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::translate(glm::mat4(), o->position));
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::mat4());
+			renderer->drawTriangles(verts, 6, rswRenderState);
+
+
+		}
+
+
 	}
 
 

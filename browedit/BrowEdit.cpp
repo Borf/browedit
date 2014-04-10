@@ -22,6 +22,8 @@
 #include <blib/Util.h>
 #include <blib/ResourceManager.h>
 #include <blib/wm/ToggleMenuItem.h>
+#include <blib/FBO.h>
+
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -144,7 +146,7 @@ void BrowEdit::init()
 	textureWindow->setPosition(window->getWidth() - textureWindow->getWidth(), 10);
 
 	objectWindow = new ObjectWindow(resourceManager, this);
-
+	objectWindow->hide();
 
 
 	rootMenu->setAction("file/open", [this](){
@@ -268,6 +270,31 @@ void BrowEdit::draw()
 	if (map)
 	{
 		mapRenderer.render(renderer, glm::vec2(mouseState.x, mouseState.y));
+
+
+		highlightRenderState.activeTexture[0] = mapRenderer.fbo;
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.75f));
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, glm::mat4());
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, glm::mat4());
+
+		static blib::VertexP2T2 verts[6] = 
+		{
+			blib::VertexP2T2(glm::vec2(-1, -1),glm::vec2(0, 0)),
+			blib::VertexP2T2(glm::vec2(1, -1), glm::vec2(1, 0)),
+			blib::VertexP2T2(glm::vec2(-1, 1), glm::vec2(0, 1)),
+
+			blib::VertexP2T2(glm::vec2(1, 1),  glm::vec2(1, 1)),
+			blib::VertexP2T2(glm::vec2(1, -1), glm::vec2(1, 0)),
+			blib::VertexP2T2(glm::vec2(-1, 1), glm::vec2(0, 1)),
+		};
+
+		renderer->drawTriangles(verts, 6, highlightRenderState);
+
+
+
+
+
 
 		int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
 		int cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
