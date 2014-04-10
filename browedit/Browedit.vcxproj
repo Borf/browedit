@@ -110,6 +110,8 @@
     <None Include="..\assets\configs\config.default.json" />
     <None Include="..\assets\configs\config.laptop.json" />
     <None Include="..\assets\menu.json" />
+    <None Include="..\assets\shaders\compose.frag" />
+    <None Include="..\assets\shaders\compose.vert" />
     <None Include="..\assets\shaders\gnd.frag" />
     <None Include="..\assets\shaders\gnd.vert" />
     <None Include="..\assets\shaders\highlight.frag" />

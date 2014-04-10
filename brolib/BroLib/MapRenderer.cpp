@@ -184,7 +184,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	this->app = app;
 	
 	fbo = resourceManager->getResource<blib::FBO>();
-	fbo->setSize(1280, 720);
+	fbo->setSize(app->window->getWidth(), app->window->getHeight());
 	fbo->depth = true;
 	fbo->textureCount = 2;
 	fbo->stencil = false;
@@ -223,9 +223,11 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix, "modelMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix2, "modelMatrix2", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::highlightColor, "highlightColor", blib::Shader::Vec4);
 	rswRenderState.activeShader->finishUniformSetup();
 
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec4(0, 0, 0,0));
 	rswRenderState.activeFbo = fbo;
 	rswRenderState.blendEnabled = true;
 	rswRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
@@ -480,49 +482,12 @@ void MapRenderer::renderRsw( blib::Renderer* renderer )
 
 //	renderer->setShaderState(rswRenderState.activeShader);
 //	rswRenderState.activeShader->state.clear();
-	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
-	{
-		Rsw::Object* o = map->getRsw()->objects[i];
-		if (o->type == Rsw::Object::Type::Model)
-		{
-			if (drawObjects)
-				renderModel(static_cast<Rsw::Model*>(o), renderer);
-		}
-		else
-		{
-			blib::Texture* t = NULL;
-			if (o->type == Rsw::Object::Type::Light)
-				t = rswLightTexture;
-			else if (o->type == Rsw::Object::Type::Effect)
-				t = rswEffectTexture;
-			else if (o->type == Rsw::Object::Type::Sound)
-				t = rswSoundTexture;
-			else
-			{
-				Log::err << "Unknown rsw object type" << Log::newline;
-				continue;
-			}
-			static blib::VertexP3T2 verts[6] =
-			{
-				blib::VertexP3T2(glm::vec3(-50, -50, 0), glm::vec2(0, 0)),
-				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
-				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
 
-				blib::VertexP3T2(glm::vec3(50, 50, 0), glm::vec2(1, 1)),
-				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
-				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
-			};
-
-			rswRenderState.activeTexture[0] = t;
-			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::translate(glm::mat4(), o->position));
-			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::mat4());
-			renderer->drawTriangles(verts, 6, rswRenderState);
-
-
-		}
-
-
-	}
+	//selected objects need to be drawn first
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec4(1, 1, 1, 1));
+	renderObjects(renderer, true);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec4(0, 0, 0, 0));
+	renderObjects(renderer, false);
 
 
 }
@@ -617,6 +582,53 @@ void MapRenderer::setTileDirty(int xx, int yy)
 {
 	gndChunks[yy / CHUNKSIZE][xx / CHUNKSIZE]->dirty = true;
 	gndGridDirty = true;
+}
+
+void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
+{
+	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+	{
+		Rsw::Object* o = map->getRsw()->objects[i];
+		if (o->selected != selected)
+			continue;
+		if (o->type == Rsw::Object::Type::Model)
+		{
+			if (drawObjects)
+				renderModel(static_cast<Rsw::Model*>(o), renderer);
+		}
+		else
+		{
+			blib::Texture* t = NULL;
+			if (o->type == Rsw::Object::Type::Light)
+				t = rswLightTexture;
+			else if (o->type == Rsw::Object::Type::Effect)
+				t = rswEffectTexture;
+			else if (o->type == Rsw::Object::Type::Sound)
+				t = rswSoundTexture;
+			else
+			{
+				Log::err << "Unknown rsw object type" << Log::newline;
+				continue;
+			}
+			static blib::VertexP3T2 verts[6] =
+			{
+				blib::VertexP3T2(glm::vec3(-50, -50, 0), glm::vec2(0, 0)),
+				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
+				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
+
+				blib::VertexP3T2(glm::vec3(50, 50, 0), glm::vec2(1, 1)),
+				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
+				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
+			};
+
+			rswRenderState.activeTexture[0] = t;
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::translate(glm::mat4(), o->position));
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::mat4());
+			renderer->drawTriangles(verts, 6, rswRenderState);
+
+
+		}
+	}
 }
 
 

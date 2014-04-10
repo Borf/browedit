@@ -100,6 +100,7 @@ private:
 			ModelMatrix,
 			ModelMatrix2,
 			s_texture,
+			highlightColor,
 		};
 	};
 
@@ -154,6 +155,9 @@ public:
 	void render(blib::Renderer* renderer, glm::vec2 mousePosition);
 	void renderGnd(blib::Renderer* renderer);
 	void renderRsw( blib::Renderer* renderer );
+
+	void renderObjects(blib::Renderer* renderer, bool selected);
+
 	void renderModel(Rsw::Model* model, blib::Renderer* renderer);
 	void renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
 

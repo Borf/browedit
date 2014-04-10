@@ -142,6 +142,17 @@ void BrowEdit::init()
 	highlightRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
 
 
+	composeRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/compose");
+	composeRenderState.activeShader->bindAttributeLocation("a_position", 0);
+	composeRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
+	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
+	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::s_texture2, "s_texture2", blib::Shader::Int);
+	composeRenderState.activeShader->finishUniformSetup();
+	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::s_texture, 0);
+	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::s_texture2, 1);
+
+
+
 	textureWindow = new TextureWindow(resourceManager, this);
 	textureWindow->setPosition(window->getWidth() - textureWindow->getWidth(), 10);
 
@@ -181,6 +192,15 @@ void BrowEdit::update( double elapsedTime )
 	}
 	if (map)
 	{
+		if (keyState.isPressed('S') && !lastKeyState.isPressed('S'))
+		{
+			for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+			{
+				map->getRsw()->objects[i]->selected = rand() > RAND_MAX / 2;
+			}
+		}
+
+
 		if (editMode == EditMode::TextureEdit)
 		{
 			if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
@@ -272,11 +292,7 @@ void BrowEdit::draw()
 		mapRenderer.render(renderer, glm::vec2(mouseState.x, mouseState.y));
 
 
-		highlightRenderState.activeTexture[0] = mapRenderer.fbo;
-		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
-		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.75f));
-		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, glm::mat4());
-		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, glm::mat4());
+		composeRenderState.activeTexture[0] = mapRenderer.fbo;
 
 		static blib::VertexP2T2 verts[6] = 
 		{
@@ -289,7 +305,7 @@ void BrowEdit::draw()
 			blib::VertexP2T2(glm::vec2(-1, 1), glm::vec2(0, 1)),
 		};
 
-		renderer->drawTriangles(verts, 6, highlightRenderState);
+		renderer->drawTriangles(verts, 6, composeRenderState);
 
 
 

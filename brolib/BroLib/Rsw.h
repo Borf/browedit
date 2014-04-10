@@ -22,13 +22,16 @@ public:
 			Effect,
 		} type;
 
-		Object(Type type) : type(type) {};
+		Object(Type type) : type(type), selected(false) {};
 
 		std::string name;
 
 		glm::vec3 position;
 		glm::vec3 rotation;
 		glm::vec3 scale;
+
+
+		bool selected;
 
 		virtual ~Object() {}
 	};

@@ -47,6 +47,16 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		texMult,
 	};
 
+
+	blib::RenderState composeRenderState;
+	enum class ComposeShaderUniforms
+	{
+		s_texture,
+		s_texture2,
+	};
+
+
+
 	TextureWindow* textureWindow;
 	ObjectWindow* objectWindow;
 public:
