@@ -26,7 +26,7 @@ GrfFileSystemHandler::GrfFileSystemHandler( const std::string &grfFile ) : blib:
 	grf = grf_open(grfFile.c_str(), "rb", &error);
 	if (grf == NULL)
 	{
-		Log::err<<"Error opening GRF file: "<<Log::newline;
+		Log::err<<"Error opening GRF file: "<<grfFile<<Log::newline;
 		return;
 	}
 	Log::out<<"Loaded GRF file "<<grfFile<<Log::newline;

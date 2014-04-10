@@ -68,7 +68,12 @@ int main()
 	value.writeString( configFileName );
 
 	mergeConfig( config, blib::util::FileSystem::getJson( "assets/configs/" + configFileName ) );
+
+#else
+	blib::util::FileSystem::registerHandler(new GrfFileSystemHandler("../../../cookiero/cookie.grf"));
+
 #endif
+
 
 	if (config["moveconsole"].asBool())
 		blib::util::fixConsole();

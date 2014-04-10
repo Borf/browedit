@@ -94,13 +94,14 @@ BrowEdit::~BrowEdit(void)
 
 void BrowEdit::init()
 {
+#ifdef WIN32
 	std::list<blib::BackgroundTask<int>*> tasks;
 	for (Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
 		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
 	for (blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();
 	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
-
+#endif
 
 	wm->setSkin("assets/skins/ro.json", resourceManager);
 	wm->setRadialMenu(rootMenu = wm->loadMenu("assets/menu.json"));
@@ -114,7 +115,11 @@ void BrowEdit::init()
 
 
 //	loadMap("data/c_tower1");
+#ifdef WIN32
 	loadMap("data/" + config["defaultmap"].asString());
+#else
+	loadMap("data/prontera");
+#endif
 //	loadMap("data/yuno");
 
 	mapRenderer.init(resourceManager, this);
