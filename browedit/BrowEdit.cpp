@@ -23,7 +23,7 @@
 #include <blib/ResourceManager.h>
 #include <blib/wm/ToggleMenuItem.h>
 #include <blib/FBO.h>
-
+#include <blib/Shapes.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -155,6 +155,7 @@ void BrowEdit::init()
 	textureWindow->setPosition(window->getWidth() - textureWindow->getWidth(), 10);
 
 	objectWindow = new ObjectWindow(resourceManager, this);
+	objectWindow->setPosition(window->getWidth() - objectWindow->getWidth(), 10);
 	objectWindow->hide();
 
 
@@ -204,15 +205,6 @@ void BrowEdit::update( double elapsedTime )
 	}
 	if (map)
 	{
-		if (keyState.isPressed('S') && !lastKeyState.isPressed('S'))
-		{
-			for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
-			{
-				map->getRsw()->objects[i]->selected = rand() > RAND_MAX / 2;
-			}
-		}
-
-
 		if (editMode == EditMode::TextureEdit)
 		{
 			if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
@@ -290,7 +282,77 @@ void BrowEdit::update( double elapsedTime )
 			}
 
 		}
+
+		if (editMode == EditMode::ObjectEdit)
+		{
+			if (mouseState.leftButton && !lastMouseState.leftButton || mouseState.rightButton && !lastMouseState.rightButton)
+			{//down
+				startMouseState = mouseState;
+				mouse3dstart = mapRenderer.mouse3d;
+
+
+			}
+			if (!mouseState.leftButton && lastMouseState.leftButton)
+			{//left up
+				if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
+				{ //click
+					float minDist = 999999999.9f;
+					Rsw::Object* closestObject = NULL;
+
+					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					{
+						Rsw::Object* o = map->getRsw()->objects[i];
+						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10+5 * map->getGnd()->height - o->position.z);
+						float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
+						if (dist < minDist)
+						{
+							minDist = dist;
+							closestObject = o;
+						}
+						o->selected = false;
+					}
+					if (closestObject && minDist < 40)
+						closestObject->selected = true;
+
+				}
+				else
+				{
+					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					{
+						Rsw::Object* o = map->getRsw()->objects[i];
+						glm::vec2 tl = glm::vec2(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x), glm::min(mouse3dstart.z, mapRenderer.mouse3d.z));
+						glm::vec2 br = glm::vec2(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x), glm::max(mouse3dstart.z, mapRenderer.mouse3d.z));
+						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10+5 * map->getGnd()->height - o->position.z);
+
+						o->selected = pos.x > tl.x && pos.x < br.x && pos.y > tl.y && pos.y < br.y;
+					}
+
+				}
+			}
+			if (mouseState.rightButton)
+			{//right
+				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+				{
+					Rsw::Object* o = map->getRsw()->objects[i];
+					if (o->selected)
+					{
+						o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
+						o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
+						((Rsw::Model*)o)->matrixCached = false;
+					}
+
+				}
+
+
+			}
+
+
+
+		}
+
+
 	}
+	lastmouse3d = mapRenderer.mouse3d;
 	lastKeyState = keyState;
 	lastMouseState = mouseState;
 }
@@ -380,11 +442,23 @@ void BrowEdit::draw()
 
 
 			renderer->drawTriangles(verts, highlightRenderState);
-
-
-
-
 		}
+
+
+		if (editMode == EditMode::ObjectEdit)
+		{
+			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton)
+			{
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, 0.5f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+				highlightRenderState.activeTexture[0] = NULL;
+				std::vector<blib::VertexP3> verts = blib::Shapes::box(blib::VertexP3(glm::vec3(mouse3dstart)), blib::VertexP3(glm::vec3(mapRenderer.mouse3d)));
+
+				renderer->drawTriangles(verts, highlightRenderState);
+
+			}
+		}
+
 
 
 		spriteBatch->begin();

@@ -35,6 +35,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	Json::Value config;
 
 	blib::MouseState lastMouseState;
+	blib::MouseState startMouseState;
 	blib::KeyState lastKeyState;
 
 	blib::RenderState highlightRenderState;
@@ -55,6 +56,9 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		s_texture2,
 	};
 
+
+	glm::vec4 mouse3dstart;
+	glm::vec4 lastmouse3d;
 
 
 	TextureWindow* textureWindow;
