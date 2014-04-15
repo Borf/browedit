@@ -58,7 +58,7 @@ void FileOpenWindow::filter(char key)
 		if (it->find(filt) != -1)
 			lstFiles->items.push_back(*it);
 	}
-	lstFiles->selectedItem = lstFiles->items.size() == 0 ? -1 : 0;
+//TODO	lstFiles->selectedItem = lstFiles->items.size() == 0 ? -1 : 0;
 }
 
 
@@ -71,10 +71,10 @@ void FileOpenWindow::listClick(blib::wm::Widget*, int, int, int clickCount)
 void FileOpenWindow::btnOpenClick(blib::wm::Widget*, int, int, int)
 {
 
-	if (lstFiles->selectedItem == -1)
+	if (lstFiles->selectedItem() == -1)
 		return;
 
-	std::string fileName = "data\\" + lstFiles->items[lstFiles->selectedItem];
+	std::string fileName = "data\\" + lstFiles->items[lstFiles->selectedItem()];
 
 	browEdit->loadMap(fileName);
 	close();

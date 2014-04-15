@@ -112,9 +112,20 @@ Rsw::Rsw(const std::string &fileName)
 			file->readString(40 + 12 + 40 + 12 + 4);
 			break;
 		case 3: //Sound
-			file->readString(80 + 80 + 12 + 4 + 4 + 4 + 4);
-			if(version >= 0x0200)
-				file->readFloat(); // cycle
+			{
+				Sound* sound = new Sound();
+				sound->name = file->readString(80);
+				sound->fileName = file->readString(80);
+				sound->position = file->readVec3();
+				sound->vol = file->readFloat();
+				sound->width = file->readInt();
+				sound->height = file->readInt();
+				sound->range = file->readFloat();
+//				file->readString(80 + 80 + 12 + 4 + 4 + 4 + 4);
+				if (version >= 0x0200)
+					file->readFloat(); // cycle
+				objects.push_back(sound);
+			}
 			break;
 		case 4: //Effect
 			file->readString(80 + 12 + 4 + 4 + 4 + 4 + 4 + 4);

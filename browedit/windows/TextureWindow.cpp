@@ -86,8 +86,8 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	getComponent<blib::wm::widgets::List>("lstFolders")->items = dirs;
 	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](blib::wm::Widget*, int, int, int) {
 		blib::wm::widgets::List* l = getComponent<blib::wm::widgets::List>("lstFolders");
-		if (l->selectedItem >= 0 && l->selectedItem < l->items.size())
-			setDirectory(l->items[l->selectedItem] + "/");
+		if (l->selectedItem() >= 0 && l->selectedItem() < l->items.size())
+			setDirectory(l->items[l->selectedItem()] + "/");
 	});
 
 	setDirectory("RO/ÇÊµå¹Ù´Ú/");

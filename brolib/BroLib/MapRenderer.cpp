@@ -237,6 +237,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix2, "modelMatrix2", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::highlightColor, "highlightColor", blib::Shader::Vec4);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::billboard, "billboard", blib::Shader::Float);
 	rswRenderState.activeShader->finishUniformSetup();
 
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
@@ -491,7 +492,7 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 void MapRenderer::renderRsw( blib::Renderer* renderer )
 {
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, cameraMatrix);
-	rswRenderState.activeTexture[1] = gndShadow;
+	//rswRenderState.activeTexture[1] = gndShadow;
 
 //	renderer->setShaderState(rswRenderState.activeShader);
 //	rswRenderState.activeShader->state.clear();
@@ -509,7 +510,6 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 {
 	if (!model)
 		return;
-	glm::mat4 matrix;
 	if (!model->matrixCached)
 	{
 		model->matrixCache = glm::mat4();
@@ -625,21 +625,40 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 				Log::err << "Unknown rsw object type" << Log::newline;
 				continue;
 			}
+
+
+			if (!o->matrixCached)
+			{
+				o->matrixCache = glm::mat4();
+				o->matrixCache = glm::scale(o->matrixCache, glm::vec3(1, 1, -1));
+				o->matrixCache = glm::translate(o->matrixCache, glm::vec3(5 * map->getGnd()->width + o->position.x, -o->position.y, -10 - 5 * map->getGnd()->height + o->position.z));
+				o->matrixCache = glm::rotate(o->matrixCache, -o->rotation.z, glm::vec3(0, 0, 1));
+				o->matrixCache = glm::rotate(o->matrixCache, -o->rotation.x, glm::vec3(1, 0, 0));
+				o->matrixCache = glm::rotate(o->matrixCache, o->rotation.y, glm::vec3(0, 1, 0));
+			//	o->matrixCache = glm::scale(o->matrixCache, glm::vec3(o->scale.x, -o->scale.y, o->scale.z));
+			//	o->matrixCache = glm::translate(o->matrixCache, glm::vec3(-o->model->realbbrange.x, model->model->realbbmin.y, -model->model->realbbrange.z));
+				o->matrixCached = true;
+			}
+
+
 			static blib::VertexP3T2 verts[6] =
 			{
-				blib::VertexP3T2(glm::vec3(-50, -50, 0), glm::vec2(0, 0)),
-				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
-				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
+				blib::VertexP3T2(glm::vec3(-5, -5, 0), glm::vec2(0, 0)),
+				blib::VertexP3T2(glm::vec3(5, -5, 0), glm::vec2(1, 0)),
+				blib::VertexP3T2(glm::vec3(-5, 5, 0), glm::vec2(0, 1)),
 
-				blib::VertexP3T2(glm::vec3(50, 50, 0), glm::vec2(1, 1)),
-				blib::VertexP3T2(glm::vec3(50, -50, 0), glm::vec2(1, 0)),
-				blib::VertexP3T2(glm::vec3(-50, 50, 0), glm::vec2(0, 1)),
+				blib::VertexP3T2(glm::vec3(5, 5, 0), glm::vec2(1, 1)),
+				blib::VertexP3T2(glm::vec3(5, -5, 0), glm::vec2(1, 0)),
+				blib::VertexP3T2(glm::vec3(-5, 5, 0), glm::vec2(0, 1)),
 			};
 
+			rswRenderState.activeVbo = NULL;
 			rswRenderState.activeTexture[0] = t;
-			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::translate(glm::mat4(), o->position));
-			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::mat4());
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, o->matrixCache);
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 1.0f);
 			renderer->drawTriangles(verts, 6, rswRenderState);
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
 
 
 		}

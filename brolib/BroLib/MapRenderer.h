@@ -101,6 +101,7 @@ private:
 			ModelMatrix2,
 			s_texture,
 			highlightColor,
+			billboard,
 		};
 	};
 

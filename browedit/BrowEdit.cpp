@@ -105,14 +105,13 @@ void BrowEdit::init()
 
 	wm->setSkin("assets/skins/ro.json", resourceManager);
 	wm->setRadialMenu(rootMenu = wm->loadMenu("assets/menu.json"));
+	wm->setMenuBar(rootMenu);
 	addMouseListener(wm);
 	addKeyListener(wm);
 
 
 	addMouseListener(this);
 	
-
-
 
 
 	mapRenderer.init(resourceManager, this);
@@ -199,7 +198,7 @@ void BrowEdit::update( double elapsedTime )
 		}
 		else
 		{
-			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y, 0, 0) * 0.003f * (camera->distance + 10) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0, 0, 1)));
+			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y, 0, 0) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0, 0, 1)));
 			camera->targetPosition = camera->position;
 		}
 	}
@@ -283,7 +282,7 @@ void BrowEdit::update( double elapsedTime )
 
 		}
 
-		if (editMode == EditMode::ObjectEdit)
+		if (editMode == EditMode::ObjectEdit && !wm->inWindow(mouseState.x, mouseState.y))
 		{
 			if (mouseState.leftButton && !lastMouseState.leftButton || mouseState.rightButton && !lastMouseState.rightButton)
 			{//down
@@ -447,7 +446,7 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::ObjectEdit)
 		{
-			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton)
+			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y))
 			{
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, 0.5f));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));

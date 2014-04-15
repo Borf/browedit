@@ -22,7 +22,7 @@ public:
 			Effect,
 		} type;
 
-		Object(Type type) : type(type), selected(false) {};
+		Object(Type type) : type(type), selected(false), matrixCached(false) {};
 
 		std::string name;
 
@@ -32,6 +32,8 @@ public:
 
 
 		bool selected;
+		bool matrixCached;
+		glm::mat4 matrixCache;
 
 		virtual ~Object() {}
 	};
@@ -48,19 +50,17 @@ public:
 
 		Rsm* model;
 
-		bool matrixCached;
-		glm::mat4 matrixCache;
 
 		Model() : Object(Object::Model)
 		{
 			model = NULL;
-			matrixCached = false;
 		}
 		~Model();
 	};
 
 	class Light : public Object
 	{
+	public:
 		std::string 	todo;
 		glm::vec3		color;
 		float			todo2;
@@ -70,6 +70,21 @@ public:
 		float		maxLightIncrement;
 		bool		givesShadow;
 		float		lightFalloff;*/
+	};
+
+	class Sound : public Object
+	{
+	public:
+		Sound() : Object(Object::Sound)
+		{
+		}
+		std::string fileName;
+		float repeatDelay;
+		float vol;
+		long	width;
+		long	height;
+		float	range;
+		float	cycle;
 	};
 
 
