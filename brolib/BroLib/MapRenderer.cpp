@@ -241,7 +241,8 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->finishUniformSetup();
 
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec4(0, 0, 0,0));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec4(0, 0, 0, 0));
 	rswRenderState.activeFbo = fbo;
 	rswRenderState.blendEnabled = true;
 	rswRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;

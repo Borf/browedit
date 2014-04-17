@@ -150,14 +150,17 @@ Rsw::Rsw(const std::string &fileName)
 Rsm* Rsw::getRsw( const std::string &fileName )
 {
 	std::map<std::string, Rsm*>::iterator it = rsmCache.find(fileName);
-	if(it == rsmCache.end())
+	if (it == rsmCache.end())
 	{
 		Rsm* rsm = new Rsm("data/model/" + fileName);
+		Log::out << "Rsw: loading mesh " << fileName << Log::newline;
 		rsmCache[fileName] = rsm->loaded ? rsm : NULL;
-		if(!rsm->loaded)
+		if (!rsm->loaded)
 			delete rsm;
 		it = rsmCache.find(fileName);
-	}	
+	}
+	else
+		Log::out << "Rsw: cache hit for mesh " << fileName << Log::newline;
 	return it->second;
 }
 

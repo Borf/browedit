@@ -18,6 +18,7 @@ void mergeConfig(Json::Value &config, const Json::Value &newConfig);
 
 int main()
 {
+
 	blib::util::Thread::setMainThread();
 	Log::out<<"/============================================================\\"<<Log::newline;
 	Log::out<<"||     ____                    ______    _ _ _              ||"<<Log::newline;
@@ -77,9 +78,6 @@ int main()
 
 	if (config["moveconsole"].asBool())
 		blib::util::fixConsole();
-
-
-
 
 
 	BrowEdit* app = new BrowEdit(config);
