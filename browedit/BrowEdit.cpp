@@ -71,6 +71,8 @@ BrowEdit::BrowEdit(const Json::Value &config)
 
 
 	editMode = EditMode::TextureEdit;
+	objectEditModeTool = ObjectEditModeTool::Select;
+
 
 	textureTargetSize = glm::ivec2(2, 2);
 	textureRot = 0;

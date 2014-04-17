@@ -89,5 +89,14 @@ public:
 	bool textureFlipH;
 	bool textureFlipV;
 
+
+
+	enum class ObjectEditModeTool
+	{
+		Select,
+		Translate,
+		Rotate,
+		Scale,
+	} objectEditModeTool;
 };
 
