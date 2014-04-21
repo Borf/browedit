@@ -5,7 +5,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += c++11
 CONFIG += threads
+CONFIG -= warn_on
 
+QMAKE_CXXFLAGS += -Wall -Wno-unused-variable
 
 INCLUDEPATH += ../blib
 INCLUDEPATH += ../blib/externals

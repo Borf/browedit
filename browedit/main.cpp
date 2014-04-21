@@ -71,8 +71,10 @@ int main()
 	mergeConfig( config, blib::util::FileSystem::getJson( "assets/configs/" + configFileName ) );
 
 #else
-	blib::util::FileSystem::registerHandler(new GrfFileSystemHandler("../../../cookiero/cookie.grf"));
-
+	Log::out<<"Loading assets/configs/config.linux.json"<<Log::newline;
+	Json::Value linuxConfig = blib::util::FileSystem::getJson("assets/configs/config.linux.json");
+	Log::out<<"Linux config size: "<<linuxConfig.size()<<Log::newline;
+	mergeConfig(config, linuxConfig);
 #endif
 
 

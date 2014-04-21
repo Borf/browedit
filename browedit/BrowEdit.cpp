@@ -85,6 +85,9 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.vsync = config["vsync"].asBool();
 
 
+	appSetup.threaded = false;
+	appSetup.backgroundTasks = false;
+
 	map = NULL;
 	wm = blib::wm::WM::getInstance();
 }
@@ -96,14 +99,12 @@ BrowEdit::~BrowEdit(void)
 
 void BrowEdit::init()
 {
-#ifdef WIN32
 	std::list<blib::BackgroundTask<int>*> tasks;
 	for (Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
 		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
 	for (blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();
 	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
-#endif
 
 	wm->setSkin("assets/skins/ro.json", resourceManager);
 	wm->setRadialMenu(rootMenu = wm->loadMenu("assets/menu.json"));

@@ -1,0 +1,18 @@
+{
+	"resolution" : [ 1280, 720 ],
+	"data" :
+	{
+		"ropath" : "/home/borf/cookiero",
+		"grfs" :
+		[
+			"/home/borf/cookiero/data.grf",
+			"/home/borf/cookiero/cookie.grf"
+		]
+	},
+	"moveconsole" : true,
+	"defaultmap" : "alb2trea",
+	"threadedrendering" : true,
+	"backgroundworkers" : true,
+	"fov" : 45,
+	"vsync" : false
+} 

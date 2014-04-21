@@ -5,6 +5,9 @@ CONFIG += object_parallel_to_source
 CONFIG += c++11
 CONFIG -= app_bundle
 CONFIG -= qt
+CONFIG -= warn_on
+
+QMAKE_CXXFLAGS += -Wall -Wno-unused-variable
 
 INCLUDEPATH += ../blib
 INCLUDEPATH += ../blib/externals
