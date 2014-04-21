@@ -147,9 +147,11 @@ void BrowEdit::init()
 	composeRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
 	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
 	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::s_texture2, "s_texture2", blib::Shader::Int);
+	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::sampleSize, "sampleSize", blib::Shader::Vec2);
 	composeRenderState.activeShader->finishUniformSetup();
 	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::s_texture, 0);
 	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::s_texture2, 1);
+	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::sampleSize, glm::vec2(1.0f / 1024.0f, 1.0f / 1024.0f));
 
 
 

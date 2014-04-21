@@ -62,3 +62,13 @@ LIBS += -lGLEW
 LIBS += -lGL
 LIBS += -lX11
 LIBS += -lz
+
+OTHER_FILES += \
+    ../assets/shaders/compose.frag \
+    ../assets/shaders/gnd.frag \
+    ../assets/shaders/highlight.frag \
+    ../assets/shaders/rsw.frag \
+    ../assets/shaders/compose.vert \
+    ../assets/shaders/gnd.vert \
+    ../assets/shaders/highlight.vert \
+    ../assets/shaders/rsw.vert
