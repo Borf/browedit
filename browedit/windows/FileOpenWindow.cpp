@@ -58,7 +58,9 @@ void FileOpenWindow::filter(char key)
 		if (it->find(filt) != -1)
 			lstFiles->items.push_back(*it);
 	}
-//TODO	lstFiles->selectedItem = lstFiles->items.size() == 0 ? -1 : 0;
+	lstFiles->selectedItems.clear();
+	if (!lstFiles->items.empty())
+		lstFiles->selectedItems.push_back(0);
 }
 
 

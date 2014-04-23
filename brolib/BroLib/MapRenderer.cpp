@@ -31,7 +31,7 @@ MapRenderer::MapRenderer()
 	drawTextureGrid = true;
 	drawObjectGrid = true;
 	drawQuadTree = true;
-
+	fbo = NULL;
 }
 
 float mod(float x, float m)
@@ -45,8 +45,7 @@ float mod(float x, float m)
 glm::vec2 mod(const glm::vec2 &a, float m)
 {
 	return glm::vec2(mod(a.x, m), mod(a.y, m));
-}
-float dist(const glm::vec2 &a, const glm::vec2 &b)
+}float dist(const glm::vec2 &a, const glm::vec2 &b)
 {
 	return glm::length(glm::min(mod(a - b, 1), mod(b - a, 1)));
 }
@@ -398,9 +397,7 @@ void MapRenderer::GndChunk::render( const Gnd* gnd, blib::App* app, blib::Render
 
 void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Renderer* renderer )
 {
-	Log::out<<"Rebuilding chunk "<<x<<", "<<y<<Log::newline;
 	rebuilding = true;
-	
 
 	struct NewChunkData
 	{
@@ -409,6 +406,7 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 	};
 
 	new blib::BackgroundTask<NewChunkData>(app, [this, gnd, renderer] () {
+		Log::out << "Rebuilding chunk " << x << ", " << y << Log::newline;
 		std::map<int, std::vector<GndVertex> > verts;
 		NewChunkData ret;
 		for(int x = this->x; x < glm::min(this->x+CHUNKSIZE, (int)gnd->cubes.size()); x++)
@@ -493,10 +491,6 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 void MapRenderer::renderRsw( blib::Renderer* renderer )
 {
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, cameraMatrix);
-	//rswRenderState.activeTexture[1] = gndShadow;
-
-//	renderer->setShaderState(rswRenderState.activeShader);
-//	rswRenderState.activeShader->state.clear();
 
 	//selected objects need to be drawn first
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec4(1, 1, 1, 1));
@@ -586,12 +580,15 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 
 void MapRenderer::resizeGl(int width, int height)
 {
-	//fbo->setSize(width, height);
+	if (fbo)
+		fbo->setSize(width, height);
 	projectionMatrix = glm::perspective(fov, width / (float)height, 5.0f, 5000.0f);
 	if (gndRenderState.activeShader)
 		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, projectionMatrix);
 	if (rswRenderState.activeShader)
 		rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
+
+	billboardMatrix = glm::scale(glm::mat4(), glm::vec3(2*height/ (float)width, 2, 1));
 }
 
 void MapRenderer::setTileDirty(int xx, int yy)
@@ -655,8 +652,8 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 
 			rswRenderState.activeVbo = NULL;
 			rswRenderState.activeTexture[0] = t;
-			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
-			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, o->matrixCache);
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, o->matrixCache);
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, billboardMatrix);
 			rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 1.0f);
 			renderer->drawTriangles(verts, 6, rswRenderState);
 			rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);

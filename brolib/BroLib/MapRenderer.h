@@ -122,6 +122,7 @@ private:
 	blib::Texture* rswLightTexture;
 	blib::Texture* rswEffectTexture;
 	blib::Texture* rswSoundTexture;
+	glm::mat4 billboardMatrix;
 
 #pragma endregion
 

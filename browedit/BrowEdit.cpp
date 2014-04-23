@@ -24,9 +24,12 @@
 #include <blib/wm/ToggleMenuItem.h>
 #include <blib/FBO.h>
 #include <blib/Shapes.h>
+#include <blib/util/Log.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+using blib::util::Log;
 
 #ifdef BLIB_WIN
 #include "resource.h"
@@ -369,7 +372,6 @@ void BrowEdit::draw()
 	{
 		mapRenderer.render(renderer, glm::vec2(mouseState.x, mouseState.y));
 
-
 		composeRenderState.activeTexture[0] = mapRenderer.fbo;
 
 		static blib::VertexP2T2 verts[6] = 
@@ -464,7 +466,6 @@ void BrowEdit::draw()
 		}
 
 
-
 		spriteBatch->begin();
 
 
@@ -476,6 +477,8 @@ void BrowEdit::draw()
 			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(5, window->getHeight() - 18)), blib::Color::black);
 			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(3, window->getHeight() - 20)), blib::Color::black);
 			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(4, window->getHeight() - 19)), blib::Color::white);
+			spriteBatch->end(); // this fixes flashing windows :(
+			spriteBatch->begin();
 		}
 		std::string editModeString = "";
 		if (editMode == EditMode::TextureEdit)
@@ -496,7 +499,6 @@ void BrowEdit::draw()
 
 	wm->draw(*spriteBatch);
 	spriteBatch->end();
-
 }
 
 void BrowEdit::loadMap(std::string fileName)
