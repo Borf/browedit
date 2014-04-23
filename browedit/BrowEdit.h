@@ -99,5 +99,6 @@ public:
 		Rotate,
 		Scale,
 	} objectEditModeTool;
+	void setObjectEditMode(ObjectEditModeTool newMode);
 };
 

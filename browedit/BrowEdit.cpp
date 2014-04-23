@@ -87,10 +87,6 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.backgroundTasks = config["backgroundworkers"].asBool();
 	appSetup.vsync = config["vsync"].asBool();
 
-
-	appSetup.threaded = false;
-	appSetup.backgroundTasks = false;
-
 	map = NULL;
 	wm = blib::wm::WM::getInstance();
 }
@@ -177,6 +173,12 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
 
 
+	rootMenu->setAction("objecttools/select", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Select));
+	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
+	rootMenu->setAction("objecttools/scale", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Scale));
+	rootMenu->setAction("objecttools/rotate", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Rotate));
+
+
 //	loadMap("data/c_tower1");
 #ifdef WIN32
 	loadMap("data/" + config["defaultmap"].asString());
@@ -212,6 +214,8 @@ void BrowEdit::update( double elapsedTime )
 	}
 	if (map)
 	{
+		///////////////////////////////////////////////TEXTURE EDIT
+
 		if (editMode == EditMode::TextureEdit)
 		{
 			if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
@@ -287,8 +291,9 @@ void BrowEdit::update( double elapsedTime )
 					}
 				}
 			}
-
 		}
+		
+		//////////////////////////////////////////////OBJECT EDIT
 
 		if (editMode == EditMode::ObjectEdit && !wm->inWindow(mouseState.x, mouseState.y))
 		{
@@ -303,55 +308,95 @@ void BrowEdit::update( double elapsedTime )
 			{//left up
 				if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
 				{ //click
-					float minDist = 999999999.9f;
-					Rsw::Object* closestObject = NULL;
-
-					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					if (objectEditModeTool == ObjectEditModeTool::Select && !wm->inWindow(mouseState.x, mouseState.y))
 					{
-						Rsw::Object* o = map->getRsw()->objects[i];
-						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10+5 * map->getGnd()->height - o->position.z);
-						float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
-						if (dist < minDist)
-						{
-							minDist = dist;
-							closestObject = o;
-						}
-						o->selected = false;
-					}
-					if (closestObject && minDist < 40)
-						closestObject->selected = true;
+						float minDist = 999999999.9f;
+						Rsw::Object* closestObject = NULL;
 
+						for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+						{
+							Rsw::Object* o = map->getRsw()->objects[i];
+							glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
+							float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
+							if (dist < minDist)
+							{
+								minDist = dist;
+								closestObject = o;
+							}
+							o->selected = false;
+						}
+						if (closestObject && minDist < 40)
+							closestObject->selected = true;
+					}
 				}
 				else
 				{
-					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					if (objectEditModeTool == ObjectEditModeTool::Select)
 					{
-						Rsw::Object* o = map->getRsw()->objects[i];
-						glm::vec2 tl = glm::vec2(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x), glm::min(mouse3dstart.z, mapRenderer.mouse3d.z));
-						glm::vec2 br = glm::vec2(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x), glm::max(mouse3dstart.z, mapRenderer.mouse3d.z));
-						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10+5 * map->getGnd()->height - o->position.z);
+						for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+						{
+							Rsw::Object* o = map->getRsw()->objects[i];
+							glm::vec2 tl = glm::vec2(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x), glm::min(mouse3dstart.z, mapRenderer.mouse3d.z));
+							glm::vec2 br = glm::vec2(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x), glm::max(mouse3dstart.z, mapRenderer.mouse3d.z));
+							glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
 
-						o->selected = pos.x > tl.x && pos.x < br.x && pos.y > tl.y && pos.y < br.y;
+							o->selected = pos.x > tl.x && pos.x < br.x && pos.y > tl.y && pos.y < br.y;
+						}
 					}
 
 				}
 			}
-			if (mouseState.rightButton)
-			{//right
+			else if (mouseState.leftButton && lastMouseState.leftButton)
+			{ // dragging
 				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 				{
 					Rsw::Object* o = map->getRsw()->objects[i];
 					if (o->selected)
 					{
-						o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
-						o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
+						if (objectEditModeTool == ObjectEditModeTool::Translate)
+						{
+							if (keyState.pressedKeys[blib::KEY_SHIFT])
+								o->position.y += mouseState.y - lastMouseState.y;
+							else
+							{
+								o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
+								o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
+							}
+						}
+						else if (objectEditModeTool == ObjectEditModeTool::Rotate)
+						{
+							o->rotation.y += mouseState.x - lastMouseState.x;
+						}
+						else if (objectEditModeTool == ObjectEditModeTool::Scale)
+						{
+							o->scale.x *= 1 + (mouseState.y - lastMouseState.y) * 0.01f;
+							o->scale.y *= 1 + (mouseState.y - lastMouseState.y) * 0.01f;
+							o->scale.z *= 1 + (mouseState.y - lastMouseState.y) * 0.01f;
+						}
+
 						((Rsw::Model*)o)->matrixCached = false;
 					}
-
 				}
 
 
+
 			}
+
+
+			if (!mouseState.rightButton && lastMouseState.rightButton)
+			{
+				if (objectEditModeTool == ObjectEditModeTool::Select)
+				{
+					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+						map->getRsw()->objects[i]->selected = false;
+				}
+			}
+
+	/*		if (mouseState.rightButton)
+			{//right
+
+
+			}*/
 
 
 
@@ -453,7 +498,7 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::ObjectEdit)
 		{
-			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y))
+			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && objectEditModeTool == ObjectEditModeTool::Select)
 			{
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, 0.5f));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
@@ -477,8 +522,6 @@ void BrowEdit::draw()
 			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(5, window->getHeight() - 18)), blib::Color::black);
 			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(3, window->getHeight() - 20)), blib::Color::black);
 			spriteBatch->draw(wm->font, statusText, blib::math::easyMatrix(glm::vec2(4, window->getHeight() - 19)), blib::Color::white);
-			spriteBatch->end(); // this fixes flashing windows :(
-			spriteBatch->begin();
 		}
 		std::string editModeString = "";
 		if (editMode == EditMode::TextureEdit)
@@ -539,4 +582,13 @@ void BrowEdit::setEditMode(EditMode newMode)
 
 
 
+}
+
+void BrowEdit::setObjectEditMode(ObjectEditModeTool newMode)
+{
+	this->objectEditModeTool = newMode;
+	rootMenu->setEnabled("objecttools/select", objectEditModeTool == ObjectEditModeTool::Select);
+	rootMenu->setEnabled("objecttools/move", objectEditModeTool == ObjectEditModeTool::Translate);
+	rootMenu->setEnabled("objecttools/scale", objectEditModeTool == ObjectEditModeTool::Scale);
+	rootMenu->setEnabled("objecttools/rotate", objectEditModeTool == ObjectEditModeTool::Rotate);
 }

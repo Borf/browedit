@@ -107,11 +107,34 @@
 
 	},
 	{
-		"name" : "tools",
+		"name" : "objecttools",
 		"type" : "menu",
 		"subitems" :
 		[
-
+			{
+				"name" : "select",
+				"type" : "toggle",
+				"initial" : true,
+				"key" : "1"
+			},
+			{
+				"name" : "move",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "2"
+			},
+			{
+				"name" : "scale",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "3"
+			},
+			{
+				"name" : "rotate",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "4"
+			}
 
 		]
 
