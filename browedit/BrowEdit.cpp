@@ -3,6 +3,7 @@
 #include "windows/FileOpenWindow.h"
 #include "windows/TextureWindow.h"
 #include "windows/ObjectWindow.h"
+#include "windows/ModelPropertiesWindow.h"
 
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
@@ -327,6 +328,12 @@ void BrowEdit::update( double elapsedTime )
 						}
 						if (closestObject && minDist < 40)
 							closestObject->selected = true;
+						if (mouseState.clickcount == 2)
+						{
+							if (closestObject->type == Rsw::Object::Model)
+								new ModelPropertiesWindow((Rsw::Model*)closestObject, resourceManager);
+
+						}
 					}
 				}
 				else

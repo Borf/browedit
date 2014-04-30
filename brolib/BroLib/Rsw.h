@@ -46,7 +46,7 @@ public:
 		float animSpeed;
 		int blockType;
 		std::string fileName;
-		std::string nodeName;
+		//std::string nodeName;
 
 		Rsm* model;
 

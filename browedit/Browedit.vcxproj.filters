@@ -54,6 +54,9 @@
     <ClInclude Include="windows\ObjectWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\ModelPropertiesWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -72,6 +75,9 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="windows\ObjectWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\ModelPropertiesWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,6 +135,9 @@
     </None>
     <None Include="..\assets\shaders\compose.frag">
       <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\windows\ModelPropertiesWindow.json">
+      <Filter>assets\windows</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
