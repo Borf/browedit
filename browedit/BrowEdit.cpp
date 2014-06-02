@@ -54,6 +54,7 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.title = "BrowEdit 2.0";
 
 #ifdef BLIB_WIN
+	appSetup.title += " Version ";
 
 	appSetup.icon = IDI_ICON1;
 
@@ -65,11 +66,23 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	char* text = (char*)malloc(size + 1);
 	memcpy(text, resText, size);
 	text[size] = 0;
-	FreeResource(hMem);
-
-	appSetup.title += " Version ";
 	appSetup.title += text;
 	free(text);
+	FreeResource(hMem);
+
+	hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA2), "data");
+	hMem = LoadResource(NULL, hRes);
+	size = SizeofResource(NULL, hRes);
+	resText = (char*)LockResource(hMem);
+	text = (char*)malloc(size + 1);
+	memcpy(text, resText, size);
+	text[size] = 0;
+	appSetup.title += ", blib version ";
+	appSetup.title += text;
+	free(text);
+	FreeResource(hMem);
+
+
 #endif
 
 
@@ -192,7 +205,7 @@ void BrowEdit::init()
 
 void BrowEdit::update( double elapsedTime )
 {
-	if(keyState.isPressed(blib::KEY_ESC))
+	if(keyState.isPressed(blib::Key::ESC))
 		running = false;
 
 	camera->update(elapsedTime);
@@ -202,7 +215,7 @@ void BrowEdit::update( double elapsedTime )
 
 	if(mouseState.middleButton)
 	{
-		if(keyState.isPressed(blib::KEY_SHIFT))
+		if(keyState.isPressed(blib::Key::SHIFT))
 		{
 			camera->direction += (mouseState.x - lastMouseState.x) / 2.0f;
 			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y) / 2.0f, 0.0f, 90.0f);
@@ -219,23 +232,23 @@ void BrowEdit::update( double elapsedTime )
 
 		if (editMode == EditMode::TextureEdit)
 		{
-			if (keyState.isPressed('R') && !lastKeyState.isPressed('R'))
+			if (keyState.isPressed(blib::Key::R) && !lastKeyState.isPressed(blib::Key::R))
 				textureRot = (textureRot + 1) % 4;
-			if (keyState.isPressed('H') && !lastKeyState.isPressed('H'))
+			if (keyState.isPressed(blib::Key::H) && !lastKeyState.isPressed(blib::Key::H))
 				textureFlipH = !textureFlipH;
-			if (keyState.isPressed('V') && !lastKeyState.isPressed('V'))
+			if (keyState.isPressed(blib::Key::V) && !lastKeyState.isPressed(blib::Key::V))
 				textureFlipV = !textureFlipV;
-			if (keyState.isPressed(blib::KEY_PLUS) && !lastKeyState.isPressed(blib::KEY_PLUS))
+			if (keyState.isPressed(blib::Key::PLUS) && !lastKeyState.isPressed(blib::Key::PLUS))
 				textureTargetSize += glm::ivec2(1, 1);
-			if (keyState.isPressed(blib::KEY_MINUS) && !lastKeyState.isPressed(blib::KEY_MINUS))
+			if (keyState.isPressed(blib::Key::MINUS) && !lastKeyState.isPressed(blib::Key::MINUS))
 				textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(-1, -1));
-			if (keyState.isPressed(blib::KEY_LEFT) && !lastKeyState.isPressed(blib::KEY_LEFT))
+			if (keyState.isPressed(blib::Key::LEFT) && !lastKeyState.isPressed(blib::Key::LEFT))
 				textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(-1, 0));
-			if (keyState.isPressed(blib::KEY_RIGHT) && !lastKeyState.isPressed(blib::KEY_RIGHT))
+			if (keyState.isPressed(blib::Key::RIGHT) && !lastKeyState.isPressed(blib::Key::RIGHT))
 				textureTargetSize += glm::ivec2(1, 0);
-			if (keyState.isPressed(blib::KEY_UP) && !lastKeyState.isPressed(blib::KEY_UP))
+			if (keyState.isPressed(blib::Key::UP) && !lastKeyState.isPressed(blib::Key::UP))
 				textureTargetSize += glm::ivec2(0, 1);
-			if (keyState.isPressed(blib::KEY_DOWN) && !lastKeyState.isPressed(blib::KEY_DOWN))
+			if (keyState.isPressed(blib::Key::DOWN) && !lastKeyState.isPressed(blib::Key::DOWN))
 				textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(0, -1));
 
 			int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
@@ -362,7 +375,7 @@ void BrowEdit::update( double elapsedTime )
 					{
 						if (objectEditModeTool == ObjectEditModeTool::Translate)
 						{
-							if (keyState.pressedKeys[blib::KEY_SHIFT])
+							if (keyState.pressedKeys[(int)blib::Key::SHIFT])
 								o->position.y += mouseState.y - lastMouseState.y;
 							else
 							{

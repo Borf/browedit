@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\blib\version.h" />
     <ClInclude Include="BrowEdit.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="resource.h" />

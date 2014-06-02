@@ -57,6 +57,9 @@
     <ClInclude Include="windows\ModelPropertiesWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\blib\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
