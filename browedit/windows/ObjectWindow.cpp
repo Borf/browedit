@@ -4,6 +4,8 @@
 
 #include <blib/wm/WM.h>
 #include <blib/wm/widgets/list.h>
+#include <blib/wm/widgets/button.h>
+#include <blib/util/FileSystem.h>
 #include <glm/glm.hpp>
 
 #include <BroLib/Map.h>
@@ -19,7 +21,6 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	largeWidth = glm::min(1300, blib::wm::WM::getInstance()->screenSize.x - 100);
 	resizable = false;
 
-
 	getComponent<blib::wm::widgets::List>("lstObjects")->addClickHandler([this, browEdit](blib::wm::Widget*, int, int, int)
 	{
 		int index = getComponent<blib::wm::widgets::List>("lstObjects")->selectedItem();
@@ -33,6 +34,64 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 			browEdit->map->getRsw()->objects[i]->selected = i == index;
 
 	});
+
+
+	resizable = false;
+
+	getComponent("btnExpand")->addClickHandler([this](blib::wm::Widget* widget, int x, int y, int clickCount)
+	{
+		blib::wm::widgets::Button* expandButton = getComponent<blib::wm::widgets::Button>("btnExpand");
+
+		if (expandButton->text == ">")
+		{
+			smallWidth = rootPanel->width;
+			if (this->x + this->getWidth() > blib::wm::WM::getInstance()->screenSize.x / 2)
+				setPosition(this->x - (largeWidth - smallWidth), this->y);
+			setSize(largeWidth, rootPanel->height);
+			expandButton->text = "<";
+			resizable = true;
+			arrangeComponents(smallWidth, height);
+
+		}
+		else
+		{
+			largeWidth = rootPanel->width;
+			if (this->x + this->getWidth() > blib::wm::WM::getInstance()->screenSize.x / 2)
+				setPosition(this->x + (largeWidth - smallWidth), this->y);
+
+			setSize(smallWidth, rootPanel->height);
+			expandButton->text = ">";
+
+			resizable = false;
+			arrangeComponents(largeWidth, height);
+		}
+	});
+
+
+	blib::util::StreamInFile* pFile = new blib::util::StreamInFile("assets/romodels.txt");
+
+	std::map<std::string, bool> dirLookup;
+
+	while (!pFile->eof())
+	{
+		std::string line = pFile->readLine();
+		std::string dir = line.substr(0, line.find("|"));
+		textureFiles[dir] = line.substr(line.find("|") + 1);
+		dir = dir.substr(0, dir.rfind("/"));
+		dirLookup[dir] = true;
+	}
+	delete pFile;
+
+	std::vector<std::string> dirs;
+	for (auto d : dirLookup)
+		dirs.push_back(d.first);
+	getComponent<blib::wm::widgets::List>("lstFolders")->items = dirs;
+	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](blib::wm::Widget*, int, int, int) {
+		blib::wm::widgets::List* l = getComponent<blib::wm::widgets::List>("lstFolders");
+		if (l->selectedItem() >= 0 && l->selectedItem() < l->items.size())
+			setDirectory(l->items[l->selectedItem()] + "/");
+	});
+
 
 }
 
@@ -58,5 +117,9 @@ void ObjectWindow::updateObjects(Map* map)
 		items->items.push_back(map->getRsw()->objects[i]->name);
 	}
 
+
+}
+void ObjectWindow::setDirectory(const std::string &directory)
+{
 
 }

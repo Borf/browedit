@@ -30,6 +30,7 @@ public:
 	~ObjectWindow();
 
 	void updateObjects(Map* map);
+	void setDirectory(const std::string &dir);
 
 	virtual void arrangeComponents(int oldWidth, int oldHeight);
 };
