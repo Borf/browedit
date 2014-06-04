@@ -560,7 +560,7 @@ void BrowEdit::draw()
 	else
 		spriteBatch->begin();
 
-	wm->draw(*spriteBatch);
+	wm->draw(*spriteBatch, renderer);
 	spriteBatch->end();
 }
 

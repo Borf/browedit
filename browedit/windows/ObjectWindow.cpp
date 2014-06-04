@@ -5,12 +5,51 @@
 #include <blib/wm/WM.h>
 #include <blib/wm/widgets/list.h>
 #include <blib/wm/widgets/button.h>
+#include <blib/wm/widgets/ScrollPanel.h>
+#include <blib/SpriteBatch.h>
 #include <blib/util/FileSystem.h>
+#include <blib/ResourceManager.h>
+#include <blib/Texture.h>
 #include <glm/glm.hpp>
 
 #include <BroLib/Map.h>
 #include <BroLib/Rsw.h>
 #include <BroLib/Gnd.h>
+#include <BroLib/Rsm.h>
+#include <BroLib/MapRenderer.h>
+
+class Rsm;
+
+
+class ModelWidget : public blib::wm::Widget
+{
+	Rsm* rsm;
+	BrowEdit* browedit;
+public:
+	ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit)
+	{
+		this->rsm = rsm;
+		this->browedit = browedit;
+		if (rsm->renderer == NULL)
+		{
+			rsm->renderer = new RsmModelRenderInfo();
+			for (size_t i = 0; i < rsm->textures.size(); i++)
+				rsm->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + rsm->textures[i]));
+		}
+
+	}
+
+
+	virtual void draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
+	{
+		spriteBatch.drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, glm::vec3(x, y, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(width, height));
+
+		browedit->mapRenderer.renderMesh(rsm->rootMesh, glm::mat4(), rsm->renderer, renderer);
+		
+
+
+	}
+};
 
 ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Objects", "ObjectWindow.json", resourceManager)
 {
@@ -93,6 +132,14 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	});
 
 
+	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+	ModelWidget* widget = new ModelWidget(new Rsm("data\\model\\히나마쯔리\\일본등.rsm"), resourceManager, browEdit);
+	widget->width = 256;
+	widget->height = 256;
+	widget->x = 10;
+	widget->y = 10;
+	panel->add(widget);
+
 }
 
 ObjectWindow::~ObjectWindow()
@@ -116,10 +163,16 @@ void ObjectWindow::updateObjects(Map* map)
 	{
 		items->items.push_back(map->getRsw()->objects[i]->name);
 	}
-
-
 }
+
+
+
+
+
 void ObjectWindow::setDirectory(const std::string &directory)
 {
+	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+
+
 
 }

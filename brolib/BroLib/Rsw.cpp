@@ -103,13 +103,23 @@ Rsw::Rsw(const std::string &fileName)
 				model->rotation = file->readVec3();
 				model->scale = file->readVec3();
 
-				model->model = getRsw(model->fileName);
+				model->model = getRsm(model->fileName);
 				objects.push_back(model);
 			}
 			break;
 		case 2:	//Light
 			//			RswLight* light = new RswLight();
-			file->readString(40 + 12 + 40 + 12 + 4);
+			{
+				Light* light = new Light();
+				light->name = file->readString(40);
+				light->position = file->readVec3();
+				light->todo = file->readString(40);
+				light->color = file->readVec3();
+				light->todo2 = file->readFloat();
+
+				objects.push_back(light);
+			}
+			//file->readString(40 + 12 + 40 + 12 + 4);
 			break;
 		case 3: //Sound
 			{
@@ -128,7 +138,20 @@ Rsw::Rsw(const std::string &fileName)
 			}
 			break;
 		case 4: //Effect
-			file->readString(80 + 12 + 4 + 4 + 4 + 4 + 4 + 4);
+		{
+			Effect* effect = new Effect();
+			effect->name = file->readString(80);
+			effect->position = file->readVec3();
+			effect->type = file->readInt();
+			effect->loop = file->readFloat();
+			effect->param1 = file->readFloat();
+			effect->param2 = file->readFloat();
+			effect->param3 = file->readFloat();
+			effect->param4 = file->readFloat();
+			objects.push_back(effect);
+
+		}
+//			file->readString(80 + 12 + 4 + 4 + 4 + 4 + 4 + 4);
 			break;
 		default:
 			Log::out<<"Unknown object type in rsw file: "<<objectType<<Log::newline;
@@ -147,7 +170,7 @@ Rsw::Rsw(const std::string &fileName)
 
 }
 
-Rsm* Rsw::getRsw( const std::string &fileName )
+Rsm* Rsw::getRsm( const std::string &fileName )
 {
 	std::map<std::string, Rsm*>::iterator it = rsmCache.find(fileName);
 	if (it == rsmCache.end())

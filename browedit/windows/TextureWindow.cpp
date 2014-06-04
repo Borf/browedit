@@ -86,7 +86,7 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	getComponent<blib::wm::widgets::List>("lstFolders")->items = dirs;
 	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](blib::wm::Widget*, int, int, int) {
 		blib::wm::widgets::List* l = getComponent<blib::wm::widgets::List>("lstFolders");
-		if (l->selectedItem() >= 0 && l->selectedItem() < l->items.size())
+		if (l->selectedItem() >= 0 && l->selectedItem() < (int)l->items.size())
 			setDirectory(l->items[l->selectedItem()] + "/");
 	});
 
@@ -279,9 +279,9 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 	dragging = false;
 }
 
-void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix)
+void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer)
 {
-	Image::draw(spriteBatch, matrix);
+	Image::draw(spriteBatch, matrix, renderer);
 
 	if ((selectX1 == 0 && selectX2 == 0 && selectY1 == 0 && selectY2 == 0) || textureWindow->selectedImage != index)
 		return;

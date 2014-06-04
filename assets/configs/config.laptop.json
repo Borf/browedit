@@ -1,11 +1,11 @@
 {
 	"data" :
 	{
-		"ropath" : "c:/games/cookiero",
+		"ropath" : "C:/vrcave/Runtime/data/RO",
 		"grfs" :
 		[
-			"c:/games/cookiero/data.grf",
-			"c:/games/cookiero/cookie.grf"
+			"C:/vrcave/Runtime/data/RO/data.grf",
+			"C:/vrcave/Runtime/data/RO/cookie.grf"
 		]
 	},
 	"defaultmap" : "prontera",

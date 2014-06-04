@@ -65,6 +65,9 @@ public:
 		glm::vec3		color;
 		float			todo2;
 		
+		Light() : Object(Object::Light)
+		{
+		}
 		// custom properties!!!!!!!!!
 		/*float		range;
 		float		maxLightIncrement;
@@ -85,6 +88,21 @@ public:
 		long	height;
 		float	range;
 		float	cycle;
+	};
+
+	class Effect : public Object
+	{
+	public:
+		Effect() : Object(Object::Effect)
+		{
+		}
+
+		int	type;
+		float loop;
+		float param1;
+		float param2;
+		float param3;
+		float param4;
 	};
 
 
@@ -120,5 +138,5 @@ public:
 	std::map<std::string, Rsm*> rsmCache;
 
 	Rsw(const std::string &fileName);
-	Rsm* getRsw( const std::string &fileName );
+	Rsm* getRsm( const std::string &fileName );
 };

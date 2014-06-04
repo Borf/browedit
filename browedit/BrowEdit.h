@@ -31,7 +31,6 @@ class BrowEdit : public blib::App, public blib::MouseListener
 
 	EditMode editMode;
 
-	MapRenderer mapRenderer;
 	Json::Value config;
 
 	blib::MouseState lastMouseState;
@@ -83,6 +82,7 @@ public:
 
 
 	Map* map;
+	MapRenderer mapRenderer;
 	Camera* camera;
 
 	glm::ivec2 textureTargetSize;
