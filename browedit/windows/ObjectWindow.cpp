@@ -10,6 +10,8 @@
 #include <blib/util/FileSystem.h>
 #include <blib/ResourceManager.h>
 #include <blib/Texture.h>
+#include <blib/Renderer.h>
+#include <blib/FBO.h>
 #include <glm/glm.hpp>
 
 #include <BroLib/Map.h>
@@ -25,6 +27,9 @@ class ModelWidget : public blib::wm::Widget
 {
 	Rsm* rsm;
 	BrowEdit* browedit;
+
+	blib::FBO* fbo;
+
 public:
 	ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit)
 	{
@@ -36,16 +41,22 @@ public:
 			for (size_t i = 0; i < rsm->textures.size(); i++)
 				rsm->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + rsm->textures[i]));
 		}
-
+		fbo = resourceManager->getResource<blib::FBO>();
+		fbo->setSize(512, 512);
 	}
 
 
 	virtual void draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
 	{
+
+
 		spriteBatch.drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, glm::vec3(x, y, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(width, height));
 
-		browedit->mapRenderer.renderMesh(rsm->rootMesh, glm::mat4(), rsm->renderer, renderer);
-		
+		browedit->mapRenderer.renderMeshFbo(rsm, fbo, renderer);
+
+
+		spriteBatch.draw(fbo, glm::translate(matrix, glm::vec3(x, y, 0)));
+
 
 
 	}
@@ -133,9 +144,9 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 
 
 	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
-	ModelWidget* widget = new ModelWidget(new Rsm("data\\model\\히나마쯔리\\일본등.rsm"), resourceManager, browEdit);
-	widget->width = 256;
-	widget->height = 256;
+	ModelWidget* widget = new ModelWidget(new Rsm("data\\model\\프론테라\\분수대.rsm"), resourceManager, browEdit);
+	widget->width = 512;
+	widget->height = 512;
 	widget->x = 10;
 	widget->y = 10;
 	panel->add(widget);

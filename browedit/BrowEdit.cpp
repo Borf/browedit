@@ -101,8 +101,14 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	appSetup.backgroundTasks = config["backgroundworkers"].asBool();
 	appSetup.vsync = config["vsync"].asBool();
 
+//	appSetup.threaded = false;
+//	appSetup.backgroundTasks = false;
+
+
 	map = NULL;
 	wm = blib::wm::WM::getInstance();
+
+
 }
 
 

@@ -50,6 +50,8 @@ public:
 class MapRenderer : public blib::gl::GlResizeRegister
 {
 private:
+	int width;
+	int height;
 #pragma region GND
 	typedef blib::VertexP3T2T2 GndVertex;
 	class GndChunk
@@ -166,4 +168,5 @@ public:
 
 	virtual void resizeGl(int width, int height);
 	void setTileDirty(int xx, int yy);
+	void renderMeshFbo(Rsm* rsm, blib::FBO* fbo, blib::Renderer* renderer);
 };

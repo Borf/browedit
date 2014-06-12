@@ -580,6 +580,8 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 
 void MapRenderer::resizeGl(int width, int height)
 {
+	this->width = width;
+	this->height = height;
 	if (fbo)
 		fbo->setSize(width, height);
 	projectionMatrix = glm::perspective(fov, width / (float)height, 5.0f, 5000.0f);
@@ -661,6 +663,32 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 
 		}
 	}
+}
+
+
+void MapRenderer::renderMeshFbo(Rsm* rsm, blib::FBO* fbo, blib::Renderer* renderer)
+{
+	blib::FBO* oldFbo = rswRenderState.activeFbo;
+
+	static float f = 0;
+	f += 0.1f;
+
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, glm::lookAt(glm::vec3(0, 25, -25), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::scale(glm::rotate(glm::mat4(), f, glm::vec3(0, 1, 0)), glm::vec3(1, -1, 1)));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
+
+	rswRenderState.activeVbo = NULL;
+	rswRenderState.activeFbo = fbo;
+	rswRenderState.depthTest = true;
+
+
+	renderer->setViewPort(fbo->originalWidth, fbo->originalHeight);
+	renderer->clear(glm::vec4(0, 0, 0, 1), blib::Renderer::Color | blib::Renderer::Depth, rswRenderState);
+	renderMesh(rsm->rootMesh, glm::mat4(), rsm->renderer, renderer);
+	renderer->setViewPort(width, height);
+
+	rswRenderState.activeFbo = oldFbo;
 }
 
 
