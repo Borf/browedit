@@ -2,10 +2,11 @@
 
 
 class Map;
+class MapRenderer;
 
 class Action
 {
 public:
-	virtual void perform(Map* map) = 0;
-	virtual void undo(Map* map) = 0;
+	virtual void perform(Map* map, MapRenderer& mapRenderer) = 0;
+	virtual void undo(Map* map, MapRenderer& mapRenderer) = 0;
 };

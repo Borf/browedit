@@ -279,7 +279,7 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 	dragging = false;
 }
 
-void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer)
+void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
 {
 	Image::draw(spriteBatch, matrix, renderer);
 

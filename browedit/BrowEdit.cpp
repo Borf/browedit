@@ -5,6 +5,8 @@
 #include "windows/ObjectWindow.h"
 #include "windows/ModelPropertiesWindow.h"
 
+#include "actions/TextureEditAction.h"
+
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
 #include <BroLib/Gnd.h>
@@ -240,6 +242,15 @@ void BrowEdit::update( double elapsedTime )
 	}
 	if (map)
 	{
+		if (keyState.isPressed(blib::Key::Z) && keyState.isPressed(blib::Key::CONTROL) && !lastKeyState.isPressed(blib::Key::Z))
+		{
+			if (keyState.isPressed(blib::Key::SHIFT))
+				redo();
+			else
+				undo();
+		}
+
+
 		///////////////////////////////////////////////TEXTURE EDIT
 
 		if (editMode == EditMode::TextureEdit)
@@ -285,6 +296,9 @@ void BrowEdit::update( double elapsedTime )
 				rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
 				rot = glm::translate(rot, glm::vec3(-texCenter, 0));
 
+
+				TextureAction* action = new TextureAction();
+
 				for (int x = 0; x < cursorWidth; x++)
 				{
 					for (int y = 0; y < cursorHeight; y++)
@@ -298,24 +312,26 @@ void BrowEdit::update( double elapsedTime )
 						glm::vec2 t2 = t1 + texInc;
 
 						Gnd::Cube* cube = map->getGnd()->cubes[xx][yy];
-						Gnd::Tile* tile = NULL;
+						Gnd::Tile tile;
 						if (cube->tileUp != -1)
-							tile = new Gnd::Tile(*map->getGnd()->tiles[cube->tileUp]);
+							tile = Gnd::Tile(*map->getGnd()->tiles[cube->tileUp]);
 						else
 						{
-							tile = new Gnd::Tile();
-							tile->lightmapIndex = 0;
+							tile = Gnd::Tile();
+							tile.lightmapIndex = 0;
 						}
-						cube->tileUp = map->getGnd()->tiles.size();
-						map->getGnd()->tiles.push_back(tile);
-						tile->textureIndex = textureWindow->selectedImage;
-						tile->v1 = glm::vec2(rot * glm::vec4(t1.x, t1.y, 0, 1));
-						tile->v2 = glm::vec2(rot * glm::vec4(t2.x, t1.y, 0, 1));
-						tile->v3 = glm::vec2(rot * glm::vec4(t1.x, t2.y, 0, 1));
-						tile->v4 = glm::vec2(rot * glm::vec4(t2.x, t2.y, 0, 1));
-						mapRenderer.setTileDirty(xx, yy);
+						tile.textureIndex = textureWindow->selectedImage;
+						tile.v1 = glm::vec2(rot * glm::vec4(t1.x, t1.y, 0, 1));
+						tile.v2 = glm::vec2(rot * glm::vec4(t2.x, t1.y, 0, 1));
+						tile.v3 = glm::vec2(rot * glm::vec4(t1.x, t2.y, 0, 1));
+						tile.v4 = glm::vec2(rot * glm::vec4(t2.x, t2.y, 0, 1));
+						action->addTile(xx, yy, tile);
+
 					}
 				}
+
+				perform(action);
+
 			}
 		}
 		
@@ -657,4 +673,27 @@ void BrowEdit::addModel(const std::string &fileName)
 	std::for_each(map->getRsw()->objects.begin(), map->getRsw()->objects.end(), [](Rsw::Object* o) { o->selected = false; });
 
 	map->getRsw()->objects.push_back(newModel);
+}
+
+void BrowEdit::perform(Action* action)
+{
+	std::for_each(undone.begin(), undone.end(), [](Action* a) { delete a; });
+	undone.clear();
+	actions.push_back(action);
+	action->perform(map, mapRenderer);
+}
+
+
+void BrowEdit::undo()
+{
+	Action* a = actions.back();
+	actions.pop_back();
+	undone.push_back(a);
+}
+
+void BrowEdit::redo()
+{
+	Action* a = undone.back();
+	undone.pop_back();
+	actions.push_back(a);
 }
