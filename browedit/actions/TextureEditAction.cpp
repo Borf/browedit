@@ -29,6 +29,7 @@ void TextureAction::undo(Map* map, MapRenderer& mapRenderer)
 		map->getGnd()->cubes[it->x][it->y]->tileUp = it->oldTile;
 		mapRenderer.setTileDirty(it->x, it->y);
 	}
+	map->getGnd()->tiles.erase(map->getGnd()->tiles.end() - undodata.size(), map->getGnd()->tiles.end());
 	undodata.clear();
 }
 

@@ -243,12 +243,9 @@ void BrowEdit::update( double elapsedTime )
 	if (map)
 	{
 		if (keyState.isPressed(blib::Key::Z) && keyState.isPressed(blib::Key::CONTROL) && !lastKeyState.isPressed(blib::Key::Z))
-		{
-			if (keyState.isPressed(blib::Key::SHIFT))
-				redo();
-			else
-				undo();
-		}
+			undo();
+		if (keyState.isPressed(blib::Key::Y) && keyState.isPressed(blib::Key::CONTROL) && !lastKeyState.isPressed(blib::Key::Y))
+			redo();
 
 
 		///////////////////////////////////////////////TEXTURE EDIT
@@ -686,14 +683,22 @@ void BrowEdit::perform(Action* action)
 
 void BrowEdit::undo()
 {
-	Action* a = actions.back();
-	actions.pop_back();
-	undone.push_back(a);
+	if (!actions.empty())
+	{
+		Action* a = actions.back();
+		actions.pop_back();
+		undone.push_back(a);
+		a->undo(map, mapRenderer);
+	}
 }
 
 void BrowEdit::redo()
 {
-	Action* a = undone.back();
-	undone.pop_back();
-	actions.push_back(a);
+	if (!undone.empty())
+	{
+		Action* a = undone.back();
+		undone.pop_back();
+		actions.push_back(a);
+		a->perform(map, mapRenderer);
+	}
 }
