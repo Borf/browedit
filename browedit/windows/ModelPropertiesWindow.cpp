@@ -29,17 +29,17 @@ ModelPropertiesWindow::ModelPropertiesWindow(Rsw::Model* model, blib::ResourceMa
 	getComponent<blib::wm::widgets::Button>("btnCancel")->addClickHandler([this](blib::wm::Widget*, int, int, int) { close();  });
 	getComponent<blib::wm::widgets::Button>("btnOk")->addClickHandler([this, model](blib::wm::Widget*, int, int, int) 
 	{ 
-		model->position.x = atof(getComponent<blib::wm::widgets::Textbox>("positionx")->text.c_str());
-		model->position.y = atof(getComponent<blib::wm::widgets::Textbox>("positiony")->text.c_str());
-		model->position.z = atof(getComponent<blib::wm::widgets::Textbox>("positionz")->text.c_str());
+		model->position.x = (float)atof(getComponent<blib::wm::widgets::Textbox>("positionx")->text.c_str());
+		model->position.y = (float)atof(getComponent<blib::wm::widgets::Textbox>("positiony")->text.c_str());
+		model->position.z = (float)atof(getComponent<blib::wm::widgets::Textbox>("positionz")->text.c_str());
 
-		model->rotation.x = atof(getComponent<blib::wm::widgets::Textbox>("rotationx")->text.c_str());
-		model->rotation.y = atof(getComponent<blib::wm::widgets::Textbox>("rotationy")->text.c_str());
-		model->rotation.z = atof(getComponent<blib::wm::widgets::Textbox>("rotationz")->text.c_str());
+		model->rotation.x = (float)atof(getComponent<blib::wm::widgets::Textbox>("rotationx")->text.c_str());
+		model->rotation.y = (float)atof(getComponent<blib::wm::widgets::Textbox>("rotationy")->text.c_str());
+		model->rotation.z = (float)atof(getComponent<blib::wm::widgets::Textbox>("rotationz")->text.c_str());
 
-		model->scale.x = atof(getComponent<blib::wm::widgets::Textbox>("scalex")->text.c_str());
-		model->scale.y = atof(getComponent<blib::wm::widgets::Textbox>("scaley")->text.c_str());
-		model->scale.z = atof(getComponent<blib::wm::widgets::Textbox>("scalez")->text.c_str());
+		model->scale.x = (float)atof(getComponent<blib::wm::widgets::Textbox>("scalex")->text.c_str());
+		model->scale.y = (float)atof(getComponent<blib::wm::widgets::Textbox>("scaley")->text.c_str());
+		model->scale.z = (float)atof(getComponent<blib::wm::widgets::Textbox>("scalez")->text.c_str());
 
 		model->matrixCached = false;
 		close();  

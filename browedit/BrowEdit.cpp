@@ -125,6 +125,10 @@ void BrowEdit::init()
 		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
 	for (blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();
+
+
+	gradientBackground = resourceManager->getResource<blib::Texture>("assets/textures/gradient.png");
+
 	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
 
 	wm->setSkin("assets/skins/ro.json", resourceManager);
@@ -448,6 +452,10 @@ void BrowEdit::update( double elapsedTime )
 void BrowEdit::draw()
 {
 	renderer->clear(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), blib::Renderer::Color | blib::Renderer::Depth);
+
+	spriteBatch->begin();
+	spriteBatch->draw(gradientBackground, blib::math::easyMatrix(gradientBackground, blib::math::Rectangle(0,0,window->getWidth(), window->getHeight())));
+	spriteBatch->end();
 
 	if (map)
 	{

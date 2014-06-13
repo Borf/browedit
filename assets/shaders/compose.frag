@@ -26,6 +26,7 @@ void main()
 
 	vec4 fac = vec4(edge, -edge, -edge, 1.0);
 
-
+	if(texColor.a <= 0.01)
+		discard;
 	gl_FragColor = clamp(texColor + fac, 0.0, 1.0);
 }
