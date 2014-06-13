@@ -23,57 +23,10 @@
 #include <BroLib/Rsm.h>
 #include <BroLib/MapRenderer.h>
 
-class Rsm;
-
 using blib::util::Log;
 
 
-class ModelWidget : public blib::wm::Widget
-{
-	Rsm* rsm;
-	BrowEdit* browedit;
 
-	blib::FBO* fbo;
-	float rotation;
-public:
-	ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit)
-	{
-		this->rsm = rsm;
-		this->browedit = browedit;
-		if (rsm->renderer == NULL)
-		{
-			rsm->renderer = new RsmModelRenderInfo();
-			for (size_t i = 0; i < rsm->textures.size(); i++)
-				rsm->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + rsm->textures[i]));
-		}
-		fbo = resourceManager->getResource<blib::FBO>();
-		fbo->depth = true;
-		rotation = 0;
-	}
-
-
-	virtual void draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
-	{
-		if (width != fbo->width || height != fbo->height)
-		{
-			fbo->setSize(width, height);
-			if (rsm->loaded)
-				browedit->mapRenderer.renderMeshFbo(rsm, rotation, fbo, renderer);
-		}
-
-		if (rsm->loaded && this->hover)
-		{
-			const_cast<ModelWidget*>(this)->rotation++;	//ahem
-			browedit->mapRenderer.renderMeshFbo(rsm, rotation, fbo, renderer);
-		}
-
-		spriteBatch.drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, glm::vec3(x, y, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(width, height));
-
-
-		spriteBatch.draw(fbo, glm::translate(matrix, glm::vec3(x, y, 0)));
-
-	}
-};
 
 ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Objects", "ObjectWindow.json", resourceManager)
 {
@@ -96,7 +49,6 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 
 		for (size_t i = 0; i < browEdit->map->getRsw()->objects.size(); i++)
 			browEdit->map->getRsw()->objects[i]->selected = i == index;
-
 	});
 
 
@@ -156,16 +108,6 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 			setDirectory(l->items[l->selectedItem()] + "/");
 	});
 
-
-	/*blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
-	ModelWidget* widget = new ModelWidget(new Rsm("data\\model\\프론테라\\분수대.rsm"), resourceManager, browEdit);
-	widget->width = 128;
-	widget->height = 128;
-	widget->x = 10;
-	widget->y = 10;
-	panel->add(widget);
-	*/
-
 	setDirectory("/");
 
 }
@@ -205,24 +147,6 @@ void ObjectWindow::setDirectory(const std::string &directory)
 	int px = 0;
 	int py = 0;
 
-/*	if (directory != "/")
-	{
-		blib::wm::widgets::Image* image = new blib::wm::widgets::Image(resourceManager->getResource<blib::Texture>("assets/textures/folder.png"));
-		image->width = textureSize;
-		image->height = textureSize;
-		image->x = px;
-		image->y = py;
-		panel->add(image);
-
-		px += textureSize;
-
-		if (px + textureSize > panel->width)
-		{
-			py += textureSize + 12;
-			px = 0;
-		}
-	}*/
-
 	double start = blib::util::Profiler::getAppTime();
 	for (auto it : textureFiles)
 	{
@@ -234,6 +158,13 @@ void ObjectWindow::setDirectory(const std::string &directory)
 			image->x = px;
 			image->y = py;
 			panel->add(image);
+
+			image->addClickHandler([this, it](blib::wm::Widget*, int, int, int) {
+				Log::out << it.second << Log::newline;
+				browEdit->addModel(it.second.substr(11));
+				getComponent<blib::wm::widgets::Button>("btnExpand")->mouseclick(0, 0, 1);
+			});
+
 
 			px += textureSize;
 
@@ -247,21 +178,6 @@ void ObjectWindow::setDirectory(const std::string &directory)
 
 	px = 0;
 	py = 0;
-
-	/*blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
-	label->text = "Up";
-	label->width = textureSize;
-	label->height = 12;
-	label->x = px;
-	label->y = py + 100;
-	panel->add(label);
-	px += textureSize;
-	if (px + textureSize > panel->width)
-	{
-		py += textureSize + 12;
-		px = 0;
-	}*/
-
 
 	for (auto it : textureFiles)
 	{
@@ -289,4 +205,71 @@ void ObjectWindow::setDirectory(const std::string &directory)
 	panel->scrollY = 0;
 	panel->internalHeight = py + textureSize + 12;
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ModelWidget::ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit)
+{
+	this->rsm = rsm;
+	this->browedit = browedit;
+	if (rsm->renderer == NULL)
+	{
+		rsm->renderer = new RsmModelRenderInfo();
+		for (size_t i = 0; i < rsm->textures.size(); i++)
+			rsm->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + rsm->textures[i]));
+	}
+	fbo = resourceManager->getResource<blib::FBO>();
+	fbo->depth = true;
+	rotation = 0;
+}
+
+void ModelWidget::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
+{
+	if (width - 4 != fbo->width || height - 4 != fbo->height)
+	{
+		fbo->setSize(width - 4, height - 4);
+		if (rsm->loaded)
+			browedit->mapRenderer.renderMeshFbo(rsm, rotation, fbo, renderer);
+	}
+
+	if (rsm->loaded && this->hover)
+	{
+		const_cast<ModelWidget*>(this)->rotation++;	//ahem
+		browedit->mapRenderer.renderMeshFbo(rsm, rotation, fbo, renderer);
+	}
+
+	spriteBatch.drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, glm::vec3(x, y, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(width, height));
+
+	spriteBatch.draw(fbo, glm::translate(matrix, glm::vec3(x + 2, y + 2, 0)));
+}
+
+ModelWidget::~ModelWidget()
+{
+	if (rsm)
+		delete rsm;
+	rsm = NULL;
+	if (fbo)
+		delete fbo;
 }

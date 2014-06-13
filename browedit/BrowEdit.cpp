@@ -89,12 +89,14 @@ BrowEdit::BrowEdit(const Json::Value &config)
 
 	editMode = EditMode::TextureEdit;
 	objectEditModeTool = ObjectEditModeTool::Select;
+	newModel = NULL;
 
 
 	textureTargetSize = glm::ivec2(2, 2);
 	textureRot = 0;
 	textureFlipH = false;
 	textureFlipV = false;
+
 
 
 	appSetup.threaded = config["threadedrendering"].asBool();
@@ -317,14 +319,22 @@ void BrowEdit::update( double elapsedTime )
 
 		if (editMode == EditMode::ObjectEdit && !wm->inWindow(mouseState.x, mouseState.y))
 		{
-			if (mouseState.leftButton && !lastMouseState.leftButton || mouseState.rightButton && !lastMouseState.rightButton)
+			if (newModel)
+			{
+				newModel->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
+				newModel->matrixCached = false;
+				if (mouseState.leftButton && !lastMouseState.leftButton)
+					newModel = NULL;
+			}
+
+			else if (mouseState.leftButton && !lastMouseState.leftButton || mouseState.rightButton && !lastMouseState.rightButton)
 			{//down
 				startMouseState = mouseState;
 				mouse3dstart = mapRenderer.mouse3d;
 
 
 			}
-			if (!mouseState.leftButton && lastMouseState.leftButton)
+			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//left up
 				if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
 				{ //click
@@ -373,7 +383,7 @@ void BrowEdit::update( double elapsedTime )
 				}
 			}
 			else if (mouseState.leftButton && lastMouseState.leftButton)
-			{ // dragging
+			{ // dragging				
 				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 				{
 					Rsw::Object* o = map->getRsw()->objects[i];
@@ -617,4 +627,26 @@ void BrowEdit::setObjectEditMode(ObjectEditModeTool newMode)
 	rootMenu->setEnabled("objecttools/move", objectEditModeTool == ObjectEditModeTool::Translate);
 	rootMenu->setEnabled("objecttools/scale", objectEditModeTool == ObjectEditModeTool::Scale);
 	rootMenu->setEnabled("objecttools/rotate", objectEditModeTool == ObjectEditModeTool::Rotate);
+}
+
+void BrowEdit::addModel(const std::string &fileName)
+{
+	newModel = new Rsw::Model();
+	newModel->matrixCached = false;
+	newModel->name = fileName;
+	newModel->animType = 0;
+	newModel->animSpeed = 0;
+	newModel->blockType = 0;
+	newModel->fileName = fileName;
+
+
+	newModel->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
+	newModel->rotation = glm::vec3(0, 0, 0);
+	newModel->scale = glm::vec3(1,1,1);
+	newModel->model = map->getRsw()->getRsm(newModel->fileName);
+	newModel->selected = true;
+
+	std::for_each(map->getRsw()->objects.begin(), map->getRsw()->objects.end(), [](Rsw::Object* o) { o->selected = false; });
+
+	map->getRsw()->objects.push_back(newModel);
 }

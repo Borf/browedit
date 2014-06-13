@@ -100,5 +100,8 @@ public:
 		Scale,
 	} objectEditModeTool;
 	void setObjectEditMode(ObjectEditModeTool newMode);
+	void addModel(const std::string &fileName);
+
+	Rsw::Model* newModel;
 };
 
