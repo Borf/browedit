@@ -53,7 +53,7 @@ glm::vec2 mod(const glm::vec2 &a, float m)
 
 void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
-	renderer->clear(glm::vec4(0, 0, 0, 1), blib::Renderer::Color | blib::Renderer::Depth, gndRenderState);
+	renderer->clear(glm::vec4(0, 0, 0, 0), blib::Renderer::Color | blib::Renderer::Depth, gndRenderState);
 	renderGnd(renderer);
 	renderer->unproject(mousePosition, &mouse3d, cameraMatrix, projectionMatrix);
 
@@ -666,16 +666,16 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 }
 
 
-void MapRenderer::renderMeshFbo(Rsm* rsm, blib::FBO* fbo, blib::Renderer* renderer)
+void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer)
 {
 	blib::FBO* oldFbo = rswRenderState.activeFbo;
 
-	static float f = 0;
-	f += 0.1f;
+	float dist = glm::max(glm::max(rsm->realbbmax.x - rsm->realbbmin.x, rsm->realbbmax.y - rsm->realbbmin.y), rsm->realbbmax.z - rsm->realbbmin.z);
 
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, glm::lookAt(glm::vec3(0, 25, -25), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(75.0f, 1.0f, 0.1f, 250.0f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, glm::lookAt(rsm->realbbrange * glm::vec3(1, -1, 1) + glm::vec3(0, -dist/3, -dist), rsm->realbbrange * glm::vec3(1, -1, 1), glm::vec3(0, 1, 0)));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::scale(glm::rotate(glm::mat4(), f, glm::vec3(0, 1, 0)), glm::vec3(1, -1, 1)));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::scale(glm::rotate(glm::mat4(), rotation, glm::vec3(0, 1, 0)), glm::vec3(1, 1, 1)));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
 
 	rswRenderState.activeVbo = NULL;
@@ -689,6 +689,7 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, blib::FBO* fbo, blib::Renderer* render
 	renderer->setViewPort(width, height);
 
 	rswRenderState.activeFbo = oldFbo;
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
 }
 
 

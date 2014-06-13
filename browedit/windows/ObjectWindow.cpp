@@ -5,6 +5,7 @@
 #include <blib/wm/WM.h>
 #include <blib/wm/widgets/list.h>
 #include <blib/wm/widgets/button.h>
+#include <blib/wm/widgets/Label.h>
 #include <blib/wm/widgets/ScrollPanel.h>
 #include <blib/SpriteBatch.h>
 #include <blib/util/FileSystem.h>
@@ -12,6 +13,8 @@
 #include <blib/Texture.h>
 #include <blib/Renderer.h>
 #include <blib/FBO.h>
+#include <blib/util/Log.h>
+#include <blib/util/Profiler.h>
 #include <glm/glm.hpp>
 
 #include <BroLib/Map.h>
@@ -22,6 +25,8 @@
 
 class Rsm;
 
+using blib::util::Log;
+
 
 class ModelWidget : public blib::wm::Widget
 {
@@ -29,7 +34,7 @@ class ModelWidget : public blib::wm::Widget
 	BrowEdit* browedit;
 
 	blib::FBO* fbo;
-
+	float rotation;
 public:
 	ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit)
 	{
@@ -42,22 +47,30 @@ public:
 				rsm->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + rsm->textures[i]));
 		}
 		fbo = resourceManager->getResource<blib::FBO>();
-		fbo->setSize(512, 512);
+		fbo->depth = true;
+		rotation = 0;
 	}
 
 
 	virtual void draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
 	{
+		if (width != fbo->width || height != fbo->height)
+		{
+			fbo->setSize(width, height);
+			if (rsm->loaded)
+				browedit->mapRenderer.renderMeshFbo(rsm, rotation, fbo, renderer);
+		}
 
+		if (rsm->loaded && this->hover)
+		{
+			const_cast<ModelWidget*>(this)->rotation++;	//ahem
+			browedit->mapRenderer.renderMeshFbo(rsm, rotation, fbo, renderer);
+		}
 
 		spriteBatch.drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, glm::vec3(x, y, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(width, height));
 
-		browedit->mapRenderer.renderMeshFbo(rsm, fbo, renderer);
-
 
 		spriteBatch.draw(fbo, glm::translate(matrix, glm::vec3(x, y, 0)));
-
-
 
 	}
 };
@@ -68,6 +81,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	this->resourceManager = resourceManager;
 	x = 1000;
 	y = 10;
+	textureSize = 128;
 	largeWidth = glm::min(1300, blib::wm::WM::getInstance()->screenSize.x - 100);
 	resizable = false;
 
@@ -143,13 +157,16 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	});
 
 
-	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+	/*blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
 	ModelWidget* widget = new ModelWidget(new Rsm("data\\model\\프론테라\\분수대.rsm"), resourceManager, browEdit);
-	widget->width = 512;
-	widget->height = 512;
+	widget->width = 128;
+	widget->height = 128;
 	widget->x = 10;
 	widget->y = 10;
 	panel->add(widget);
+	*/
+
+	setDirectory("/");
 
 }
 
@@ -168,8 +185,6 @@ void ObjectWindow::updateObjects(Map* map)
 {
 	blib::wm::widgets::List* items = getComponent<blib::wm::widgets::List>("lstObjects");
 	items->items.clear();
-
-
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
 		items->items.push_back(map->getRsw()->objects[i]->name);
@@ -183,7 +198,95 @@ void ObjectWindow::updateObjects(Map* map)
 void ObjectWindow::setDirectory(const std::string &directory)
 {
 	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+	panel->clear();
+	panel->internalWidth = panel->width;
 
 
+	int px = 0;
+	int py = 0;
+
+/*	if (directory != "/")
+	{
+		blib::wm::widgets::Image* image = new blib::wm::widgets::Image(resourceManager->getResource<blib::Texture>("assets/textures/folder.png"));
+		image->width = textureSize;
+		image->height = textureSize;
+		image->x = px;
+		image->y = py;
+		panel->add(image);
+
+		px += textureSize;
+
+		if (px + textureSize > panel->width)
+		{
+			py += textureSize + 12;
+			px = 0;
+		}
+	}*/
+
+	double start = blib::util::Profiler::getAppTime();
+	for (auto it : textureFiles)
+	{
+		if (it.first.substr(0, directory.size()) == directory && it.first.find("/", directory.size() + 1) == -1)
+		{
+			ModelWidget* image = new ModelWidget(new Rsm(it.second), resourceManager, browEdit);
+			image->width = textureSize;
+			image->height = textureSize;
+			image->x = px;
+			image->y = py;
+			panel->add(image);
+
+			px += textureSize;
+
+			if (px + textureSize > panel->width)
+			{
+				py += textureSize + 12;
+				px = 0;
+			}
+		}
+	}
+
+	px = 0;
+	py = 0;
+
+	/*blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
+	label->text = "Up";
+	label->width = textureSize;
+	label->height = 12;
+	label->x = px;
+	label->y = py + 100;
+	panel->add(label);
+	px += textureSize;
+	if (px + textureSize > panel->width)
+	{
+		py += textureSize + 12;
+		px = 0;
+	}*/
+
+
+	for (auto it : textureFiles)
+	{
+		if (it.first.substr(0, directory.size()) == directory && it.first.find("/", directory.size() + 1) == -1)
+		{
+			blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
+			label->text = it.first.substr(directory.size());
+			label->width = textureSize;
+			label->height = 12;
+			label->x = px;
+			label->y = py + textureSize;
+			panel->add(label);
+			px += textureSize;
+			if (px + textureSize > panel->width)
+			{
+				py += textureSize + 12;
+				px = 0;
+			}
+		}
+	}
+
+
+	Log::out << "Time taken: " << blib::util::Profiler::getAppTime() - start << Log::newline;
+	panel->scrollX = 0;
+	panel->scrollY = 0;
+	panel->internalHeight = py + textureSize + 12;
 
 }

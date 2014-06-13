@@ -168,5 +168,5 @@ public:
 
 	virtual void resizeGl(int width, int height);
 	void setTileDirty(int xx, int yy);
-	void renderMeshFbo(Rsm* rsm, blib::FBO* fbo, blib::Renderer* renderer);
+	void renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
 };

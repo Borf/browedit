@@ -20,6 +20,8 @@ class ObjectWindow : public blib::wm::Window
 	int smallWidth;
 	int largeWidth;
 
+	int textureSize;
+
 	blib::ResourceManager* resourceManager;
 
 	BrowEdit* browEdit;
