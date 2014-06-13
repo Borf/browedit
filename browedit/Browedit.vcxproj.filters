@@ -31,6 +31,9 @@
     <Filter Include="assets\windows">
       <UniqueIdentifier>{574b8356-0f1c-4a5d-af9a-210b1587bf52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="actions">
+      <UniqueIdentifier>{2b3abe1c-7279-4242-a10d-488252d85259}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
@@ -60,6 +63,15 @@
     <ClInclude Include="..\blib\version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="action.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="actions\TextureEditAction.h">
+      <Filter>actions</Filter>
+    </ClInclude>
+    <ClInclude Include="actions\GroupAction.h">
+      <Filter>actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -82,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="windows\ModelPropertiesWindow.cpp">
       <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="actions\TextureEditAction.cpp">
+      <Filter>actions</Filter>
+    </ClCompile>
+    <ClCompile Include="actions\GroupAction.cpp">
+      <Filter>actions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

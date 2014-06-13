@@ -15,6 +15,8 @@ class Camera;
 class TextureWindow;
 class ObjectWindow;
 
+class Action;
+
 
 class BrowEdit : public blib::App, public blib::MouseListener
 {
@@ -56,6 +58,9 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		sampleSize,
 	};
 
+
+	std::list<Action*> actions;
+	std::list<Action*> undone;
 
 	glm::vec4 mouse3dstart;
 	glm::vec4 lastmouse3d;
@@ -101,6 +106,10 @@ public:
 	} objectEditModeTool;
 	void setObjectEditMode(ObjectEditModeTool newMode);
 	void addModel(const std::string &fileName);
+
+	void perform(Action* action);
+	void undo();
+	void redo();
 
 	Rsw::Model* newModel;
 };
