@@ -4,6 +4,7 @@
 #include <blib/RenderState.h>
 #include <blib/gl/Vertex.h>
 #include <blib/gl/GlResizeRegister.h>
+#include <blib/math/Ray.h>
 #include <map>
 #include <vector>
 
@@ -152,6 +153,7 @@ public:
 
 	blib::FBO* fbo;
 	glm::vec4 mouse3d;
+	blib::math::Ray mouseRay;
 
 
 	void init( blib::ResourceManager* resourceManager, blib::App* app );

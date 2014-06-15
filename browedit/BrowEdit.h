@@ -65,6 +65,8 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	glm::vec4 mouse3dstart;
 	glm::vec4 lastmouse3d;
 
+	blib::math::Ray mouseRay;
+
 	blib::Texture* gradientBackground;
 
 	TextureWindow* textureWindow;

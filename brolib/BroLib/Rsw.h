@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 
+#include <blib/math/AABB.h>
 class Rsm;
 
 
@@ -14,7 +15,7 @@ public:
 	class Object
 	{
 	public:
-		enum Type
+		enum class Type
 		{
 			Model,
 			Light,
@@ -22,7 +23,7 @@ public:
 			Effect,
 		} type;
 
-		Object(Type type) : type(type), selected(false), matrixCached(false) {};
+		Object(Type type) : type(type), selected(false), matrixCached(false), aabb(glm::vec3(0,0,0), glm::vec3(0,0,0)) {};
 
 		std::string name;
 
@@ -35,13 +36,16 @@ public:
 		bool matrixCached;
 		glm::mat4 matrixCache;
 
+		blib::math::AABB aabb;
+
 		virtual ~Object() {}
+		virtual bool collides(const blib::math::Ray &ray) { return false; };
 	};
 
 
 	class Model : public Object
 	{
-	public:
+	public: 
 		int animType;
 		float animSpeed;
 		int blockType;
@@ -49,9 +53,10 @@ public:
 		//std::string nodeName;
 
 		Rsm* model;
+		bool collides(const blib::math::Ray &ray);
 
 
-		Model() : Object(Object::Model)
+		Model() : Object(Object::Type::Model)
 		{
 			model = NULL;
 		}
@@ -65,7 +70,7 @@ public:
 		glm::vec3		color;
 		float			todo2;
 		
-		Light() : Object(Object::Light)
+		Light() : Object(Object::Type::Light)
 		{
 		}
 		// custom properties!!!!!!!!!
@@ -78,7 +83,7 @@ public:
 	class Sound : public Object
 	{
 	public:
-		Sound() : Object(Object::Sound)
+		Sound() : Object(Object::Type::Sound)
 		{
 		}
 		std::string fileName;
@@ -93,7 +98,7 @@ public:
 	class Effect : public Object
 	{
 	public:
-		Effect() : Object(Object::Effect)
+		Effect() : Object(Object::Type::Effect)
 		{
 		}
 

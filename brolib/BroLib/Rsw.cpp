@@ -1,5 +1,6 @@
 #include "Rsw.h"
 #include "Rsm.h"
+#include "MapRenderer.h"
 
 #include <blib/util/FileSystem.h>
 #include <blib/util/Log.h>
@@ -190,4 +191,43 @@ Rsm* Rsw::getRsm( const std::string &fileName )
 Rsw::Model::~Model()
 {
 
+}
+
+
+bool collides_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
+{
+	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
+	newMatrix = glm::inverse(newMatrix);
+	blib::math::Ray newRay = ray * newMatrix;
+
+
+	std::vector<glm::vec3> verts;
+	verts.resize(3);
+	float t;
+	for (size_t i = 0; i < mesh->faces.size(); i++)
+	{
+		for (size_t ii = 0; ii < 3; ii++)
+			verts[ii] = mesh->vertices[mesh->faces[i]->vertices[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+
+		if (newRay.LineIntersectPolygon(verts, t))
+			return true;
+	}
+
+	for (size_t i = 0; i < mesh->children.size(); i++)
+	{
+		if (collides_(mesh->children[i], ray, matrix))
+			return true;
+	}
+
+
+	return false;
+}
+
+bool Rsw::Model::collides(const blib::math::Ray &ray)
+{
+	if (!aabb.hasRayCollision(ray, 0, 10000000))
+		return false;
+
+	return collides_(model->rootMesh, ray, matrixCache);
+	return true;
 }

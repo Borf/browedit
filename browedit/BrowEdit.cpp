@@ -39,7 +39,7 @@ using blib::util::Log;
 #endif
 
 
-BrowEdit::BrowEdit(const Json::Value &config)
+BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
 {
 	this->config = config;
 
@@ -94,7 +94,7 @@ BrowEdit::BrowEdit(const Json::Value &config)
 	newModel = NULL;
 
 
-	textureTargetSize = glm::ivec2(2, 2);
+	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
 	textureFlipH = false;
 	textureFlipV = false;
@@ -227,6 +227,10 @@ void BrowEdit::update( double elapsedTime )
 	mapRenderer.cameraMatrix = camera->getMatrix();
 	mapRenderer.drawTextureGrid = mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue(); // TODO: fix this
 
+	if (mouseState.leftButton)
+		mouseRay = mapRenderer.mouseRay;
+
+
 	if(mouseState.middleButton)
 	{
 		if(keyState.isPressed(blib::Key::SHIFT))
@@ -357,28 +361,17 @@ void BrowEdit::update( double elapsedTime )
 				{ //click
 					if (objectEditModeTool == ObjectEditModeTool::Select && !wm->inWindow(mouseState.x, mouseState.y))
 					{
-						float minDist = 999999999.9f;
-						Rsw::Object* closestObject = NULL;
-
 						for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 						{
 							Rsw::Object* o = map->getRsw()->objects[i];
 							glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
 							float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
-							if (dist < minDist)
+							o->selected = o->collides(mapRenderer.mouseRay);
+							if (o->selected && mouseState.clickcount == 2)
 							{
-								minDist = dist;
-								closestObject = o;
+								if (o->type == Rsw::Object::Type::Model)
+									new ModelPropertiesWindow((Rsw::Model*)o, resourceManager);
 							}
-							o->selected = false;
-						}
-						if (closestObject && minDist < 40)
-							closestObject->selected = true;
-						if (mouseState.clickcount == 2)
-						{
-							if (closestObject->type == Rsw::Object::Model)
-								new ModelPropertiesWindow((Rsw::Model*)closestObject, resourceManager);
-
 						}
 					}
 				}
@@ -567,6 +560,16 @@ void BrowEdit::draw()
 			}
 		}
 
+		{
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1.0f));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+			highlightRenderState.depthTest = true;
+			highlightRenderState.activeTexture[0] = NULL;
+			std::vector<blib::VertexP3> verts;
+			verts.push_back(blib::VertexP3(mouseRay.origin));
+			verts.push_back(blib::VertexP3(mouseRay.origin + 10000.0f * mouseRay.dir));
+			renderer->drawLines(verts, highlightRenderState);
+		}
 
 		spriteBatch->begin();
 

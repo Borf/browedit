@@ -1,5 +1,6 @@
 attribute vec3 a_position;
 attribute vec2 a_texture;
+attribute vec3 a_normal;
 
 uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;

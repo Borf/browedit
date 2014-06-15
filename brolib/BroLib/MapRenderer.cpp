@@ -14,6 +14,7 @@
 #include <blib/VBO.h>
 #include <blib/Window.h>
 #include <blib/FBO.h>
+#include <blib/Shapes.h>
 
 using blib::util::Log;
 
@@ -21,7 +22,7 @@ using blib::util::Log;
 #include <glm/gtc/matrix_transform.hpp>
 
 
-MapRenderer::MapRenderer()
+MapRenderer::MapRenderer() : mouseRay(glm::vec3(0, 0,0), glm::vec3(1,0,0))
 {
 	drawShadows = true;
 	drawObjects = true;
@@ -55,7 +56,7 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
 	renderer->clear(glm::vec4(0, 0, 0, 0), blib::Renderer::Color | blib::Renderer::Depth, gndRenderState);
 	renderGnd(renderer);
-	renderer->unproject(mousePosition, &mouse3d, cameraMatrix, projectionMatrix);
+	renderer->unproject(mousePosition, &mouse3d, &mouseRay, cameraMatrix, projectionMatrix);
 
 
 	if (drawTextureGrid)
@@ -230,6 +231,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/rsw");
 	rswRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	rswRenderState.activeShader->bindAttributeLocation("a_texture", 1);
+	rswRenderState.activeShader->bindAttributeLocation("a_normal", 2);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::CameraMatrix, "cameraMatrix", blib::Shader::Mat4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::ModelMatrix, "modelMatrix", blib::Shader::Mat4);
@@ -516,6 +518,18 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 		model->matrixCache = glm::scale(model->matrixCache, glm::vec3(model->scale.x, -model->scale.y, model->scale.z));
 		model->matrixCache = glm::translate(model->matrixCache, glm::vec3(-model->model->realbbrange.x, model->model->realbbmin.y, -model->model->realbbrange.z));
 		model->matrixCached = true;
+
+
+		std::vector<blib::VertexP3> verts = blib::Shapes::box(model->model->realbbmin, model->model->realbbmax);
+		for (size_t i = 0; i < verts.size(); i++)
+			verts[i].position = glm::vec3(model->matrixCache * glm::vec4(glm::vec3(1,-1,1) * verts[i].position,1.0f));
+		model->aabb.min = glm::vec3(99999999, 99999999, 99999999);
+		model->aabb.max = glm::vec3(-99999999, -99999999, -99999999);
+		for (size_t i = 0; i < verts.size(); i++)
+		{
+			model->aabb.min = glm::min(model->aabb.min, verts[i].position);
+			model->aabb.max = glm::max(model->aabb.max, verts[i].position);
+		}
 	}
 
 	if (model->model->renderer == NULL)
@@ -535,17 +549,18 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 	{
 		mesh->renderer = new RsmMeshRenderInfo();
 		mesh->renderer->vbo = resourceManager->getResource<blib::VBO>();
-		mesh->renderer->vbo->setVertexFormat<blib::VertexP3T2>();
+		mesh->renderer->vbo->setVertexFormat<blib::VertexP3T2N3>();
 
-		std::map<int, std::vector<blib::VertexP3T2> > verts;
+		std::map<int, std::vector<blib::VertexP3T2N3> > verts;
 		for (size_t i = 0; i < mesh->faces.size(); i++)
 		{
+			glm::vec3 normal = glm::normalize(glm::cross(mesh->vertices[mesh->faces[i]->vertices[1]] - mesh->vertices[mesh->faces[i]->vertices[0]],	mesh->vertices[mesh->faces[i]->vertices[2]] - mesh->vertices[mesh->faces[i]->vertices[0]]));
 			for (int ii = 0; ii < 3; ii++)
-				verts[mesh->faces[i]->texIndex].push_back(blib::VertexP3T2(mesh->vertices[mesh->faces[i]->vertices[ii]], mesh->texCoords[mesh->faces[i]->texvertices[ii]]));
+				verts[mesh->faces[i]->texIndex].push_back(blib::VertexP3T2N3(mesh->vertices[mesh->faces[i]->vertices[ii]], mesh->texCoords[mesh->faces[i]->texvertices[ii]], normal));
 		}
 
-		std::vector<blib::VertexP3T2> allVerts;
-		for (std::map<int, std::vector<blib::VertexP3T2> >::iterator it2 = verts.begin(); it2 != verts.end(); it2++)
+		std::vector<blib::VertexP3T2N3> allVerts;
+		for (std::map<int, std::vector<blib::VertexP3T2N3> >::iterator it2 = verts.begin(); it2 != verts.end(); it2++)
 		{
 			mesh->renderer->indices.push_back(VboIndex(it2->first, allVerts.size(), it2->second.size()));
 			allVerts.insert(allVerts.end(), it2->second.begin(), it2->second.end());
@@ -569,7 +584,7 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 	for (VboIndex& it : meshInfo->indices)
 	{
 		rswRenderState.activeTexture[0] = renderInfo->textures[mesh->textures[it.texture]];
-		renderer->drawTriangles<blib::VertexP3T2>(it.begin, it.count, rswRenderState);
+		renderer->drawTriangles<blib::VertexP3T2N3>(it.begin, it.count, rswRenderState);
 	}
 
 	for (size_t i = 0; i < mesh->children.size(); i++)
