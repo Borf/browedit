@@ -45,6 +45,8 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		s_texture,
 		modelviewMatrix,
 		projectionMatrix,
+		normalMatrix,
+		diffuse,
 		color,
 		texMult,
 	};
@@ -98,6 +100,8 @@ public:
 	bool textureFlipH;
 	bool textureFlipV;
 
+
+	std::vector<blib::VertexP3N3> arrow;
 
 
 	enum class ObjectEditModeTool
