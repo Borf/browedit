@@ -102,6 +102,7 @@ public:
 
 
 	std::vector<blib::VertexP3N3> arrow;
+	int objectTranslateDirection;
 
 
 	enum class ObjectEditModeTool

@@ -93,7 +93,7 @@ BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::
 	editMode = EditMode::TextureEdit;
 	objectEditModeTool = ObjectEditModeTool::Select;
 	newModel = NULL;
-
+	objectTranslateDirection = -1;
 
 	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
@@ -400,28 +400,39 @@ void BrowEdit::update( double elapsedTime )
 				if (selectCount > 0)
 				{
 					center /= selectCount;
-					int collides = -1;
+					objectTranslateDirection = -1;
 					{
+						blib::math::Ray transformedRay = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 0, 1)));
 						blib::math::Ray transformedRayX = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 0, 1)));
 						blib::math::Ray transformedRayY = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 0.0f, glm::vec3(1, 0, 0)));
 						blib::math::Ray transformedRayZ = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(1, 0, 0)));
 
 						std::vector<glm::vec3> polygon(3);
 						float t;
-						for (size_t i = 0; i < arrow.size() && collides == -1; i += 3)
+						for (size_t i = 0; i < arrow.size() && objectTranslateDirection == -1; i += 3)
 						{
 							for (size_t ii = 0; ii < 3; ii++)
 								polygon[ii] = arrow[i + ii].position;
 							if (transformedRayX.LineIntersectPolygon(polygon, t))
-								collides = 0;
+								objectTranslateDirection = 0;
 							if (transformedRayY.LineIntersectPolygon(polygon, t))
-								collides = 1;
+								objectTranslateDirection = 1;
 							if (transformedRayZ.LineIntersectPolygon(polygon, t))
-								collides = 2;
+								objectTranslateDirection = 2;
 						}
+						std::vector<glm::vec2> flatSheet;
+						flatSheet.push_back(glm::vec2(0, 0));
+						flatSheet.push_back(glm::vec2(0, 10));
+						flatSheet.push_back(glm::vec2(10, 10));
+						flatSheet.push_back(glm::vec2(10, 0));
+
+						if (transformedRay.LineIntersectPolygon(blib::linq::reverse(blib::linq::select<std::vector<glm::vec3>>(flatSheet, [](glm::vec2 p) { return glm::vec3(p.x, p.y, 0); })), t))
+							objectTranslateDirection = 3;
+						if (transformedRay.LineIntersectPolygon(blib::linq::reverse(blib::linq::select<std::vector<glm::vec3>>(flatSheet, [](glm::vec2 p) { return glm::vec3(p.x, 0, p.y); })), t))
+							objectTranslateDirection = 4;
+						if (transformedRay.LineIntersectPolygon(blib::linq::select<std::vector<glm::vec3>>(flatSheet, [](glm::vec2 p) { return glm::vec3(0, p.x, p.y); }), t))
+							objectTranslateDirection = 5;
 					}
-					if (collides != -1)
-						Log::out << "YAY: " << collides << Log::newline;
 
 
 				}
@@ -432,7 +443,12 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//left up
-				if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
+				if (objectTranslateDirection != -1)
+				{
+
+
+				}
+				else if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
 				{ //click
 					if (objectEditModeTool == ObjectEditModeTool::Select && !wm->inWindow(mouseState.x, mouseState.y))
 					{
@@ -474,6 +490,17 @@ void BrowEdit::update( double elapsedTime )
 					Rsw::Object* o = map->getRsw()->objects[i];
 					if (o->selected)
 					{
+						if (objectTranslateDirection != -1)
+						{
+							if (objectTranslateDirection == 0 || objectTranslateDirection == 3 || objectTranslateDirection == 5)
+								o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
+							if (objectTranslateDirection == 1 || objectTranslateDirection == 3 || objectTranslateDirection == 4)
+								o->position.y += (mouseState.y - lastMouseState.y)/5.0f;
+							if (objectTranslateDirection == 2 || objectTranslateDirection == 4 || objectTranslateDirection == 5)
+								o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
+						}
+
+
 						if (objectEditModeTool == ObjectEditModeTool::Translate)
 						{
 							if (keyState.pressedKeys[(int)blib::Key::SHIFT])
@@ -625,7 +652,7 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::ObjectEdit)
 		{
-			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && objectEditModeTool == ObjectEditModeTool::Select)
+			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && objectEditModeTool == ObjectEditModeTool::Select && objectTranslateDirection == -1)
 			{
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, 0.5f));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
