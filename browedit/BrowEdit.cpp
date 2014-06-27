@@ -28,6 +28,7 @@
 #include <blib/FBO.h>
 #include <blib/Shapes.h>
 #include <blib/util/Log.h>
+#include <blib/linq.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -649,6 +650,29 @@ void BrowEdit::draw()
 			{
 				center /= selectCount;
 
+				blib::math::Ray transformedRay = mapRenderer.mouseRay * glm::inverse(glm::translate(glm::mat4(), center));
+				int collides = -1;
+				float t;
+				{
+					blib::math::Ray transformedRayX = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 0, 1)));
+					blib::math::Ray transformedRayY = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 0.0f, glm::vec3(1, 0, 0)));
+					blib::math::Ray transformedRayZ = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(1, 0, 0)));
+
+					std::vector<glm::vec3> polygon(3);
+					for (size_t i = 0; i < arrow.size() && collides == -1; i += 3)
+					{
+						for (size_t ii = 0; ii < 3; ii++)
+							polygon[ii] = arrow[i + ii].position;
+						if (transformedRayX.LineIntersectPolygon(polygon, t))
+							collides = 0;
+						if (transformedRayY.LineIntersectPolygon(polygon, t))
+							collides = 1;
+						if (transformedRayZ.LineIntersectPolygon(polygon, t))
+							collides = 2;
+					}
+				}
+
+
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 				highlightRenderState.activeTexture[0] = NULL;
 				highlightRenderState.depthTest = true;
@@ -665,7 +689,10 @@ void BrowEdit::draw()
 				sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
 				sheet[4] = blib::VertexP3(glm::vec3(0, 10, 0));
 				sheet[5] = blib::VertexP3(glm::vec3(-10, 10, 0));
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, .25f));
+				if (transformedRay.LineIntersectPolygon(blib::linq::unique(blib::linq::select<std::vector<glm::vec3> >(sheet, [](blib::VertexP3 v) {return v.position;  })), t))
+					collides = 3;
+
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, collides == 3 ? 1 : .25f));
 				renderer->drawTriangles(sheet, highlightRenderState);
 				sheet[0] = blib::VertexP3(glm::vec3(0, 0, 0));
 				sheet[1] = blib::VertexP3(glm::vec3(-10, 0, 0));
@@ -673,7 +700,9 @@ void BrowEdit::draw()
 				sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
 				sheet[4] = blib::VertexP3(glm::vec3(0, 0, 10));
 				sheet[5] = blib::VertexP3(glm::vec3(-10, 0, 10));
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 1, .25f));
+				if (transformedRay.LineIntersectPolygon(blib::linq::unique(blib::linq::select<std::vector<glm::vec3> >(sheet, [](blib::VertexP3 v) {return v.position;  })), t))
+					collides = 4;
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 1, collides == 4 ? 1 : .25f));
 				renderer->drawTriangles(sheet, highlightRenderState);
 				sheet[0] = blib::VertexP3(glm::vec3(0, 0, 0));
 				sheet[1] = blib::VertexP3(glm::vec3(0, 10, 0));
@@ -681,7 +710,9 @@ void BrowEdit::draw()
 				sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
 				sheet[4] = blib::VertexP3(glm::vec3(0, 0, 10));
 				sheet[5] = blib::VertexP3(glm::vec3(0, 10, 10));
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 1, 1, .25f));
+				if (transformedRay.LineIntersectPolygon(blib::linq::unique(blib::linq::select<std::vector<glm::vec3> >(sheet, [](blib::VertexP3 v) {return v.position;  })), t))
+					collides = 5;
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 1, 1, collides == 5 ? 1 : .25f));
 				renderer->drawTriangles(sheet, highlightRenderState);
 
 
@@ -692,21 +723,21 @@ void BrowEdit::draw()
 				glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, modelView);
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::normalMatrix, normalMatrix);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 1, 0, 0.25f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 1, 0, collides == 1 ? 1 : 0.25f));
 				renderer->drawTriangles(arrow, highlightRenderState);
 
 				modelView = glm::rotate(cameraMat, 90.0f, glm::vec3(0, 0, 1));
 				normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, modelView);
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::normalMatrix, normalMatrix);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 0.25f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, collides == 0 ? 1 : 0.25f));
 				renderer->drawTriangles(arrow, highlightRenderState);
 
 				modelView = glm::rotate(cameraMat, 90.0f, glm::vec3(1, 0, 0));
 				normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, modelView);
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::normalMatrix, normalMatrix);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 1, 0.25f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 1, collides == 2 ? 1 : 0.25f));
 				renderer->drawTriangles(arrow, highlightRenderState);
 
 
