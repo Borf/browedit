@@ -96,6 +96,7 @@
     <ClInclude Include="BrowEdit.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="TranslatorTool.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
     <ClInclude Include="windows\ModelPropertiesWindow.h" />
@@ -108,6 +109,7 @@
     <ClCompile Include="BrowEdit.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="TranslatorTool.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />
     <ClCompile Include="windows\ObjectWindow.cpp" />

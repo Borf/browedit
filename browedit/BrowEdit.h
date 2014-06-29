@@ -4,6 +4,7 @@
 #include <blib/MouseListener.h>
 #include <BroLib/MapRenderer.h>
 #include <json/value.h>
+#include "TranslatorTool.h"
 
 namespace blib { 
 	class Texture; 
@@ -40,18 +41,6 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	blib::KeyState lastKeyState;
 
 	blib::RenderState highlightRenderState;
-	enum class HighlightShaderUniforms
-	{
-		s_texture,
-		modelviewMatrix,
-		projectionMatrix,
-		normalMatrix,
-		diffuse,
-		color,
-		texMult,
-	};
-
-
 	blib::RenderState composeRenderState;
 	enum class ComposeShaderUniforms
 	{
@@ -100,9 +89,8 @@ public:
 	bool textureFlipH;
 	bool textureFlipV;
 
-
-	std::vector<blib::VertexP3N3> arrow;
-	int objectTranslateDirection;
+	TranslatorTool translatorTool;
+	TranslatorTool::Axis objectTranslateDirection;
 
 
 	enum class ObjectEditModeTool
@@ -112,6 +100,18 @@ public:
 		Rotate,
 		Scale,
 	} objectEditModeTool;
+	enum class HighlightShaderUniforms
+	{
+		s_texture,
+		modelviewMatrix,
+		projectionMatrix,
+		normalMatrix,
+		diffuse,
+		color,
+		texMult,
+	};
+
+
 	void setObjectEditMode(ObjectEditModeTool newMode);
 	void addModel(const std::string &fileName);
 

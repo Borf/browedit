@@ -93,7 +93,7 @@ BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::
 	editMode = EditMode::TextureEdit;
 	objectEditModeTool = ObjectEditModeTool::Select;
 	newModel = NULL;
-	objectTranslateDirection = -1;
+	objectTranslateDirection = TranslatorTool::Axis::NONE;
 
 	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
@@ -220,33 +220,6 @@ void BrowEdit::init()
 	//	loadMap("data/yuno");
 
 
-	//// build up arrow
-	{
-		int height = 20;
-		int tip = 30;
-		std::vector<blib::VertexP3> verts = blib::Shapes::box(glm::vec3(-2, 5, -2), glm::vec3(2, height, 2));
-		verts.push_back(blib::VertexP3(glm::vec3(-5, height, -5)));
-		verts.push_back(blib::VertexP3(glm::vec3(-5, height, 5)));
-		verts.push_back(blib::VertexP3(glm::vec3(0, tip, 0)));
-
-		verts.push_back(blib::VertexP3(glm::vec3(-5, height, 5)));
-		verts.push_back(blib::VertexP3(glm::vec3(5, height, 5)));
-		verts.push_back(blib::VertexP3(glm::vec3(0, tip, 0)));
-
-		verts.push_back(blib::VertexP3(glm::vec3(5, height, 5)));
-		verts.push_back(blib::VertexP3(glm::vec3(5, height, -5)));
-		verts.push_back(blib::VertexP3(glm::vec3(0, tip, 0)));
-
-		verts.push_back(blib::VertexP3(glm::vec3(5, height, -5)));
-		verts.push_back(blib::VertexP3(glm::vec3(-5, height, -5)));
-		verts.push_back(blib::VertexP3(glm::vec3(0, tip, 0)));
-		for (size_t i = 0; i < verts.size(); i += 3)
-		{
-			glm::vec3 normal = glm::normalize(glm::cross(verts[i + 1].position - verts[i].position, verts[i + 2].position - verts[i].position));
-			for (size_t ii = i; ii < i + 3; ii++)
-				arrow.push_back(blib::VertexP3N3(verts[ii].position, normal));
-		}
-	}
 
 
 }
@@ -400,39 +373,7 @@ void BrowEdit::update( double elapsedTime )
 				if (selectCount > 0)
 				{
 					center /= selectCount;
-					objectTranslateDirection = -1;
-					{
-						blib::math::Ray transformedRay = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 0, 1)));
-						blib::math::Ray transformedRayX = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 0, 1)));
-						blib::math::Ray transformedRayY = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 0.0f, glm::vec3(1, 0, 0)));
-						blib::math::Ray transformedRayZ = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(1, 0, 0)));
-
-						std::vector<glm::vec3> polygon(3);
-						float t;
-						for (size_t i = 0; i < arrow.size() && objectTranslateDirection == -1; i += 3)
-						{
-							for (size_t ii = 0; ii < 3; ii++)
-								polygon[ii] = arrow[i + ii].position;
-							if (transformedRayX.LineIntersectPolygon(polygon, t))
-								objectTranslateDirection = 0;
-							if (transformedRayY.LineIntersectPolygon(polygon, t))
-								objectTranslateDirection = 1;
-							if (transformedRayZ.LineIntersectPolygon(polygon, t))
-								objectTranslateDirection = 2;
-						}
-						std::vector<glm::vec2> flatSheet;
-						flatSheet.push_back(glm::vec2(0, 0));
-						flatSheet.push_back(glm::vec2(0, 10));
-						flatSheet.push_back(glm::vec2(10, 10));
-						flatSheet.push_back(glm::vec2(10, 0));
-
-						if (transformedRay.LineIntersectPolygon(blib::linq::reverse(blib::linq::select<std::vector<glm::vec3>>(flatSheet, [](glm::vec2 p) { return glm::vec3(p.x, p.y, 0); })), t))
-							objectTranslateDirection = 3;
-						if (transformedRay.LineIntersectPolygon(blib::linq::reverse(blib::linq::select<std::vector<glm::vec3>>(flatSheet, [](glm::vec2 p) { return glm::vec3(p.x, 0, p.y); })), t))
-							objectTranslateDirection = 4;
-						if (transformedRay.LineIntersectPolygon(blib::linq::select<std::vector<glm::vec3>>(flatSheet, [](glm::vec2 p) { return glm::vec3(0, p.x, p.y); }), t))
-							objectTranslateDirection = 5;
-					}
+					objectTranslateDirection = translatorTool.selectedAxis(mapRenderer.mouseRay, center);
 
 
 				}
@@ -443,7 +384,7 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//left up
-				if (objectTranslateDirection != -1)
+				if (objectTranslateDirection != TranslatorTool::Axis::NONE)
 				{
 
 
@@ -490,13 +431,13 @@ void BrowEdit::update( double elapsedTime )
 					Rsw::Object* o = map->getRsw()->objects[i];
 					if (o->selected)
 					{
-						if (objectTranslateDirection != -1)
+						if (objectTranslateDirection != TranslatorTool::Axis::NONE)
 						{
-							if (objectTranslateDirection == 0 || objectTranslateDirection == 3 || objectTranslateDirection == 5)
+							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::X) != 0)
 								o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
-							if (objectTranslateDirection == 1 || objectTranslateDirection == 3 || objectTranslateDirection == 4)
-								o->position.y += (mouseState.y - lastMouseState.y)/5.0f;
-							if (objectTranslateDirection == 2 || objectTranslateDirection == 4 || objectTranslateDirection == 5)
+							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Y) != 0)
+								o->position.y += (mouseState.y - lastMouseState.y) / 5.0f;
+							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Z) != 0)
 								o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
 						}
 
@@ -652,7 +593,7 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::ObjectEdit)
 		{
-			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && objectEditModeTool == ObjectEditModeTool::Select && objectTranslateDirection == -1)
+			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && objectEditModeTool == ObjectEditModeTool::Select && objectTranslateDirection == TranslatorTool::Axis::NONE)
 			{
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, 0.5f));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
@@ -677,101 +618,7 @@ void BrowEdit::draw()
 			{
 				center /= selectCount;
 
-				blib::math::Ray transformedRay = mapRenderer.mouseRay * glm::inverse(glm::translate(glm::mat4(), center));
-				int collides = -1;
-				float t;
-				{
-					blib::math::Ray transformedRayX = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 0, 1)));
-					blib::math::Ray transformedRayY = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 0.0f, glm::vec3(1, 0, 0)));
-					blib::math::Ray transformedRayZ = mapRenderer.mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(1, 0, 0)));
-
-					std::vector<glm::vec3> polygon(3);
-					for (size_t i = 0; i < arrow.size() && collides == -1; i += 3)
-					{
-						for (size_t ii = 0; ii < 3; ii++)
-							polygon[ii] = arrow[i + ii].position;
-						if (transformedRayX.LineIntersectPolygon(polygon, t))
-							collides = 0;
-						if (transformedRayY.LineIntersectPolygon(polygon, t))
-							collides = 1;
-						if (transformedRayZ.LineIntersectPolygon(polygon, t))
-							collides = 2;
-					}
-				}
-
-
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
-				highlightRenderState.activeTexture[0] = NULL;
-				highlightRenderState.depthTest = true;
-
-
-				glm::mat4 cameraMat = camera->getMatrix();
-				cameraMat = glm::translate(cameraMat, center);
-
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMat);
-				std::vector<blib::VertexP3> sheet(6);
-				sheet[0] = blib::VertexP3(glm::vec3(0, 0, 0));
-				sheet[1] = blib::VertexP3(glm::vec3(-10, 0, 0));
-				sheet[2] = blib::VertexP3(glm::vec3(-10, 10, 0));
-				sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
-				sheet[4] = blib::VertexP3(glm::vec3(0, 10, 0));
-				sheet[5] = blib::VertexP3(glm::vec3(-10, 10, 0));
-				if (transformedRay.LineIntersectPolygon(blib::linq::unique(blib::linq::select<std::vector<glm::vec3> >(sheet, [](blib::VertexP3 v) {return v.position;  })), t))
-					collides = 3;
-
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, collides == 3 ? 1 : .25f));
-				renderer->drawTriangles(sheet, highlightRenderState);
-				sheet[0] = blib::VertexP3(glm::vec3(0, 0, 0));
-				sheet[1] = blib::VertexP3(glm::vec3(-10, 0, 0));
-				sheet[2] = blib::VertexP3(glm::vec3(-10, 0, 10));
-				sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
-				sheet[4] = blib::VertexP3(glm::vec3(0, 0, 10));
-				sheet[5] = blib::VertexP3(glm::vec3(-10, 0, 10));
-				if (transformedRay.LineIntersectPolygon(blib::linq::unique(blib::linq::select<std::vector<glm::vec3> >(sheet, [](blib::VertexP3 v) {return v.position;  })), t))
-					collides = 4;
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 1, collides == 4 ? 1 : .25f));
-				renderer->drawTriangles(sheet, highlightRenderState);
-				sheet[0] = blib::VertexP3(glm::vec3(0, 0, 0));
-				sheet[1] = blib::VertexP3(glm::vec3(0, 10, 0));
-				sheet[2] = blib::VertexP3(glm::vec3(0, 10, 10));
-				sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
-				sheet[4] = blib::VertexP3(glm::vec3(0, 0, 10));
-				sheet[5] = blib::VertexP3(glm::vec3(0, 10, 10));
-				if (transformedRay.LineIntersectPolygon(blib::linq::unique(blib::linq::select<std::vector<glm::vec3> >(sheet, [](blib::VertexP3 v) {return v.position;  })), t))
-					collides = 5;
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 1, 1, collides == 5 ? 1 : .25f));
-				renderer->drawTriangles(sheet, highlightRenderState);
-
-
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.75f);
-
-
-				glm::mat4 modelView = glm::rotate(cameraMat, 0.0f, glm::vec3(1, 0, 0));
-				glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, modelView);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::normalMatrix, normalMatrix);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 1, 0, collides == 1 ? 1 : 0.25f));
-				renderer->drawTriangles(arrow, highlightRenderState);
-
-				modelView = glm::rotate(cameraMat, 90.0f, glm::vec3(0, 0, 1));
-				normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, modelView);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::normalMatrix, normalMatrix);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, collides == 0 ? 1 : 0.25f));
-				renderer->drawTriangles(arrow, highlightRenderState);
-
-				modelView = glm::rotate(cameraMat, 90.0f, glm::vec3(1, 0, 0));
-				normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, modelView);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::normalMatrix, normalMatrix);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 1, collides == 2 ? 1 : 0.25f));
-				renderer->drawTriangles(arrow, highlightRenderState);
-
-
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
-				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, camera->getMatrix());
-
-
+				translatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
 			}
 
 		}
