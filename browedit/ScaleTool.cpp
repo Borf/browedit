@@ -44,7 +44,6 @@ ScaleTool::ScaleTool()
 void ScaleTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer)
 {
 	Axis collides = selectedAxis(mouseRay, center);
-	printf("Collides: %i\n", (int)collides);
 
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 	highlightRenderState.activeTexture[0] = NULL;

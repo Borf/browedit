@@ -6,6 +6,7 @@
 #include "windows/ModelPropertiesWindow.h"
 
 #include "actions/TextureEditAction.h"
+#include "actions/ObjectEditAction.h"
 
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
@@ -96,6 +97,7 @@ BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::
 	objectTranslateDirection = TranslatorTool::Axis::NONE;
 	objectRotateDirection = RotatorTool::Axis::NONE;
 	objectScaleDirection = ScaleTool::Axis::NONE;
+	objectEditAction = NULL;
 
 	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
@@ -384,6 +386,10 @@ void BrowEdit::update( double elapsedTime )
 					if (objectEditModeTool == ObjectEditModeTool::Scale)
 						objectScaleDirection = scaleTool.selectedAxis(mapRenderer.mouseRay, center);
 
+
+					for (size_t i = 0; i < map->getRsw()->objects.size() && !objectEditAction; i++)
+						if (map->getRsw()->objects[i]->selected)
+							objectEditAction = new ObjectEditAction(map->getRsw()->objects[i]);
 				}
 
 

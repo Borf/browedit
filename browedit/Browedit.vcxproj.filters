@@ -81,6 +81,9 @@
     <ClInclude Include="ScaleTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="actions\ObjectEditAction.h">
+      <Filter>actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="ScaleTool.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="actions\ObjectEditAction.cpp">
+      <Filter>actions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

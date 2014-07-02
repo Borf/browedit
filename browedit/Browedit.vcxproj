@@ -92,6 +92,7 @@
     <ClInclude Include="..\blib\version.h" />
     <ClInclude Include="action.h" />
     <ClInclude Include="actions\GroupAction.h" />
+    <ClInclude Include="actions\ObjectEditAction.h" />
     <ClInclude Include="actions\TextureEditAction.h" />
     <ClInclude Include="BrowEdit.h" />
     <ClInclude Include="Camera.h" />
@@ -107,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="actions\GroupAction.cpp" />
+    <ClCompile Include="actions\ObjectEditAction.cpp" />
     <ClCompile Include="actions\TextureEditAction.cpp" />
     <ClCompile Include="BrowEdit.cpp" />
     <ClCompile Include="Camera.cpp" />

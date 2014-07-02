@@ -19,6 +19,7 @@ class TextureWindow;
 class ObjectWindow;
 
 class Action;
+class ObjectEditAction;
 
 
 class BrowEdit : public blib::App, public blib::MouseListener
@@ -91,6 +92,7 @@ public:
 	bool textureFlipH;
 	bool textureFlipV;
 
+
 	TranslatorTool translatorTool;
 	TranslatorTool::Axis objectTranslateDirection;
 
@@ -99,6 +101,9 @@ public:
 
 	ScaleTool scaleTool;
 	ScaleTool::Axis objectScaleDirection;
+
+	ObjectEditAction* objectEditAction;
+
 
 	enum class ObjectEditModeTool
 	{
