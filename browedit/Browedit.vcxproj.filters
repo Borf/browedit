@@ -78,6 +78,9 @@
     <ClInclude Include="RotateTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScaleTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -111,6 +114,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RotateTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScaleTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

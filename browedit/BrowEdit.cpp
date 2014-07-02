@@ -95,6 +95,7 @@ BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::
 	newModel = NULL;
 	objectTranslateDirection = TranslatorTool::Axis::NONE;
 	objectRotateDirection = RotatorTool::Axis::NONE;
+	objectScaleDirection = ScaleTool::Axis::NONE;
 
 	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
@@ -380,6 +381,8 @@ void BrowEdit::update( double elapsedTime )
 						objectTranslateDirection = translatorTool.selectedAxis(mapRenderer.mouseRay, center);
 					if (objectEditModeTool == ObjectEditModeTool::Rotate)
 						objectRotateDirection = rotatorTool.selectedAxis(mapRenderer.mouseRay, center);
+					if (objectEditModeTool == ObjectEditModeTool::Scale)
+						objectScaleDirection = scaleTool.selectedAxis(mapRenderer.mouseRay, center);
 
 				}
 
@@ -389,7 +392,7 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//left up
-				if (objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE)
+				if (objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE || objectScaleDirection != ScaleTool::Axis::NONE)
 				{
 
 				}
@@ -448,6 +451,17 @@ void BrowEdit::update( double elapsedTime )
 								o->rotation.y -= mouseState.x - lastMouseState.x;
 							if (objectRotateDirection == RotatorTool::Axis::Z)
 								o->rotation.z -= mouseState.x - lastMouseState.x;
+						}
+						if (objectScaleDirection != ScaleTool::Axis::NONE)
+						{
+							if (objectScaleDirection == ScaleTool::Axis::X)
+								o->scale.x *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
+							if (objectScaleDirection == ScaleTool::Axis::Y)
+								o->scale.y *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
+							if (objectScaleDirection == ScaleTool::Axis::Z)
+								o->scale.z *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
+							if (objectScaleDirection == ScaleTool::Axis::ALL)
+								o->scale *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
 						}
 
 						((Rsw::Model*)o)->matrixCached = false;
@@ -579,7 +593,8 @@ void BrowEdit::draw()
 		{
 			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && (
 				(objectEditModeTool == ObjectEditModeTool::Translate && objectTranslateDirection == TranslatorTool::Axis::NONE) ||
-				(objectEditModeTool == ObjectEditModeTool::Rotate && objectRotateDirection == RotatorTool::Axis::NONE)
+				(objectEditModeTool == ObjectEditModeTool::Rotate && objectRotateDirection == RotatorTool::Axis::NONE) ||
+				(objectEditModeTool == ObjectEditModeTool::Scale && objectScaleDirection == ScaleTool::Axis::NONE)
 				))
 			{
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, 0.5f));
@@ -609,6 +624,8 @@ void BrowEdit::draw()
 					translatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
 				else if (objectEditModeTool == ObjectEditModeTool::Rotate)
 					rotatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
+				else if (objectEditModeTool == ObjectEditModeTool::Scale)
+					scaleTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
 			}
 
 		}

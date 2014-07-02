@@ -6,6 +6,7 @@
 #include <json/value.h>
 #include "TranslatorTool.h"
 #include "RotateTool.h"
+#include "ScaleTool.h"
 
 namespace blib { 
 	class Texture; 
@@ -96,6 +97,8 @@ public:
 	RotatorTool rotatorTool;
 	RotatorTool::Axis objectRotateDirection;
 
+	ScaleTool scaleTool;
+	ScaleTool::Axis objectScaleDirection;
 
 	enum class ObjectEditModeTool
 	{

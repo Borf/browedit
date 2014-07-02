@@ -97,6 +97,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RotateTool.h" />
+    <ClInclude Include="ScaleTool.h" />
     <ClInclude Include="TranslatorTool.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
@@ -111,6 +112,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RotateTool.cpp" />
+    <ClCompile Include="ScaleTool.cpp" />
     <ClCompile Include="TranslatorTool.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />
