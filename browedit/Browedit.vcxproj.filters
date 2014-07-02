@@ -75,6 +75,9 @@
     <ClInclude Include="TranslatorTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RotateTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -105,6 +108,9 @@
       <Filter>actions</Filter>
     </ClCompile>
     <ClCompile Include="TranslatorTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

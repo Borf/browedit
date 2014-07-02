@@ -112,28 +112,22 @@
 		"subitems" :
 		[
 			{
-				"name" : "select",
-				"type" : "toggle",
-				"initial" : true,
-				"key" : "1"
-			},
-			{
 				"name" : "move",
 				"type" : "toggle",
 				"initial" : false,
-				"key" : "2"
+				"key" : "1"
 			},
 			{
 				"name" : "scale",
 				"type" : "toggle",
 				"initial" : false,
-				"key" : "3"
+				"key" : "2"
 			},
 			{
 				"name" : "rotate",
 				"type" : "toggle",
 				"initial" : false,
-				"key" : "4"
+				"key" : "3"
 			}
 
 		]

@@ -5,6 +5,7 @@
 #include <BroLib/MapRenderer.h>
 #include <json/value.h>
 #include "TranslatorTool.h"
+#include "RotateTool.h"
 
 namespace blib { 
 	class Texture; 
@@ -92,10 +93,12 @@ public:
 	TranslatorTool translatorTool;
 	TranslatorTool::Axis objectTranslateDirection;
 
+	RotatorTool rotatorTool;
+	RotatorTool::Axis objectRotateDirection;
+
 
 	enum class ObjectEditModeTool
 	{
-		Select,
 		Translate,
 		Rotate,
 		Scale,

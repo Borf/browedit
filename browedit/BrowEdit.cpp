@@ -91,9 +91,10 @@ BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::
 
 
 	editMode = EditMode::TextureEdit;
-	objectEditModeTool = ObjectEditModeTool::Select;
+	objectEditModeTool = ObjectEditModeTool::Translate;
 	newModel = NULL;
 	objectTranslateDirection = TranslatorTool::Axis::NONE;
+	objectRotateDirection = RotatorTool::Axis::NONE;
 
 	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
@@ -205,7 +206,6 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
 
 
-	rootMenu->setAction("objecttools/select", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Select));
 	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
 	rootMenu->setAction("objecttools/scale", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Scale));
 	rootMenu->setAction("objecttools/rotate", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Rotate));
@@ -373,8 +373,13 @@ void BrowEdit::update( double elapsedTime )
 				if (selectCount > 0)
 				{
 					center /= selectCount;
-					objectTranslateDirection = translatorTool.selectedAxis(mapRenderer.mouseRay, center);
+					objectTranslateDirection = TranslatorTool::Axis::NONE;
+					objectRotateDirection = RotatorTool::Axis::NONE;
 
+					if (objectEditModeTool == ObjectEditModeTool::Translate)
+						objectTranslateDirection = translatorTool.selectedAxis(mapRenderer.mouseRay, center);
+					if (objectEditModeTool == ObjectEditModeTool::Rotate)
+						objectRotateDirection = rotatorTool.selectedAxis(mapRenderer.mouseRay, center);
 
 				}
 
@@ -384,14 +389,13 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//left up
-				if (objectTranslateDirection != TranslatorTool::Axis::NONE)
+				if (objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE)
 				{
-
 
 				}
 				else if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
 				{ //click
-					if (objectEditModeTool == ObjectEditModeTool::Select && !wm->inWindow(mouseState.x, mouseState.y))
+					if (!wm->inWindow(mouseState.x, mouseState.y))
 					{
 						for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 						{
@@ -409,19 +413,15 @@ void BrowEdit::update( double elapsedTime )
 				}
 				else
 				{
-					if (objectEditModeTool == ObjectEditModeTool::Select)
+					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 					{
-						for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
-						{
-							Rsw::Object* o = map->getRsw()->objects[i];
-							glm::vec2 tl = glm::vec2(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x), glm::min(mouse3dstart.z, mapRenderer.mouse3d.z));
-							glm::vec2 br = glm::vec2(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x), glm::max(mouse3dstart.z, mapRenderer.mouse3d.z));
-							glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
+						Rsw::Object* o = map->getRsw()->objects[i];
+						glm::vec2 tl = glm::vec2(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x), glm::min(mouse3dstart.z, mapRenderer.mouse3d.z));
+						glm::vec2 br = glm::vec2(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x), glm::max(mouse3dstart.z, mapRenderer.mouse3d.z));
+						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
 
-							o->selected = pos.x > tl.x && pos.x < br.x && pos.y > tl.y && pos.y < br.y;
-						}
+						o->selected = pos.x > tl.x && pos.x < br.x && pos.y > tl.y && pos.y < br.y;
 					}
-
 				}
 			}
 			else if (mouseState.leftButton && lastMouseState.leftButton)
@@ -440,27 +440,14 @@ void BrowEdit::update( double elapsedTime )
 							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Z) != 0)
 								o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
 						}
-
-
-						if (objectEditModeTool == ObjectEditModeTool::Translate)
+						if (objectRotateDirection != RotatorTool::Axis::NONE)
 						{
-							if (keyState.pressedKeys[(int)blib::Key::SHIFT])
-								o->position.y += mouseState.y - lastMouseState.y;
-							else
-							{
-								o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
-								o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
-							}
-						}
-						else if (objectEditModeTool == ObjectEditModeTool::Rotate)
-						{
-							o->rotation.y += mouseState.x - lastMouseState.x;
-						}
-						else if (objectEditModeTool == ObjectEditModeTool::Scale)
-						{
-							o->scale.x *= 1 + (mouseState.y - lastMouseState.y) * 0.01f;
-							o->scale.y *= 1 + (mouseState.y - lastMouseState.y) * 0.01f;
-							o->scale.z *= 1 + (mouseState.y - lastMouseState.y) * 0.01f;
+							if (objectRotateDirection == RotatorTool::Axis::X)
+								o->rotation.x -= mouseState.x - lastMouseState.x;
+							if (objectRotateDirection == RotatorTool::Axis::Y)
+								o->rotation.y -= mouseState.x - lastMouseState.x;
+							if (objectRotateDirection == RotatorTool::Axis::Z)
+								o->rotation.z -= mouseState.x - lastMouseState.x;
 						}
 
 						((Rsw::Model*)o)->matrixCached = false;
@@ -474,11 +461,8 @@ void BrowEdit::update( double elapsedTime )
 
 			if (!mouseState.rightButton && lastMouseState.rightButton)
 			{
-				if (objectEditModeTool == ObjectEditModeTool::Select)
-				{
-					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
-						map->getRsw()->objects[i]->selected = false;
-				}
+				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					map->getRsw()->objects[i]->selected = false;
 			}
 
 	/*		if (mouseState.rightButton)
@@ -593,7 +577,10 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::ObjectEdit)
 		{
-			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && objectEditModeTool == ObjectEditModeTool::Select && objectTranslateDirection == TranslatorTool::Axis::NONE)
+			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && (
+				(objectEditModeTool == ObjectEditModeTool::Translate && objectTranslateDirection == TranslatorTool::Axis::NONE) ||
+				(objectEditModeTool == ObjectEditModeTool::Rotate && objectRotateDirection == RotatorTool::Axis::NONE)
+				))
 			{
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 1, 0, 0.5f));
 				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
@@ -618,7 +605,10 @@ void BrowEdit::draw()
 			{
 				center /= selectCount;
 
-				translatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
+				if (objectEditModeTool == ObjectEditModeTool::Translate)
+					translatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
+				else if (objectEditModeTool == ObjectEditModeTool::Rotate)
+					rotatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
 			}
 
 		}
@@ -701,7 +691,6 @@ void BrowEdit::setEditMode(EditMode newMode)
 void BrowEdit::setObjectEditMode(ObjectEditModeTool newMode)
 {
 	this->objectEditModeTool = newMode;
-	rootMenu->setEnabled("objecttools/select", objectEditModeTool == ObjectEditModeTool::Select);
 	rootMenu->setEnabled("objecttools/move", objectEditModeTool == ObjectEditModeTool::Translate);
 	rootMenu->setEnabled("objecttools/scale", objectEditModeTool == ObjectEditModeTool::Scale);
 	rootMenu->setEnabled("objecttools/rotate", objectEditModeTool == ObjectEditModeTool::Rotate);
