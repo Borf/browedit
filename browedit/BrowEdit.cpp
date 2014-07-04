@@ -7,6 +7,7 @@
 
 #include "actions/TextureEditAction.h"
 #include "actions/ObjectEditAction.h"
+#include "actions/GroupAction.h"
 
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
@@ -97,7 +98,7 @@ BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::
 	objectTranslateDirection = TranslatorTool::Axis::NONE;
 	objectRotateDirection = RotatorTool::Axis::NONE;
 	objectScaleDirection = ScaleTool::Axis::NONE;
-	objectEditAction = NULL;
+	objectEditActions.clear();
 
 	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
@@ -387,9 +388,9 @@ void BrowEdit::update( double elapsedTime )
 						objectScaleDirection = scaleTool.selectedAxis(mapRenderer.mouseRay, center);
 
 
-					for (size_t i = 0; i < map->getRsw()->objects.size() && !objectEditAction; i++)
+					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 						if (map->getRsw()->objects[i]->selected)
-							objectEditAction = new ObjectEditAction(map->getRsw()->objects[i]);
+							objectEditActions.push_back(new ObjectEditAction(map->getRsw()->objects[i], i));
 				}
 
 
@@ -400,7 +401,11 @@ void BrowEdit::update( double elapsedTime )
 			{//left up
 				if (objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE || objectScaleDirection != ScaleTool::Axis::NONE)
 				{
-
+					GroupAction* action = new GroupAction();
+					for (ObjectEditAction* a : objectEditActions)
+						action->add(a);
+					perform(action);
+					objectEditActions.clear();
 				}
 				else if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
 				{ //click

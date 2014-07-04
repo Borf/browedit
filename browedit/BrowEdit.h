@@ -102,7 +102,7 @@ public:
 	ScaleTool scaleTool;
 	ScaleTool::Axis objectScaleDirection;
 
-	ObjectEditAction* objectEditAction;
+	std::vector<ObjectEditAction*> objectEditActions;
 
 
 	enum class ObjectEditModeTool
