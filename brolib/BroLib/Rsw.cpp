@@ -161,15 +161,152 @@ Rsw::Rsw(const std::string &fileName)
 	}
 
 
-	std::vector<float> quadtreeFloats;
 	while(!file->eof())
 		quadtreeFloats.push_back(file->readFloat());
 
 	delete file;
-
-
-
 }
+
+
+
+void Rsw::save(const std::string &fileName)
+{
+	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".rsw");
+
+	char header[5] = "GRGW";
+	pFile->write(header, 4);
+	pFile->writeShort(version);
+
+	pFile->writeString(iniFile, 40);
+	pFile->writeString(gndFile, 40);
+	if (version > 0x0104)
+		pFile->writeString(gatFile, 40);
+
+	pFile->writeString(iniFile, 40);
+
+	//TODO: default values
+	if (version >= 0x103)
+		pFile->writeFloat(water.height);
+	if (version >= 0x108)
+	{
+		pFile->writeInt(water.type);
+		pFile->writeFloat(water.amplitude);
+		pFile->writeFloat(water.phase);
+		pFile->writeFloat(water.surfaceCurve);
+	}
+	if (version >= 0x109)
+		pFile->writeInt(water.animSpeed);
+	else
+	{
+		throw "todo";
+	}
+
+	if (version >= 0x105)
+	{
+		pFile->writeInt(light.longitude);
+		pFile->writeInt(light.lattitude);
+		pFile->writeVec3(light.diffuse);
+		pFile->writeVec3(light.ambient);
+	}
+	if (version >= 0x107)
+		pFile->writeFloat(light.intensity);
+
+
+	if (version >= 0x106)
+	{
+		pFile->writeInt(unknown[0]);
+		pFile->writeInt(unknown[1]);
+		pFile->writeInt(unknown[2]);
+		pFile->writeInt(unknown[3]);
+	}
+	else
+	{
+		unknown[0] = unknown[2] = -500;
+		unknown[1] = unknown[3] = 500;
+	}
+
+	pFile->writeInt(objects.size());
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		Object* object = objects[i];
+		switch (object->type)
+		{
+		case Object::Type::Model: //1
+		{
+			pFile->writeInt(1);
+			Model* model = (Model*)object;
+			if (version >= 0x103)
+			{
+				pFile->writeString(model->name, 40);
+				pFile->writeInt(model->animType);
+				pFile->writeFloat(model->animSpeed);
+				pFile->writeInt(model->blockType);
+			}
+			pFile->writeString(model->fileName, 80);
+			pFile->writeString("", 80); // TODO: Unknown?
+			pFile->writeVec3(model->position);
+			pFile->writeVec3(model->rotation);
+			pFile->writeVec3(model->scale);
+		}
+			break;
+		case Object::Type::Light:	//2 Light
+		{
+			pFile->writeInt(2);
+			Light* light = (Light*)object;
+			pFile->writeString(light->name, 40);
+			pFile->writeVec3(light->position);
+			pFile->writeString(light->todo, 40);
+			pFile->writeVec3(light->color);
+			pFile->writeFloat(light->todo2);
+		}
+			break;
+		case Object::Type::Sound://3: //Sound
+		{
+			pFile->writeInt(3);
+			Sound* sound = new Sound();
+			pFile->writeString(sound->name, 80);
+			pFile->writeString(sound->fileName, 80);
+			pFile->writeVec3(sound->position);
+			pFile->writeFloat(sound->vol);
+			pFile->writeInt(sound->width);
+			pFile->writeInt(sound->height);
+			pFile->writeFloat(sound->range);
+			if (version >= 0x0200)
+				pFile->writeFloat(0); //cycle
+		}
+			break;
+		case Object::Type::Effect://4: //Effect
+		{
+			pFile->writeInt(4);
+			Effect* effect = (Effect*)object;
+			pFile->writeString(effect->name, 80);
+			pFile->writeVec3(effect->position);
+			pFile->writeInt(effect->type);
+			pFile->writeFloat(effect->loop);
+			pFile->writeFloat(effect->param1);
+			pFile->writeFloat(effect->param2);
+			pFile->writeFloat(effect->param3);
+			pFile->writeFloat(effect->param4);
+		}
+			break;
+		default:
+			Log::out << "Unknown object type in rsw file: "<< Log::newline;
+			break;
+		}
+	}
+
+
+	for (size_t i = 0; i < quadtreeFloats.size(); i++)
+		pFile->writeFloat(quadtreeFloats[i]);
+
+
+
+
+	delete pFile;
+}
+
+
+
 
 Rsm* Rsw::getRsm( const std::string &fileName )
 {
@@ -187,6 +324,7 @@ Rsm* Rsw::getRsm( const std::string &fileName )
 		Log::out << "Rsw: cache hit for mesh " << fileName << Log::newline;
 	return it->second;
 }
+
 
 Rsw::Model::~Model()
 {

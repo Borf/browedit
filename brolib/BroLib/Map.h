@@ -21,6 +21,12 @@ public:
 	{
 		return rsw;
 	}
+
+	inline const std::string getFileName() const
+	{
+		return fileName;
+	}
+
 	void save(const std::string &filename);
 
 };

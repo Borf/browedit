@@ -138,10 +138,12 @@ public:
 
 	int			unknown[4];
 	std::vector<Object*> objects;
+	std::vector<float> quadtreeFloats;
 
 
 	std::map<std::string, Rsm*> rsmCache;
 
 	Rsw(const std::string &fileName);
 	Rsm* getRsm( const std::string &fileName );
+	void save(const std::string &fileName);
 };

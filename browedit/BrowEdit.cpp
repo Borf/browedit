@@ -205,7 +205,7 @@ void BrowEdit::init()
 
 	rootMenu->setAction("file/save", [this](){
 		if (map)
-			map->save("d:/games/cookiero/data/prontera");
+			map->save(config["data"]["ropath"].asString() + "/data/" + map->getFileName());
 	});
 
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);

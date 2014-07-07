@@ -35,8 +35,7 @@ void Map::save(const std::string &filename)
 		this->fileName = filename;
 
 	gnd->save(this->fileName);
-
-
+	rsw->save(this->fileName);
 }
 
 template class blib::BackgroundTask<int>;
