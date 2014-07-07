@@ -10,7 +10,7 @@ class Gnd
 {
 public:
 	Gnd(const std::string &fileName);
-
+	void save(std::string fileName);
 
 	class Texture
 	{
@@ -50,7 +50,7 @@ public:
 	int width;
 	int height;
 	float tileScale;
-	int textureCount;
+	int maxTexName;
 	int lightmapWidth;
 	int lightmapHeight;
 	int gridSizeCell;

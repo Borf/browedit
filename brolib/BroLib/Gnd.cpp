@@ -29,6 +29,7 @@ Gnd::Gnd( const std::string &fileName )
 	else
 		version = 0;
 
+	int textureCount = 0;
 
 	if(version > 0)
 	{
@@ -36,7 +37,7 @@ Gnd::Gnd( const std::string &fileName )
 		height = file->readInt();
 		tileScale = file->readFloat();
 		textureCount = file->readInt();
-		file->readInt();// iunno
+		maxTexName = file->readInt();// 80
 	}
 	else
 	{
@@ -100,7 +101,7 @@ Gnd::Gnd( const std::string &fileName )
 			tile->v4.y = file->readFloat();
 			tile->textureIndex = file->readWord();
 			tile->lightmapIndex= file->readWord();
-			tile->color = glm::vec4((unsigned char)file->get() / 256.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f);
+			tile->color = glm::vec4((unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f);
 			tiles.push_back(tile);
 		}
 
@@ -139,6 +140,95 @@ Gnd::Gnd( const std::string &fileName )
 	}
 	delete file;
 	Log::out<<"GND: Done reading gnd file"<<Log::newline;
+}
+
+void Gnd::save(std::string fileName)
+{
+	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".gnd");
+
+
+	char header[5] = "GRGN";
+	pFile->write(header, 4);
+	pFile->writeShort(version);
+
+	if (version > 0)
+	{
+		pFile->writeInt(width);
+		pFile->writeInt(height);
+		pFile->writeFloat(tileScale);
+		pFile->writeInt(textures.size());
+		pFile->writeInt(maxTexName);// iunno
+	}
+	
+	
+	for (size_t i = 0; i < textures.size(); i++)
+	{
+		pFile->writeString(textures[i]->file, 40);
+		pFile->writeString(textures[i]->name, 40);
+	}
+
+
+	if (version > 0)
+	{
+		pFile->writeInt(lightmaps.size());
+		pFile->writeInt(lightmapWidth);
+		pFile->writeInt(lightmapHeight);
+		pFile->writeInt(gridSizeCell);
+
+		for (size_t i = 0; i < lightmaps.size(); i++)
+			pFile->write(lightmaps[i]->data, 256);
+
+		pFile->writeInt(tiles.size());
+		for (size_t i = 0; i < tiles.size(); i++)
+		{
+			Tile* tile = tiles[i];
+
+			pFile->writeFloat(tile->v1.x);
+			pFile->writeFloat(tile->v2.x);
+			pFile->writeFloat(tile->v3.x);
+			pFile->writeFloat(tile->v4.x);
+			pFile->writeFloat(tile->v1.y);
+			pFile->writeFloat(tile->v2.y);
+			pFile->writeFloat(tile->v3.y);
+			pFile->writeFloat(tile->v4.y);
+			pFile->writeWord(tile->textureIndex);
+			pFile->writeWord(tile->lightmapIndex);
+			
+			pFile->put((int)(tile->color.a * 255));
+			pFile->put((int)(tile->color.z * 255));
+			pFile->put((int)(tile->color.y * 255));
+			pFile->put((int)(tile->color.x * 255));
+		}
+
+		for (size_t y = 0; y < height; y++)
+		{
+			for (size_t x = 0; x < width; x++)
+			{
+				Cube* cube = cubes[x][y];
+				pFile->writeFloat(cube->h1);
+				pFile->writeFloat(cube->h2);
+				pFile->writeFloat(cube->h3);
+				pFile->writeFloat(cube->h4);
+				if (version >= 0x0106)
+				{
+					pFile->writeInt(cube->tileUp);
+					pFile->writeInt(cube->tileSide);
+					pFile->writeInt(cube->tileFront);
+				}
+				else
+				{
+					pFile->writeWord(cube->tileUp);
+					pFile->writeWord(cube->tileSide);
+					pFile->writeWord(cube->tileFront);
+				}
+			}
+		}
+
+
+	}
+
+
+	delete pFile;
 }
 
 

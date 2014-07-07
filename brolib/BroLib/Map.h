@@ -8,6 +8,8 @@ class Map
 {
 	Gnd* gnd;
 	Rsw* rsw;
+
+	std::string fileName;
 public:
 	Map(const std::string &fileName);
 
@@ -19,6 +21,6 @@ public:
 	{
 		return rsw;
 	}
-
+	void save(const std::string &filename);
 
 };

@@ -5,8 +5,7 @@
 		"ropath" : "d:/games/Cookie_Full_Client_3.0_",
 		"grfs" :
 		[
-			"d:/games/Cookie_Full_Client_3.0_/data.grf",
-			"d:/games/Cookie_Full_Client_3.0_/cookie.grf"
+			"d:/games/Cookie_Full_Client_3.0_/data.grf"
 		]
 	},
 	"moveconsole" : true,

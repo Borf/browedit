@@ -8,6 +8,7 @@ using blib::util::Log;
 
 Map::Map( const std::string &fileName )
 {
+	this->fileName = fileName;
 	Log::out<<"Map: loading map "<<fileName<<Log::newline;
 
 	//TODO: for some reason it doesn't like to parallalize these tasks...investigate later
@@ -25,6 +26,16 @@ Map::Map( const std::string &fileName )
 
 
 	Log::out<<"Map: Done loading map"<<Log::newline;
+
+}
+
+void Map::save(const std::string &filename)
+{
+	if (filename != "")
+		this->fileName = filename;
+
+	gnd->save(this->fileName);
+
 
 }
 

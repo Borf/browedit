@@ -203,6 +203,10 @@ void BrowEdit::init()
 		new FileOpenWindow(resourceManager, this);
 	});
 
+	rootMenu->setAction("file/save", [this](){
+		if (map)
+			map->save("d:/games/cookiero/data/prontera");
+	});
 
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
