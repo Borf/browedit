@@ -174,7 +174,7 @@ void Rsw::save(const std::string &fileName)
 {
 	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".rsw");
 
-	char header[5] = "GRGW";
+	char header[5] = "GRSW";
 	pFile->write(header, 4);
 	pFile->writeShort(version);
 
@@ -294,8 +294,8 @@ void Rsw::save(const std::string &fileName)
 			Log::out << "Unknown object type in rsw file: "<< Log::newline;
 			break;
 		}
-	}
 
+	}
 
 	for (size_t i = 0; i < quadtreeFloats.size(); i++)
 		pFile->writeVec3(quadtreeFloats[i]);

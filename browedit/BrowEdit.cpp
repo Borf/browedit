@@ -205,7 +205,7 @@ void BrowEdit::init()
 		new FileOpenWindow(resourceManager, this);
 	});
 
-	rootMenu->setAction("file/save", [this](){
+	rootMenu->setAction("file/save", [this](){ 
 		if (map)
 			map->save(config["data"]["ropath"].asString() + "/" + map->getFileName());
 	});

@@ -2,10 +2,10 @@
 	"resolution" : [ 1920, 1080 ],
 	"data" :
 	{
-		"ropath" : "d:/games/Cookie_Full_Client_3.0_",
+		"ropath" : "d:/games/testro",
 		"grfs" :
 		[
-			"d:/games/Cookie_Full_Client_3.0_/data.grf"
+			"d:/games/testro/data.grf"
 		]
 	},
 	"moveconsole" : true,
