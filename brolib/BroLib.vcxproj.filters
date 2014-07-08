@@ -96,6 +96,9 @@
     <ClCompile Include="BroLib\Rsw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BroLib\Gat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BroLib\Map.h">
@@ -165,6 +168,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BroLib\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\Gat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,6 +26,7 @@
     <ClCompile Include="..\externals\zlib\trees.c" />
     <ClCompile Include="..\externals\zlib\uncompr.c" />
     <ClCompile Include="..\externals\zlib\zutil.c" />
+    <ClCompile Include="BroLib\Gat.cpp" />
     <ClCompile Include="BroLib\Gnd.cpp" />
     <ClCompile Include="BroLib\GrfFileSystemHandler.cpp" />
     <ClCompile Include="BroLib\grflib\grf.c" />
@@ -49,6 +50,7 @@
     <ClInclude Include="..\externals\zlib\zconf.h" />
     <ClInclude Include="..\externals\zlib\zlib.h" />
     <ClInclude Include="..\externals\zlib\zutil.h" />
+    <ClInclude Include="BroLib\Gat.h" />
     <ClInclude Include="BroLib\Gnd.h" />
     <ClInclude Include="BroLib\GrfFileSystemHandler.h" />
     <ClInclude Include="BroLib\grflib\grf.h" />

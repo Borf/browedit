@@ -3,11 +3,13 @@
 #include <string>
 class Gnd;
 class Rsw;
+class Gat;
 
 class Map
 {
 	Gnd* gnd;
 	Rsw* rsw;
+	Gat* gat;
 
 	std::string fileName;
 public:
