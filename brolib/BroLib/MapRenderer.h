@@ -133,6 +133,7 @@ private:
 
 	const Map* map;
 	blib::App* app;
+	std::vector<std::vector<blib::Texture*> > waterTextures;
 
 
 public:

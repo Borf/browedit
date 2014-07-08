@@ -15,6 +15,7 @@
 #include <blib/Window.h>
 #include <blib/FBO.h>
 #include <blib/Shapes.h>
+#include <blib/util/Profiler.h>
 
 using blib::util::Log;
 
@@ -189,6 +190,34 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 	renderRsw(renderer);
 
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMatrix);
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, projectionMatrix);
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.5f));
+	highlightRenderState.activeTexture[0] = waterTextures[map->getRsw()->water.type][(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed * 3) % waterTextures[map->getRsw()->water.type].size()];
+
+
+	float repeatX = map->getGnd()->width / 4;
+	float repeatY = map->getGnd()->height / 4;
+
+	float waterHeight = map->getRsw()->water.height;
+
+	std::vector<blib::VertexP3T2> verts;
+	verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 0), glm::vec2(0, 0)));
+	verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
+	verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
+
+	verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 10 * map->getGnd()->height), glm::vec2(repeatX, repeatY)));
+	verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
+	verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
+	renderer->drawTriangles(verts, highlightRenderState);
+
+
+
+
+
+
+
 }
 
 void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
@@ -279,6 +308,26 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 	gndShadowDirty = false;
 	gndGridDirty = false;
+
+
+
+	for (int i = 0; i < 10; i++)
+	{
+		std::vector<blib::Texture*> textures;
+
+		for (int ii = 0; ii < 32; ii++)
+		{
+			char buf[128];
+			sprintf(buf, "data/texture/ฟ๖ลอ/water%i%02i%s", i, ii, ".jpg");
+			textures.push_back(resourceManager->getResource<blib::Texture>(buf));
+			textures.back()->setTextureRepeat(true);
+		}
+
+		waterTextures.push_back(textures);
+	}
+		
+
+
 }
 
 void MapRenderer::setMap(const Map* map)
