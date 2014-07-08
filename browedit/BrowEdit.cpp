@@ -352,6 +352,20 @@ void BrowEdit::update( double elapsedTime )
 		}
 		
 		//////////////////////////////////////////////OBJECT EDIT
+		if (editMode == EditMode::ObjectEdit)
+		{
+			if (keyState.isPressed(blib::Key::DEL) && !lastKeyState.isPressed(blib::Key::DEL))
+			{
+				for (int i = 0; i < map->getRsw()->objects.size(); i++)
+				{
+					if (map->getRsw()->objects[i]->selected)
+					{
+						map->getRsw()->objects.erase(map->getRsw()->objects.begin() + i);
+						i--;
+					}
+				}
+			}
+		}
 
 		if (editMode == EditMode::ObjectEdit && !wm->inWindow(mouseState.x, mouseState.y))
 		{
@@ -494,11 +508,7 @@ void BrowEdit::update( double elapsedTime )
 					map->getRsw()->objects[i]->selected = false;
 			}
 
-	/*		if (mouseState.rightButton)
-			{//right
 
-
-			}*/
 
 
 
