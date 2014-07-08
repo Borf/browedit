@@ -13,11 +13,11 @@ class ObjectEditAction : public Action
 		glm::vec3 position;
 		glm::vec3 rotation;
 		glm::vec3 scale;
+		std::string name;
 
 		void fromObject(Rsw::Object* object);
 		void toObject(Rsw::Object* object);
 	};
-
 	Data oldData;
 	Data newData;
 public:

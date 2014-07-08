@@ -8,6 +8,7 @@
 #include "actions/TextureEditAction.h"
 #include "actions/ObjectEditAction.h"
 #include "actions/GroupAction.h"
+#include "actions/SelectObjectAction.h"
 
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
@@ -99,6 +100,7 @@ BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::
 	objectRotateDirection = RotatorTool::Axis::NONE;
 	objectScaleDirection = ScaleTool::Axis::NONE;
 	objectEditActions.clear();
+	selectObjectAction = NULL;
 
 	textureTargetSize = glm::ivec2(4, 4);
 	textureRot = 0;
@@ -382,6 +384,7 @@ void BrowEdit::update( double elapsedTime )
 				startMouseState = mouseState;
 				mouse3dstart = mapRenderer.mouse3d;
 
+				selectObjectAction = new SelectObjectAction(map->getRsw());
 				glm::vec3 center;
 				int selectCount = 0;
 				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
@@ -454,6 +457,14 @@ void BrowEdit::update( double elapsedTime )
 
 						o->selected = pos.x > tl.x && pos.x < br.x && pos.y > tl.y && pos.y < br.y;
 					}
+				}
+				selectObjectAction->finish(map->getRsw());
+				if (selectObjectAction->hasDifference())
+					perform(selectObjectAction);
+				else
+				{
+					delete selectObjectAction;
+					selectObjectAction = NULL;
 				}
 			}
 			else if (mouseState.leftButton && lastMouseState.leftButton)

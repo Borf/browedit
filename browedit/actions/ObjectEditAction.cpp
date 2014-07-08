@@ -35,6 +35,7 @@ void ObjectEditAction::Data::fromObject(Rsw::Object* object)
 	position = object->position;
 	rotation = object->rotation;
 	scale = object->scale;
+	name = object->name;
 }
 
 void ObjectEditAction::Data::toObject(Rsw::Object* object)
@@ -45,4 +46,6 @@ void ObjectEditAction::Data::toObject(Rsw::Object* object)
 	object->position = position;
 	object->rotation = rotation;
 	object->scale = scale;
+	object->name = name;
+
 }

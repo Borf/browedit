@@ -84,6 +84,9 @@
     <ClInclude Include="actions\ObjectEditAction.h">
       <Filter>actions</Filter>
     </ClInclude>
+    <ClInclude Include="actions\SelectObjectAction.h">
+      <Filter>actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -123,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="actions\ObjectEditAction.cpp">
+      <Filter>actions</Filter>
+    </ClCompile>
+    <ClCompile Include="actions\SelectObjectAction.cpp">
       <Filter>actions</Filter>
     </ClCompile>
   </ItemGroup>

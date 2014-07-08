@@ -20,7 +20,7 @@ class ObjectWindow;
 
 class Action;
 class ObjectEditAction;
-
+class SelectObjectAction;
 
 class BrowEdit : public blib::App, public blib::MouseListener
 {
@@ -103,7 +103,7 @@ public:
 	ScaleTool::Axis objectScaleDirection;
 
 	std::vector<ObjectEditAction*> objectEditActions;
-
+	SelectObjectAction* selectObjectAction;
 
 	enum class ObjectEditModeTool
 	{
