@@ -218,10 +218,14 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 	highlightRenderState.activeTexture[0] = NULL;
 
-	map->getRsw()->quadtree->foreach([&renderer, this](Rsw::QuadTreeNode* node) {
+/*	map->getRsw()->quadtree->foreach([&renderer, this](Rsw::QuadTreeNode* node) {
 		std::vector<blib::VertexP3> verts = blib::Shapes::linebox(node->bbox.min * glm::vec3(1, -1, 1), node->bbox.max * glm::vec3(1, -1, 1));
 		renderer->drawLines(verts, highlightRenderState);
-	});
+	});*/
+
+	std::vector<blib::VertexP3> verts = blib::Shapes::linebox(map->getRsw()->quadtree->bbox.min * glm::vec3(1, -1, 1), map->getRsw()->quadtree->bbox.max * glm::vec3(1, -1, 1));
+	renderer->drawLines(verts, highlightRenderState);
+
 	
 
 

@@ -143,7 +143,7 @@ Rsw::Rsw(const std::string &fileName)
 			Effect* effect = new Effect();
 			effect->name = file->readString(80);
 			effect->position = file->readVec3();
-			effect->type = file->readInt();
+			effect->id = file->readInt();
 			effect->loop = file->readFloat();
 			effect->param1 = file->readFloat();
 			effect->param2 = file->readFloat();
@@ -282,7 +282,7 @@ void Rsw::save(const std::string &fileName)
 			Effect* effect = (Effect*)object;
 			pFile->writeString(effect->name, 80);
 			pFile->writeVec3(effect->position);
-			pFile->writeInt(effect->type);
+			pFile->writeInt(effect->id);
 			pFile->writeFloat(effect->loop);
 			pFile->writeFloat(effect->param1);
 			pFile->writeFloat(effect->param2);

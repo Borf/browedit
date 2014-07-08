@@ -103,7 +103,7 @@ public:
 		{
 		}
 
-		int	type;
+		int	id;
 		float loop;
 		float param1;
 		float param2;
