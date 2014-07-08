@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <blib/util/Tree.h>
 
 #include <blib/math/AABB.h>
 class Rsm;
@@ -111,6 +112,15 @@ public:
 	};
 
 
+	class QuadTreeNode : public blib::util::Tree<4, QuadTreeNode>
+	{
+	public:
+		QuadTreeNode(std::vector<glm::vec3>::iterator &it, int level = 0);
+
+		blib::math::AABB bbox;
+		glm::vec3 range[2];
+	};
+
 
 	short version;
 	std::string iniFile;
@@ -138,8 +148,8 @@ public:
 
 	int			unknown[4];
 	std::vector<Object*> objects;
-	std::vector<float> quadtreeFloats;
-
+	std::vector<glm::vec3> quadtreeFloats;
+	QuadTreeNode* quadtree;
 
 	std::map<std::string, Rsm*> rsmCache;
 

@@ -196,21 +196,33 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.5f));
 	highlightRenderState.activeTexture[0] = waterTextures[map->getRsw()->water.type][(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed * 3) % waterTextures[map->getRsw()->water.type].size()];
 
+	{
+		float repeatX = map->getGnd()->width / 4.0f;
+		float repeatY = map->getGnd()->height / 4.0f;
 
-	float repeatX = map->getGnd()->width / 4;
-	float repeatY = map->getGnd()->height / 4;
+		float waterHeight = map->getRsw()->water.height;
 
-	float waterHeight = map->getRsw()->water.height;
+		std::vector<blib::VertexP3T2> verts;
+		verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 0), glm::vec2(0, 0)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
 
-	std::vector<blib::VertexP3T2> verts;
-	verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 0), glm::vec2(0, 0)));
-	verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
-	verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 10 * map->getGnd()->height), glm::vec2(repeatX, repeatY)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
+		verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
+		renderer->drawTriangles(verts, highlightRenderState);
+	}
 
-	verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 10 * map->getGnd()->height), glm::vec2(repeatX, repeatY)));
-	verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
-	verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
-	renderer->drawTriangles(verts, highlightRenderState);
+
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1));
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+	highlightRenderState.activeTexture[0] = NULL;
+
+	map->getRsw()->quadtree->foreach([&renderer, this](Rsw::QuadTreeNode* node) {
+		std::vector<blib::VertexP3> verts = blib::Shapes::linebox(node->bbox.min * glm::vec3(1, -1, 1), node->bbox.max * glm::vec3(1, -1, 1));
+		renderer->drawLines(verts, highlightRenderState);
+	});
+	
 
 
 

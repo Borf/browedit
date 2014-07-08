@@ -162,7 +162,8 @@ Rsw::Rsw(const std::string &fileName)
 
 
 	while(!file->eof())
-		quadtreeFloats.push_back(file->readFloat());
+		quadtreeFloats.push_back(file->readVec3());
+	quadtree = new QuadTreeNode(quadtreeFloats.begin());
 
 	delete file;
 }
@@ -297,7 +298,7 @@ void Rsw::save(const std::string &fileName)
 
 
 	for (size_t i = 0; i < quadtreeFloats.size(); i++)
-		pFile->writeFloat(quadtreeFloats[i]);
+		pFile->writeVec3(quadtreeFloats[i]);
 
 
 
@@ -368,4 +369,23 @@ bool Rsw::Model::collides(const blib::math::Ray &ray)
 
 	return collides_(model->rootMesh, ray, matrixCache);
 	return true;
+}
+
+Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::iterator &it, int level /*= 0*/) : bbox(glm::vec3(0, 0, 0), glm::vec3(0,0,0))
+{
+	bbox.bounds[0] = *it;
+	it++;
+	bbox.bounds[1] = *it;
+	it++;
+
+	range[0] = *it;
+	it++;
+	range[1] = *it;
+	it++;
+	
+	if (level >= 5)
+		return;
+	for (size_t i = 0; i < 4; i++)
+		children[i] = new QuadTreeNode(it, level + 1);
+	
 }
