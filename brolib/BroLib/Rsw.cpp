@@ -383,7 +383,17 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 	{
 		if (objects[i]->type == Object::Type::Model)
 		{
-			((Model*)objects[i])->foreachface();
+			((Model*)objects[i])->foreachface([gnd, &heights](const std::vector<glm::vec3> &verts) {
+				for (glm::vec3 vert : verts)// size_t ii = 0; ii < verts.size(); ii++)
+				{
+					int x = vert.x / 10;
+					int y = gnd->height - (vert.z / 10);
+					if (x < 0 || x >= gnd->width || y < 0 || y >= gnd->height)
+						continue;
+					heights[x][y].x = glm::min(heights[x][y].x, -vert.y);
+					heights[x][y].y = glm::max(heights[x][y].y, -vert.y);
+				}
+			});
 		}
 	}
 
@@ -402,11 +412,16 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 		{
 			for (float z = node->bbox.min.z; z <= node->bbox.max.z; z += 1)
 			{
-				if (heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].x == MAP_MAX || 
-					heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].y == MAP_MIN)
+				int xx = (int)(gnd->width * 5 + x) / 10;
+				int yy = (int)(gnd->width * 5 + z) / 10;
+				if (xx < 0 || yy < 0 || xx >= gnd->width || yy >= gnd->height)
 					continue;
-				node->bbox.min.y = glm::min(node->bbox.min.y, heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].x);
-				node->bbox.max.y = glm::max(node->bbox.max.y, heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].y);
+
+				if (heights[xx][yy].x == MAP_MAX || 
+					heights[xx][yy].y == MAP_MIN)
+					continue;
+				node->bbox.min.y = glm::min(node->bbox.min.y, heights[xx][yy].x);
+				node->bbox.max.y = glm::max(node->bbox.max.y, heights[xx][yy].y);
 			}
 		}
 
@@ -498,10 +513,29 @@ std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray)
 	return collisions_(model->rootMesh, ray, matrixCache);
 }
 
-void Rsw::Model::foreachface(std::function<void(Rsm::Mesh::Face*)> &callback)
+
+void foreachface_(Rsm::Mesh* mesh, std::function<void(const std::vector<glm::vec3>&)> callback, glm::mat4 matrix)
 {
+	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
 
 
+	std::vector<glm::vec3> verts;
+	verts.resize(3);
+	for (size_t i = 0; i < mesh->faces.size(); i++)
+	{
+		for (size_t ii = 0; ii < 3; ii++)
+			verts[ii] = glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+		callback(verts);
+	}
+
+	for (size_t i = 0; i < mesh->children.size(); i++)
+		foreachface_(mesh->children[i], callback, matrix);
+}
+
+
+void Rsw::Model::foreachface(std::function<void(const std::vector<glm::vec3>&)> callback)
+{
+	foreachface_(model->rootMesh, callback, matrixCache);
 }
 
 Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::iterator &it, int level /*= 0*/) : bbox(glm::vec3(0, 0, 0), glm::vec3(0,0,0))

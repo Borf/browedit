@@ -6,10 +6,9 @@
 #include <map>
 #include <functional>
 #include <blib/util/Tree.h>
-#include "Rsm.h"
 #include <blib/math/AABB.h>
 class Gnd;
-
+class Rsm;
 
 class Rsw
 {
@@ -57,7 +56,7 @@ public:
 		Rsm* model;
 		bool collides(const blib::math::Ray &ray);
 		std::vector<glm::vec3> collisions(const blib::math::Ray &ray);
-		void foreachface(std::function<void(Rsm::Mesh::Face*)> &callback);
+		void foreachface(std::function<void(const std::vector<glm::vec3>&)> callback);
 
 
 		Model() : Object(Object::Type::Model)
