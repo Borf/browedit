@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <functional>
 #include <blib/util/Tree.h>
-
+#include "Rsm.h"
 #include <blib/math/AABB.h>
-class Rsm;
+class Gnd;
 
 
 class Rsw
@@ -55,6 +56,8 @@ public:
 
 		Rsm* model;
 		bool collides(const blib::math::Ray &ray);
+		std::vector<glm::vec3> collisions(const blib::math::Ray &ray);
+		void foreachface(std::function<void(Rsm::Mesh::Face*)> &callback);
 
 
 		Model() : Object(Object::Type::Model)
@@ -62,6 +65,8 @@ public:
 			model = NULL;
 		}
 		~Model();
+
+
 	};
 
 	class Light : public Object
@@ -156,4 +161,5 @@ public:
 	Rsw(const std::string &fileName, bool loadModels = true);
 	Rsm* getRsm( const std::string &fileName );
 	void save(const std::string &fileName);
+	void recalculateQuadTree(Gnd* gnd);
 };

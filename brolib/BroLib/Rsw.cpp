@@ -1,5 +1,6 @@
 #include "Rsw.h"
 #include "Rsm.h"
+#include "Gnd.h"
 #include "MapRenderer.h"
 
 #include <blib/util/FileSystem.h>
@@ -328,6 +329,93 @@ Rsm* Rsw::getRsm( const std::string &fileName )
 	return it->second;
 }
 
+void Rsw::recalculateQuadTree(Gnd* gnd)
+{
+	/*std::vector<QuadTreeNode*> nodes;
+	quadtree->foreachLevel([&nodes] (QuadTreeNode* node, int level) {	if (level == 5) nodes.push_back(node);	});
+	for (QuadTreeNode* node : nodes)
+	{
+		node->bbox.min.y = 999999;
+		node->bbox.max.y = -999999;
+		printf(".");
+
+		//todo: make a list of models that are (partially) contained in node->bbox
+
+		for (float x = node->bbox.min.x; x <= node->bbox.max.x; x+=1)
+		{
+			for (float z = node->bbox.min.z; z <= node->bbox.max.z; z+=1)
+			{
+				blib::math::Ray ray(glm::vec3(width*5+x,9999,width*5-z), glm::vec3(0,-1,0));
+				for (size_t i = 0; i < objects.size(); i++)
+				{
+					if (objects[i]->type == Object::Type::Model)
+					{
+						std::vector<glm::vec3> collisionPoints = ((Model*)objects[i])->collisions(ray);
+						for (int i = 0; i < collisionPoints.size(); i++)
+						{
+							node->bbox.min.y = glm::min(node->bbox.min.y, collisionPoints[i].y);
+							node->bbox.max.y = glm::max(node->bbox.max.y, collisionPoints[i].y);
+						}
+					}
+				}
+			}
+		}
+	}*/
+
+
+#define MAP_MIN -9999999
+#define MAP_MAX 9999999
+
+
+	std::vector<std::vector<glm::vec2>> heights(gnd->width, std::vector<glm::vec2>(gnd->height, glm::vec2(MAP_MAX,MAP_MIN)));
+	for (int x = 0; x < gnd->width; x++)
+	{
+		for (int y = 0; y < gnd->height; y++)
+		{
+			heights[x][y].x = glm::min(glm::min(glm::min(gnd->cubes[x][y]->h1, gnd->cubes[x][y]->h2), gnd->cubes[x][y]->h3), gnd->cubes[x][y]->h4);
+			heights[x][y].y = glm::max(glm::max(glm::max(gnd->cubes[x][y]->h1, gnd->cubes[x][y]->h2), gnd->cubes[x][y]->h3), gnd->cubes[x][y]->h4);
+		}
+	}
+
+
+
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (objects[i]->type == Object::Type::Model)
+		{
+			((Model*)objects[i])->foreachface();
+		}
+	}
+
+
+
+
+
+
+	std::vector<QuadTreeNode*> nodes;
+	quadtree->foreachLevel([&nodes](QuadTreeNode* node, int level) {	if (level == 5) nodes.push_back(node);	});
+	for (QuadTreeNode* node : nodes)
+	{
+		node->bbox.min.y = MAP_MAX;
+		node->bbox.max.y = MAP_MIN;
+		for (float x = node->bbox.min.x; x <= node->bbox.max.x; x += 1)
+		{
+			for (float z = node->bbox.min.z; z <= node->bbox.max.z; z += 1)
+			{
+				if (heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].x == MAP_MAX || 
+					heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].y == MAP_MIN)
+					continue;
+				node->bbox.min.y = glm::min(node->bbox.min.y, heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].x);
+				node->bbox.max.y = glm::max(node->bbox.max.y, heights[(int)(gnd->width * 5 + x) / 10][(int)(gnd->width * 5 + z) / 10].y);
+			}
+		}
+
+
+	}
+
+
+}
+
 
 Rsw::Model::~Model()
 {
@@ -359,9 +447,38 @@ bool collides_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
 		if (collides_(mesh->children[i], ray, matrix))
 			return true;
 	}
-
-
 	return false;
+}
+
+std::vector<glm::vec3> collisions_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
+{
+	std::vector<glm::vec3> ret;
+
+	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
+	newMatrix = glm::inverse(newMatrix);
+	blib::math::Ray newRay = ray * newMatrix;
+
+
+	std::vector<glm::vec3> verts;
+	verts.resize(3);
+	float t;
+	for (size_t i = 0; i < mesh->faces.size(); i++)
+	{
+		for (size_t ii = 0; ii < 3; ii++)
+			verts[ii] = mesh->vertices[mesh->faces[i]->vertices[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+
+		if (newRay.LineIntersectPolygon(verts, t))
+		{
+			ret.push_back(newRay.origin + t * newRay.dir);
+		}
+	}
+
+	for (size_t i = 0; i < mesh->children.size(); i++)
+	{
+		std::vector<glm::vec3> other = collisions_(mesh->children[i], ray, matrix);
+		ret.insert(ret.end(), other.begin(), other.end());
+	}
+	return ret;
 }
 
 bool Rsw::Model::collides(const blib::math::Ray &ray)
@@ -373,11 +490,25 @@ bool Rsw::Model::collides(const blib::math::Ray &ray)
 	return true;
 }
 
+std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray)
+{
+	if (!aabb.hasRayCollision(ray, 0, 10000000))
+		return std::vector<glm::vec3>();
+
+	return collisions_(model->rootMesh, ray, matrixCache);
+}
+
+void Rsw::Model::foreachface(std::function<void(Rsm::Mesh::Face*)> &callback)
+{
+
+
+}
+
 Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::iterator &it, int level /*= 0*/) : bbox(glm::vec3(0, 0, 0), glm::vec3(0,0,0))
 {
-	bbox.bounds[0] = *it;
-	it++;
 	bbox.bounds[1] = *it;
+	it++;
+	bbox.bounds[0] = *it;
 	it++;
 
 	range[0] = *it;
@@ -389,5 +520,4 @@ Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::iterator &it, int level 
 		return;
 	for (size_t i = 0; i < 4; i++)
 		children[i] = new QuadTreeNode(it, level + 1);
-	
 }

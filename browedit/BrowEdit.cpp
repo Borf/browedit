@@ -269,6 +269,10 @@ void BrowEdit::update( double elapsedTime )
 			redo();
 
 
+		if (keyState.isPressed(blib::Key::Q))
+			map->getRsw()->recalculateQuadTree(map->getGnd());
+
+
 		///////////////////////////////////////////////TEXTURE EDIT
 
 		if (editMode == EditMode::TextureEdit)

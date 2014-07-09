@@ -63,7 +63,7 @@
       <Profile>true</Profile>
     </Link>
     <PreBuildEvent>
-      <Command>svnversion "$(ProjectPath)" &gt; $(MSBuildProjectDirectory)\version.h</Command>
+      <Command>$(SolutionDir)\svnversion "$(ProjectPath)" &gt; $(MSBuildProjectDirectory)\version.h</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
