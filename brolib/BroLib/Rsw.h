@@ -88,7 +88,7 @@ public:
 		{
 		}
 		std::string fileName;
-		float repeatDelay;
+		//float repeatDelay;
 		float vol;
 		long	width;
 		long	height;
@@ -153,7 +153,7 @@ public:
 
 	std::map<std::string, Rsm*> rsmCache;
 
-	Rsw(const std::string &fileName);
+	Rsw(const std::string &fileName, bool loadModels = true);
 	Rsm* getRsm( const std::string &fileName );
 	void save(const std::string &fileName);
 };

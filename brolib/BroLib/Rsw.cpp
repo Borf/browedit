@@ -8,7 +8,7 @@
 
 using blib::util::Log;
 
-Rsw::Rsw(const std::string &fileName)
+Rsw::Rsw(const std::string &fileName, bool loadModels)
 {
 	char header[4];
 	blib::util::StreamInFile* file = new blib::util::StreamInFile(fileName + ".rsw");
@@ -103,8 +103,10 @@ Rsw::Rsw(const std::string &fileName)
 				model->position = file->readVec3();
 				model->rotation = file->readVec3();
 				model->scale = file->readVec3();
-
-				model->model = getRsm(model->fileName);
+				if (loadModels)
+					model->model = getRsm(model->fileName);
+				else
+					model->model = NULL;
 				objects.push_back(model);
 			}
 			break;
@@ -134,7 +136,7 @@ Rsw::Rsw(const std::string &fileName)
 				sound->range = file->readFloat();
 //				file->readString(80 + 80 + 12 + 4 + 4 + 4 + 4);
 				if (version >= 0x0200)
-					file->readFloat(); // cycle
+					sound->cycle = file->readFloat(); // cycle
 				objects.push_back(sound);
 			}
 			break;
@@ -264,7 +266,7 @@ void Rsw::save(const std::string &fileName)
 		case Object::Type::Sound://3: //Sound
 		{
 			pFile->writeInt(3);
-			Sound* sound = new Sound();
+			Sound* sound = (Sound*)object;
 			pFile->writeString(sound->name, 80);
 			pFile->writeString(sound->fileName, 80);
 			pFile->writeVec3(sound->position);

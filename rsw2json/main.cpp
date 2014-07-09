@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 
 	printf("Opening %s\n", filename.c_str());
 
-	Rsw* rsw = new Rsw(filename);
+	Rsw* rsw = new Rsw(filename, false);
 
 	Json::Value data;
 
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 		case Rsw::Object::Type::Sound://3: //Sound
 		{
 			o["type"] = "sound";
-			Rsw::Sound* sound = new Rsw::Sound();
+			Rsw::Sound* sound = (Rsw::Sound*)object;
 			o["name"] = sound->name; 
 			o["filename"] = sound->fileName;
 			o["position"] = vec3(sound->position);
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
 			o["height"] = sound->height;
 			o["range"] = sound->range;
 //			if (rsw->version >= 0x0200)
-//				pFile->writeFloat(0); //cycle
+			o["cycle"] = sound->cycle;
 		}
 			break;
 		case Rsw::Object::Type::Effect://4: //Effect
@@ -126,7 +126,5 @@ int main(int argc, char* argv[])
 	file.close();
 
 	printf("Wrote to %s\n", (filename + ".json").c_str());
-
-	getchar();
 	return 0;
 }
