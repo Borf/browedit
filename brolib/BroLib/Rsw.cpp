@@ -384,7 +384,7 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 		if (objects[i]->type == Object::Type::Model)
 		{
 			((Model*)objects[i])->foreachface([gnd, &heights](const std::vector<glm::vec3> &verts) {
-				for (glm::vec3 vert : verts)// size_t ii = 0; ii < verts.size(); ii++)
+				for (glm::vec3 vert : verts)
 				{
 					int x = vert.x / 10;
 					int y = gnd->height - (vert.z / 10);
@@ -406,25 +406,62 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 	quadtree->foreachLevel([&nodes](QuadTreeNode* node, int level) {	if (level == 5) nodes.push_back(node);	});
 	for (QuadTreeNode* node : nodes)
 	{
+		assert(node->range[0].x == (node->bbox.max.x - node->bbox.min.x) / 2);
+		assert(node->range[0].y == (node->bbox.max.y - node->bbox.min.y) / 2);
+		assert(node->range[0].z == (node->bbox.max.z - node->bbox.min.z) / 2);
+		assert(node->range[1].x == (node->bbox.max.x - node->range[0].x));
+		assert(node->range[1].y == (node->bbox.max.y - node->range[0].y));
+		assert(node->range[1].z == (node->bbox.max.z - node->range[0].z));
+
+
 		node->bbox.min.y = MAP_MAX;
 		node->bbox.max.y = MAP_MIN;
 		for (float x = node->bbox.min.x; x <= node->bbox.max.x; x += 1)
 		{
 			for (float z = node->bbox.min.z; z <= node->bbox.max.z; z += 1)
 			{
-				int xx = (int)(gnd->width * 5 + x) / 10;
-				int yy = (int)(gnd->width * 5 + z) / 10;
-				if (xx < 0 || yy < 0 || xx >= gnd->width || yy >= gnd->height)
+				int xx = floor((gnd->width * 5 + x) / 10);
+				int yy = floor((gnd->height * 5 + z) / 10);
+				int xxx = ceil((gnd->width * 5 + x) / 10);
+				int yyy = ceil((gnd->height * 5 + z) / 10);
+				if (xx < 0 || yy < 0 || xx >= gnd->width || yy >= gnd->height ||
+					xxx < 0 || yyy < 0 || xxx >= gnd->width || yyy >= gnd->height)
 					continue;
 
-				if (heights[xx][yy].x == MAP_MAX || 
-					heights[xx][yy].y == MAP_MIN)
-					continue;
-				node->bbox.min.y = glm::min(node->bbox.min.y, heights[xx][yy].x);
-				node->bbox.max.y = glm::max(node->bbox.max.y, heights[xx][yy].y);
+				if (heights[xx][yy].x != MAP_MAX &&
+					heights[xx][yy].y != MAP_MIN)
+				{
+					node->bbox.min.y = glm::min(node->bbox.min.y, heights[xx][yy].x);
+					node->bbox.max.y = glm::max(node->bbox.max.y, heights[xx][yy].y);
+				}
+				if (heights[xxx][yy].x != MAP_MAX &&
+					heights[xxx][yy].y != MAP_MIN)
+				{
+					node->bbox.min.y = glm::min(node->bbox.min.y, heights[xxx][yy].x);
+					node->bbox.max.y = glm::max(node->bbox.max.y, heights[xxx][yy].y);
+				}
+				if (heights[xx][yyy].x != MAP_MAX &&
+					heights[xx][yyy].y != MAP_MIN)
+				{
+					node->bbox.min.y = glm::min(node->bbox.min.y, heights[xx][yyy].x);
+					node->bbox.max.y = glm::max(node->bbox.max.y, heights[xx][yyy].y);
+				}
+				if (heights[xxx][yyy].x != MAP_MAX &&
+					heights[xxx][yyy].y != MAP_MIN)
+				{
+					node->bbox.min.y = glm::min(node->bbox.min.y, heights[xxx][yyy].x);
+					node->bbox.max.y = glm::max(node->bbox.max.y, heights[xxx][yyy].y);
+				}
 			}
 		}
+		if (node->bbox.min.y == MAP_MAX)
+			node->bbox.min.y = 0;
+		if (node->bbox.max.y = MAP_MIN)
+			node->bbox.max.y = 0;
 
+
+		node->range[0] = (node->bbox.max - node->bbox.min) / 2.0f;
+		node->range[1] = node->bbox.max - node->range[0];
 
 	}
 

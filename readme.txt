@@ -42,18 +42,16 @@ Click on the list of categories to browse through categories. There is no option
 Object edit (F2)
 ----------------
 In object edit mode you can edit models, sounds, effects and lights
+Click on an object to select it, drag to select multiple, doubleclick on an object to view its properties
 This editmode has different tools
 
-Select (1)
-used to select objects. Click on an object to select it, drag to select multiple, doubleclick on an object to view its properties
-
-Move (2)
+Move (1)
 Used to move selected objects. Drag to move the object. Shift+drag to move the object up and down
 
-Scale (3)
+Scale (2)
 Used to move scale objects. Drag to scale the object. 
 
-Rotate (4)
+Rotate (3)
 Used to move rotate objects. Drag to rotate the object. 
 
 
