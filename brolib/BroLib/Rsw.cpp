@@ -2,10 +2,15 @@
 #include "Rsm.h"
 #include "Gnd.h"
 #include "MapRenderer.h"
+#include <blib/util/Log.h>
+#include <blib/Util.h>
+using blib::util::Log;
 
 #include <blib/util/FileSystem.h>
 #include <blib/util/Log.h>
 
+#define assert2(expr) if(!(expr)) { Log::out<<__FILE__<<":"<<__LINE__<<"\n Debug assertion failed: " #expr ""<<Log::newline; }
+#define assert3(expr, msg) if(!(expr)) { Log::out<<__FILE__<<":"<<__LINE__<<"\n\t-> Debug assertion failed: " #expr ": "<<(msg)<<Log::newline; }
 
 using blib::util::Log;
 
@@ -331,41 +336,9 @@ Rsm* Rsw::getRsm( const std::string &fileName )
 
 void Rsw::recalculateQuadTree(Gnd* gnd)
 {
-	/*std::vector<QuadTreeNode*> nodes;
-	quadtree->foreachLevel([&nodes] (QuadTreeNode* node, int level) {	if (level == 5) nodes.push_back(node);	});
-	for (QuadTreeNode* node : nodes)
-	{
-		node->bbox.min.y = 999999;
-		node->bbox.max.y = -999999;
-		printf(".");
-
-		//todo: make a list of models that are (partially) contained in node->bbox
-
-		for (float x = node->bbox.min.x; x <= node->bbox.max.x; x+=1)
-		{
-			for (float z = node->bbox.min.z; z <= node->bbox.max.z; z+=1)
-			{
-				blib::math::Ray ray(glm::vec3(width*5+x,9999,width*5-z), glm::vec3(0,-1,0));
-				for (size_t i = 0; i < objects.size(); i++)
-				{
-					if (objects[i]->type == Object::Type::Model)
-					{
-						std::vector<glm::vec3> collisionPoints = ((Model*)objects[i])->collisions(ray);
-						for (int i = 0; i < collisionPoints.size(); i++)
-						{
-							node->bbox.min.y = glm::min(node->bbox.min.y, collisionPoints[i].y);
-							node->bbox.max.y = glm::max(node->bbox.max.y, collisionPoints[i].y);
-						}
-					}
-				}
-			}
-		}
-	}*/
-
-
 #define MAP_MIN -9999999
 #define MAP_MAX 9999999
-
+	Log::out << "Recalculating quadtree" << Log::newline;
 
 	std::vector<std::vector<glm::vec2>> heights(gnd->width, std::vector<glm::vec2>(gnd->height, glm::vec2(MAP_MAX,MAP_MIN)));
 	for (int x = 0; x < gnd->width; x++)
@@ -376,8 +349,6 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 			heights[x][y].y = glm::max(glm::max(glm::max(gnd->cubes[x][y]->h1, gnd->cubes[x][y]->h2), gnd->cubes[x][y]->h3), gnd->cubes[x][y]->h4);
 		}
 	}
-
-
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -397,21 +368,17 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 		}
 	}
 
-
-
-
-
-
 	std::vector<QuadTreeNode*> nodes;
 	quadtree->foreachLevel([&nodes](QuadTreeNode* node, int level) {	if (level == 5) nodes.push_back(node);	});
+	int index = 0;
 	for (QuadTreeNode* node : nodes)
 	{
-		assert(node->range[0].x == (node->bbox.max.x - node->bbox.min.x) / 2);
-		assert(node->range[0].y == (node->bbox.max.y - node->bbox.min.y) / 2);
-		assert(node->range[0].z == (node->bbox.max.z - node->bbox.min.z) / 2);
-		assert(node->range[1].x == (node->bbox.max.x - node->range[0].x));
-		assert(node->range[1].y == (node->bbox.max.y - node->range[0].y));
-		assert(node->range[1].z == (node->bbox.max.z - node->range[0].z));
+		assert3(node->range[0].x == (node->bbox.max.x - node->bbox.min.x) / 2, "Difference: " + blib::util::toString(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2) + " (should be small)");
+		assert3(node->range[0].y == (node->bbox.max.y - node->bbox.min.y) / 2, "Difference: " + blib::util::toString(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2) + " (should be small)");
+		assert3(node->range[0].z == (node->bbox.max.z - node->bbox.min.z) / 2, "Difference: " + blib::util::toString(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2) + " (should be small)");
+		assert3(node->range[1].x == (node->bbox.max.x - node->range[0].x), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[1].y == (node->bbox.max.y - node->range[0].y), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[1].z == (node->bbox.max.z - node->range[0].z), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
 
 
 		node->bbox.min.y = MAP_MAX;
@@ -459,13 +426,31 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 		if (node->bbox.max.y = MAP_MIN)
 			node->bbox.max.y = 0;
 
-
 		node->range[0] = (node->bbox.max - node->bbox.min) / 2.0f;
 		node->range[1] = node->bbox.max - node->range[0];
-
+		index++;
 	}
 
+	for (int i = 4; i >= 0; i--)
+	{
+		quadtree->foreachLevel([&nodes, i](QuadTreeNode* node, int level) 
+		{
+			if (level == i)
+			{
+				node->bbox.min.y = MAP_MAX;
+				node->bbox.max.y = MAP_MIN;
 
+				for (int ii = 0; ii < 4; ii++)
+				{
+					node->bbox.min.y = glm::min(node->bbox.min.y, node->children[ii]->bbox.min.y);
+					node->bbox.max.y = glm::max(node->bbox.max.y, node->children[ii]->bbox.max.y);
+				}
+				node->range[0] = (node->bbox.max - node->bbox.min) / 2.0f;
+				node->range[1] = node->bbox.max - node->range[0];
+			}
+		});
+	}
+	Log::out << "Done recalculating quadtree" << Log::newline;
 }
 
 
