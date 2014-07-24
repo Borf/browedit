@@ -37,6 +37,7 @@ void Map::save(const std::string &filename)
 		this->fileName = filename;
 
 	gnd->save(this->fileName);
+	rsw->recalculateQuadTree(gnd);
 	rsw->save(this->fileName);
 	gat->save(this->fileName);
 }

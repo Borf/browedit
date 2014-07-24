@@ -1,9 +1,10 @@
 {
 	"size" : [ 300, 100 ],
 	"resizable" : false,
+	"model" : true,
 	"widgets" :
 	{
-		"lblMessage" :
+		"message" :
 		{
 			"type" : "label",
 			"position" : [ 0, 0 ],

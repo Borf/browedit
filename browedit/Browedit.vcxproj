@@ -105,6 +105,7 @@
     <ClInclude Include="TranslatorTool.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
+    <ClInclude Include="windows\MessageWindow.h" />
     <ClInclude Include="windows\ModelPropertiesWindow.h" />
     <ClInclude Include="windows\ObjectWindow.h" />
     <ClInclude Include="windows\TextureWindow.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="ScaleTool.cpp" />
     <ClCompile Include="TranslatorTool.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
+    <ClCompile Include="windows\MessageWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />
     <ClCompile Include="windows\ObjectWindow.cpp" />
     <ClCompile Include="windows\TextureWindow.cpp" />

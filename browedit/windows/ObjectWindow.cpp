@@ -152,14 +152,14 @@ void ObjectWindow::setDirectory(const std::string &directory)
 	{
 		if (it.first.substr(0, directory.size()) == directory && it.first.find("/", directory.size() + 1) == -1)
 		{
-			ModelWidget* image = new ModelWidget(new Rsm(it.second), resourceManager, browEdit);
-			image->width = textureSize;
-			image->height = textureSize;
-			image->x = px;
-			image->y = py;
-			panel->add(image);
+			ModelWidget* modelWidget = new ModelWidget(new Rsm(it.second), resourceManager, browEdit);
+			modelWidget->width = textureSize;
+			modelWidget->height = textureSize;
+			modelWidget->x = px;
+			modelWidget->y = py;
+			panel->add(modelWidget);
 
-			image->addClickHandler([this, it](blib::wm::Widget*, int, int, int) {
+			modelWidget->addClickHandler([this, it](blib::wm::Widget*, int, int, int) {
 				Log::out << it.second << Log::newline;
 				browEdit->addModel(it.second.substr(11));
 				getComponent<blib::wm::widgets::Button>("btnExpand")->mouseclick(0, 0, 1);
@@ -262,7 +262,8 @@ void ModelWidget::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::R
 
 	spriteBatch.drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, glm::vec3(x, y, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(width, height));
 
-	spriteBatch.draw(fbo, glm::translate(matrix, glm::vec3(x + 2, y + 2, 0)));
+	if (rsm->loaded)
+		spriteBatch.draw(fbo, glm::translate(matrix, glm::vec3(x + 2, y + 2, 0)));
 }
 
 ModelWidget::~ModelWidget()
@@ -271,5 +272,5 @@ ModelWidget::~ModelWidget()
 		delete rsm;
 	rsm = NULL;
 	if (fbo)
-		delete fbo;
+		fbo->free();
 }

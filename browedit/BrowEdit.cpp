@@ -4,6 +4,7 @@
 #include "windows/TextureWindow.h"
 #include "windows/ObjectWindow.h"
 #include "windows/ModelPropertiesWindow.h"
+#include "windows/MessageWindow.h"
 
 #include "actions/TextureEditAction.h"
 #include "actions/ObjectEditAction.h"
@@ -205,9 +206,17 @@ void BrowEdit::init()
 		new FileOpenWindow(resourceManager, this);
 	});
 
-	rootMenu->setAction("file/save", [this](){ 
-		if (map)
-			map->save(config["data"]["ropath"].asString() + "/" + map->getFileName());
+	rootMenu->setAction("file/save", [this](){
+		MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+		new blib::BackgroundTask<bool>(this, [this]()
+		{
+			if (map)
+				map->save(config["data"]["ropath"].asString() + "/" + map->getFileName());
+			return true;
+		}, [dialog](bool bla)
+		{
+			dialog->close();
+		});
 	});
 
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
@@ -267,11 +276,6 @@ void BrowEdit::update( double elapsedTime )
 			undo();
 		if (keyState.isPressed(blib::Key::Y) && keyState.isPressed(blib::Key::CONTROL) && !lastKeyState.isPressed(blib::Key::Y))
 			redo();
-
-
-		if (keyState.isPressed(blib::Key::Q))
-			map->getRsw()->recalculateQuadTree(map->getGnd());
-
 
 		///////////////////////////////////////////////TEXTURE EDIT
 

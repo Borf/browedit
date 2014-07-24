@@ -34,6 +34,8 @@ MapRenderer::MapRenderer() : mouseRay(glm::vec3(0, 0,0), glm::vec3(1,0,0))
 	drawObjectGrid = true;
 	drawQuadTree = true;
 	fbo = NULL;
+	fov = 90;
+	mouse3d = glm::vec4(0, 0, 0, -1);
 }
 
 float mod(float x, float m)
@@ -329,7 +331,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		std::vector<blib::Texture*> textures;
 
