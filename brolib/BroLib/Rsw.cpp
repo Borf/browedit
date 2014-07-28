@@ -340,6 +340,7 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 #define MAP_MAX 9999999
 	Log::out << "Recalculating quadtree" << Log::newline;
 
+	//first build up a grid, based on the gnd grid
 	std::vector<std::vector<glm::vec2>> heights(gnd->width, std::vector<glm::vec2>(gnd->height, glm::vec2(MAP_MAX,MAP_MIN)));
 	for (int x = 0; x < gnd->width; x++)
 	{
@@ -350,6 +351,7 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 		}
 	}
 
+	//loop through all polygons of all objects and then adjust the min/max per tile
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (objects[i]->type == Object::Type::Model)
@@ -398,15 +400,15 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 				if (heights[xx][yy].x != MAP_MAX &&
 					heights[xx][yy].y != MAP_MIN)
 				{
-					node->bbox.min.y = glm::min(node->bbox.min.y, heights[xx][yy].x);
-					node->bbox.max.y = glm::max(node->bbox.max.y, heights[xx][yy].y);
-				}
+				node->bbox.min.y = glm::min(node->bbox.min.y, heights[xx][yy].x);
+				node->bbox.max.y = glm::max(node->bbox.max.y, heights[xx][yy].y);
+			}
 				if (heights[xxx][yy].x != MAP_MAX &&
 					heights[xxx][yy].y != MAP_MIN)
 				{
 					node->bbox.min.y = glm::min(node->bbox.min.y, heights[xxx][yy].x);
 					node->bbox.max.y = glm::max(node->bbox.max.y, heights[xxx][yy].y);
-				}
+		}
 				if (heights[xx][yyy].x != MAP_MAX &&
 					heights[xx][yyy].y != MAP_MIN)
 				{
@@ -483,7 +485,7 @@ bool collides_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
 	{
 		if (collides_(mesh->children[i], ray, matrix))
 			return true;
-	}
+	} 
 	return false;
 }
 

@@ -41,8 +41,13 @@ public:
 	class Cube
 	{
 	public:
+		Cube() 
+		{
+			selected = rand()%100 == 0;
+		}
 		float h1,h2,h3,h4;
 		int tileUp, tileSide, tileFront;
+		bool selected;
 	};
 
 

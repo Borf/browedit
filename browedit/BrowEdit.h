@@ -33,6 +33,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		ObjectEdit,
 		GatEdit,
 		WallEdit,
+		HeightEdit,
 	};
 
 	EditMode editMode;

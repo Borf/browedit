@@ -121,6 +121,10 @@ private:
 
 	blib::VBO* gndTextureGridVbo;
 	bool gndGridDirty;
+	
+	blib::VBO* gndObjectGridVbo;
+	bool objectGridDirty;
+
 
 	blib::Texture* rswLightTexture;
 	blib::Texture* rswEffectTexture;

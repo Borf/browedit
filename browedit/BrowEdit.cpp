@@ -223,6 +223,7 @@ void BrowEdit::init()
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
 	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
+	rootMenu->setAction("editmode/heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::HeightEdit));
 
 
 	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
@@ -251,7 +252,8 @@ void BrowEdit::update( double elapsedTime )
 	camera->update(elapsedTime);
 
 	mapRenderer.cameraMatrix = camera->getMatrix();
-	mapRenderer.drawTextureGrid = mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue(); // TODO: fix this
+	mapRenderer.drawTextureGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && editMode == EditMode::TextureEdit; // TODO: fix this
+	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit); // TODO: fix this
 
 	if (mouseState.leftButton)
 		mouseRay = mapRenderer.mouseRay;
@@ -261,11 +263,15 @@ void BrowEdit::update( double elapsedTime )
 	{
 		if(keyState.isPressed(blib::Key::SHIFT))
 		{
+			if (mouseState.clickcount == 2)
+				camera->angle = 60;
 			camera->direction += (mouseState.x - lastMouseState.x) / 2.0f;
 			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y) / 2.0f, 0.0f, 90.0f);
 		}
 		else
 		{
+			if (mouseState.clickcount == 2)
+				camera->direction = 0;
 			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y, 0, 0) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0, 0, 1)));
 			camera->targetPosition = camera->position;
 		}
@@ -674,6 +680,37 @@ void BrowEdit::draw()
 
 		}
 
+		if (editMode == EditMode::HeightEdit)
+		{
+			std::vector<blib::VertexP3> verts;
+			Gnd* gnd = map->getGnd();
+
+			for (int x = 0; x < gnd->width; x++)
+			{
+				for (int y = 0; y < gnd->height; y++)
+				{
+					Gnd::Cube* cube = gnd->cubes[x][y];
+					if (!cube->selected)
+						continue;
+
+					blib::VertexP3 v1(glm::vec3(10 * x, -cube->h3 + 0.1f, 10 * gnd->height - 10 * y));
+					blib::VertexP3 v2(glm::vec3(10 * x + 10, -cube->h4 + 0.1f, 10 * gnd->height - 10 * y));
+					blib::VertexP3 v3(glm::vec3(10 * x, -cube->h1 + 0.1f, 10 * gnd->height - 10 * y + 10));
+					blib::VertexP3 v4(glm::vec3(10 * x + 10, -cube->h2 + 0.1f, 10 * gnd->height - 10 * y + 10));
+
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+					verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+				}
+			}
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+			highlightRenderState.activeTexture[0] = NULL;
+			highlightRenderState.activeVbo = NULL;
+			renderer->drawTriangles(verts, highlightRenderState);
+		}
+
 
 
 		spriteBatch->begin();
@@ -695,6 +732,8 @@ void BrowEdit::draw()
 			editModeString = "Object Edit";
 		else if (editMode == EditMode::GatEdit)
 			editModeString = "GAT Edit";
+		else if (editMode == EditMode::HeightEdit)
+			editModeString = "Height Edit";
 		else
 			editModeString = "Unknown editmode: " + blib::util::toString((int)editMode);
 

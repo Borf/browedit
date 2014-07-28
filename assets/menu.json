@@ -101,6 +101,12 @@
 				"type" : "toggle",
 				"initial" : false,
 				"key" : "f2"
+			},
+			{
+				"name" : "heightedit",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "f3"
 			}
 
 		]
