@@ -119,7 +119,7 @@ public:
 	class QuadTreeNode : public blib::util::Tree<4, QuadTreeNode>
 	{
 	public:
-		QuadTreeNode(std::vector<glm::vec3>::iterator &it, int level = 0);
+        QuadTreeNode(std::vector<glm::vec3>::const_iterator &it, int level = 0);
 
 		blib::math::AABB bbox;
 		glm::vec3 range[2];

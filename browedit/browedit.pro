@@ -12,13 +12,36 @@ QMAKE_CXXFLAGS += -Wall -Wno-unused-variable
 INCLUDEPATH += ../blib
 INCLUDEPATH += ../blib/externals
 INCLUDEPATH += ../blib/externals/box2d
+windows
+{
+    INCLUDEPATH += ../blib/externals/glew/include
+}
+
+DEFINES -= UNICODE
+
+
+
+LIBS += -lopengl32
+LIBS += -lglu32
+LIBS += -luser32
+LIBS += -lgdi32
+
 
 SOURCES += main.cpp \
     BrowEdit.cpp \
     Camera.cpp \
     windows/FileOpenWindow.cpp \
     windows/ObjectWindow.cpp \
-    windows/TextureWindow.cpp
+    windows/TextureWindow.cpp \
+    actions/GroupAction.cpp \
+    actions/ObjectEditAction.cpp \
+    actions/SelectObjectAction.cpp \
+    actions/TextureEditAction.cpp \
+    windows/MessageWindow.cpp \
+    windows/ModelPropertiesWindow.cpp \
+    RotateTool.cpp \
+    ScaleTool.cpp \
+    TranslatorTool.cpp
 
 HEADERS += \
     BrowEdit.h \
@@ -26,7 +49,16 @@ HEADERS += \
     version.h \
     windows/FileOpenWindow.h \
     windows/ObjectWindow.h \
-    windows/TextureWindow.h
+    windows/TextureWindow.h \
+    actions/GroupAction.h \
+    actions/ObjectEditAction.h \
+    actions/SelectObjectAction.h \
+    actions/TextureEditAction.h \
+    windows/MessageWindow.h \
+    windows/ModelPropertiesWindow.h \
+    RotateTool.h \
+    ScaleTool.h \
+    TranslatorTool.h
 
 
 
@@ -57,12 +89,19 @@ else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../brolib/libbrolib.a
 
 
-LIBS += -lpthread
-LIBS += -lGLEW
-LIBS += -lGL
-LIBS += -lX11
-LIBS += -lz
-
+#windows
+#{
+#    LIBS += -lopengl32
+#}
+#
+#unix
+#{
+#    LIBS += -lpthread
+#    LIBS += -lGLEW
+#    LIBS += -lGL
+#    LIBS += -lX11
+#    LIBS += -lz
+#}
 OTHER_FILES += \
     ../assets/shaders/compose.frag \
     ../assets/shaders/gnd.frag \

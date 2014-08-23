@@ -171,7 +171,7 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 
 	while(!file->eof())
 		quadtreeFloats.push_back(file->readVec3());
-	quadtree = new QuadTreeNode(quadtreeFloats.begin());
+  //TODO  quadtree = new QuadTreeNode(quadtreeFloats.cbegin());
 
 	delete file;
 }
@@ -562,7 +562,7 @@ void Rsw::Model::foreachface(std::function<void(const std::vector<glm::vec3>&)> 
 	foreachface_(model->rootMesh, callback, matrixCache);
 }
 
-Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::iterator &it, int level /*= 0*/) : bbox(glm::vec3(0, 0, 0), glm::vec3(0,0,0))
+Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::const_iterator &it, int level /*= 0*/) : bbox(glm::vec3(0, 0, 0), glm::vec3(0,0,0))
 {
 	bbox.bounds[1] = *it;
 	it++;

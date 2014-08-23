@@ -1,7 +1,10 @@
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG += object_with_source
-CONFIG += object_parallel_to_source
+unix
+{
+    CONFIG += object_with_source
+    CONFIG += object_parallel_to_source
+}
 CONFIG += c++11
 CONFIG -= app_bundle
 CONFIG -= qt
@@ -12,6 +15,14 @@ QMAKE_CXXFLAGS += -Wall -Wno-unused-variable
 INCLUDEPATH += ../blib
 INCLUDEPATH += ../blib/externals
 INCLUDEPATH += ../blib/externals/box2d
+windows
+{
+    INCLUDEPATH += ../blib/externals/glew/include
+}
+
+
+LIBS += -lglew.lib
+LIBS += -lwinmm.lib
 
 SOURCES += \
     BroLib/Gnd.cpp \

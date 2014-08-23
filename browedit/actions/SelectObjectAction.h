@@ -10,7 +10,7 @@ class SelectObjectAction : public Action
 	std::vector<int> indices;
 	std::vector<int> oldIndices;
 public:
-	SelectObjectAction::SelectObjectAction(Rsw* rsw);
+    SelectObjectAction(Rsw* rsw);
 	void finish(Rsw* rsw);
 
 	bool hasDifference();

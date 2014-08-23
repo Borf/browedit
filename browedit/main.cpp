@@ -1,4 +1,5 @@
-#ifdef WIN32
+#include <blib/config.h>
+#ifdef BLIB_WIN
 #include <Windows.h>
 #include <blib/platform/win32/Registry.h>
 #include <iostream>

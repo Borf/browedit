@@ -36,6 +36,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 
 using blib::util::Log;
 
@@ -521,9 +522,6 @@ void BrowEdit::update( double elapsedTime )
 						((Rsw::Model*)o)->matrixCached = false;
 					}
 				}
-
-
-
 			}
 
 
@@ -532,13 +530,23 @@ void BrowEdit::update( double elapsedTime )
 				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 					map->getRsw()->objects[i]->selected = false;
 			}
+		}
+		if (editMode == EditMode::HeightEdit && !wm->inWindow(mouseState.x, mouseState.y))
+		{
+			if (mouseState.leftButton && !lastMouseState.leftButton)
+			{//down
 
+			}
+			else if (!mouseState.leftButton && lastMouseState.leftButton)
+			{//up
 
+			}
+			else if (mouseState.leftButton && lastMouseState.leftButton)
+			{//drag
 
-
+			}
 
 		}
-
 
 	}
 	lastmouse3d = mapRenderer.mouse3d;
@@ -704,8 +712,9 @@ void BrowEdit::draw()
 			}
 			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
 			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
-			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.5f, 0.9f, 0.5f, 0.65f));
 			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
 			highlightRenderState.activeTexture[0] = NULL;
 			highlightRenderState.activeVbo = NULL;
 			renderer->drawTriangles(verts, highlightRenderState);
