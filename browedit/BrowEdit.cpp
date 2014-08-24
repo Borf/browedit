@@ -284,6 +284,37 @@ void BrowEdit::update( double elapsedTime )
 		if (keyState.isPressed(blib::Key::Y) && keyState.isPressed(blib::Key::CONTROL) && !lastKeyState.isPressed(blib::Key::Y))
 			redo();
 
+
+		if (keyState.isPressed(blib::Key::M) && !lastKeyState.isPressed(blib::Key::M))
+		{
+			int size = map->getRsw()->objects.size();
+			for (int i = 0; i < size; i++)
+			{
+				if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
+				{
+					Rsw::Model* model = (Rsw::Model*)map->getRsw()->objects[i];
+
+					Rsw::Model* newModel = new Rsw::Model();
+					newModel->matrixCached = false;
+					newModel->name = model->name;
+					newModel->animType = model->animType;
+					newModel->animSpeed = model->animSpeed;
+					newModel->blockType = model->blockType;
+					newModel->fileName = model->fileName;
+					newModel->position = model->position;
+					newModel->rotation = model->rotation;
+					newModel->scale = model->scale;
+
+					newModel->position *= glm::vec3(-1, 1, 1);
+					newModel->scale *= glm::vec3(-1, 1, 1);
+
+					newModel->model = map->getRsw()->getRsm(model->fileName);
+					map->getRsw()->objects.push_back(newModel);
+				}
+			}
+
+		}
+
 		///////////////////////////////////////////////TEXTURE EDIT
 
 		if (editMode == EditMode::TextureEdit)
