@@ -119,11 +119,8 @@ private:
 	};
 
 
-	blib::VBO* gndTextureGridVbo;
-	bool gndGridDirty;
-	
-	blib::VBO* gndObjectGridVbo;
-	bool objectGridDirty;
+	blib::VBO* gndTextureGridVbo;	
+	blib::VBO* gndGridVbo;
 
 
 	blib::Texture* rswLightTexture;
@@ -176,4 +173,8 @@ public:
 	virtual void resizeGl(int width, int height);
 	void setTileDirty(int xx, int yy);
 	void renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
+
+	bool gndTextureGridDirty;
+	bool gndGridDirty;
+
 };

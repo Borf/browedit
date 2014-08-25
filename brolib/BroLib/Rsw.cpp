@@ -171,7 +171,7 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 
 	while(!file->eof())
 		quadtreeFloats.push_back(file->readVec3());
-  //TODO  quadtree = new QuadTreeNode(quadtreeFloats.cbegin());
+	quadtree = new QuadTreeNode(quadtreeFloats.cbegin());
 
 	delete file;
 }
@@ -559,6 +559,8 @@ void foreachface_(Rsm::Mesh* mesh, std::function<void(const std::vector<glm::vec
 
 void Rsw::Model::foreachface(std::function<void(const std::vector<glm::vec3>&)> callback)
 {
+	if (!model)
+		return;
 	foreachface_(model->rootMesh, callback, matrixCache);
 }
 

@@ -101,6 +101,12 @@ Gnd::Gnd( const std::string &fileName )
 			tile->v4.y = file->readFloat();
 			tile->textureIndex = file->readWord();
 			tile->lightmapIndex= file->readWord();
+
+			if (tile->lightmapIndex < 0)
+			{
+				tile->lightmapIndex = 0;
+			}
+
 			tile->color = glm::vec4((unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f);
 			tiles.push_back(tile);
 		}

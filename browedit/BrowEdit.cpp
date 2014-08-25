@@ -138,6 +138,8 @@ void BrowEdit::init()
 	for (blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();
 
+	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler( config["data"]["ropath"].asString() ));
+
 
 	gradientBackground = resourceManager->getResource<blib::Texture>("assets/textures/gradient.png");
 
@@ -285,7 +287,7 @@ void BrowEdit::update( double elapsedTime )
 			redo();
 
 
-		if (keyState.isPressed(blib::Key::M) && !lastKeyState.isPressed(blib::Key::M))
+/*olroxmirror		if (keyState.isPressed(blib::Key::M) && !lastKeyState.isPressed(blib::Key::M))
 		{
 			int size = map->getRsw()->objects.size();
 			for (int i = 0; i < size; i++)
@@ -293,7 +295,6 @@ void BrowEdit::update( double elapsedTime )
 				if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
 				{
 					Rsw::Model* model = (Rsw::Model*)map->getRsw()->objects[i];
-
 					Rsw::Model* newModel = new Rsw::Model();
 					newModel->matrixCached = false;
 					newModel->name = model->name;
@@ -304,16 +305,13 @@ void BrowEdit::update( double elapsedTime )
 					newModel->position = model->position;
 					newModel->rotation = model->rotation;
 					newModel->scale = model->scale;
-
+					newModel->rotation.y = -newModel->rotation.y;
 					newModel->position *= glm::vec3(-1, 1, 1);
-					newModel->scale *= glm::vec3(-1, 1, 1);
-
 					newModel->model = map->getRsw()->getRsm(model->fileName);
 					map->getRsw()->objects.push_back(newModel);
 				}
 			}
-
-		}
+		}*/
 
 		///////////////////////////////////////////////TEXTURE EDIT
 
@@ -562,11 +560,11 @@ void BrowEdit::update( double elapsedTime )
 					map->getRsw()->objects[i]->selected = false;
 			}
 		}
+//////////////////////////////////////////////HEIGHT EDIT
 		if (editMode == EditMode::HeightEdit && !wm->inWindow(mouseState.x, mouseState.y))
 		{
 			if (mouseState.leftButton && !lastMouseState.leftButton)
 			{//down
-
 			}
 			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//up
@@ -574,8 +572,46 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (mouseState.leftButton && lastMouseState.leftButton)
 			{//drag
-
 			}
+
+			if (!mouseState.rightButton && lastMouseState.rightButton)
+			{
+				bool moved = false;
+				for (int x = 0; x < map->getGnd()->width; x++)
+				{
+					for (int y = 0; y < map->getGnd()->height; y++)
+					{
+						if (!map->getGnd()->cubes[x][y]->selected)
+							continue;
+						moved = true;
+						mapRenderer.setTileDirty(x, y);
+					}
+				}
+				if (moved)
+					mapRenderer.gndGridDirty = true;
+			}
+			else if (mouseState.rightButton && lastMouseState.rightButton)
+			{
+				std::vector<int> bla;
+				printf("%i", bla[10]);
+
+				bool moved = false;
+				for (int x = 0; x < map->getGnd()->width; x++)
+				{
+					for (int y = 0; y < map->getGnd()->height; y++)
+					{
+						if (!map->getGnd()->cubes[x][y]->selected)
+							continue;
+						moved = true;
+
+						map->getGnd()->cubes[x][y]->h1 += mouseState.y - lastMouseState.y;
+						map->getGnd()->cubes[x][y]->h2 += mouseState.y - lastMouseState.y;
+						map->getGnd()->cubes[x][y]->h3 += mouseState.y - lastMouseState.y; 
+						map->getGnd()->cubes[x][y]->h4 += mouseState.y - lastMouseState.y;
+					}
+				}
+			}
+
 
 		}
 

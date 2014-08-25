@@ -67,7 +67,7 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 	if (drawTextureGrid)
 	{
-		if (gndGridDirty)
+		if (gndTextureGridDirty)
 		{
 			std::vector<blib::VertexP3> verts;
 			Gnd* gnd = map->getGnd();
@@ -178,7 +178,7 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 				}
 			}
 			renderer->setVbo(gndTextureGridVbo, verts);
-			gndGridDirty = false;
+			gndTextureGridDirty = false;
 		}
 		//highlightRenderState.depthTest = false;
 		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMatrix);
@@ -195,7 +195,7 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 	if (drawObjectGrid)
 	{
-		if (objectGridDirty)
+		if (gndGridDirty)
 		{
 			std::vector<blib::VertexP3> verts;
 			Gnd* gnd = map->getGnd();
@@ -225,8 +225,8 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 				}
 			}
 
-			objectGridDirty = false;
-			renderer->setVbo(gndObjectGridVbo, verts);
+			gndGridDirty = false;
+			renderer->setVbo(gndGridVbo, verts);
 		}
 		//highlightRenderState.depthTest = false;
 		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMatrix);
@@ -235,8 +235,8 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 		highlightRenderState.activeTexture[0] = NULL;
 
-		highlightRenderState.activeVbo = gndObjectGridVbo;
-		renderer->drawLines<blib::VertexP3>(gndObjectGridVbo->getLength(), highlightRenderState);
+		highlightRenderState.activeVbo = gndGridVbo;
+		renderer->drawLines<blib::VertexP3>(gndGridVbo->getLength(), highlightRenderState);
 		highlightRenderState.activeVbo = NULL;
 
 
@@ -330,8 +330,8 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndTextureGridVbo = resourceManager->getResource<blib::VBO>();
 	gndTextureGridVbo->setVertexFormat<blib::VertexP3>();
 
-	gndObjectGridVbo = resourceManager->getResource<blib::VBO>();
-	gndObjectGridVbo->setVertexFormat<blib::VertexP3>();
+	gndGridVbo = resourceManager->getResource<blib::VBO>();
+	gndGridVbo->setVertexFormat<blib::VertexP3>();
 
 
 
@@ -385,8 +385,8 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswSoundTexture = resourceManager->getResource<blib::Texture>("assets/sound.png");
 
 	gndShadowDirty = false;
+	gndTextureGridDirty = true;
 	gndGridDirty = true;
-	objectGridDirty = true;
 
 
 
@@ -426,8 +426,8 @@ void MapRenderer::setMap(const Map* map)
 		for(size_t x = 0; x < gndChunks[y].size(); x++)
 			gndChunks[y][x] = new GndChunk(x*CHUNKSIZE,y*CHUNKSIZE, resourceManager);
 	gndShadowDirty = true;
+	gndTextureGridDirty = true;
 	gndGridDirty = true;
-	objectGridDirty = true;
 
 
 	//load textures if needed
@@ -537,7 +537,7 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 	};
 
 	new blib::BackgroundTask<NewChunkData>(app, [this, gnd, renderer] () {
-		Log::out << "Rebuilding chunk " << x << ", " << y << Log::newline;
+//		Log::out << "Rebuilding chunk " << x << ", " << y << Log::newline;
 		std::map<int, std::vector<GndVertex> > verts;
 		NewChunkData ret;
 		for(int x = this->x; x < glm::min(this->x+CHUNKSIZE, (int)gnd->cubes.size()); x++)
@@ -635,6 +635,8 @@ void MapRenderer::renderRsw( blib::Renderer* renderer )
 void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 {
 	if (!model)
+		return;
+	if (!model->model)
 		return;
 	if (!model->matrixCached)
 	{
@@ -740,7 +742,7 @@ void MapRenderer::resizeGl(int width, int height)
 void MapRenderer::setTileDirty(int xx, int yy)
 {
 	gndChunks[yy / CHUNKSIZE][xx / CHUNKSIZE]->dirty = true;
-	gndGridDirty = true;
+	gndTextureGridDirty = true;
 }
 
 void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)

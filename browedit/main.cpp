@@ -1,24 +1,45 @@
 #include <blib/config.h>
+#include <blib/util/FileSystem.h>
+#include <blib/Util.h>
+#include <blib/util/Log.h>
+
 #ifdef BLIB_WIN
 #include <Windows.h>
 #include <blib/platform/win32/Registry.h>
 #include <iostream>
 #endif
 
-#include <blib/util/FileSystem.h>
-#include <blib/Util.h>
 #include "BrowEdit.h"
+#ifndef _DEBUG
+#include <BugTrap.h>
+#endif
+
 #include <BroLib/GrfFileSystemHandler.h>
-#include <blib/util/Log.h>
 using blib::util::Log;
 
 
+#ifndef _DEBUG
+#pragma comment(lib, "BugTrap.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "version.lib")
+#pragma comment(lib, "wininet.lib")
+#endif
 
 void mergeConfig(Json::Value &config, const Json::Value &newConfig);
 
 
 int main()
 {
+#ifndef _DEBUG
+	BT_InstallSehFilter();
+	BT_SetAppName(("BrowEdit 2.0"));
+	BT_SetSupportEMail(("borfje@gmail.com"));
+	BT_SetFlags(BTF_DETAILEDMODE | BTF_EDITMAIL);
+	BT_SetSupportServer(("192.168.2.204"), 9999);
+	BT_SetSupportURL(("http://browedit.excalibur-nw.com"));
+#endif
 
 	blib::util::Thread::setMainThread();
 	Log::out<<"/============================================================\\"<<Log::newline;
