@@ -54,7 +54,7 @@ int main()
 	BT_SetAppName((appname.c_str()));
 	BT_SetSupportEMail(("borfje@gmail.com"));
 	BT_SetFlags(BTF_DETAILEDMODE | BTF_EDITMAIL);
-	BT_SetSupportServer(("192.168.2.204"), 9999);
+	BT_SetSupportServer(("borf.info"), 9999);
 	BT_SetSupportURL(("http://browedit.excalibur-nw.com"));
 #endif
 
