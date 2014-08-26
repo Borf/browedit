@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <blib/platform/win32/Registry.h>
 #include <iostream>
+#include "resource.h"
 #endif
 
 #include "BrowEdit.h"
@@ -32,9 +33,25 @@ void mergeConfig(Json::Value &config, const Json::Value &newConfig);
 
 int main()
 {
-#ifndef _DEBUG
+#if !defined(_DEBUG) && defined(BLIB_WIN)
+	HINSTANCE hInst = GetModuleHandle(0);
+	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA1), "data");
+	HGLOBAL hMem = LoadResource(NULL, hRes);
+	DWORD size = SizeofResource(NULL, hRes);
+	char* resText = (char*)LockResource(hMem);
+	char* text = (char*)malloc(size + 1);
+	memcpy(text, resText, size);
+	text[size] = 0;
+
+	std::string appname = "Browedit 2.0, " + std::string(text);
+
+	free(text);
+	FreeResource(hMem);
+
+
+
 	BT_InstallSehFilter();
-	BT_SetAppName(("BrowEdit 2.0"));
+	BT_SetAppName((appname.c_str()));
 	BT_SetSupportEMail(("borfje@gmail.com"));
 	BT_SetFlags(BTF_DETAILEDMODE | BTF_EDITMAIL);
 	BT_SetSupportServer(("192.168.2.204"), 9999);

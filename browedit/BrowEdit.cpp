@@ -565,6 +565,7 @@ void BrowEdit::update( double elapsedTime )
 		{
 			if (mouseState.leftButton && !lastMouseState.leftButton)
 			{//down
+				mouse3dstart = mapRenderer.mouse3d;
 			}
 			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//up
@@ -572,6 +573,19 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (mouseState.leftButton && lastMouseState.leftButton)
 			{//drag
+				glm::vec2 tl = glm::vec2(glm::floor(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x) / 10.0f) - 1, glm::floor(glm::min(mouse3dstart.z, mapRenderer.mouse3d.z) / 10.0f) - 1);
+				glm::vec2 br = glm::vec2(glm::ceil(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x)/10.0f), glm::ceil(glm::max(mouse3dstart.z, mapRenderer.mouse3d.z)/10.0f));
+				blib::math::Rectangle rect(tl, br);
+
+				for (int x = 0; x < map->getGnd()->width; x++)
+				{
+					for (int y = 0; y < map->getGnd()->height; y++)
+					{
+						map->getGnd()->cubes[x][y]->selected = rect.contains(glm::vec2(x, map->getGnd()->height - y));
+
+
+					}
+				}
 			}
 
 			if (!mouseState.rightButton && lastMouseState.rightButton)
@@ -592,22 +606,67 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (mouseState.rightButton && lastMouseState.rightButton)
 			{
-				std::vector<int> bla;
-				printf("%i", bla[10]);
+				bool around = false;
 
+				float diff = mouseState.y - lastMouseState.y;
 				bool moved = false;
 				for (int x = 0; x < map->getGnd()->width; x++)
 				{
 					for (int y = 0; y < map->getGnd()->height; y++)
 					{
 						if (!map->getGnd()->cubes[x][y]->selected)
+						{
+							if (around)
+							{
+								bool changedCorners[4] = { false, false, false, false };
+								for (int xx = -1; xx <= 1; xx++)
+								{
+									for (int yy = -1; yy <= 1; yy++)
+									{
+										if (x + xx < 0 || x + xx >= map->getGnd()->width ||
+											y + yy < 0 || y + yy >= map->getGnd()->height)
+											continue;
+										if (!map->getGnd()->cubes[x + xx][y + yy]->selected)
+											continue;
+
+										if (((xx == 1 && yy != 1) || (xx == 0 && yy == -1)) && !changedCorners[1])
+										{
+											map->getGnd()->cubes[x][y]->h2 += diff;
+											changedCorners[1] = true;
+										}
+										if (((xx == 1 && yy != -1) || (xx == 0 && yy == 1)) && !changedCorners[3])
+										{
+											map->getGnd()->cubes[x][y]->h4 += diff;
+											changedCorners[3] = true;
+										}
+
+										if (((xx == -1 && yy != 1) || (xx == 0 && yy == -1)) && !changedCorners[0])
+										{
+											map->getGnd()->cubes[x][y]->h1 += diff;
+											changedCorners[0] = true;
+										}
+
+										if (((xx == -1 && yy != -1) || (xx == 0 && yy == 1)) && !changedCorners[2])
+										{
+											map->getGnd()->cubes[x][y]->h3 += diff;
+											changedCorners[2] = true;
+										}
+
+									}
+								}
+
+
+							}
+
 							continue;
+						}
 						moved = true;
 
-						map->getGnd()->cubes[x][y]->h1 += mouseState.y - lastMouseState.y;
-						map->getGnd()->cubes[x][y]->h2 += mouseState.y - lastMouseState.y;
-						map->getGnd()->cubes[x][y]->h3 += mouseState.y - lastMouseState.y; 
-						map->getGnd()->cubes[x][y]->h4 += mouseState.y - lastMouseState.y;
+
+						map->getGnd()->cubes[x][y]->h1 += diff;
+						map->getGnd()->cubes[x][y]->h2 += diff;
+						map->getGnd()->cubes[x][y]->h3 += diff;
+						map->getGnd()->cubes[x][y]->h4 += diff;
 					}
 				}
 			}
