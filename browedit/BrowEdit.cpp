@@ -606,7 +606,7 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (mouseState.rightButton && lastMouseState.rightButton)
 			{
-				bool around = false;
+				bool around = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("heighttools/connect"))->getValue();
 
 				float diff = mouseState.y - lastMouseState.y;
 				bool moved = false;

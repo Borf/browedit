@@ -138,5 +138,18 @@
 
 		]
 
+	},
+	{
+		"name" : "heighttools",
+		"type" : "menu",
+		"subitems" :
+		[
+			{
+				"name" : "connect",
+				"type" : "toggle",
+				"initial" : true,
+			}
+		]
+
 	}
 ]
