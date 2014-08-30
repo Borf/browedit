@@ -106,6 +106,8 @@ public:
 	std::vector<ObjectEditAction*> objectEditActions;
 	SelectObjectAction* selectObjectAction;
 
+	std::vector<glm::ivec2> selectLasso;
+
 	enum class ObjectEditModeTool
 	{
 		Translate,

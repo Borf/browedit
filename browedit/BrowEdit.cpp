@@ -26,6 +26,7 @@
 #include <blib/Window.h>
 #include <blib/Color.h>
 #include <blib/Math.h>
+#include <blib/math/Polygon.h>
 #include <blib/Util.h>
 #include <blib/ResourceManager.h>
 #include <blib/wm/ToggleMenuItem.h>
@@ -402,7 +403,7 @@ void BrowEdit::update( double elapsedTime )
 		{
 			if (keyState.isPressed(blib::Key::DEL) && !lastKeyState.isPressed(blib::Key::DEL))
 			{
-				for (int i = 0; i < map->getRsw()->objects.size(); i++)
+				for (int i = 0; i < (int)map->getRsw()->objects.size(); i++)
 				{
 					if (map->getRsw()->objects[i]->selected)
 					{
@@ -569,21 +570,56 @@ void BrowEdit::update( double elapsedTime )
 			}
 			else if (!mouseState.leftButton && lastMouseState.leftButton)
 			{//up
-
+				if (!selectLasso.empty())
+				{
+					blib::math::Polygon polygon;
+					for (size_t i = 0; i < selectLasso.size(); i++)
+						polygon.push_back(glm::vec2(selectLasso[i]));
+					for (int x = 0; x < map->getGnd()->width; x++)
+					{
+						for (int y = 0; y < map->getGnd()->height; y++)
+						{
+							map->getGnd()->cubes[x][y]->selected = polygon.contains(glm::vec2(x, y));
+						}
+					}
+					for (size_t i = 0; i < selectLasso.size(); i++)
+						map->getGnd()->cubes[selectLasso[i].x][selectLasso[i].y]->selected = true;
+					selectLasso.clear();
+				}
 			}
 			else if (mouseState.leftButton && lastMouseState.leftButton)
 			{//drag
-				glm::vec2 tl = glm::vec2(glm::floor(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x) / 10.0f) - 1, glm::floor(glm::min(mouse3dstart.z, mapRenderer.mouse3d.z) / 10.0f) - 1);
-				glm::vec2 br = glm::vec2(glm::ceil(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x)/10.0f), glm::ceil(glm::max(mouse3dstart.z, mapRenderer.mouse3d.z)/10.0f));
-				blib::math::Rectangle rect(tl, br);
-
-				for (int x = 0; x < map->getGnd()->width; x++)
+				if (keyState.isPressed(blib::Key::CONTROL))
 				{
-					for (int y = 0; y < map->getGnd()->height; y++)
+					int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
+					int cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
+					if (cursorX >= 0 && cursorX < map->getGnd()->width && cursorY >= 0 && cursorY < map->getGnd()->height)
 					{
-						map->getGnd()->cubes[x][y]->selected = rect.contains(glm::vec2(x, map->getGnd()->height - y));
+						if (selectLasso.empty())
+						{
+							selectLasso.push_back(glm::ivec2(cursorX, cursorY));
+						}
+						else
+						{
+							if (selectLasso[selectLasso.size() - 1] != glm::ivec2(cursorX, cursorY))
+							{
+								selectLasso.push_back(glm::ivec2(cursorX, cursorY));
+							}
+						}
+					}
+				}
+				else
+				{
+					glm::vec2 tl = glm::vec2(glm::floor(glm::min(mouse3dstart.x, mapRenderer.mouse3d.x) / 10.0f) - 1, glm::floor(glm::min(mouse3dstart.z, mapRenderer.mouse3d.z) / 10.0f) - 1);
+					glm::vec2 br = glm::vec2(glm::ceil(glm::max(mouse3dstart.x, mapRenderer.mouse3d.x) / 10.0f), glm::ceil(glm::max(mouse3dstart.z, mapRenderer.mouse3d.z) / 10.0f));
+					blib::math::Rectangle rect(tl, br);
 
-
+					for (int x = 0; x < map->getGnd()->width; x++)
+					{
+						for (int y = 0; y < map->getGnd()->height; y++)
+						{
+							map->getGnd()->cubes[x][y]->selected = rect.contains(glm::vec2(x, map->getGnd()->height - y));
+						}
 					}
 				}
 			}
@@ -598,7 +634,9 @@ void BrowEdit::update( double elapsedTime )
 						if (!map->getGnd()->cubes[x][y]->selected)
 							continue;
 						moved = true;
-						mapRenderer.setTileDirty(x, y);
+						for (int xx = -1; xx <= 1; xx++)
+							for (int yy = -1; yy <= 1; yy++)
+								mapRenderer.setTileDirty(x+xx, y+yy);
 					}
 				}
 				if (moved)
@@ -818,6 +856,27 @@ void BrowEdit::draw()
 		{
 			std::vector<blib::VertexP3> verts;
 			Gnd* gnd = map->getGnd();
+
+			if (!selectLasso.empty())
+			{
+				for (size_t i = 0; i < selectLasso.size(); i++)
+				{
+					int x = selectLasso[i].x;
+					int y = selectLasso[i].y;
+					Gnd::Cube* cube = gnd->cubes[x][y];
+
+					blib::VertexP3 v1(glm::vec3(10 * x, -cube->h3 + 0.1f, 10 * gnd->height - 10 * y));
+					blib::VertexP3 v2(glm::vec3(10 * x + 10, -cube->h4 + 0.1f, 10 * gnd->height - 10 * y));
+					blib::VertexP3 v3(glm::vec3(10 * x, -cube->h1 + 0.1f, 10 * gnd->height - 10 * y + 10));
+					blib::VertexP3 v4(glm::vec3(10 * x + 10, -cube->h2 + 0.1f, 10 * gnd->height - 10 * y + 10));
+
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+					verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+				}
+			}
+
+
+
 
 			for (int x = 0; x < gnd->width; x++)
 			{

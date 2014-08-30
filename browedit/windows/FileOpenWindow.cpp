@@ -21,6 +21,8 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 
 	for (size_t i = 0; i < tmpFiles.size(); i++)
 	{
+		if (tmpFiles[i].size() < 4)
+			continue;
 		std::transform(tmpFiles[i].begin(), tmpFiles[i].end(), tmpFiles[i].begin(), ::tolower);
 		if (tmpFiles[i].substr(tmpFiles[i].length() - 4, 4) == ".rsw")
 		{
