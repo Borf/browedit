@@ -65,7 +65,7 @@
       <Profile>true</Profile>
     </Link>
     <PreBuildEvent>
-      <Command>$(SolutionDir)\svnversion "$(ProjectPath)" &gt; $(MSBuildProjectDirectory)\version.h</Command>
+      <Command>"$(ProjectDir)\vs2013\svnversion.exe" "$(ProjectPath)" &gt; $(MSBuildProjectDirectory)\version.h</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -89,6 +89,9 @@
       <AdditionalDependencies>brolib.lib;blib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>
+    <PreBuildEvent>
+      <Command>"$(ProjectDir)..\vs2013\svnversion.exe" "$(ProjectPath)" &gt; "$(MSBuildProjectDirectory)\version.h"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\blib\version.h" />
