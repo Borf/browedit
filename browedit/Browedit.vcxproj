@@ -65,7 +65,7 @@
       <Profile>true</Profile>
     </Link>
     <PreBuildEvent>
-      <Command>"$(ProjectDir)\vs2013\svnversion.exe" "$(ProjectPath)" &gt; $(MSBuildProjectDirectory)\version.h</Command>
+      <Command>"$(ProjectDir)..\vs2013\svnversion.exe" "$(ProjectPath)" &gt; "$(MSBuildProjectDirectory)\version.h"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -120,9 +120,12 @@
     <ClCompile Include="actions\TextureEditAction.cpp" />
     <ClCompile Include="BrowEdit.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="HeightEdit.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ObjectEdit.cpp" />
     <ClCompile Include="RotateTool.cpp" />
     <ClCompile Include="ScaleTool.cpp" />
+    <ClCompile Include="TextureEdit.cpp" />
     <ClCompile Include="TranslatorTool.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\MessageWindow.cpp" />

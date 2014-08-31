@@ -30,5 +30,5 @@ public:
 	}
 
 	void save(const std::string &filename);
-
+	bool inMap(int xx, int yy);
 };

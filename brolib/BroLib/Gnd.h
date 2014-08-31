@@ -45,7 +45,14 @@ public:
 		{
 			selected = rand()%100 == 0;
 		}
-		float h1,h2,h3,h4;
+		union 
+		{
+			struct
+			{
+				float h1, h2, h3, h4;
+			};
+			float height[4];
+		};
 		int tileUp, tileSide, tileFront;
 		bool selected;
 	};

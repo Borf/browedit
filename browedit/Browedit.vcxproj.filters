@@ -137,6 +137,15 @@
     <ClCompile Include="windows\MessageWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="TextureEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\shaders\gnd.frag">

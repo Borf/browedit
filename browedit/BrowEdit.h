@@ -72,6 +72,10 @@ public:
 
 	virtual void init();
 	virtual void update( double elapsedTime );
+
+	void textureEditUpdate();
+	void objectEditUpdate();
+
 	virtual void draw();
 
 	void loadMap(std::string fileName);
@@ -132,7 +136,7 @@ public:
 	void perform(Action* action);
 	void undo();
 	void redo();
-
+	void heightEditUpdate();
 	Rsw::Model* newModel;
 };
 

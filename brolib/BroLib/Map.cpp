@@ -42,5 +42,10 @@ void Map::save(const std::string &filename)
 	gat->save(this->fileName);
 }
 
+bool Map::inMap(int x, int y)
+{
+	return x >= 0 && x < gnd->width && y >= 0 && y < gnd->height;
+}
+
 template class blib::BackgroundTask<int>;
 
