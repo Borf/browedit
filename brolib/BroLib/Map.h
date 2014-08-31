@@ -1,9 +1,13 @@
 #pragma once
 
+
+#include <vector>
 #include <string>
 class Gnd;
 class Rsw;
 class Gat;
+
+#include "Gnd.h"
 
 class Map
 {
@@ -31,4 +35,11 @@ public:
 
 	void save(const std::string &filename);
 	bool inMap(int xx, int yy);
+	void saveHeightmap(const std::string &fileName);
+	void loadHeightmap(const std::string &fileName);
+
+
+	float heightImportMin;
+	float heightImportMax;
+	std::vector<std::vector<Gnd::Cube> > heightImportCubes;
 };

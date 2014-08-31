@@ -19,6 +19,14 @@
 			{
 				"name" : "save as",
 				"type" : "item"
+			},
+			{
+				"name" : "save heightmap",
+				"type" : "item"
+			},
+			{
+				"name" : "load heightmap",
+				"type" : "item"
 			}
 		]
 	},

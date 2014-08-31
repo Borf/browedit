@@ -7,6 +7,11 @@
 #include <blib/util/Log.h>
 using blib::util::Log;
 
+
+#include <blib/util/stb_image_create.h>
+#include <blib/util/stb_image.h>
+
+
 Map::Map( const std::string &fileName )
 {
 	this->fileName = fileName;
@@ -45,6 +50,91 @@ void Map::save(const std::string &filename)
 bool Map::inMap(int x, int y)
 {
 	return x >= 0 && x < gnd->width && y >= 0 && y < gnd->height;
+}
+
+void Map::saveHeightmap( const std::string &fileName )
+{
+	char* data = new char[(gnd->width * 2 )  * (gnd->height * 2) * 3];
+	float minHeight = 999999;
+	float maxHeight = -999999;
+	for (int y = 0; y < gnd->height; y++)
+	{
+		for (int x = 0; x < gnd->width; x++)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				minHeight = glm::min(minHeight, gnd->cubes[x][y]->height[i]);
+				maxHeight = glm::max(maxHeight, gnd->cubes[x][y]->height[i]);
+			}
+		}
+	}
+
+	for (int y = 0; y < gnd->height; y++)
+	{
+		for (int x = 0; x < gnd->width; x++)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				int xx = i % 2;
+				int yy = i / 2;
+				int index = ((2 * x + xx) + (gnd->width * 2) * (2 * y + yy)) * 3;
+				for (int ii = 0; ii < 3; ii++)
+					data[index+ii] = (gnd->cubes[x][y]->height[i] - minHeight) * (255 / (maxHeight - minHeight));
+			}
+		}
+	}
+
+	stbi_write_png(fileName.c_str(), gnd->width * 2, gnd->height * 2, 3, data, 0);
+	delete[] data;
+}
+
+void Map::loadHeightmap(const std::string &fileName)
+{
+	int width, height, comp;
+
+	unsigned char* data = stbi_load(fileName.c_str(), &width, &height, &comp, 3);
+	if (!data || width != gnd->width * 2 || height != gnd->height * 2)
+	{
+		if (data)
+			stbi_image_free(data);
+		return;
+	}
+
+
+	heightImportCubes.resize(width/2, std::vector<Gnd::Cube>(height/2));
+
+	float minHeight = 999999;
+	float maxHeight = -999999;
+	for (int y = 0; y < gnd->height; y++)
+	{
+		for (int x = 0; x < gnd->width; x++)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				minHeight = glm::min(minHeight, gnd->cubes[x][y]->height[i]);
+				maxHeight = glm::max(maxHeight, gnd->cubes[x][y]->height[i]);
+			}
+		}
+	}
+
+	for (int y = 0; y < gnd->height; y++)
+	{
+		for (int x = 0; x < gnd->width; x++)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				int xx = i % 2;
+				int yy = i / 2;
+				int index = ((2 * x + xx) + (gnd->width * 2) * (2 * y + yy)) * 3;
+				heightImportCubes[x][y].height[i] = data[index] / 255.0f;
+			}
+		}
+	}
+
+	heightImportMin = 350;
+	heightImportMax = 1050;
+
+	stbi_image_free(data);
 }
 
 template class blib::BackgroundTask<int>;

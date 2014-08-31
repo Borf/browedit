@@ -223,6 +223,26 @@ void BrowEdit::init()
 		});
 	});
 
+	rootMenu->setAction("file/save heightmap", [this](){
+		MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+		new blib::BackgroundTask<bool>(this, [this]()
+		{
+			if (map)
+				map->saveHeightmap(config["data"]["ropath"].asString() + "/" + map->getFileName() + ".height.png");
+			return true;
+		}, [dialog](bool bla)	{	dialog->close();	});
+	});
+
+	rootMenu->setAction("file/load heightmap", [this](){
+		MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+		new blib::BackgroundTask<bool>(this, [this]()
+		{
+			if (map)
+				map->loadHeightmap(config["data"]["ropath"].asString() + "/" + map->getFileName() + ".height.png");
+			return true;
+		}, [dialog](bool bla)	{	dialog->close();	});
+	});
+
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
 	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
@@ -314,18 +334,36 @@ void BrowEdit::update( double elapsedTime )
 			}
 		}*/
 
-		if (editMode == EditMode::TextureEdit)
-			textureEditUpdate();
-		
-		if (editMode == EditMode::ObjectEdit)
-			objectEditUpdate();
-
-		if (editMode == EditMode::HeightEdit)
-			heightEditUpdate();
+		if (!map->heightImportCubes.empty())
 		{
+			if (mouseState.rightButton)
+			{
+				if (keyState.isPressed(blib::Key::SHIFT))
+					map->heightImportMax -= (mouseState.y - lastMouseState.y) * 0.1f;
+				else
+					map->heightImportMin -= (mouseState.y - lastMouseState.y) * 0.1f;
+			}
 
+			if (keyState.isPressed(blib::Key::ENTER))
+			{
+				for (int x = 0; x < map->getGnd()->width; x++)
+				{
+					for (int y = 0; y < map->getGnd()->height; y++)
+					{
+						for (int i = 0; i < 4; i++)
+							map->getGnd()->cubes[x][y]->height[i] = map->heightImportCubes[x][y].height[i];
+						mapRenderer.setTileDirty(x, y);
+					}
+				}
+				map->heightImportCubes.clear();
+			}
 		}
-
+		else if (editMode == EditMode::TextureEdit)
+			textureEditUpdate();
+		else if (editMode == EditMode::ObjectEdit)
+			objectEditUpdate();
+		else if (editMode == EditMode::HeightEdit)
+			heightEditUpdate();
 	}
 	lastmouse3d = mapRenderer.mouse3d;
 	lastKeyState = keyState;
@@ -519,8 +557,32 @@ void BrowEdit::draw()
 			renderer->drawTriangles(verts, highlightRenderState);
 		}
 
+		if (!map->heightImportCubes.empty())
+		{
+			std::vector<blib::VertexP3> verts;
+			for (int x = 0; x < map->heightImportCubes.size(); x++)
+			{
+				for (int y = 0; y < map->heightImportCubes[x].size(); y++)
+				{
+					Gnd::Cube* cube = &map->heightImportCubes[x][y];
+					blib::VertexP3 v1(glm::vec3(10 * x, -cube->h3 * (map->heightImportMax - map->heightImportMin) + map->heightImportMin, 10 * map->getGnd()->height - 10 * y));
+					blib::VertexP3 v2(glm::vec3(10 * x + 10, -cube->h4 * (map->heightImportMax - map->heightImportMin) + map->heightImportMin, 10 * map->getGnd()->height - 10 * y));
+					blib::VertexP3 v3(glm::vec3(10 * x, -cube->h1  * (map->heightImportMax - map->heightImportMin) + map->heightImportMin, 10 * map->getGnd()->height - 10 * y + 10));
+					blib::VertexP3 v4(glm::vec3(10 * x + 10, -cube->h2 * (map->heightImportMax - map->heightImportMin) + map->heightImportMin, 10 * map->getGnd()->height - 10 * y + 10));
 
-
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+					verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+				}
+			}
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.9f, 0.5f, 0.5f, 0.65f));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+			highlightRenderState.activeTexture[0] = NULL;
+			highlightRenderState.activeVbo = NULL;
+			renderer->drawTriangles(verts, highlightRenderState);
+		}
 		spriteBatch->begin();
 
 
