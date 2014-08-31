@@ -351,7 +351,7 @@ void BrowEdit::update( double elapsedTime )
 					for (int y = 0; y < map->getGnd()->height; y++)
 					{
 						for (int i = 0; i < 4; i++)
-							map->getGnd()->cubes[x][y]->height[i] = map->heightImportCubes[x][y].height[i];
+							map->getGnd()->cubes[x][y]->height[i] = -(-map->heightImportCubes[x][y].height[i] * (map->heightImportMax - map->heightImportMin) + map->heightImportMin);
 						mapRenderer.setTileDirty(x, y);
 					}
 				}
