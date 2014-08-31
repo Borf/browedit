@@ -272,6 +272,17 @@ void BrowEdit::update( double elapsedTime )
 {
 	if(keyState.isPressed(blib::Key::ESC))
 		running = false;
+	if (keyState.isPressed(blib::Key::ALT) && mouseState.rightButton)
+	{
+		mouseState.middleButton = true;
+		mouseState.rightButton = false;
+	}
+	if (lastKeyState.isPressed(blib::Key::ALT) && lastMouseState.rightButton)
+	{
+		lastMouseState.middleButton = true;
+		lastMouseState.rightButton = false;
+	}
+
 
 	camera->update(elapsedTime);
 
@@ -281,6 +292,8 @@ void BrowEdit::update( double elapsedTime )
 
 	if (mouseState.leftButton)
 		mouseRay = mapRenderer.mouseRay;
+
+
 
 
 	if(mouseState.middleButton)
