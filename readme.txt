@@ -65,3 +65,40 @@ Wall edit (F4)
 --------------
 not implemented yet
 
+
+
+
+
+
+
+=============================================================
+
+Plugin Interface
+----------------
+
+browedit :
+{
+	version,	//contains browedit version
+	'map' :
+	{
+		save(),																			//TODO
+		load(),																			//TODO
+		'gnd' : // API related to the floor height, textures & shadows
+		{
+			getWidth(),		/returns the width of the map
+			getHeight(),	//returns the height of the map
+		},
+		'rsw' :	// API related to objects
+		{
+			
+		}
+	},
+	'camera' : //camera controls
+	{
+	
+	}
+	'wm' : 																			//TODO
+	{
+		showMessage(text),															//TODO
+	}
+}

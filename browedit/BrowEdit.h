@@ -8,6 +8,8 @@
 #include "RotateTool.h"
 #include "ScaleTool.h"
 
+#include <v8.h>
+
 namespace blib { 
 	class Texture; 
 	namespace wm { class WM; class Menu; }
@@ -34,6 +36,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		GatEdit,
 		WallEdit,
 		HeightEdit,
+		DetailHeightEdit,
 	};
 
 	EditMode editMode;
@@ -67,7 +70,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	TextureWindow* textureWindow;
 	ObjectWindow* objectWindow;
 public:
-	BrowEdit(const Json::Value &config);
+	BrowEdit(const Json::Value &config, v8::Isolate* isolate);
 	~BrowEdit(void);
 
 	virtual void init();
@@ -137,6 +140,19 @@ public:
 	void undo();
 	void redo();
 	void heightEditUpdate();
+	void detailHeightEditUpdate();
 	Rsw::Model* newModel;
+
+
+
+
+	v8::Isolate* isolate;
+//	v8::Isolate::Scope* isolate_scope;
+	//v8::HandleScope* handle_scope;
+
+	v8::Handle<v8::Object> brow;
+	int version;
+	void loadJsPlugins();
+
 };
 

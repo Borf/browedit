@@ -10,6 +10,7 @@
 #include "resource.h"
 #endif
 
+#include <v8.h>
 #include "BrowEdit.h"
 #ifndef _DEBUG
 #include <BugTrap.h>
@@ -31,9 +32,16 @@ using blib::util::Log;
 void mergeConfig(Json::Value &config, const Json::Value &newConfig);
 
 
+#pragma comment(lib, "icui18n.lib")
+#pragma comment(lib, "icuuc.lib")
+#pragma comment(lib, "v8_base.lib")
+#pragma comment(lib, "v8_libbase.lib")
+#pragma comment(lib, "v8_nosnapshot.lib")
+#pragma comment(lib, "v8_libplatform.lib")
+
 int main()
 {
-#if !defined(_DEBUG) && defined(BLIB_WIN)
+#if defined(BLIB_WIN)
 	HINSTANCE hInst = GetModuleHandle(0);
 	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA1), "data");
 	HGLOBAL hMem = LoadResource(NULL, hRes);
@@ -43,13 +51,14 @@ int main()
 	memcpy(text, resText, size);
 	text[size] = 0;
 
+	int version = atoi(text);
 	std::string appname = "Browedit 2.0, " + std::string(text);
 
 	free(text);
 	FreeResource(hMem);
 
 
-
+#if !defined(_DEBUG)
 	BT_InstallSehFilter();
 	BT_SetAppName((appname.c_str()));
 	BT_SetSupportEMail(("borfje@gmail.com"));
@@ -57,7 +66,7 @@ int main()
 	BT_SetSupportServer(("borf.info"), 9999);
 	BT_SetSupportURL(("http://browedit.excalibur-nw.com"));
 #endif
-
+#endif
 	blib::util::Thread::setMainThread();
 	Log::out<<"/============================================================\\"<<Log::newline;
 	Log::out<<"||     ____                    ______    _ _ _              ||"<<Log::newline;
@@ -121,7 +130,17 @@ int main()
 		blib::util::fixConsole();
 
 
-	BrowEdit* app = new BrowEdit(config);
+
+
+	v8::Isolate* isolate = v8::Isolate::New();
+	v8::Isolate::Scope isolate_scope(isolate);
+	v8::HandleScope handle_scope(isolate);
+	v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
+	v8::Local<v8::Context> context = v8::Context::New(isolate, NULL, global);
+	v8::Context::Scope context_scope(context);
+
+	BrowEdit* app = new BrowEdit(config, isolate);
+	app->version = version;
 	app->start();
 	delete app;
 	return 0;

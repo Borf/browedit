@@ -9,7 +9,7 @@
 		]
 	},
 	"moveconsole" : true,
-	"defaultmap" : "nyd_dun02",
+	"defaultmap" : "prontera",
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
 	"fov" : 45,

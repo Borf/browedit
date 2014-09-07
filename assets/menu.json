@@ -115,6 +115,12 @@
 				"type" : "toggle",
 				"initial" : false,
 				"key" : "f3"
+			},
+			{
+				"name" : "detail heightedit",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "f4"
 			}
 
 		]
@@ -155,7 +161,7 @@
 			{
 				"name" : "connect",
 				"type" : "toggle",
-				"initial" : true,
+				"initial" : true
 			}
 		]
 

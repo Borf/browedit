@@ -46,9 +46,10 @@ using blib::util::Log;
 #endif
 
 
-BrowEdit::BrowEdit(const Json::Value &config) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
+BrowEdit::BrowEdit(const Json::Value &config, v8::Isolate* isolate) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
 {
 	this->config = config;
+	this->isolate = isolate;
 
 	appSetup.width = config["resolution"][0u].asInt();
 	appSetup.height = config["resolution"][1u].asInt();
@@ -206,6 +207,9 @@ void BrowEdit::init()
 	objectWindow->hide();
 
 
+	loadJsPlugins();
+
+
 	rootMenu->setAction("file/open", [this](){
 		new FileOpenWindow(resourceManager, this);
 	});
@@ -248,8 +252,9 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
 	rootMenu->setAction("editmode/heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::HeightEdit));
+	rootMenu->setAction("editmode/detail heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::DetailHeightEdit));
 
-
+	
 	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
 	rootMenu->setAction("objecttools/scale", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Scale));
 	rootMenu->setAction("objecttools/rotate", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Rotate));
@@ -268,19 +273,15 @@ void BrowEdit::init()
 
 }
 
+
 void BrowEdit::update( double elapsedTime )
 {
 	if(keyState.isPressed(blib::Key::ESC))
 		running = false;
-	if (keyState.isPressed(blib::Key::ALT) && mouseState.rightButton)
+	if (keyState.isPressed(blib::Key::ALT))
 	{
-		mouseState.middleButton = true;
-		mouseState.rightButton = false;
-	}
-	if (lastKeyState.isPressed(blib::Key::ALT) && lastMouseState.rightButton)
-	{
-		lastMouseState.middleButton = true;
-		lastMouseState.rightButton = false;
+		mouseState.middleButton = mouseState.rightButton;
+		lastMouseState.middleButton = lastMouseState.rightButton;
 	}
 
 
@@ -377,6 +378,8 @@ void BrowEdit::update( double elapsedTime )
 			objectEditUpdate();
 		else if (editMode == EditMode::HeightEdit)
 			heightEditUpdate();
+		else if (editMode == EditMode::DetailHeightEdit)
+			detailHeightEditUpdate();
 	}
 	lastmouse3d = mapRenderer.mouse3d;
 	lastKeyState = keyState;
@@ -617,6 +620,8 @@ void BrowEdit::draw()
 			editModeString = "GAT Edit";
 		else if (editMode == EditMode::HeightEdit)
 			editModeString = "Height Edit";
+		else if (editMode == EditMode::DetailHeightEdit)
+			editModeString = "Detailed Height Edit";
 		else
 			editModeString = "Unknown editmode: " + blib::util::toString((int)editMode);
 
@@ -731,4 +736,3 @@ void BrowEdit::redo()
 		a->perform(map, mapRenderer);
 	}
 }
-
