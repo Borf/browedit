@@ -143,6 +143,9 @@ public:
 	void detailHeightEditUpdate();
 	Rsw::Model* newModel;
 
+	glm::ivec2 detailHeightCursor;
+	glm::vec2 detailHeightOffset;
+
 
 
 

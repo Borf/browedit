@@ -289,7 +289,7 @@ void BrowEdit::update( double elapsedTime )
 
 	mapRenderer.cameraMatrix = camera->getMatrix();
 	mapRenderer.drawTextureGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && editMode == EditMode::TextureEdit; // TODO: fix this
-	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit); // TODO: fix this
+	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit || editMode == EditMode::DetailHeightEdit); // TODO: fix this
 
 	if (mouseState.leftButton)
 		mouseRay = mapRenderer.mouseRay;
@@ -573,12 +573,93 @@ void BrowEdit::draw()
 			renderer->drawTriangles(verts, highlightRenderState);
 		}
 
+		if (editMode == EditMode::DetailHeightEdit)
+		{
+			std::vector<blib::VertexP3> verts;
+			Gnd* gnd = map->getGnd();
+			if (map->inMap(cursorX, cursorY))
+			{
+				if (!mouseState.leftButton)
+				{
+					detailHeightCursor = glm::ivec2(cursorX, cursorY);
+					float cursorXOff = -(cursorX - (mapRenderer.mouse3d.x / 10));
+					float cursorYOff = cursorY - (map->getGnd()->height - (mapRenderer.mouse3d.z / 10));
+					detailHeightOffset = glm::vec2(cursorXOff, cursorYOff);
+				}
+				auto drawTriangle = [&verts, this, gnd](int x, int y, float xoff, float yoff){
+					if (!map->inMap(x, y))
+						return;
+					Gnd::Cube* cube = gnd->cubes[x][y];
+					blib::VertexP3 allVerts[4] = {
+						blib::VertexP3(glm::vec3(10 * x, -cube->h3 + 0.1f, 10 * gnd->height - 10 * y)),
+						blib::VertexP3(glm::vec3(10 * x + 10, -cube->h4 + 0.1f, 10 * gnd->height - 10 * y)),
+						blib::VertexP3(glm::vec3(10 * x, -cube->h1 + 0.1f, 10 * gnd->height - 10 * y + 10)),
+						blib::VertexP3(glm::vec3(10 * x + 10, -cube->h2 + 0.1f, 10 * gnd->height - 10 * y + 10))
+					};
+					int primIndex = 0;
+					if (xoff < 0.5 && yoff < 0.5)
+						primIndex = 0;
+					else if (xoff > 0.5 && yoff < 0.5)
+						primIndex = 1;
+					else if (xoff < 0.5 && yoff > 0.5)
+						primIndex = 2;
+					else if (xoff > 0.5 && yoff > 0.5)
+						primIndex = 3;
+
+					verts.push_back(allVerts[primIndex]);
+					if (xoff < 0.5)
+						verts.push_back(allVerts[(primIndex + 1)%4]);
+					else
+						verts.push_back(allVerts[(primIndex + 3) % 4]);
+					verts.push_back(allVerts[(primIndex + 2) % 4]);
+				};
+
+
+
+				drawTriangle(detailHeightCursor.x, detailHeightCursor.y, detailHeightOffset.x, detailHeightOffset.y);
+				if (dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("heighttools/connect"))->getValue())
+				{
+					if (detailHeightOffset.x < 0.5)
+					{
+						drawTriangle(detailHeightCursor.x - 1, detailHeightCursor.y, 1, detailHeightOffset.y);
+						if (detailHeightOffset.y > 0.5)
+							drawTriangle(detailHeightCursor.x - 1, detailHeightCursor.y - 1, 1, 0);
+						else
+							drawTriangle(detailHeightCursor.x - 1, detailHeightCursor.y + 1, 1, 1);
+					}
+					else
+					{
+						drawTriangle(detailHeightCursor.x + 1, detailHeightCursor.y, 0, detailHeightOffset.y);
+						if (detailHeightOffset.y > 0.5)
+							drawTriangle(detailHeightCursor.x + 1, detailHeightCursor.y - 1, 0, 0);
+						else
+							drawTriangle(detailHeightCursor.x + 1, detailHeightCursor.y + 1, 0, 1);
+					}
+
+					if (detailHeightOffset.y > 0.5)
+						drawTriangle(detailHeightCursor.x, detailHeightCursor.y - 1, detailHeightOffset.x, 0);
+					else
+						drawTriangle(detailHeightCursor.x, detailHeightCursor.y + 1, detailHeightOffset.x, 1);
+				}
+
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.5f, 0.9f, 0.5f, 0.65f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+				highlightRenderState.activeTexture[0] = NULL;
+				highlightRenderState.activeVbo = NULL;
+				renderer->drawTriangles(verts, highlightRenderState);
+			}
+		}
+
+
 		if (!map->heightImportCubes.empty())
 		{
 			std::vector<blib::VertexP3> verts;
-			for (int x = 0; x < map->heightImportCubes.size(); x++)
+			for (size_t x = 0; x < map->heightImportCubes.size(); x++)
 			{
-				for (int y = 0; y < map->heightImportCubes[x].size(); y++)
+				for (size_t y = 0; y < map->heightImportCubes[x].size(); y++)
 				{
 					Gnd::Cube* cube = &map->heightImportCubes[x][y];
 					blib::VertexP3 v1(glm::vec3(10 * x, -cube->h3 * (map->heightImportMax - map->heightImportMin) + map->heightImportMin, 10 * map->getGnd()->height - 10 * y));
