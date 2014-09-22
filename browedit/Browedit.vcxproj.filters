@@ -152,6 +152,9 @@
     <ClCompile Include="BrowEditJsApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WallEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\shaders\gnd.frag">

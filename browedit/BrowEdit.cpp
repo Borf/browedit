@@ -253,6 +253,7 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
 	rootMenu->setAction("editmode/heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::HeightEdit));
 	rootMenu->setAction("editmode/detail heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::DetailHeightEdit));
+	rootMenu->setAction("editmode/walledit", std::bind(&BrowEdit::setEditMode, this, EditMode::WallEdit));
 
 	
 	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
@@ -289,7 +290,7 @@ void BrowEdit::update( double elapsedTime )
 
 	mapRenderer.cameraMatrix = camera->getMatrix();
 	mapRenderer.drawTextureGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && editMode == EditMode::TextureEdit; // TODO: fix this
-	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit || editMode == EditMode::DetailHeightEdit); // TODO: fix this
+	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit || editMode == EditMode::DetailHeightEdit || editMode == EditMode::WallEdit); // TODO: fix this
 
 	if (mouseState.leftButton)
 		mouseRay = mapRenderer.mouseRay;
@@ -380,6 +381,8 @@ void BrowEdit::update( double elapsedTime )
 			heightEditUpdate();
 		else if (editMode == EditMode::DetailHeightEdit)
 			detailHeightEditUpdate();
+		else if (editMode == EditMode::WallEdit)
+			wallEditUpdate();
 	}
 	lastmouse3d = mapRenderer.mouse3d;
 	lastKeyState = keyState;
@@ -654,6 +657,99 @@ void BrowEdit::draw()
 		}
 
 
+		if (editMode == EditMode::WallEdit)
+		{
+
+			if (!mouseState.leftButton && !lastMouseState.leftButton)
+			{
+				int lastCursorX = (int)glm::round(mouse3dstart.x / 10)-1;
+				int lastCursorY = map->getGnd()->height - (int)glm::round(mouse3dstart.z / 10);
+				int cursorX = (int)glm::round(mapRenderer.mouse3d.x / 10)-1;
+				int cursorY = map->getGnd()->height - (int)glm::round(mapRenderer.mouse3d.z / 10);
+
+
+				std::vector<blib::VertexP3> verts;
+				{
+					blib::VertexP3 v1(glm::vec3(10 * (cursorX + 1), 0, 10 * map->getGnd()->height - 10 * cursorY));
+					blib::VertexP3 v2(glm::vec3(10 * (cursorX + 1), 500, 10 * map->getGnd()->height - 10 * cursorY));
+
+					blib::VertexP3 v3(glm::vec3(10 * (cursorX + 0.5f), 0, 10 * map->getGnd()->height - 10 * cursorY));
+					blib::VertexP3 v4(glm::vec3(10 * (cursorX + 0.5f), 500, 10 * map->getGnd()->height - 10 * cursorY));
+
+					blib::VertexP3 v5(glm::vec3(10 * (cursorX + 1), 0, 10 * map->getGnd()->height - 10 * (cursorY - 0.5f)));
+					blib::VertexP3 v6(glm::vec3(10 * (cursorX + 1), 500, 10 * map->getGnd()->height - 10 * (cursorY - 0.5f)));
+
+					blib::VertexP3 v7(glm::vec3(10 * (cursorX + 1), 0, 10 * map->getGnd()->height - 10 * (cursorY + 0.5f)));
+					blib::VertexP3 v8(glm::vec3(10 * (cursorX + 1), 500, 10 * map->getGnd()->height - 10 * (cursorY + 0.5f)));
+
+					blib::VertexP3 v9(glm::vec3(10 * (cursorX + 1.5f), 0, 10 * map->getGnd()->height - 10 * cursorY));
+					blib::VertexP3 v10(glm::vec3(10 * (cursorX + 1.5f), 500, 10 * map->getGnd()->height - 10 * cursorY));
+
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+					verts.push_back(v2); verts.push_back(v3); verts.push_back(v4);
+
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v5);
+					verts.push_back(v2); verts.push_back(v5); verts.push_back(v6);
+
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v7);
+					verts.push_back(v2); verts.push_back(v7); verts.push_back(v8);
+
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v9);
+					verts.push_back(v2); verts.push_back(v9); verts.push_back(v10);
+
+				}
+
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.5f, 0.9f, 0.5f, 0.6f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+				highlightRenderState.activeTexture[0] = NULL;
+				highlightRenderState.activeVbo = NULL;
+				renderer->drawTriangles(verts, highlightRenderState);
+			}
+
+
+			if (mouseState.leftButton && lastMouseState.leftButton)
+			{
+				int lastCursorX = (int)glm::floor(mouse3dstart.x / 10);
+				int lastCursorY = map->getGnd()->height - (int)glm::floor(mouse3dstart.z / 10);
+				int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
+				int cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
+
+
+				std::vector<blib::VertexP3> verts;
+				blib::VertexP3 v1(glm::vec3(10 * (cursorX+1), 0,   10 * map->getGnd()->height - 10 * cursorY));
+				blib::VertexP3 v2(glm::vec3(10 * (cursorX+1), 500, 10 * map->getGnd()->height - 10 * cursorY));
+				blib::VertexP3 v3(glm::vec3(10 * (lastCursorX+1), 0,   10 * map->getGnd()->height - 10 * lastCursorY));
+				blib::VertexP3 v4(glm::vec3(10 * (lastCursorX+1), 500, 10 * map->getGnd()->height - 10 * lastCursorY));
+
+				verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+				verts.push_back(v2); verts.push_back(v3); verts.push_back(v4);
+
+
+				if (glm::length(glm::vec2(lastCursorX - cursorX, lastCursorY - cursorY)) > 10)
+					Sleep(0);
+
+
+
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.5f, 0.9f, 0.5f, 1.0f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+				highlightRenderState.activeTexture[0] = NULL;
+				highlightRenderState.activeVbo = NULL;
+				renderer->drawTriangles(verts, highlightRenderState);
+			}
+
+
+
+
+		}
+
+
+
 		if (!map->heightImportCubes.empty())
 		{
 			std::vector<blib::VertexP3> verts;
@@ -703,6 +799,8 @@ void BrowEdit::draw()
 			editModeString = "Height Edit";
 		else if (editMode == EditMode::DetailHeightEdit)
 			editModeString = "Detailed Height Edit";
+		else if (editMode == EditMode::WallEdit)
+			editModeString = "Wall Edit";
 		else
 			editModeString = "Unknown editmode: " + blib::util::toString((int)editMode);
 

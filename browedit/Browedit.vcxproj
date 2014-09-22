@@ -131,6 +131,7 @@
     <ClCompile Include="ScaleTool.cpp" />
     <ClCompile Include="TextureEdit.cpp" />
     <ClCompile Include="TranslatorTool.cpp" />
+    <ClCompile Include="WallEdit.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\MessageWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />

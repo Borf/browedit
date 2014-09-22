@@ -141,6 +141,9 @@ public:
 	void redo();
 	void heightEditUpdate();
 	void detailHeightEditUpdate();
+	void wallEditUpdate();
+
+
 	Rsw::Model* newModel;
 
 	glm::ivec2 detailHeightCursor;

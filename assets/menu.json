@@ -121,8 +121,13 @@
 				"type" : "toggle",
 				"initial" : false,
 				"key" : "f4"
+			},
+			{
+				"name" : "walledit",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "f5"
 			}
-
 		]
 
 	},
