@@ -42,4 +42,7 @@ public:
 	float heightImportMin;
 	float heightImportMax;
 	std::vector<std::vector<Gnd::Cube> > heightImportCubes;
+
+
+	glm::vec4 getHeightsAt(int x, int y);
 };

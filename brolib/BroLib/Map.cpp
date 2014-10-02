@@ -79,7 +79,7 @@ void Map::saveHeightmap( const std::string &fileName )
 				int yy = i / 2;
 				int index = ((2 * x + xx) + (gnd->width * 2) * (2 * y + yy)) * 3;
 				for (int ii = 0; ii < 3; ii++)
-					data[index+ii] = (gnd->cubes[x][y]->height[i] - minHeight) * (255 / (maxHeight - minHeight));
+					data[index+ii] = (unsigned char)((gnd->cubes[x][y]->height[i] - minHeight) * (255 / (maxHeight - minHeight)));
 			}
 		}
 	}
@@ -136,6 +136,24 @@ void Map::loadHeightmap(const std::string &fileName)
 
 	stbi_image_free(data);
 }
+
+glm::vec4 Map::getHeightsAt(int x, int y)
+{
+	assert(inMap(x, y));
+	float ret[4];
+
+	for (int i = 0; i < 4; i++)
+	{
+		int xx = i % 2;
+		int yy = i / 2;
+		if (inMap(x - xx, y - yy))
+			ret[i] = gnd->cubes[x - xx][y - yy]->height[i];
+		else
+			ret[i] = gnd->cubes[x][y]->height[0];
+	}
+	return glm::vec4(ret[0], ret[1], ret[2], ret[3]);
+}
+
 
 template class blib::BackgroundTask<int>;
 

@@ -1,0 +1,14 @@
+{
+	"data" :
+	{
+		"ropath" : "C:/vrcave/Runtime/data/RO",
+		"grfs" :
+		[
+			"C:/vrcave/Runtime/data/RO/data.grf",
+			"C:/vrcave/Runtime/data/RO/cookie.grf"
+		]
+	},
+	"defaultmap" : "prontera",
+	"threadedrendering" : true,
+	"backgroundworkers" : true
+}
