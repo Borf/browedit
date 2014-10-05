@@ -659,7 +659,7 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::WallEdit)
 		{
-			if (keyState.isPressed(blib::Key::SHIFT))
+			if (keyState.isPressed(blib::Key::SHIFT) && textureWindow->selectedImage != -1)
 			{
 				
 				int cursorX = (int)glm::floor (mapRenderer.mouse3d.x / 10);
@@ -668,17 +668,22 @@ void BrowEdit::draw()
 				float diffx = cursorX - (mapRenderer.mouse3d.x / 10.0f);
 				float diffy = cursorY - (map->getGnd()->height - mapRenderer.mouse3d.z / 10.0f);
 
-				if (diffx > 0.5)
-					diffx--;
-				if (diffy > 0.5)
-					diffy--;
-				if (diffx < -0.5)
+				if (diffx < -0.5f)
 					diffx++;
-				if (diffy < -0.5)
-					diffy++;
+				if (diffy > 0.5f)
+					diffy--;
+
+				bool horizontal = fabs(diffx) > fabs(diffy);
+
+				bool extrax = !horizontal && diffx > 0;
+				bool extray = horizontal && diffy > 0;
+
+
 
 				if (fabs(diffx) < 0.01 || fabs(diffy) < 0.01)
 				{
+					printf("%f\n", diffx);
+
 					if (fabs(diffx) < fabs(diffy))
 					{
 						cursorX = (int)glm::round(mapRenderer.mouse3d.x / 10) - 1;
@@ -689,44 +694,73 @@ void BrowEdit::draw()
 					Gnd* gnd = map->getGnd();
 					int x = cursorX;
 					int y = cursorY;
+					int xx = 0;
+					int yy = 0;
 
-
-					Gnd::Cube* cube = gnd->cubes[x][y];
-
-					if (cube->tileFront != -1 && x < gnd->width - 1)
+					for (int i = 0; i < newTextureSize; i++)
 					{
-						Gnd::Tile* tile = gnd->tiles[cube->tileFront];
-						assert(tile->lightmapIndex >= 0);
+						if (!map->inMap(x + xx, y + yy))
+							continue;
+						Gnd::Cube* cube = gnd->cubes[x+xx][y+yy];
 
-						blib::VertexP3T2 v1(glm::vec3(10 * x + 10, -cube->h2, 10 * gnd->height - 10 * y + 10), tile->v2);
-						blib::VertexP3T2 v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y), tile->v1);
-						blib::VertexP3T2 v3(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h1, 10 * gnd->height - 10 * y + 10), tile->v4);
-						blib::VertexP3T2 v4(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h3, 10 * gnd->height - 10 * y), tile->v3);
 
-						verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
-						verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+						float tx1, tx2;
+						float ty1, ty2;
+
+						if (extrax || extray)
+						{
+							tx1 = textureWindow->tx1.x + i * ((textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize);
+							tx2 = tx1 + (textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize;
+							ty1 = textureWindow->tx2.y;
+							ty2 = textureWindow->tx1.y;
+						}
+						else
+						{
+							tx2 = textureWindow->tx1.x + i * ((textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize);
+							tx1 = tx2 + (textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize;
+							ty1 = textureWindow->tx1.y;
+							ty2 = textureWindow->tx2.y;
+						}
+
+						if (cube->tileFront != -1 && x < gnd->width - 1 && !horizontal)
+						{
+							Gnd::Tile* tile = gnd->tiles[cube->tileFront];
+							assert(tile->lightmapIndex >= 0);
+
+							blib::VertexP3T2 v1(glm::vec3(10 * (x + xx) + 10, -cube->h2, 10 * gnd->height - 10 * (y + yy) + 10),							glm::vec2(tx2, ty1));
+							blib::VertexP3T2 v2(glm::vec3(10 * (x + xx) + 10, -cube->h4, 10 * gnd->height - 10 * (y + yy)),									glm::vec2(tx1, ty1));
+							blib::VertexP3T2 v3(glm::vec3(10 * (x + xx) + 10, -gnd->cubes[x + xx + 1][y + yy]->h1, 10 * gnd->height - 10 * (y + yy) + 10),	glm::vec2(tx2, ty2));
+							blib::VertexP3T2 v4(glm::vec3(10 * (x + xx) + 10, -gnd->cubes[x + xx + 1][y + yy]->h3, 10 * gnd->height - 10 * (y + yy)),		glm::vec2(tx1, ty2));
+
+							verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+							verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+						}
+						if (cube->tileSide != -1 && y < gnd->height - 1 && horizontal)
+						{
+							Gnd::Tile* tile = gnd->tiles[cube->tileSide];
+							assert(tile->lightmapIndex >= 0);
+
+							blib::VertexP3T2 v1(glm::vec3(10 * (x + xx), -cube->h3, 10 * gnd->height - 10 * (y + yy)),									glm::vec2(tx1, ty1));
+							blib::VertexP3T2 v2(glm::vec3(10 * (x + xx) + 10, -cube->h4, 10 * gnd->height - 10 * (y + yy)),								glm::vec2(tx2, ty1));
+							blib::VertexP3T2 v4(glm::vec3(10 * (x + xx) + 10, -gnd->cubes[x + xx][y + yy + 1]->h2, 10 * gnd->height - 10 * (y + yy)),	glm::vec2(tx2, ty2));
+							blib::VertexP3T2 v3(glm::vec3(10 * (x + xx), -gnd->cubes[x + xx][y + yy + 1]->h1, 10 * gnd->height - 10 * (y + yy)),		glm::vec2(tx1, ty2));
+
+							verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+							verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+						}
+
+						if (horizontal)
+							xx += extray ? 1 : -1;
+						else
+							yy += extrax ? -1 : 1;
 					}
-					if (cube->tileSide != -1 && y < gnd->height - 1)
-					{
-						Gnd::Tile* tile = gnd->tiles[cube->tileSide];
-						assert(tile->lightmapIndex >= 0);
-
-						blib::VertexP3T2 v1(glm::vec3(10 * x, -cube->h3, 10 * gnd->height - 10 * y), tile->v1);
-						blib::VertexP3T2 v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y), tile->v2);
-						blib::VertexP3T2 v4(glm::vec3(10 * x + 10, -gnd->cubes[x][y + 1]->h2, 10 * gnd->height - 10 * y), tile->v4);
-						blib::VertexP3T2 v3(glm::vec3(10 * x, -gnd->cubes[x][y + 1]->h1, 10 * gnd->height - 10 * y), tile->v3);
-
-						verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
-						verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
-					}
-
 
 					highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
 					highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
 					highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 					highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 1));
 					highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
-					highlightRenderState.activeTexture[0] = NULL;
+					highlightRenderState.activeTexture[0] = gnd->textures[textureWindow->selectedImage]->texture;
 					highlightRenderState.activeVbo = NULL;
 					renderer->drawTriangles(verts, highlightRenderState);
 

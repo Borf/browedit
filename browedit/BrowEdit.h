@@ -115,6 +115,11 @@ public:
 
 	std::vector<glm::ivec2> selectLasso;
 
+
+	int newTextureSize = 4;
+
+
+
 	enum class ObjectEditModeTool
 	{
 		Translate,
@@ -131,8 +136,6 @@ public:
 		color,
 		texMult,
 	};
-
-
 	void setObjectEditMode(ObjectEditModeTool newMode);
 	void addModel(const std::string &fileName);
 
