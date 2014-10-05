@@ -9,7 +9,7 @@
 		]
 	},
 	"moveconsole" : true,
-	"defaultmap" : "prt_sewb1",
+	"defaultmap" : "test",
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
 	"fov" : 45,

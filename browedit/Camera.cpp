@@ -6,7 +6,7 @@ Camera::Camera(void)
 	position = glm::vec2(0,0);
 	direction = 0;
 	angle = 60;
-	distance = 1000;
+	distance = 50;
 }
 
 
@@ -21,7 +21,7 @@ glm::mat4 Camera::getMatrix() const
 
 	ret = glm::rotate(ret, angle, glm::vec3(1, 0, 0));
 	ret = glm::rotate(ret, direction, glm::vec3(0, 1, 0));
-	ret = glm::translate(ret, glm::vec3(-position.x, -50, -position.y));
+	ret = glm::translate(ret, glm::vec3(-position.x, 0, -position.y));
 
 	return ret;
 }

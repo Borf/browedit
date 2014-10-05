@@ -91,9 +91,11 @@
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)\..\externals\BugTrap;$(SolutionDir)\..\externals\v8\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>brolib.lib;blib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>"$(ProjectDir)..\vs2013\svnversion.exe" "$(ProjectPath)" &gt; "$(MSBuildProjectDirectory)\version.h"</Command>
+      <Command>xcopy /q /y /c "c:\Program Files\TortoiseSVN\bin\svnversion.exe" "$(ProjectDir)..\vs2013\svnversion.exe"
+"$(ProjectDir)..\vs2013\svnversion.exe" "$(ProjectPath)" &gt; "$(MSBuildProjectDirectory)\version.h"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

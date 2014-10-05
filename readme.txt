@@ -56,16 +56,42 @@ Used to move rotate objects. Drag to rotate the object.
 
 
 
-Gat Edit (F3)
+Height Edit (F3)
+----------------
+Leftdrag			select an area
+ctrl+leftdrag		select an area in a lassoshape
+rightdrag			move the selected area up and down
+C					connects tiles together
+R					adds a random value to the height of tiles
+F					flattens an area
+
+menu:
+use the heighttools/connect to connect the raised area to the surrounding area
+
+
+Detailed height Edit (F4)
+-------------------------
+Gives you really precise control over vertices
+with the heighttools/connect menu to select a single vertex or the 4 vertices on the corner of a quad
+
+leftdrag			moves currently highlighted vertex up or down
+
+
+Wall edit (F5)
+--------------
+rightdrag			add a wall
+ctrl+rightdrag		remove a wall
+
+leftclick			paste selected texture on walls
+left/right arrow	scale selected texture output
+H					flip texture horizontally
+V					flip texture vertically
+
+
+
+Gat Edit ()
 -------------
 not implemented yet
-
-
-Wall edit (F4)
---------------
-not implemented yet
-
-
 
 
 

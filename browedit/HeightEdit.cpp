@@ -98,7 +98,7 @@ void BrowEdit::heightEditUpdate()
 		{
 			bool around = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("heighttools/connect"))->getValue();
 
-			float diff = mouseState.y - lastMouseState.y;
+			float diff = (float)(mouseState.y - lastMouseState.y);
 			bool moved = false;
 			for (int x = 0; x < map->getGnd()->width; x++)
 			{

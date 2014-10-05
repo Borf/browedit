@@ -660,7 +660,7 @@ void BrowEdit::draw()
 		if (editMode == EditMode::WallEdit)
 		{
 
-			if (!mouseState.leftButton && !lastMouseState.leftButton)
+			if (!mouseState.rightButton && !lastMouseState.rightButton && !mouseState.leftButton && !lastMouseState.leftButton)
 			{
 				int lastCursorX = (int)glm::round(mouse3dstart.x / 10)-1;
 				int lastCursorY = map->getGnd()->height - (int)glm::round(mouse3dstart.z / 10);
@@ -716,14 +716,14 @@ void BrowEdit::draw()
 			}
 
 
-			if (mouseState.leftButton && lastMouseState.leftButton)
+			if (mouseState.rightButton && lastMouseState.rightButton)
 			{
 				int lastCursorX = (int)glm::round(mouse3dstart.x / 10) - 1;
 				int lastCursorY = map->getGnd()->height - (int)glm::round(mouse3dstart.z / 10);
 				int cursorX = (int)glm::round(mapRenderer.mouse3d.x / 10) - 1;
 				int cursorY = map->getGnd()->height - (int)glm::round(mapRenderer.mouse3d.z / 10);
 
-				if (map->inMap(cursorX+1, cursorY+1))
+				if (map->inMap(cursorX + 1, cursorY + 1) && map->inMap(lastCursorX + 1, lastCursorY + 1))
 				{
 
 					std::vector<blib::VertexP3> verts;
