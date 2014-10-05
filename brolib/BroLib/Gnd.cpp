@@ -117,14 +117,14 @@ Gnd::Gnd( const std::string &fileName )
 		cubes.resize(width, std::vector<Cube*>(height, NULL));
 		for(int y = 0; y < height; y++)
 		{
-			for(int x = 0; x < width; x++)
+			for (int x = 0; x < width; x++)
 			{
 				Cube* cube = new Cube();
 				cube->h1 = file->readFloat();
 				cube->h2 = file->readFloat();
 				cube->h3 = file->readFloat();
 				cube->h4 = file->readFloat();
-				if(version >= 0x0106)
+				if (version >= 0x0106)
 				{
 					cube->tileUp = file->readInt();
 					cube->tileSide = file->readInt();
@@ -136,6 +136,23 @@ Gnd::Gnd( const std::string &fileName )
 					cube->tileSide = file->readWord();
 					cube->tileFront = file->readWord();
 				}
+
+				if (cube->tileUp >= (int)tiles.size())
+				{
+					Log::out << "Wrong value for tileup at " << x << ", " << y << Log::newline;
+					cube->tileUp = -1;
+				}
+				if (cube->tileSide >= (int)tiles.size())
+				{
+					Log::out << "Wrong value for tileside at " << x << ", " << y << Log::newline;
+					cube->tileSide = -1;
+				}
+				if (cube->tileFront >= (int)tiles.size())
+				{
+					Log::out << "Wrong value for tilefront at " << x << ", " << y << Log::newline;
+					cube->tileFront = -1;
+				}
+
 				cubes[x][y] = cube;
 			}
 		}

@@ -50,11 +50,12 @@ public:
 
 class MapRenderer : public blib::gl::GlResizeRegister
 {
+public:
+	typedef blib::VertexP3T2T2 GndVertex;
 private:
 	int width;
 	int height;
 #pragma region GND
-	typedef blib::VertexP3T2T2 GndVertex;
 	class GndChunk
 	{
 	public:

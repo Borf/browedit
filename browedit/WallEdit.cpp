@@ -3,6 +3,7 @@
 #include <BroLib/Map.h>
 #include <BroLib/Gnd.h>
 
+#include "windows/TextureWindow.h"
 
 
 //tilefront = between x and x+1
@@ -15,14 +16,7 @@ void BrowEdit::wallEditUpdate()
 
 
 	}
-	else if (mouseState.rightButton && !lastMouseState.rightButton)
-	{
-		mouse3dstart = mapRenderer.mouse3d;
-
-
-	}
-
-	else if (!mouseState.rightButton && lastMouseState.rightButton)
+	else if (!mouseState.leftButton && lastMouseState.leftButton)
 	{//up
 		int lastCursorX = (int)glm::round(mouse3dstart.x / 10) - 1;
 		int lastCursorY = map->getGnd()->height - (int)glm::round(mouse3dstart.z / 10);
@@ -45,14 +39,29 @@ void BrowEdit::wallEditUpdate()
 			{
 				for (int y = glm::min(cursorY, lastCursorY); y <= glm::max(cursorY, lastCursorY); y++)
 				{
+					int newTile = -1;
+					if (!keyState.isPressed(blib::Key::CONTROL))
+					{
+						Gnd::Tile* t = new Gnd::Tile();
+
+						t->textureIndex = textureWindow->selectedImage >= 0 ? textureWindow->selectedImage : 0;
+						t->v1 = glm::vec2(0, 0);
+						t->v2 = glm::vec2(1, 0);
+						t->v3 = glm::vec2(0, 1);
+						t->v4 = glm::vec2(1, 1);
+						t->lightmapIndex = 0;
+						t->color = glm::vec4(1, 1, 1, 1);
+
+						newTile = map->getGnd()->tiles.size();
+						map->getGnd()->tiles.push_back(t);
+					}
 					if (cursorX == lastCursorX)
-						map->getGnd()->cubes[x][y]->tileFront = keyState.isPressed(blib::Key::CONTROL) ? -1 : 0;
+						map->getGnd()->cubes[x][y]->tileFront = newTile;
 					else
-						map->getGnd()->cubes[x][y]->tileSide = keyState.isPressed(blib::Key::CONTROL) ? -1 : 0;
+						map->getGnd()->cubes[x][y]->tileSide = newTile;
 					mapRenderer.setTileDirty(x, y);
 				}
 			}
-
 		}
 
 

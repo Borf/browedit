@@ -544,48 +544,50 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 		{
 			for(int y = this->y; y < glm::min(this->y+CHUNKSIZE, (int)gnd->cubes[x].size()); y++)
 			{
-				if(gnd->cubes[x][y]->tileUp != -1)
+				Gnd::Cube* cube = gnd->cubes[x][y];
+
+				if(cube->tileUp != -1)
 				{
-					Gnd::Tile* tile = gnd->tiles[gnd->cubes[x][y]->tileUp];
+					Gnd::Tile* tile = gnd->tiles[cube->tileUp];
 					assert(tile->lightmapIndex >= 0);
 
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10*x,	-gnd->cubes[x][y]->h3,10*gnd->height-10*y),	tile->v3,		glm::vec2(lm1.x,lm2.y));
-					GndVertex v2(glm::vec3(10*x+10,	-gnd->cubes[x][y]->h4,10*gnd->height-10*y),	tile->v4,		glm::vec2(lm2.x,lm2.y));
-					GndVertex v3(glm::vec3(10*x,	-gnd->cubes[x][y]->h1,10*gnd->height-10*y+10), tile->v1,	glm::vec2(lm1.x,lm1.y));
-					GndVertex v4(glm::vec3(10*x+10,	-gnd->cubes[x][y]->h2,10*gnd->height-10*y+10), tile->v2,	glm::vec2(lm2.x,lm1.y));
+					GndVertex v1(glm::vec3(10*x,	-cube->h3,10*gnd->height-10*y),	tile->v3,		glm::vec2(lm1.x,lm2.y));
+					GndVertex v2(glm::vec3(10*x+10,	-cube->h4,10*gnd->height-10*y),	tile->v4,		glm::vec2(lm2.x,lm2.y));
+					GndVertex v3(glm::vec3(10*x,	-cube->h1,10*gnd->height-10*y+10), tile->v1,	glm::vec2(lm1.x,lm1.y));
+					GndVertex v4(glm::vec3(10*x+10,	-cube->h2,10*gnd->height-10*y+10), tile->v2,	glm::vec2(lm2.x,lm1.y));
 
 					verts[tile->textureIndex].push_back(v1); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v3);
 					verts[tile->textureIndex].push_back(v3); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v4);
 				}
-				if(gnd->cubes[x][y]->tileFront != -1)
+				if(cube->tileFront != -1 && x < gnd->width-1)
 				{
-					Gnd::Tile* tile = gnd->tiles[gnd->cubes[x][y]->tileFront];
+					Gnd::Tile* tile = gnd->tiles[cube->tileFront];
 					assert(tile->lightmapIndex >= 0);
 
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h2,		10 * gnd->height - 10 * y + 10),	tile->v2, glm::vec2(lm2.x, lm1.y));
-					GndVertex v2(glm::vec3(10 * x + 10, -gnd->cubes[x][y]->h4,		10 * gnd->height - 10 * y),			tile->v1, glm::vec2(lm1.x, lm1.y));
+					GndVertex v1(glm::vec3(10 * x + 10, -cube->h2, 10 * gnd->height - 10 * y + 10), tile->v2, glm::vec2(lm2.x, lm1.y));
+					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y), tile->v1, glm::vec2(lm1.x, lm1.y));
 					GndVertex v3(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h1,	10 * gnd->height - 10 * y + 10),	tile->v4, glm::vec2(lm2.x, lm2.y));
 					GndVertex v4(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h3,	10 * gnd->height - 10 * y),			tile->v3, glm::vec2(lm1.x, lm2.y));
 					
 					verts[tile->textureIndex].push_back(v1); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v3);
 					verts[tile->textureIndex].push_back(v3); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v4);
 				}
-				if(gnd->cubes[x][y]->tileSide != -1)
+				if (cube->tileSide != -1 && y < gnd->height-1)
 				{
-					Gnd::Tile* tile = gnd->tiles[gnd->cubes[x][y]->tileSide];
+					Gnd::Tile* tile = gnd->tiles[cube->tileSide];
 					assert(tile->lightmapIndex >= 0);
 
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10*x,	-gnd->cubes[x][y]->h3,	10*gnd->height-10*y),	tile->v1, glm::vec2(lm1.x,lm1.y));
-					GndVertex v2(glm::vec3(10*x+10,	-gnd->cubes[x][y]->h4,	10*gnd->height-10*y),	tile->v2, glm::vec2(lm2.x,lm1.y));
+					GndVertex v1(glm::vec3(10 * x, -cube->h3, 10 * gnd->height - 10 * y), tile->v1, glm::vec2(lm1.x, lm1.y));
+					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y), tile->v2, glm::vec2(lm2.x, lm1.y));
 					GndVertex v4(glm::vec3(10*x+10, -gnd->cubes[x][y+1]->h2,10*gnd->height-10*y),	tile->v4, glm::vec2(lm2.x,lm2.y));
 					GndVertex v3(glm::vec3(10*x,    -gnd->cubes[x][y+1]->h1,10*gnd->height-10*y),	tile->v3, glm::vec2(lm1.x,lm2.y));
 

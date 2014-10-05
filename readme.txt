@@ -79,10 +79,10 @@ leftdrag			moves currently highlighted vertex up or down
 
 Wall edit (F5)
 --------------
-rightdrag			add a wall
-ctrl+rightdrag		remove a wall
+leftdrag			add a wall
+ctrl+leftdrag		remove a wall
 
-leftclick			paste selected texture on walls
+shift+leftclick		paste selected texture on walls
 left/right arrow	scale selected texture output
 H					flip texture horizontally
 V					flip texture vertically

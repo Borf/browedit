@@ -375,12 +375,12 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 	int index = 0;
 	for (QuadTreeNode* node : nodes)
 	{
-		assert3(node->range[0].x == (node->bbox.max.x - node->bbox.min.x) / 2, "Difference: " + blib::util::toString(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2) + " (should be small)");
-		assert3(node->range[0].y == (node->bbox.max.y - node->bbox.min.y) / 2, "Difference: " + blib::util::toString(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2) + " (should be small)");
-		assert3(node->range[0].z == (node->bbox.max.z - node->bbox.min.z) / 2, "Difference: " + blib::util::toString(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2) + " (should be small)");
-		assert3(node->range[1].x == (node->bbox.max.x - node->range[0].x), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
-		assert3(node->range[1].y == (node->bbox.max.y - node->range[0].y), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
-		assert3(node->range[1].z == (node->bbox.max.z - node->range[0].z), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2 < 0.0001, "Difference: " + blib::util::toString(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2) + " (should be small)");
+		assert3(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2 < 0.0001, "Difference: " + blib::util::toString(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2) + " (should be small)");
+		assert3(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2 < 0.0001, "Difference: " + blib::util::toString(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2) + " (should be small)");
+		assert3(node->range[1].x - (node->bbox.max.x - node->range[0].x < 0.0001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[1].y - (node->bbox.max.y - node->range[0].y < 0.0001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[1].z - (node->bbox.max.z - node->range[0].z < 0.0001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
 
 
 		node->bbox.min.y = MAP_MAX;
