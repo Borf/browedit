@@ -675,6 +675,7 @@ void BrowEdit::draw()
 
 				bool horizontal = fabs(diffx) > fabs(diffy);
 
+//todo: calculate extrax and extray  using a ray-plane collision, and determine the direction the normal is pointing at
 				bool extrax = !horizontal && diffx > 0;
 				bool extray = horizontal && diffy > 0;
 
@@ -682,8 +683,6 @@ void BrowEdit::draw()
 
 				if (fabs(diffx) < 0.01 || fabs(diffy) < 0.01)
 				{
-					printf("%f\n", diffx);
-
 					if (fabs(diffx) < fabs(diffy))
 					{
 						cursorX = (int)glm::round(mapRenderer.mouse3d.x / 10) - 1;
