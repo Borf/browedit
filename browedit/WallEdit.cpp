@@ -10,6 +10,12 @@
 
 void BrowEdit::wallEditUpdate()
 {
+	if (keyState.isPressed(blib::Key::LEFT) && !lastKeyState.isPressed(blib::Key::LEFT))
+		newTextureSize = glm::max(newTextureSize-1, 1);
+	if (keyState.isPressed(blib::Key::RIGHT) && !lastKeyState.isPressed(blib::Key::RIGHT))
+		newTextureSize++;
+
+
 	if (mouseState.leftButton && !lastMouseState.leftButton)
 	{
 		mouse3dstart = mapRenderer.mouse3d;
@@ -20,9 +26,104 @@ void BrowEdit::wallEditUpdate()
 	{//up
 		if (keyState.isPressed(blib::Key::SHIFT))
 		{
-			
+			int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
+			int cursorY = map->getGnd()->height - (int)glm::round(mapRenderer.mouse3d.z / 10);
+
+			float diffx = cursorX - (mapRenderer.mouse3d.x / 10.0f);
+			float diffy = cursorY - (map->getGnd()->height - mapRenderer.mouse3d.z / 10.0f);
+
+			if (diffx < -0.5f)
+				diffx++;
+			if (diffy > 0.5f)
+				diffy--;
+
+			bool horizontal = fabs(diffx) > fabs(diffy);
+
+			//todo: calculate extrax and extray  using a ray-plane collision, and determine the direction the normal is pointing at
+			bool extrax = !horizontal && diffx > 0;
+			bool extray = horizontal && diffy > 0;
+
+
+
+			if (fabs(diffx) < 0.01 || fabs(diffy) < 0.01)
+			{
+				if (fabs(diffx) < fabs(diffy))
+				{
+					cursorX = (int)glm::round(mapRenderer.mouse3d.x / 10) - 1;
+					cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
+				}
+
+				std::vector<blib::VertexP3T2> verts;
+				Gnd* gnd = map->getGnd();
+				int x = cursorX;
+				int y = cursorY;
+				int xx = 0;
+				int yy = 0;
+
+				for (int i = 0; i < newTextureSize; i++)
+				{
+					if (!map->inMap(x + xx, y + yy))
+						continue;
+					Gnd::Cube* cube = gnd->cubes[x + xx][y + yy];
+
+
+					float tx1, tx2;
+					float ty1, ty2;
+
+					if (extrax || extray)
+					{
+						tx1 = textureWindow->tx1.x + i * ((textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize);
+						tx2 = tx1 + (textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize;
+						ty1 = textureWindow->tx2.y;
+						ty2 = textureWindow->tx1.y;
+					}
+					else
+					{
+						tx2 = textureWindow->tx1.x + i * ((textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize);
+						tx1 = tx2 + (textureWindow->tx2.x - textureWindow->tx1.x) / newTextureSize;
+						ty1 = textureWindow->tx1.y;
+						ty2 = textureWindow->tx2.y;
+					}
+
+					if (cube->tileFront != -1 && x < gnd->width - 1 && !horizontal)
+					{
+						Gnd::Tile* tile = new Gnd::Tile();
+						cube->tileFront = gnd->tiles.size();
+						gnd->tiles.push_back(tile);
+
+						tile->textureIndex = textureWindow->selectedImage;
+						tile->lightmapIndex = 0;
+						tile->color = glm::vec4(1, 1, 1, 1);
+						tile->v1 = glm::vec2(tx1, ty1);
+						tile->v2 = glm::vec2(tx2, ty1);
+						tile->v3 = glm::vec2(tx1, ty2);
+						tile->v4 = glm::vec2(tx2, ty2);
+					}
+					if (cube->tileSide != -1 && y < gnd->height - 1 && horizontal)
+					{
+						Gnd::Tile* tile = new Gnd::Tile();
+						cube->tileSide = gnd->tiles.size();
+						gnd->tiles.push_back(tile);
+
+						tile->textureIndex = textureWindow->selectedImage;
+						tile->lightmapIndex = 0;
+						tile->color = glm::vec4(1, 1, 1, 1);
+						tile->v1 = glm::vec2(tx1, ty1);
+						tile->v2 = glm::vec2(tx2, ty1);
+						tile->v3 = glm::vec2(tx1, ty2);
+						tile->v4 = glm::vec2(tx2, ty2);
+					}
+
+					mapRenderer.setTileDirty(x + xx, y + yy);
+					if (horizontal)
+						xx += extray ? 1 : -1;
+					else
+						yy += extrax ? -1 : 1;
+				}
+			}
+
 		}
-		else //no shift
+		else //no shiftkey pressed...place or remove walls
 		{
 			int lastCursorX = (int)glm::round(mouse3dstart.x / 10) - 1;
 			int lastCursorY = map->getGnd()->height - (int)glm::round(mouse3dstart.z / 10);
