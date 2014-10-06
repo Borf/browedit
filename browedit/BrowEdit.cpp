@@ -163,7 +163,7 @@ void BrowEdit::init()
 	camera = new Camera();
 
 
-	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/highlight");
+	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("highlight");
 	highlightRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	highlightRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
 	highlightRenderState.activeShader->bindAttributeLocation("a_normal", 1);
@@ -186,7 +186,7 @@ void BrowEdit::init()
 	highlightRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
 
 
-	composeRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/compose");
+	composeRenderState.activeShader = resourceManager->getResource<blib::Shader>("compose");
 	composeRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	composeRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
 	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::s_texture, "s_texture", blib::Shader::Int);

@@ -305,7 +305,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	fbo->textureCount = 2;
 	fbo->stencil = false;
 
-	gndRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/gnd");
+	gndRenderState.activeShader = resourceManager->getResource<blib::Shader>("gnd");
 	gndRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture", 1);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture2", 2);
@@ -335,7 +335,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 
 
-	rswRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/rsw");
+	rswRenderState.activeShader = resourceManager->getResource<blib::Shader>("rsw");
 	rswRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	rswRenderState.activeShader->bindAttributeLocation("a_texture", 1);
 	rswRenderState.activeShader->bindAttributeLocation("a_normal", 2);
@@ -359,7 +359,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.dstBlendAlpha = blib::RenderState::ONE_MINUS_SRC_ALPHA;
 	rswRenderState.depthTest = true;
 
-	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("assets/shaders/highlight");
+	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("highlight");
 	highlightRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	highlightRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
