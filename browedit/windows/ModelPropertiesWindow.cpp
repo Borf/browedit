@@ -26,8 +26,8 @@ ModelPropertiesWindow::ModelPropertiesWindow(Rsw::Model* model, blib::ResourceMa
 
 
 
-	getComponent<blib::wm::widgets::Button>("btnCancel")->addClickHandler([this](blib::wm::Widget*, int, int, int) { close();  });
-	getComponent<blib::wm::widgets::Button>("btnOk")->addClickHandler([this, model](blib::wm::Widget*, int, int, int) 
+	getComponent<blib::wm::widgets::Button>("btnCancel")->addClickHandler([this](int, int, int) { close(); return true;  });
+	getComponent<blib::wm::widgets::Button>("btnOk")->addClickHandler([this, model](int, int, int) 
 	{ 
 		model->position.x = (float)atof(getComponent<blib::wm::widgets::Textbox>("positionx")->text.c_str());
 		model->position.y = (float)atof(getComponent<blib::wm::widgets::Textbox>("positiony")->text.c_str());
@@ -42,7 +42,8 @@ ModelPropertiesWindow::ModelPropertiesWindow(Rsw::Model* model, blib::ResourceMa
 		model->scale.z = (float)atof(getComponent<blib::wm::widgets::Textbox>("scalez")->text.c_str());
 
 		model->matrixCached = false;
-		close();  
+		close();
+		return true;
 	});
 
 }

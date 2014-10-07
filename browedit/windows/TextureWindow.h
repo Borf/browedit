@@ -72,6 +72,7 @@ public:
 	void setActiveTexture(int index);
 	void setDirectory(std::string directory);
 
+
 	virtual void arrangeComponents(int oldWidth, int oldHeight);
 
 	int selectedImage;

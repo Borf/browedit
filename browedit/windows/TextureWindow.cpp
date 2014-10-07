@@ -36,7 +36,7 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	selectedImage = -1;
 	resizable = false;
 
-	getComponent("btnExpand")->addClickHandler([this](blib::wm::Widget* widget, int x, int y, int clickCount)
+	getComponent("btnExpand")->addClickHandler([this](int x, int y, int clickCount)
 	{
 		blib::wm::widgets::Button* expandButton = getComponent<blib::wm::widgets::Button>("btnExpand");
 
@@ -63,6 +63,7 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 			resizable = false;
 			arrangeComponents(largeWidth, height);
 		}
+		return true;
 	});
 
 
@@ -84,10 +85,22 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	for (auto d : dirLookup)
 		dirs.push_back(d.first);
 	getComponent<blib::wm::widgets::List>("lstFolders")->items = dirs;
-	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](blib::wm::Widget*, int, int, int) {
+	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](int, int, int) {
 		blib::wm::widgets::List* l = getComponent<blib::wm::widgets::List>("lstFolders");
 		if (l->selectedItem() >= 0 && l->selectedItem() < (int)l->items.size())
 			setDirectory(l->items[l->selectedItem()] + "/");
+		return false;
+	});
+
+
+	addKeyDownHandler([](blib::Key key)
+	{
+		if (key == blib::Key::DEL)
+		{
+			Log::out << "YAY" << Log::newline;
+			return true;
+		}
+		return false;
 	});
 
 	setDirectory("RO/ÇÊµå¹Ù´Ú/");
@@ -241,7 +254,7 @@ void TextureWindow::arrangeComponents(int oldWidth, int oldHeight)
 
 			(*it)->x = px;
 			(*it)->y = py;
-			if (i >= panel->children.size() / 2)
+			if (i >= (int)panel->children.size() / 2)
 				(*it)->y = py+textureSize;
 
 			px += textureSize;
@@ -256,7 +269,6 @@ void TextureWindow::arrangeComponents(int oldWidth, int oldHeight)
 		panel->internalHeight = py + textureSize+12;
 	}
 }
-
 
 
 

@@ -38,23 +38,24 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	largeWidth = glm::min(1300, blib::wm::WM::getInstance()->screenSize.x - 100);
 	resizable = false;
 
-	getComponent<blib::wm::widgets::List>("lstObjects")->addClickHandler([this, browEdit](blib::wm::Widget*, int, int, int)
+	getComponent<blib::wm::widgets::List>("lstObjects")->addClickHandler([this, browEdit](int, int, int)
 	{
 		int index = getComponent<blib::wm::widgets::List>("lstObjects")->selectedItem();
 		if (index == -1)
-			return;
+			return false;
 		browEdit->camera->targetPosition = glm::vec2(
 			5 * browEdit->map->getGnd()->width + browEdit->map->getRsw()->objects[index]->position.x, 
 			5 * browEdit->map->getGnd()->height - browEdit->map->getRsw()->objects[index]->position.z);
 
 		for (size_t i = 0; i < browEdit->map->getRsw()->objects.size(); i++)
-			browEdit->map->getRsw()->objects[i]->selected = i == index;
+			browEdit->map->getRsw()->objects[i]->selected = i == index; 
+		return true;
 	});
 
 
 	resizable = false;
 
-	getComponent("btnExpand")->addClickHandler([this](blib::wm::Widget* widget, int x, int y, int clickCount)
+	getComponent("btnExpand")->addClickHandler([this](int x, int y, int clickCount)
 	{
 		blib::wm::widgets::Button* expandButton = getComponent<blib::wm::widgets::Button>("btnExpand");
 
@@ -81,6 +82,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 			resizable = false;
 			arrangeComponents(largeWidth, height);
 		}
+		return true;
 	});
 
 
@@ -102,10 +104,11 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	for (auto d : dirLookup)
 		dirs.push_back(d.first);
 	getComponent<blib::wm::widgets::List>("lstFolders")->items = dirs;
-	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](blib::wm::Widget*, int, int, int) {
+	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](int, int, int) {
 		blib::wm::widgets::List* l = getComponent<blib::wm::widgets::List>("lstFolders");
-		if (l->selectedItem() >= 0 && l->selectedItem() < l->items.size())
+		if (l->selectedItem() >= 0 && (int)l->selectedItem() < l->items.size())
 			setDirectory(l->items[l->selectedItem()] + "/");
+		return true;
 	});
 
 	setDirectory("/");
@@ -159,10 +162,11 @@ void ObjectWindow::setDirectory(const std::string &directory)
 			modelWidget->y = py;
 			panel->add(modelWidget);
 
-			modelWidget->addClickHandler([this, it](blib::wm::Widget*, int, int, int) {
+			modelWidget->addClickHandler([this, it](int, int, int) {
 				Log::out << it.second << Log::newline;
 				browEdit->addModel(it.second.substr(11));
-				getComponent<blib::wm::widgets::Button>("btnExpand")->mouseclick(0, 0, 1);
+				getComponent<blib::wm::widgets::Button>("btnExpand")->onMouseClick(0, 0, 1);
+				return true;
 			});
 
 

@@ -31,25 +31,25 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 			files.push_back(name);
 		}
 	}
-	getComponent("txtFilter")->addKeyHandler(std::bind(&FileOpenWindow::filter, this, std::placeholders::_1));
-	lstFiles->addClickHandler(std::bind(&FileOpenWindow::listClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
-	getComponent("btnOpen")->addClickHandler(std::bind(&FileOpenWindow::btnOpenClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	getComponent("txtFilter")->addKeyDownHandler(std::bind(&FileOpenWindow::filter, this, std::placeholders::_1));
+	lstFiles->addClickHandler(std::bind(&FileOpenWindow::listClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+	getComponent("btnOpen")->addClickHandler([this](int, int, int) { open(); return true; });
 	selectedWidget = getComponent("txtFilter");
 	selectedWidget->selected = true;
 
 
-	getComponent("btnCancel")->addClickHandler([this](blib::wm::Widget*, int,int,int) { close(); });
+	getComponent("btnCancel")->addClickHandler([this](int, int, int) { close(); return true; });
 
-	filter('\0');
+	filter((blib::Key)'\0');
 
 }
 
-void FileOpenWindow::filter(char key)
+bool FileOpenWindow::filter(blib::Key key)
 {
-	if (key == '\r' || key == '\n')
+	if (key == blib::Key::ENTER)
 	{
-		btnOpenClick(NULL, 0, 0,1);
-		return;
+		open();
+		return true;
 	}
 
 	std::string filt = getComponent<blib::wm::widgets::Textbox>("txtFilter")->text;
@@ -63,16 +63,21 @@ void FileOpenWindow::filter(char key)
 	lstFiles->selectedItems.clear();
 	if (!lstFiles->items.empty())
 		lstFiles->selectedItems.push_back(0);
+	return false;
 }
 
 
-void FileOpenWindow::listClick(blib::wm::Widget*, int, int, int clickCount)
+bool FileOpenWindow::listClick(int, int, int clickCount)
 {
 	if (clickCount == 2)
-		btnOpenClick(NULL, 0, 0, 0);
+	{
+		open();
+		return true;
+	}
+	return false;
 }
 
-void FileOpenWindow::btnOpenClick(blib::wm::Widget*, int, int, int)
+void FileOpenWindow::open()
 {
 
 	if (lstFiles->selectedItem() == -1)
