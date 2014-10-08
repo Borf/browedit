@@ -289,6 +289,53 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 	gridX = 4;
 	gridY = 4;
 	dragging = false;
+
+
+	addMouseDownHandler([this](int x, int y, int clickcount)
+	{
+		dragging = true;
+		selectX1 = x - this->x;
+		selectY1 = y - this->y;
+		selectX2 = x - this->x;
+		selectY2 = y - this->y;
+		alignToGrid();
+		this->textureWindow->setActiveTexture(this->index);
+		return true;
+	});
+
+
+	addMouseUpHandler([this](int x, int y, int clickcount)
+	{
+		if (dragging)
+		{
+			dragging = false;
+			selectX2 = x - this->x;
+			selectY2 = y - this->y;
+			alignToGrid();
+			this->textureWindow->setActiveTexture(this->index);
+			this->textureWindow->tx1 = glm::vec2(selectX1, selectY1) / glm::vec2(width, height);
+			this->textureWindow->tx2 = glm::vec2(selectX2, selectY2) / glm::vec2(width, height);
+			return true;
+		}
+		return false;
+	});
+
+	addClickHandler([this](int x, int y, int clickcount)
+	{
+		dragging = false;
+		selectX1 = 0;
+		selectY1 = 0;
+		selectX2 = width;
+		selectY2 = height;
+		alignToGrid();
+		this->textureWindow->setActiveTexture(this->index);
+		return true;
+	});
+
+
+
+
+
 }
 
 void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
@@ -304,31 +351,6 @@ void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, bli
 	spriteBatch.drawStretchyRect(texture, glm::translate(matrix, glm::vec3(x + selectX1, y + selectY1, 0)), skin, glm::vec2(selectX2 - selectX1, selectY2 - selectY1), glm::vec4(1, 1, 1, 0.5f));
 }
 
-void SelectableImage::mousedown(int x, int y)
-{
-	dragging = true;
-	selectX1 = x - this->x;
-	selectY1 = y - this->y;
-	selectX2 = x - this->x;
-	selectY2 = y - this->y;
-	alignToGrid();
-	textureWindow->setActiveTexture(index);
-}
-
-void SelectableImage::mouseup(int x, int y)
-{
-	if (dragging)
-	{
-		dragging = false;
-		selectX2 = x - this->x;
-		selectY2 = y - this->y;
-		alignToGrid();
-		textureWindow->setActiveTexture(index);
-		textureWindow->tx1 = glm::vec2(selectX1, selectY1) / glm::vec2(width, height); 
-		textureWindow->tx2 = glm::vec2(selectX2, selectY2) / glm::vec2(width, height);
-
-	}
-}
 
 void SelectableImage::mousedrag(int x, int y)
 {
@@ -339,17 +361,6 @@ void SelectableImage::mousedrag(int x, int y)
 		alignToGrid();
 		textureWindow->setActiveTexture(index);
 	}
-}
-
-void SelectableImage::mouseclick(int x, int y)
-{
-	dragging = false;
-	selectX1 = 0;
-	selectY1 = 0;
-	selectX2 = width;
-	selectY2 = height;
-	alignToGrid();
-	textureWindow->setActiveTexture(index);
 }
 
 void SelectableImage::alignToGrid()
