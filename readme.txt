@@ -116,7 +116,10 @@ browedit :
 		{
 			getWidth(),		/returns the width of the map
 			getHeight(),	//returns the height of the map
-			getCell(int x, int y)
+			getCell(int x, int y),
+
+			getTexture(int index),
+			setTexture(int index, std::string filename),
 		},
 		'rsw' :	// API related to objects
 		{

@@ -39,12 +39,6 @@ void Print(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 
 void getGndHeight(const v8::FunctionCallbackInfo<v8::Value>& args) {
-	BrowEdit* browEdit = (BrowEdit*)args.GetIsolate()->GetData(0);
-	args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), browEdit->map->getGnd()->height));
-}
-void getGndWidth(const v8::FunctionCallbackInfo<v8::Value>& args) {
-	BrowEdit* browEdit = (BrowEdit*)args.GetIsolate()->GetData(0);
-	args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), browEdit->map->getGnd()->width));
 }
 
 
@@ -103,8 +97,14 @@ void BrowEdit::loadJsPlugins()
 
 	v8::Handle<v8::Object> gnd = v8::Object::New(isolate);
 	map->Set(v8::String::NewFromUtf8(isolate, "gnd"), gnd);
-	gnd->Set(v8::String::NewFromUtf8(isolate, "getHeight"), v8::FunctionTemplate::New(isolate, getGndHeight)->GetFunction());
-	gnd->Set(v8::String::NewFromUtf8(isolate, "getWidth"), v8::FunctionTemplate::New(isolate, getGndWidth)->GetFunction());
+	gnd->Set(v8::String::NewFromUtf8(isolate, "getHeight"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getGnd()->height));
+	})->GetFunction());
+	gnd->Set(v8::String::NewFromUtf8(isolate, "getWidth"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getGnd()->width));
+	})->GetFunction());
 
 	v8::Handle<v8::Object> rsw = v8::Object::New(isolate);
 	map->Set(v8::String::NewFromUtf8(isolate, "rsw"), rsw);
