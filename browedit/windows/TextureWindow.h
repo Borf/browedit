@@ -34,7 +34,6 @@ class SelectableImage : public blib::wm::widgets::Image
 public:
 	SelectableImage(blib::Texture* texture, int index, TextureWindow* textureWindow);
 	virtual void draw(blib::SpriteBatch &shader, glm::mat4 matrix, blib::Renderer* renderer) const;
-	virtual void mousedrag(int x, int y);
 	void alignToGrid();
 	glm::vec2 topLeft();
 	glm::vec2 bottomRight();

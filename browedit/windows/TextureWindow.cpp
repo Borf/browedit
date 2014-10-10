@@ -334,7 +334,18 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 
 
 
-
+	addDragHandler([this](int x, int y)
+	{
+		if (dragging)
+		{
+			selectX2 = x - this->x;
+			selectY2 = y - this->y;
+			alignToGrid();
+			this->textureWindow->setActiveTexture(this->index);
+			return true;
+		}
+		return false;
+	});
 
 }
 
@@ -351,17 +362,6 @@ void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, bli
 	spriteBatch.drawStretchyRect(texture, glm::translate(matrix, glm::vec3(x + selectX1, y + selectY1, 0)), skin, glm::vec2(selectX2 - selectX1, selectY2 - selectY1), glm::vec4(1, 1, 1, 0.5f));
 }
 
-
-void SelectableImage::mousedrag(int x, int y)
-{
-	if (dragging)
-	{
-		selectX2 = x - this->x;
-		selectY2 = y - this->y;
-		alignToGrid();
-		textureWindow->setActiveTexture(index);
-	}
-}
 
 void SelectableImage::alignToGrid()
 {
