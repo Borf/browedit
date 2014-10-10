@@ -105,7 +105,51 @@ void BrowEdit::loadJsPlugins()
 	{
 		args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getGnd()->width));
 	})->GetFunction());
+	gnd->Set(v8::String::NewFromUtf8(isolate, "getCell"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		int x = (int)args[0]->IntegerValue();
+		int y = (int)args[1]->IntegerValue();
+		Gnd::Cube* cube = static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getGnd()->cubes[x][y];
 
+		v8::Handle<v8::Object> ret = v8::Object::New(args.GetIsolate());
+		v8::Handle<v8::Array> heights = v8::Array::New(args.GetIsolate(), 4);
+		for (int i = 0; i < 4; i++)
+			heights->Set(i, v8::Number::New(args.GetIsolate(), cube->height[i]));
+		ret->Set(v8::String::NewFromUtf8(args.GetIsolate(), "heights"), heights);
+
+		v8::Handle<v8::Array> tiles = v8::Array::New(args.GetIsolate(), 3);
+		tiles->Set(0, v8::Integer::New(args.GetIsolate(), cube->tileUp));
+		tiles->Set(1, v8::Integer::New(args.GetIsolate(), cube->tileSide));
+		tiles->Set(2, v8::Integer::New(args.GetIsolate(), cube->tileFront));
+		ret->Set(v8::String::NewFromUtf8(args.GetIsolate(), "tiles"), tiles);
+		args.GetReturnValue().Set(ret);
+	})->GetFunction());
+
+	gnd->Set(v8::String::NewFromUtf8(isolate, "setCell"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		int x = (int)args[0]->IntegerValue();
+		int y = (int)args[1]->IntegerValue();
+		v8::HandleScope handle_scope(args.GetIsolate());
+		v8::Handle<v8::Object> t(args[2]->ToObject());
+
+		Gnd::Cube* cube = static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getGnd()->cubes[x][y];
+
+		v8::Handle<v8::Array> heights = v8::Handle<v8::Array>::Cast(t->Get(v8::String::NewFromUtf8(args.GetIsolate(), "heights")));
+		v8::Handle<v8::Array> tiles = v8::Handle<v8::Array>::Cast(t->Get(v8::String::NewFromUtf8(args.GetIsolate(), "tiles")));
+
+		for (int i = 0; i < 4; i++)
+			cube->height[i] = (float)heights->Get(i)->NumberValue();
+
+		cube->tileUp = tiles->Get(0)->Int32Value();
+		cube->tileSide = tiles->Get(1)->Int32Value();
+		cube->tileFront = tiles->Get(2)->Int32Value();		
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->mapRenderer.setTileDirty(x, y);
+		
+	})->GetFunction());
+
+
+
+////////////////////rsw
 	v8::Handle<v8::Object> rsw = v8::Object::New(isolate);
 	map->Set(v8::String::NewFromUtf8(isolate, "rsw"), rsw);
 	rsw->Set(v8::String::NewFromUtf8(isolate, "getVersion"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args) 

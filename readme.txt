@@ -150,15 +150,16 @@ browedit :
 
 cell
 {
-	setHeight(int index, float height),
-	getHeight(int index)
-	getTexture(),
-	setTexture(int index),
-	uniqueLightmap(),
-	setShadowMap(int x, int y, int value),
-	setColorMap(int x, int y, int r, int g, int b),
-	getColor(), // [ r, g, b ]
-	setColor(int r, int g, int b),
+	float heights[4]
+	int tiles[3]
+}
+
+tile
+{
+	float texcoords[4][2]
+	int texIndex
+	int lightmapIndex
+	float color[3]
 }
 
 object
