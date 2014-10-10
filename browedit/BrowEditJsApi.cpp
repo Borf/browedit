@@ -95,14 +95,56 @@ void BrowEdit::loadJsPlugins()
 	v8::Handle<v8::Object> map = v8::Object::New(isolate);
 	brow->Set(v8::String::NewFromUtf8(isolate, "map"), map);
 
+	map->Set(v8::String::NewFromUtf8(isolate, "getFile"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::String::NewFromUtf8(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getFileName().c_str()));
+	})->GetFunction());
+
 
 	v8::Handle<v8::Object> gnd = v8::Object::New(isolate);
 	map->Set(v8::String::NewFromUtf8(isolate, "gnd"), gnd);
 	gnd->Set(v8::String::NewFromUtf8(isolate, "getHeight"), v8::FunctionTemplate::New(isolate, getGndHeight)->GetFunction());
 	gnd->Set(v8::String::NewFromUtf8(isolate, "getWidth"), v8::FunctionTemplate::New(isolate, getGndWidth)->GetFunction());
 
+	v8::Handle<v8::Object> rsw = v8::Object::New(isolate);
+	map->Set(v8::String::NewFromUtf8(isolate, "rsw"), rsw);
+	rsw->Set(v8::String::NewFromUtf8(isolate, "getVersion"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args) 
+	{
+		args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->version));
+	})->GetFunction());
 
 
+
+	v8::Handle<v8::Object> water = v8::Object::New(isolate);
+	rsw->Set(v8::String::NewFromUtf8(isolate, "water"), water);
+	water->Set(v8::String::NewFromUtf8(isolate, "getHeight"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Number::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.height));
+	})->GetFunction());
+	water->Set(v8::String::NewFromUtf8(isolate, "getType"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.type));
+	})->GetFunction());
+	water->Set(v8::String::NewFromUtf8(isolate, "getAmplitude"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Number::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.amplitude));
+	})->GetFunction());
+	water->Set(v8::String::NewFromUtf8(isolate, "getAmplitude"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Number::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.amplitude));
+	})->GetFunction());
+	water->Set(v8::String::NewFromUtf8(isolate, "getPhase"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Number::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.phase));
+	})->GetFunction());
+	water->Set(v8::String::NewFromUtf8(isolate, "getSurfaceCurve"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Number::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.surfaceCurve));
+	})->GetFunction());
+	water->Set(v8::String::NewFromUtf8(isolate, "getAnimSpeed"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.animSpeed));
+	})->GetFunction());
 
 
 

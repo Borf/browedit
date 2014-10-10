@@ -109,14 +109,28 @@ browedit :
 	{
 		save(),																			//TODO
 		load(),																			//TODO
+
+		getName();
+
 		'gnd' : // API related to the floor height, textures & shadows
 		{
 			getWidth(),		/returns the width of the map
 			getHeight(),	//returns the height of the map
+			getCell(int x, int y)
 		},
 		'rsw' :	// API related to objects
 		{
-			
+			'water' :
+			{
+				getHeight(),
+				getType(),
+				getAmplitude(),
+				getPhase(),
+				getSurfaceCurve(),
+				getAnimSpeed()
+			},
+			objectSize(),
+			getObject(int id)
 		}
 	},
 	'camera' : //camera controls
@@ -127,4 +141,27 @@ browedit :
 	{
 		showMessage(text),															//TODO
 	}
+}
+
+
+
+cell
+{
+	setHeight(int index, float height),
+	getHeight(int index)
+	getTexture(),
+	setTexture(int index),
+	uniqueLightmap(),
+	setShadowMap(int x, int y, int value),
+	setColorMap(int x, int y, int r, int g, int b),
+	getColor(), // [ r, g, b ]
+	setColor(int r, int g, int b),
+}
+
+object
+{
+	getType(),
+	getPosition(), // [ x, y, z]
+	getRotation(), // [ x, y, z]
+
 }

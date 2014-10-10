@@ -34,6 +34,9 @@
     <Filter Include="actions">
       <UniqueIdentifier>{2b3abe1c-7279-4242-a10d-488252d85259}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assets\plugins">
+      <UniqueIdentifier>{9b6808fc-e700-4e1d-9200-425e74696a07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
@@ -213,6 +216,9 @@
     </None>
     <None Include="..\assets\windows\ModelPropertiesWindow.json">
       <Filter>assets\windows</Filter>
+    </None>
+    <None Include="..\assets\plugins\browedit.test.js">
+      <Filter>assets\plugins</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
