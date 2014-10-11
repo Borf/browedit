@@ -1,4 +1,5 @@
 #include "TextureWindow.h"
+#include "../BrowEdit.h"
 
 #include <BroLib/MapRenderer.h>
 #include <BroLib/Map.h>
@@ -36,9 +37,10 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	selectedImage = -1;
 	resizable = false;
 
-	getComponent("btnExpand")->addClickHandler([this](int x, int y, int clickCount)
+	blib::wm::widgets::Button* expandButton = getComponent<blib::wm::widgets::Button>("btnExpand");
+
+	expandButton->addClickHandler([this, expandButton](int x, int y, int clickCount)
 	{
-		blib::wm::widgets::Button* expandButton = getComponent<blib::wm::widgets::Button>("btnExpand");
 
 		if (expandButton->text == ">")
 		{
@@ -93,11 +95,26 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	});
 
 
-	addKeyDownHandler([](blib::Key key)
+	addKeyDownHandler([this, browEdit, expandButton](blib::Key key)
 	{
 		if (key == blib::Key::DEL)
 		{
-			Log::out << "YAY" << Log::newline;
+			if (expandButton->text == "<" && selectedImage != -1)
+			{
+				Gnd* gnd = browEdit->map->getGnd();
+				gnd->textures.push_back(gnd->textures[selectedImage]);
+				gnd->textures.erase(gnd->textures.begin() + selectedImage); // mag nie
+
+				for (size_t i = 0; i < gnd->tiles.size(); i++)
+				{
+					if (gnd->tiles[i]->textureIndex > selectedImage)
+						gnd->tiles[i]->textureIndex--;
+				}
+				updateTextures(browEdit->map);
+				for (int x = 0; x < gnd->width; x++)
+					for (int y = 0; y < gnd->height; y++)
+						browEdit->mapRenderer.setTileDirty(x, y);
+			}
 			return true;
 		}
 		return false;
@@ -110,6 +127,7 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 void TextureWindow::updateTextures(Map* map)
 {
 	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstTextures");
+	panel->clear();
 	for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
 	{
 		SelectableImage* img = new SelectableImage(map->getGnd()->textures[i]->texture, i, this);
@@ -338,8 +356,8 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 	{
 		if (dragging)
 		{
-			selectX2 = x - this->x;
-			selectY2 = y - this->y;
+			selectX2 = x;
+			selectY2 = y;
 			alignToGrid();
 			this->textureWindow->setActiveTexture(this->index);
 			return true;

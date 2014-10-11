@@ -5,6 +5,7 @@
 #include "windows/ObjectWindow.h"
 #include "windows/ModelPropertiesWindow.h"
 #include "windows/MessageWindow.h"
+#include "windows/HelpWindow.h"
 
 #include "actions/TextureEditAction.h"
 #include "actions/ObjectEditAction.h"
@@ -206,6 +207,8 @@ void BrowEdit::init()
 	objectWindow->setPosition(window->getWidth() - objectWindow->getWidth(), 10);
 	objectWindow->hide();
 
+
+	HelpWindow* helpWindow = new HelpWindow(resourceManager, NULL);
 
 	loadJsPlugins();
 
@@ -432,7 +435,8 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::TextureEdit && mapRenderer.mouse3d.w < 1 && map && cursorX >= 0 && cursorX < map->getGnd()->width && cursorY >= 0 && cursorY < mapHeight && textureWindow->selectedImage != -1)
 		{
-			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 0));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
 			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.75f));
 			highlightRenderState.activeTexture[0] = map->getGnd()->textures[textureWindow->selectedImage]->texture;
 			std::vector<blib::VertexP3T2> verts;

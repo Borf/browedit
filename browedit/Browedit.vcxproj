@@ -113,6 +113,7 @@
     <ClInclude Include="TranslatorTool.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
+    <ClInclude Include="windows\HelpWindow.h" />
     <ClInclude Include="windows\MessageWindow.h" />
     <ClInclude Include="windows\ModelPropertiesWindow.h" />
     <ClInclude Include="windows\ObjectWindow.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="TranslatorTool.cpp" />
     <ClCompile Include="WallEdit.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
+    <ClCompile Include="windows\HelpWindow.cpp" />
     <ClCompile Include="windows\MessageWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />
     <ClCompile Include="windows\ObjectWindow.cpp" />
@@ -145,6 +147,7 @@
     <None Include="..\assets\configs\config.borf.json" />
     <None Include="..\assets\configs\config.default.json" />
     <None Include="..\assets\configs\config.laptop.json" />
+    <None Include="..\assets\help.json" />
     <None Include="..\assets\menu.json" />
     <None Include="..\assets\shaders\compose.frag" />
     <None Include="..\assets\shaders\compose.vert" />
@@ -155,6 +158,7 @@
     <None Include="..\assets\shaders\rsw.frag" />
     <None Include="..\assets\shaders\rsw.vert" />
     <None Include="..\assets\skins\ro.json" />
+    <None Include="..\assets\windows\HelpWindow.json" />
     <None Include="..\assets\windows\MenuFilterWindow.json" />
     <None Include="..\assets\windows\MessageWindow.json" />
     <None Include="..\assets\windows\ModelPropertiesWindow.json" />

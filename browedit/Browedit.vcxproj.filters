@@ -34,9 +34,6 @@
     <Filter Include="actions">
       <UniqueIdentifier>{2b3abe1c-7279-4242-a10d-488252d85259}</UniqueIdentifier>
     </Filter>
-    <Filter Include="assets\plugins">
-      <UniqueIdentifier>{9b6808fc-e700-4e1d-9200-425e74696a07}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
@@ -91,6 +88,9 @@
       <Filter>actions</Filter>
     </ClInclude>
     <ClInclude Include="windows\MessageWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\HelpWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>
@@ -158,6 +158,9 @@
     <ClCompile Include="WallEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="windows\HelpWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\shaders\gnd.frag">
@@ -217,8 +220,11 @@
     <None Include="..\assets\windows\ModelPropertiesWindow.json">
       <Filter>assets\windows</Filter>
     </None>
-    <None Include="..\assets\plugins\browedit.test.js">
-      <Filter>assets\plugins</Filter>
+    <None Include="..\assets\windows\HelpWindow.json">
+      <Filter>assets\windows</Filter>
+    </None>
+    <None Include="..\assets\help.json">
+      <Filter>assets</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

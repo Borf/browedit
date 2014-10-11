@@ -1,0 +1,35 @@
+{
+	"size" : [ 800, 600 ],
+	"modal" : false,
+	"resizable" : true,
+	"widgets" :
+	{
+		"lstTopics" :
+		{
+			"type" : "list",
+			"position" : [ 0, 0 ],
+			"size" : [ 200, 580 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"text" :
+		{
+			"type" : "label",
+			"text" : "-",
+			"position" : [ 210, 10],
+			"size" : [ 580, 560 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		}
+	}
+}
