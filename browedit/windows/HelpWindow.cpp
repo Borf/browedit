@@ -3,7 +3,7 @@
 
 
 #include <blib/wm/widgets/list.h>
-#include <blib/wm/widgets/Label.h>
+#include <blib/wm/widgets/BmlBox.h>
 #include <blib/util/FileSystem.h>
 
 
@@ -24,7 +24,7 @@ HelpWindow::HelpWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdi
 		if (list->selectedItems.empty())
 			return false;
 
-		getComponent<blib::wm::widgets::Label>("text")->text = help[list->selectedItems[0]]["value"].asString();
+		getComponent<blib::wm::widgets::BmlBox>("text")->setBml(help[list->selectedItems[0]]["value"].asString());
 		return true;
 	});
 

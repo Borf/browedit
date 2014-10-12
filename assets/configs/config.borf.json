@@ -9,7 +9,7 @@
 		]
 	},
 	"moveconsole" : true,
-	"defaultmap" : "test",
+	"defaultmap" : "prontera",
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
 	"fov" : 45,

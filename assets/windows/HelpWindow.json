@@ -19,7 +19,7 @@
 		},
 		"text" :
 		{
-			"type" : "label",
+			"type" : "bmlbox",
 			"text" : "-",
 			"position" : [ 210, 10],
 			"size" : [ 580, 560 ],
