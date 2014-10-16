@@ -13,7 +13,7 @@ HelpWindow::HelpWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdi
 
 	blib::wm::widgets::List* list = getComponent<blib::wm::widgets::List>("lstTopics");
 
-	for (int i = 0; i < help.size(); i++)
+	for (Json::ArrayIndex i = 0; i < help.size(); i++)
 	{
 		list->items.push_back(help[i]["title"].asString());
 	}
