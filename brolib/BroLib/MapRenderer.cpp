@@ -429,17 +429,23 @@ void MapRenderer::setMap(const Map* map)
 	gndTextureGridDirty = true;
 	gndGridDirty = true;
 
-
 	//load textures if needed
-	if (map->getGnd()->textures[0]->texture == NULL)
-		for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
+	for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
+		if (map->getGnd()->textures[i]->texture == NULL)
 			map->getGnd()->textures[i]->texture = resourceManager->getResource<blib::Texture>("data/texture/" + map->getGnd()->textures[i]->file);
+
 }
 
 #pragma region GND
 
 void MapRenderer::renderGnd(blib::Renderer* renderer)
 {
+	//load textures if needed
+	for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
+		if (map->getGnd()->textures[i]->texture == NULL)
+			map->getGnd()->textures[i]->texture = resourceManager->getResource<blib::Texture>("data/texture/" + map->getGnd()->textures[i]->file);
+
+
 	if (gndShadowDirty)
 	{
 		char shadowData[4] = { 0, 0, 0, 0xffu };
@@ -536,6 +542,16 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 		std::vector<VboIndex> newVertIndices;
 	};
 
+	for (auto a : vertIndices)
+	{
+		if (a.texture >= gnd->textures.size())
+		{
+			vertIndices.clear();
+			break;
+		}
+	}
+
+
 	new blib::BackgroundTask<NewChunkData>(app, [this, gnd, renderer] () {
 //		Log::out << "Rebuilding chunk " << x << ", " << y << Log::newline;
 		std::map<int, std::vector<GndVertex> > verts;
@@ -613,7 +629,6 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 			dirty = false;
 			rebuilding = false;
 	});
-
 }
 
 #pragma endregion

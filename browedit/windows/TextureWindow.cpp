@@ -102,18 +102,19 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 			if (expandButton->text == "<" && selectedImage != -1)
 			{
 				Gnd* gnd = browEdit->map->getGnd();
-				gnd->textures.push_back(gnd->textures[selectedImage]);
-				gnd->textures.erase(gnd->textures.begin() + selectedImage); // mag nie
+				gnd->textures.erase(gnd->textures.begin() + selectedImage);
 
 				for (size_t i = 0; i < gnd->tiles.size(); i++)
 				{
-					if (gnd->tiles[i]->textureIndex > selectedImage)
+					if (gnd->tiles[i]->textureIndex >= selectedImage)
 						gnd->tiles[i]->textureIndex--;
 				}
 				updateTextures(browEdit->map);
 				for (int x = 0; x < gnd->width; x++)
 					for (int y = 0; y < gnd->height; y++)
 						browEdit->mapRenderer.setTileDirty(x, y);
+				if (selectedImage >= (int)gnd->textures.size())
+					selectedImage = -1;
 			}
 			return true;
 		}
@@ -190,6 +191,22 @@ void TextureWindow::setDirectory(std::string directory)
 			image->height = textureSize;
 			image->x = px;
 			image->y = py;
+
+			image->addClickHandler([this, it](int x, int y, int clickCount) {
+				if (clickCount == 2)
+				{
+					Gnd::Texture* tex = new Gnd::Texture();
+					tex->file = it.second;
+					tex->name = it.second;
+					tex->texture = resourceManager->getResource<blib::Texture>("data/texture/" + it.second);;
+
+					browEdit->map->getGnd()->textures.push_back(tex);
+					updateTextures(browEdit->map);
+				}
+				return true;
+			});
+
+
 			panel->add(image);
 
 			px += textureSize;
@@ -354,7 +371,7 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 
 	addDragHandler([this](int x, int y)
 	{
-		if (dragging)
+		if (dragging && x > 0 && y > 0)
 		{
 			selectX2 = x;
 			selectY2 = y;

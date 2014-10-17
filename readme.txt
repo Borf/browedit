@@ -35,7 +35,9 @@ V			Flip texture vertically
 R			Rotate texture
 
 In the texture window is a little > button. Click it to expand this window. This will open the texture browser. 
-Click on the list of categories to browse through categories. There is no option to add these textures to the map yet
+Click on the list of categories to browse through categories. In the window
+Delete				delete selected texture
+doubleclick			add selected texture
 
 
 
