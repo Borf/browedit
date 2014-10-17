@@ -2,6 +2,7 @@
 	"size" : [ 800, 600 ],
 	"modal" : false,
 	"resizable" : true,
+	"closable" : true,
 	"widgets" :
 	{
 		"lstTopics" :

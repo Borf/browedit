@@ -89,6 +89,11 @@
 				"name" : "effects",
 				"type" : "toggle",
 				"initial" : true
+			},
+			{
+				"name" : "help",
+				"type" : "item",
+				"key" : "ctrl+h"
 			}
 		]
 

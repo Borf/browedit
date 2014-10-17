@@ -207,9 +207,6 @@ void BrowEdit::init()
 	objectWindow->setPosition(window->getWidth() - objectWindow->getWidth(), 10);
 	objectWindow->hide();
 
-
-	HelpWindow* helpWindow = new HelpWindow(resourceManager, NULL);
-
 	loadJsPlugins();
 
 
@@ -250,6 +247,8 @@ void BrowEdit::init()
 		}, [dialog](bool bla)	{	dialog->close();	});
 	});
 
+
+	rootMenu->setAction("display/help", [this]() { new HelpWindow(resourceManager, this);  });
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
 	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
