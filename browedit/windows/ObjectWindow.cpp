@@ -3,9 +3,10 @@
 #include "../Camera.h"
 
 #include <blib/wm/WM.h>
-#include <blib/wm/widgets/list.h>
+#include <blib/wm/widgets/TreeView.h>
 #include <blib/wm/widgets/button.h>
 #include <blib/wm/widgets/Label.h>
+#include <blib/wm/widgets/List.h>
 #include <blib/wm/widgets/ScrollPanel.h>
 #include <blib/SpriteBatch.h>
 #include <blib/util/FileSystem.h>
@@ -38,17 +39,19 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	largeWidth = glm::min(1300, blib::wm::WM::getInstance()->screenSize.x - 100);
 	resizable = false;
 
-	getComponent<blib::wm::widgets::List>("lstObjects")->addClickHandler([this, browEdit](int, int, int)
+	getComponent<blib::wm::widgets::TreeView>("lstObjects")->addClickHandler([this, browEdit](int, int, int)
 	{
-		int index = getComponent<blib::wm::widgets::List>("lstObjects")->selectedItem();
-		if (index == -1)
+		blib::wm::widgets::TreeView* treeView = getComponent<blib::wm::widgets::TreeView>("lstObjects");
+
+		ObjectTreeNode* node = dynamic_cast<ObjectTreeNode*>(treeView->currentList[treeView->selectedItem].second);
+		if (!node)
 			return false;
 		browEdit->camera->targetPosition = glm::vec2(
-			5 * browEdit->map->getGnd()->width + browEdit->map->getRsw()->objects[index]->position.x, 
-			5 * browEdit->map->getGnd()->height - browEdit->map->getRsw()->objects[index]->position.z);
+			5 * browEdit->map->getGnd()->width + node->object->position.x,
+			5 * browEdit->map->getGnd()->height - node->object->position.z);
 
 		for (size_t i = 0; i < browEdit->map->getRsw()->objects.size(); i++)
-			browEdit->map->getRsw()->objects[i]->selected = i == index; 
+			browEdit->map->getRsw()->objects[i]->selected = node->object == browEdit->map->getRsw()->objects[i];
 		return true;
 	});
 
@@ -111,6 +114,14 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 		return true;
 	});
 
+
+	getComponent<blib::wm::widgets::TreeView>("lstObjects")->root = new blib::wm::widgets::TreeView::TreeNode();
+	modelsNode = new blib::wm::widgets::TreeView::TreeNode("Models", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	lightsNode = new blib::wm::widgets::TreeView::TreeNode("Lights", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	effectsNode = new blib::wm::widgets::TreeView::TreeNode("Effects", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	soundsNode = new blib::wm::widgets::TreeView::TreeNode("Sounds", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+
+
 	setDirectory("/");
 
 }
@@ -128,12 +139,40 @@ void ObjectWindow::arrangeComponents(int oldWidth, int oldHeight)
 
 void ObjectWindow::updateObjects(Map* map)
 {
-	blib::wm::widgets::List* items = getComponent<blib::wm::widgets::List>("lstObjects");
-	items->items.clear();
+	blib::wm::widgets::TreeView* items = getComponent<blib::wm::widgets::TreeView>("lstObjects");
+
+
+	blib::linq::deleteall(modelsNode->children);
+	blib::linq::deleteall(effectsNode->children);
+	blib::linq::deleteall(lightsNode->children);
+	blib::linq::deleteall(soundsNode->children);
+
+
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
-		items->items.push_back(map->getRsw()->objects[i]->name);
+		Rsw::Object* obj = map->getRsw()->objects[i];
+		std::vector<std::string> folders = blib::util::split(obj->name, "\\");
+		blib::wm::widgets::TreeView::TreeNode* node = NULL;
+		
+		if (obj->type == Rsw::Object::Type::Model)
+			node = modelsNode;
+		else if (obj->type == Rsw::Object::Type::Effect)
+			node = effectsNode;
+		else if (obj->type == Rsw::Object::Type::Light)
+			node = lightsNode;
+		else if (obj->type == Rsw::Object::Type::Sound)
+			node = soundsNode;
+
+		for (size_t i = 0; i < folders.size()-1; i++)
+		{
+			blib::wm::widgets::TreeView::TreeNode* child = node->getNode(folders[i]);
+			if (!child)
+				child = new blib::wm::widgets::TreeView::TreeNode(folders[i], node);
+			node = child;
+		}
+		new ObjectTreeNode(folders[folders.size() - 1], obj, node);
 	}
+	items->buildList();
 }
 
 

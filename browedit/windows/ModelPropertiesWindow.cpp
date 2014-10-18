@@ -1,11 +1,13 @@
 #include "ModelPropertiesWindow.h"
+#include "ObjectWindow.h"
+#include "../BrowEdit.h"
 
 #include <blib/wm/WM.h>
 #include <blib/wm/widgets/textbox.h>
 #include <blib/wm/widgets/button.h>
 #include <blib/Util.h>
 
-ModelPropertiesWindow::ModelPropertiesWindow(Rsw::Model* model, blib::ResourceManager* resourceManager) : blib::wm::Window("Model Properties", "ModelPropertiesWindow.json", resourceManager)
+ModelPropertiesWindow::ModelPropertiesWindow(Rsw::Model* model, blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Model Properties", "ModelPropertiesWindow.json", resourceManager)
 {
 	blib::wm::WM::getInstance()->center(this);
 
@@ -27,7 +29,7 @@ ModelPropertiesWindow::ModelPropertiesWindow(Rsw::Model* model, blib::ResourceMa
 
 
 	getComponent<blib::wm::widgets::Button>("btnCancel")->addClickHandler([this](int, int, int) { close(); return true;  });
-	getComponent<blib::wm::widgets::Button>("btnOk")->addClickHandler([this, model](int, int, int) 
+	getComponent<blib::wm::widgets::Button>("btnOk")->addClickHandler([this, model, browEdit](int, int, int) 
 	{ 
 		model->position.x = (float)atof(getComponent<blib::wm::widgets::Textbox>("positionx")->text.c_str());
 		model->position.y = (float)atof(getComponent<blib::wm::widgets::Textbox>("positiony")->text.c_str());
@@ -41,8 +43,13 @@ ModelPropertiesWindow::ModelPropertiesWindow(Rsw::Model* model, blib::ResourceMa
 		model->scale.y = (float)atof(getComponent<blib::wm::widgets::Textbox>("scaley")->text.c_str());
 		model->scale.z = (float)atof(getComponent<blib::wm::widgets::Textbox>("scalez")->text.c_str());
 
+		model->name = getComponent<blib::wm::widgets::Textbox>("name")->text;
+
 		model->matrixCached = false;
 		close();
+
+		browEdit->objectWindow->updateObjects(browEdit->map);
+
 		return true;
 	});
 

@@ -359,8 +359,8 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 			((Model*)objects[i])->foreachface([gnd, &heights](const std::vector<glm::vec3> &verts) {
 				for (glm::vec3 vert : verts)
 				{
-					int x = vert.x / 10;
-					int y = gnd->height - (vert.z / 10);
+					int x = (int)(vert.x / 10);
+					int y = (int)(gnd->height - (vert.z / 10));
 					if (x < 0 || x >= gnd->width || y < 0 || y >= gnd->height)
 						continue;
 					heights[x][y].x = glm::min(heights[x][y].x, -vert.y);
@@ -375,12 +375,12 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 	int index = 0;
 	for (QuadTreeNode* node : nodes)
 	{
-		assert3(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2 < 0.0001, "Difference: " + blib::util::toString(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2) + " (should be small)");
-		assert3(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2 < 0.0001, "Difference: " + blib::util::toString(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2) + " (should be small)");
-		assert3(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2 < 0.0001, "Difference: " + blib::util::toString(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2) + " (should be small)");
-		assert3(node->range[1].x - (node->bbox.max.x - node->range[0].x < 0.0001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
-		assert3(node->range[1].y - (node->bbox.max.y - node->range[0].y < 0.0001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
-		assert3(node->range[1].z - (node->bbox.max.z - node->range[0].z < 0.0001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2 < 0.000001, "Difference: " + blib::util::toString(node->range[0].x - (node->bbox.max.x - node->bbox.min.x) / 2) + " (should be small)");
+		assert3(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2 < 0.000001, "Difference: " + blib::util::toString(node->range[0].y - (node->bbox.max.y - node->bbox.min.y) / 2) + " (should be small)");
+		assert3(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2 < 0.000001, "Difference: " + blib::util::toString(node->range[0].z - (node->bbox.max.z - node->bbox.min.z) / 2) + " (should be small)");
+		assert3(node->range[1].x - (node->bbox.max.x - node->range[0].x < 0.000001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[1].y - (node->bbox.max.y - node->range[0].y < 0.000001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
+		assert3(node->range[1].z - (node->bbox.max.z - node->range[0].z < 0.000001), "Difference: " + blib::util::toString(node->range[1].x - (node->bbox.max.x - node->range[0].x)) + " (should be small)");
 
 
 		node->bbox.min.y = MAP_MAX;
@@ -389,10 +389,10 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 		{
 			for (float z = node->bbox.min.z; z <= node->bbox.max.z; z += 1)
 			{
-				int xx = floor((gnd->width * 5 + x) / 10);
-				int yy = floor((gnd->height * 5 + z) / 10);
-				int xxx = ceil((gnd->width * 5 + x) / 10);
-				int yyy = ceil((gnd->height * 5 + z) / 10);
+				int xx = (int)floor((gnd->width * 5 + x) / 10);
+				int yy = (int)floor((gnd->height * 5 + z) / 10);
+				int xxx = (int)ceil((gnd->width * 5 + x) / 10);
+				int yyy = (int)ceil((gnd->height * 5 + z) / 10);
 				if (xx < 0 || yy < 0 || xx >= gnd->width || yy >= gnd->height ||
 					xxx < 0 || yyy < 0 || xxx >= gnd->width || yyy >= gnd->height)
 					continue;

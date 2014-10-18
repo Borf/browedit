@@ -3,6 +3,9 @@
 
 #include <blib/wm/Window.h>
 #include <blib/wm/widgets/Image.h>
+#include <blib/wm/widgets/TreeView.h>
+
+#include <BroLib/Rsw.h>
 
 #include <glm/glm.hpp>
 
@@ -32,6 +35,18 @@ public:
 
 class ObjectWindow : public blib::wm::Window
 {
+	class ObjectTreeNode : public blib::wm::widgets::TreeView::TreeNode
+	{
+	public:
+		Rsw::Object* object;
+
+		ObjectTreeNode(std::string name, Rsw::Object* object, blib::wm::widgets::TreeView::TreeNode* parent) : blib::wm::widgets::TreeView::TreeNode(name, parent)
+		{
+			this->object = object;
+		}
+	};
+
+
 	int smallWidth;
 	int largeWidth;
 
@@ -42,6 +57,11 @@ class ObjectWindow : public blib::wm::Window
 	BrowEdit* browEdit;
 	std::map<std::string, std::string> textureFiles;
 
+
+	blib::wm::widgets::TreeView::TreeNode* modelsNode;
+	blib::wm::widgets::TreeView::TreeNode* soundsNode;
+	blib::wm::widgets::TreeView::TreeNode* effectsNode;
+	blib::wm::widgets::TreeView::TreeNode* lightsNode;
 public:
 	ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit);
 	~ObjectWindow();

@@ -21,7 +21,7 @@ void SelectObjectAction::finish(Rsw* rsw)
 
 void SelectObjectAction::perform(Map* map, MapRenderer& mapRenderer)
 {
-	int ii = 0;
+	size_t ii = 0;
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
 		if (ii < indices.size())
@@ -37,7 +37,7 @@ void SelectObjectAction::perform(Map* map, MapRenderer& mapRenderer)
 
 void SelectObjectAction::undo(Map* map, MapRenderer& mapRenderer)
 {
-	int ii = 0;
+	size_t ii = 0;
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
 		if (ii < oldIndices.size())

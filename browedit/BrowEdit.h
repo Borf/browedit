@@ -67,9 +67,11 @@ class BrowEdit : public blib::App, public blib::MouseListener
 
 	blib::Texture* gradientBackground;
 
+public:
 	TextureWindow* textureWindow;
 	ObjectWindow* objectWindow;
-public:
+
+
 	BrowEdit(const Json::Value &config, v8::Isolate* isolate);
 	~BrowEdit(void);
 

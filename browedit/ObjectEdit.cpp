@@ -10,6 +10,7 @@
 #include "actions/GroupAction.h"
 
 #include "windows/ModelPropertiesWindow.h"
+#include "windows/ObjectWindow.h"
 
 void BrowEdit::objectEditUpdate()
 {
@@ -85,7 +86,7 @@ void BrowEdit::objectEditUpdate()
 						if (o->selected && mouseState.clickcount == 2)
 						{
 							if (o->type == Rsw::Object::Type::Model)
-								new ModelPropertiesWindow((Rsw::Model*)o, resourceManager);
+								new ModelPropertiesWindow((Rsw::Model*)o, resourceManager, this);
 						}
 					}
 				}
@@ -165,7 +166,7 @@ void BrowEdit::objectEditUpdate()
 
 
 
-	if (true /* wm keyfocus */)
+	if (!wm->keyPressed)
 	{
 		if (keyState.isPressed(blib::Key::DEL) && !lastKeyState.isPressed(blib::Key::DEL))
 		{
@@ -175,6 +176,8 @@ void BrowEdit::objectEditUpdate()
 				{
 					map->getRsw()->objects.erase(map->getRsw()->objects.begin() + i);
 					i--;
+
+					objectWindow->updateObjects(map);
 				}
 			}
 		}

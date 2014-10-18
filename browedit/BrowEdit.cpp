@@ -389,6 +389,8 @@ void BrowEdit::update( double elapsedTime )
 	lastmouse3d = mapRenderer.mouse3d;
 	lastKeyState = keyState;
 	lastMouseState = mouseState;
+
+	wm->keyPressed = false;
 }
 
 void BrowEdit::draw()

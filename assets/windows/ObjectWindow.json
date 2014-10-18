@@ -6,7 +6,7 @@
 	{
 		"lstObjects" :
 		{
-			"type" : "list",
+			"type" : "tree",
 			"position" : [ 0, 0 ],
 			"size" : [ 212, 575 ],
 			"positionhelp" :
