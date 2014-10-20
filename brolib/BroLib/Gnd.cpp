@@ -136,7 +136,8 @@ Gnd::Gnd( const std::string &fileName )
 				tile->lightmapIndex = 0;
 			}
 
-			tile->color = glm::vec4((unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f);
+			tile->color = glm::vec3((unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f);
+			file->get(); // alpha
 			tiles.push_back(tile);
 		}
 
@@ -248,8 +249,9 @@ void Gnd::save(std::string fileName)
 			pFile->writeFloat(tile->v4.y);
 			pFile->writeWord(tile->textureIndex);
 			pFile->writeWord(tile->lightmapIndex);
-			
-			pFile->put((int)(tile->color.a * 255));
+	
+			pFile->put(255);
+//			pFile->put((int)(tile->color.a * 255));
 			pFile->put((int)(tile->color.z * 255));
 			pFile->put((int)(tile->color.y * 255));
 			pFile->put((int)(tile->color.x * 255));

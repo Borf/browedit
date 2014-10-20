@@ -51,7 +51,7 @@ public:
 class MapRenderer : public blib::gl::GlResizeRegister
 {
 public:
-	typedef blib::VertexP3T2T2 GndVertex;
+	typedef blib::VertexP3T2T2C3N3 GndVertex; //TODO: T2T2T2 , use a 2d map for the colors
 private:
 	int width;
 	int height;

@@ -37,7 +37,7 @@ public:
 		glm::vec2 v1,v2,v3,v4;
 		int textureIndex;
 		int lightmapIndex;
-		glm::vec4 color;
+		glm::vec3 color;
 	};
 
 	class Cube

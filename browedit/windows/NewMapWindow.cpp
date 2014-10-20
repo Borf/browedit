@@ -54,7 +54,7 @@ NewMapWindow::NewMapWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 			for (int y = 0; y < 4; y++)
 			{
 				Gnd::Tile* tile = new Gnd::Tile();
-				tile->color = glm::vec4(1, 1, 1, 1);
+				tile->color = glm::vec3(1, 1, 1);
 				tile->lightmapIndex = 0;
 				tile->textureIndex = 0;
 				tile->v1 = glm::vec2(0, 0);

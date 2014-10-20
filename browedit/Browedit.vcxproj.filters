@@ -169,18 +169,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\assets\shaders\gnd.frag">
-      <Filter>assets\shaders</Filter>
-    </None>
-    <None Include="..\assets\shaders\gnd.vert">
-      <Filter>assets\shaders</Filter>
-    </None>
-    <None Include="..\assets\shaders\rsw.vert">
-      <Filter>assets\shaders</Filter>
-    </None>
-    <None Include="..\assets\shaders\rsw.frag">
-      <Filter>assets\shaders</Filter>
-    </None>
     <None Include="..\assets\menu.json">
       <Filter>assets</Filter>
     </None>
@@ -208,20 +196,8 @@
     <None Include="..\assets\windows\OpenWindow.json">
       <Filter>assets\windows</Filter>
     </None>
-    <None Include="..\assets\shaders\highlight.vert">
-      <Filter>assets\shaders</Filter>
-    </None>
-    <None Include="..\assets\shaders\highlight.frag">
-      <Filter>assets\shaders</Filter>
-    </None>
     <None Include="..\assets\windows\ObjectWindow.json">
       <Filter>assets\windows</Filter>
-    </None>
-    <None Include="..\assets\shaders\compose.vert">
-      <Filter>assets\shaders</Filter>
-    </None>
-    <None Include="..\assets\shaders\compose.frag">
-      <Filter>assets\shaders</Filter>
     </None>
     <None Include="..\assets\windows\ModelPropertiesWindow.json">
       <Filter>assets\windows</Filter>
@@ -234,6 +210,30 @@
     </None>
     <None Include="..\assets\windows\NewMapWindow.json">
       <Filter>assets\windows</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\compose.vert">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\gnd.frag">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\gnd.vert">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\highlight.frag">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\highlight.vert">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\rsw.frag">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\rsw.vert">
+      <Filter>assets\shaders</Filter>
+    </None>
+    <None Include="..\assets\shaders\gl\compose.frag">
+      <Filter>assets\shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

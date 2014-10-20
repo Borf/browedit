@@ -93,7 +93,7 @@ void BrowEdit::wallEditUpdate()
 
 						tile->textureIndex = textureWindow->selectedImage;
 						tile->lightmapIndex = 0;
-						tile->color = glm::vec4(1, 1, 1, 1);
+						tile->color = glm::vec3(1, 1, 1);
 						tile->v1 = glm::vec2(tx1, ty1);
 						tile->v2 = glm::vec2(tx2, ty1);
 						tile->v3 = glm::vec2(tx1, ty2);
@@ -107,7 +107,7 @@ void BrowEdit::wallEditUpdate()
 
 						tile->textureIndex = textureWindow->selectedImage;
 						tile->lightmapIndex = 0;
-						tile->color = glm::vec4(1, 1, 1, 1);
+						tile->color = glm::vec3(1, 1, 1);
 						tile->v1 = glm::vec2(tx1, ty1);
 						tile->v2 = glm::vec2(tx2, ty1);
 						tile->v3 = glm::vec2(tx1, ty2);
@@ -157,7 +157,7 @@ void BrowEdit::wallEditUpdate()
 							t->v3 = glm::vec2(0, 1);
 							t->v4 = glm::vec2(1, 1);
 							t->lightmapIndex = 0;
-							t->color = glm::vec4(1, 1, 1, 1);
+							t->color = glm::vec3(1, 1, 1);
 
 							newTile = map->getGnd()->tiles.size();
 							map->getGnd()->tiles.push_back(t);
