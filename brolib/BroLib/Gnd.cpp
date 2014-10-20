@@ -5,6 +5,35 @@
 #include <blib/Texture.h>
 using blib::util::Log;
 
+Gnd::Gnd(int width, int height)
+{
+	version = 0x0107;
+	this->width = width;
+	this->height = height;
+	tileScale = 10.0f;
+	maxTexName = 80;
+	lightmapWidth = 8;
+	lightmapHeight = 8;
+	gridSizeCell = 1;
+
+
+	cubes.resize(width, std::vector<Cube*>(height, NULL));
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			Cube* cube = new Cube();
+			cube->h1 = cube->h2 = cube->h3 = cube->h4 = 0;
+			cube->tileUp = -1;
+			cube->tileSide = -1;
+			cube->tileFront = -1;
+			cubes[x][y] = cube;
+		}
+	}
+}
+
+
+
 Gnd::Gnd( const std::string &fileName )
 {
 	blib::util::StreamInFile* file = blib::util::FileSystem::openRead(fileName + ".gnd");
@@ -164,6 +193,9 @@ Gnd::Gnd( const std::string &fileName )
 	delete file;
 	Log::out<<"GND: Done reading gnd file"<<Log::newline;
 }
+
+
+
 
 void Gnd::save(std::string fileName)
 {

@@ -106,7 +106,7 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 
 				for (size_t i = 0; i < gnd->tiles.size(); i++)
 				{
-					if (gnd->tiles[i]->textureIndex >= selectedImage)
+					if (gnd->tiles[i]->textureIndex >= selectedImage && gnd->tiles[i]->textureIndex > 0)
 						gnd->tiles[i]->textureIndex--;
 				}
 				updateTextures(browEdit->map);

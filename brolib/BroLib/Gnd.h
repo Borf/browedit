@@ -10,6 +10,8 @@ class Gnd
 {
 public:
 	Gnd(const std::string &fileName);
+	Gnd(int width, int height);
+
 	void save(std::string fileName);
 
 	class Texture

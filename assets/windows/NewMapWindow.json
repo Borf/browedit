@@ -1,0 +1,104 @@
+{
+    "size": [ 400, 150 ],
+    "modal": true,
+    "resizable": false,
+    "closable": true,
+    "widgets": {
+        "btnOk": {
+            "type": "button",
+            "text": "Ok",
+            "position": [ 300, 125 ],
+            "size": [ 100, 25 ],
+            "positionhelp": {
+                "left": "right",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom"
+            }
+        },
+        "btnCancel": {
+            "type": "button",
+            "text": "Cancel",
+            "position": [ 0, 125 ],
+            "size": [ 100, 25 ],
+            "positionhelp": {
+                "left": "left",
+                "right": "left",
+                "top": "bottom",
+                "bottom": "bottom"
+            }
+        },
+        "lblName": {
+            "type": "label",
+            "text": "Name: ",
+            "position": [ 0, 0 ],
+            "size": [ 100, 20 ],
+            "positionhelp": {
+                "left": "left",
+                "right": "left",
+                "top": "top",
+                "bottom": "top"
+            }
+        },
+        "name": {
+            "type": "textbox",
+            "text": "untitled",
+            "position": [ 100, 0 ],
+            "size": [ 300, 20 ],
+            "positionhelp": {
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "top"
+            }
+        },
+        "lblWidth": {
+            "type": "label",
+            "text": "Width: ",
+            "position": [ 0, 20 ],
+            "size": [ 100, 20 ],
+            "positionhelp": {
+                "left": "left",
+                "right": "left",
+                "top": "top",
+                "bottom": "top"
+            }
+        },
+        "width": {
+            "type": "textbox",
+            "text": "200",
+            "position": [ 100, 20 ],
+            "size": [ 300, 20 ],
+            "positionhelp": {
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "top"
+            }
+        },
+        "lblHeight": {
+            "type": "label",
+            "text": "Height: ",
+            "position": [ 0, 40 ],
+            "size": [ 100, 20 ],
+            "positionhelp": {
+                "left": "left",
+                "right": "left",
+                "top": "top",
+                "bottom": "top"
+            }
+        },
+        "height": {
+            "type": "textbox",
+            "text": "300",
+            "position": [ 100, 40 ],
+            "size": [ 300, 20 ],
+            "positionhelp": {
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "top"
+            }
+        }
+    }
+}

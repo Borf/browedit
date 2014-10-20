@@ -9,7 +9,7 @@
 		]
 	},
 	"moveconsole" : true,
-	"defaultmap" : "prontera",
+	"defaultmap" : "tur_dun02",
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
 	"fov" : 45,

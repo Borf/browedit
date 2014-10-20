@@ -93,6 +93,9 @@
     <ClInclude Include="windows\HelpWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\NewMapWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -161,6 +164,9 @@
     <ClCompile Include="windows\HelpWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="windows\NewMapWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\shaders\gnd.frag">
@@ -225,6 +231,9 @@
     </None>
     <None Include="..\assets\help.json">
       <Filter>assets</Filter>
+    </None>
+    <None Include="..\assets\windows\NewMapWindow.json">
+      <Filter>assets\windows</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

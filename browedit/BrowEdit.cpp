@@ -6,6 +6,7 @@
 #include "windows/ModelPropertiesWindow.h"
 #include "windows/MessageWindow.h"
 #include "windows/HelpWindow.h"
+#include "windows/NewMapWindow.h"
 
 #include "actions/TextureEditAction.h"
 #include "actions/ObjectEditAction.h"
@@ -209,6 +210,10 @@ void BrowEdit::init()
 
 	loadJsPlugins();
 
+	rootMenu->setAction("file/new", [this]()
+	{
+		new NewMapWindow(resourceManager, this);
+	});
 
 	rootMenu->setAction("file/open", [this](){
 		new FileOpenWindow(resourceManager, this);
@@ -270,8 +275,6 @@ void BrowEdit::init()
 	loadMap("data/prontera");
 #endif
 	//	loadMap("data/yuno");
-
-
 
 
 }
@@ -464,7 +467,7 @@ void BrowEdit::draw()
 					int xx = x + cursorTopLeft.x;
 					int yy = y + cursorTopLeft.y;
 
-					if (xx < 0 || yy < 0 || xx >= map->getGnd()->width || yy >= map->getGnd()->height)
+					if (xx < 0 || yy+1 < 0 || xx >= map->getGnd()->width || yy+1 >= map->getGnd()->height)
 						continue;
 
 					glm::vec2 t1 = texStart + glm::vec2(x, y) * texInc;

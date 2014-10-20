@@ -43,6 +43,25 @@ Gat::Gat(const std::string &fileName)
 	}
 }
 
+Gat::Gat(int width, int height)
+{
+	this->width = width;
+	this->height = height;
+	this->version = 0x0102;
+	tiles.resize(width, std::vector<Tile*>(height, NULL));
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			Tile* tile = new Tile();
+			for (int i = 0; i < 4; i++)
+				tile->cells[i] = 0;
+			tile->type = 0;
+			tiles[x][y] = tile;
+		}
+	}
+}
+
 void Gat::save(const std::string &fileName)
 {
 	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".gat");

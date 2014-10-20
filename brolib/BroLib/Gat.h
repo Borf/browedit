@@ -21,6 +21,8 @@ public:
 
 
 	Gat(const std::string &fileName);
+	Gat(int width, int height);
+
 	void save(const std::string &fileName);
 
 };

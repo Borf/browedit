@@ -116,6 +116,7 @@
     <ClInclude Include="windows\HelpWindow.h" />
     <ClInclude Include="windows\MessageWindow.h" />
     <ClInclude Include="windows\ModelPropertiesWindow.h" />
+    <ClInclude Include="windows\NewMapWindow.h" />
     <ClInclude Include="windows\ObjectWindow.h" />
     <ClInclude Include="windows\TextureWindow.h" />
   </ItemGroup>
@@ -140,6 +141,7 @@
     <ClCompile Include="windows\HelpWindow.cpp" />
     <ClCompile Include="windows\MessageWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />
+    <ClCompile Include="windows\NewMapWindow.cpp" />
     <ClCompile Include="windows\ObjectWindow.cpp" />
     <ClCompile Include="windows\TextureWindow.cpp" />
   </ItemGroup>
@@ -162,6 +164,7 @@
     <None Include="..\assets\windows\MenuFilterWindow.json" />
     <None Include="..\assets\windows\MessageWindow.json" />
     <None Include="..\assets\windows\ModelPropertiesWindow.json" />
+    <None Include="..\assets\windows\NewMapWindow.json" />
     <None Include="..\assets\windows\ObjectWindow.json" />
     <None Include="..\assets\windows\OpenWindow.json" />
     <None Include="..\assets\windows\TextureWindow.json" />

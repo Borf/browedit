@@ -18,6 +18,7 @@ class Map
 	std::string fileName;
 public:
 	Map(const std::string &fileName);
+	Map(const std::string &fileName, int width, int height);
 
 	inline Gnd* getGnd() const
 	{

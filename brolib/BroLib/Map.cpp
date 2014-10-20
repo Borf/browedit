@@ -30,11 +30,20 @@ Map::Map( const std::string &fileName )
 	rsw = new Rsw(fileName);
 	gat = new Gat(fileName);
 #endif
-
-
 	Log::out<<"Map: Done loading map"<<Log::newline;
-
 }
+
+
+Map::Map(const std::string &fileName, int width, int height)
+{
+	Log::out << "Map: New map " << fileName << " of " << width << "x" << height << Log::newline;
+	this->fileName = fileName;
+
+	gnd = new Gnd(width, height);
+	rsw = new Rsw();
+	gat = new Gat(width*2, height*2);
+}
+
 
 void Map::save(const std::string &filename)
 {

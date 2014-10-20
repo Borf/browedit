@@ -14,6 +14,29 @@ using blib::util::Log;
 
 using blib::util::Log;
 
+Rsw::Rsw()
+{
+	version = 0x0201;
+	water.height = 1;
+	water.type = 0;
+	water.amplitude = 1.0f;
+	water.phase = 2.0f;
+	water.surfaceCurve = 50.0f;
+	water.animSpeed = 3;
+
+	light.longitude = 45.0f;
+	light.lattitude = 45.0f;
+	light.diffuse = glm::vec3(1, 1, 1);
+	light.ambient = glm::vec3(0.55f, 0.55f, 0.55f);
+	light.intensity = 0.5f;
+	
+	//dunno, wtf is this?
+	unknown[0] = 9;
+	unknown[1] = 34004;
+	unknown[2] = 512;
+	unknown[3] = 0;
+}
+
 Rsw::Rsw(const std::string &fileName, bool loadModels)
 {
 	char header[4];

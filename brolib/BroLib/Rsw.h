@@ -158,6 +158,8 @@ public:
 	std::map<std::string, Rsm*> rsmCache;
 
 	Rsw(const std::string &fileName, bool loadModels = true);
+	Rsw();
+
 	Rsm* getRsm( const std::string &fileName );
 	void save(const std::string &fileName);
 	void recalculateQuadTree(Gnd* gnd);
