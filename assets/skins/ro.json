@@ -113,6 +113,8 @@
 	"input" : 
 	{
 		"fontcolor" : "000000",
+		"selectcolor" : "6666FF",
+		"selectfontcolor" : "FFFFFF",
 		"top" :
 		{
 			"height" : 2,
