@@ -27,6 +27,7 @@ Gnd::Gnd(int width, int height)
 			cube->tileUp = -1;
 			cube->tileSide = -1;
 			cube->tileFront = -1;
+			cube->calcNormal();
 			cubes[x][y] = cube;
 		}
 	}
@@ -136,8 +137,12 @@ Gnd::Gnd( const std::string &fileName )
 				tile->lightmapIndex = 0;
 			}
 
-			tile->color = glm::vec3((unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f, (unsigned char)file->get() / 255.0f);
-			file->get(); // alpha
+
+
+			tile->color.r = (unsigned char)file->get();
+			tile->color.g = (unsigned char)file->get();
+			tile->color.b = (unsigned char)file->get();
+			tile->color.a = (unsigned char)file->get();
 			tiles.push_back(tile);
 		}
 
@@ -154,6 +159,8 @@ Gnd::Gnd( const std::string &fileName )
 				cube->h2 = file->readFloat();
 				cube->h3 = file->readFloat();
 				cube->h4 = file->readFloat();
+				cube->calcNormal();
+
 				if (version >= 0x0106)
 				{
 					cube->tileUp = file->readInt();
@@ -193,6 +200,15 @@ Gnd::Gnd( const std::string &fileName )
 	}
 	delete file;
 	Log::out<<"GND: Done reading gnd file"<<Log::newline;
+
+	for (int x = 1; x < width-1; x++)
+	{
+		for (int y = 1; y < height-1; y++)
+		{
+			cubes[x][y]->calcNormals(this, x, y);
+		}
+	}
+	Log::out<<"GND: Done calculating normals" << Log::newline;
 }
 
 
@@ -250,11 +266,10 @@ void Gnd::save(std::string fileName)
 			pFile->writeWord(tile->textureIndex);
 			pFile->writeWord(tile->lightmapIndex);
 	
-			pFile->put(255);
-//			pFile->put((int)(tile->color.a * 255));
-			pFile->put((int)(tile->color.z * 255));
-			pFile->put((int)(tile->color.y * 255));
-			pFile->put((int)(tile->color.x * 255));
+			pFile->put(tile->color.a);
+			pFile->put(tile->color.z);
+			pFile->put(tile->color.y);
+			pFile->put(tile->color.x);
 		}
 
 		for (size_t y = 0; y < height; y++)
@@ -299,4 +314,43 @@ Gnd::Texture::~Texture()
 	if(texture)
 		texture->unload();
 	texture = NULL;
+}
+
+void Gnd::Cube::calcNormal()
+{
+/*
+	1----2
+	|\   |
+	| \  |
+	|  \ |
+	|   \|
+	3----4
+*/
+	glm::vec3 v1(10, -h1, 0);
+	glm::vec3 v2(0, -h2, 0);
+	glm::vec3 v3(10, -h3, 10);
+	glm::vec3 v4(0, -h4, 10);
+
+	glm::vec3 normal1 = glm::normalize(glm::cross(v4 - v3, v1 - v3));
+	glm::vec3 normal2 = glm::normalize(glm::cross(v1 - v2, v4 - v2));
+	normal = glm::normalize(normal1 + normal2);
+	for (int i = 0; i < 4; i++)
+		normals[i] = normal;
+}
+
+
+void Gnd::Cube::calcNormals(Gnd* gnd, int x, int y)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		normals[i] = glm::vec3(0, 0, 0);
+		for (int ii = 0; ii < 4; ii++)
+		{
+			int xx = (ii % 2) * ((i % 2 == 0) ? -1 : 1);
+			int yy = (ii / 2) * (i < 2 ? -1 : 1);
+			if (x+xx >= 0 && x+xx < gnd->width && y+yy >= 0 && y+yy < gnd->height)
+				normals[i] += gnd->cubes[x + xx][y + yy]->normal;
+		}
+		normals[i] = glm::normalize(normals[i]);
+	}
 }

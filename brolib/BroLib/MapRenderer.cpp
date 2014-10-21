@@ -36,9 +36,6 @@ MapRenderer::MapRenderer() : mouseRay(glm::vec3(0, 0,0), glm::vec3(1,0,0))
 	fbo = NULL;
 	fov = 90;
 	mouse3d = glm::vec4(0, 0, 0, -1);
-
-
-
 }
 
 float mod(float x, float m)
@@ -61,6 +58,22 @@ glm::vec2 mod(const glm::vec2 &a, float m)
 void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
 	renderer->clear(glm::vec4(0, 0, 0, 0), blib::Renderer::Color | blib::Renderer::Depth, gndRenderState);
+
+	glm::vec3 lightDirection;
+	lightDirection[0] = -glm::cos(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
+	lightDirection[1] = -glm::cos(glm::radians((float)map->getRsw()->light.latitude));
+	lightDirection[2] = -glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::lightAmbient, map->getRsw()->light.ambient);
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::lightDiffuse, map->getRsw()->light.diffuse);
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::lightIntensity, map->getRsw()->light.intensity);
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::lightDirection, lightDirection);
+
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightAmbient, map->getRsw()->light.ambient);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDiffuse, map->getRsw()->light.diffuse);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightIntensity, map->getRsw()->light.intensity);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDirection, lightDirection);
+
+
 	renderGnd(renderer);
 	renderer->unproject(mousePosition, &mouse3d, &mouseRay, cameraMatrix, projectionMatrix);
 
@@ -206,10 +219,10 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 				{
 					Gnd::Cube* cube = gnd->cubes[x][y];
 
-					blib::VertexP3 v1(glm::vec3(10 * x, -cube->h3+0.1f, 10 * gnd->height - 10 * y));
-					blib::VertexP3 v2(glm::vec3(10 * x + 10, -cube->h4 + 0.1f, 10 * gnd->height - 10 * y));
-					blib::VertexP3 v3(glm::vec3(10 * x, -cube->h1 + 0.1f, 10 * gnd->height - 10 * y + 10));
-					blib::VertexP3 v4(glm::vec3(10 * x + 10, -cube->h2 + 0.1f, 10 * gnd->height - 10 * y + 10));
+					blib::VertexP3 v1(glm::vec3(10 * x,			-cube->h3 + 0.1f, 10 * gnd->height - 10 * y));
+					blib::VertexP3 v2(glm::vec3(10 * x + 10,	-cube->h4 + 0.1f, 10 * gnd->height - 10 * y));
+					blib::VertexP3 v3(glm::vec3(10 * x,			-cube->h1 + 0.1f, 10 * gnd->height - 10 * y + 10));
+					blib::VertexP3 v4(glm::vec3(10 * x + 10,	-cube->h2 + 0.1f, 10 * gnd->height - 10 * y + 10));
 
 					verts.push_back(v1);
 					verts.push_back(v2);
@@ -222,6 +235,23 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 					verts.push_back(v2);
 					verts.push_back(v4);
+#if 0 //show normal debug
+					glm::vec3 center = (v1.position + v2.position + v3.position + v4.position) / 4.0f;
+					verts.push_back(center);
+					verts.push_back(center + cube->normal* glm::vec3(5, -5, 5));
+
+					verts.push_back(v1);
+					verts.push_back(v1.position + cube->normals[2] * glm::vec3(3, -3, 3));
+
+					verts.push_back(v2);
+					verts.push_back(v2.position + cube->normals[3] * glm::vec3(3, -3, 3));
+
+					verts.push_back(v3);
+					verts.push_back(v3.position + cube->normals[0] * glm::vec3(3, -3, 3));
+
+					verts.push_back(v4);
+					verts.push_back(v4.position + cube->normals[1] * glm::vec3(3, -3, 3));
+#endif
 				}
 			}
 
@@ -249,8 +279,10 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMatrix);
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, projectionMatrix);
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
-	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.5f));
-	highlightRenderState.activeTexture[0] = waterTextures[map->getRsw()->water.type][(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed * 3) % waterTextures[map->getRsw()->water.type].size()];
+
+	float opacity = map->getRsw()->water.type != 4 && map->getRsw()->water.type != 6 ? 0.6f : 1.0f;
+	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, opacity));
+	highlightRenderState.activeTexture[0] = waterTextures[map->getRsw()->water.type][(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed) % waterTextures[map->getRsw()->water.type].size()];
 
 	{
 		float repeatX = map->getGnd()->width / 4.0f;
@@ -309,15 +341,24 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture", 1);
 	gndRenderState.activeShader->bindAttributeLocation("a_texture2", 2);
-	gndRenderState.activeShader->bindAttributeLocation("a_color", 3);
+	gndRenderState.activeShader->bindAttributeLocation("a_tileColorCoord", 3);
+	gndRenderState.activeShader->bindAttributeLocation("a_normal", 4);
 	gndRenderState.activeShader->setUniformName(GndShaderAttributes::ProjectionMatrix, "projectionMatrix", blib::Shader::Mat4);
 	gndRenderState.activeShader->setUniformName(GndShaderAttributes::ModelViewMatrix, "modelViewMatrix", blib::Shader::Mat4);
 	gndRenderState.activeShader->setUniformName(GndShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
 	gndRenderState.activeShader->setUniformName(GndShaderAttributes::s_lighting, "s_lighting", blib::Shader::Int);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::s_tileColor, "s_tileColor", blib::Shader::Int);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::lightAmbient, "lightAmbient", blib::Shader::Vec3);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::lightDiffuse, "lightDiffuse", blib::Shader::Vec3);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::lightIntensity, "lightIntensity", blib::Shader::Float);
+	gndRenderState.activeShader->setUniformName(GndShaderAttributes::lightDirection, "lightDirection", blib::Shader::Vec3);
+
+	
 	gndRenderState.activeShader->finishUniformSetup();
 
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_texture, 0);
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_lighting, 1);
+	gndRenderState.activeShader->setUniform(GndShaderAttributes::s_tileColor, 2);
 	gndRenderState.activeFbo = fbo;
 	gndRenderState.blendEnabled = true;
 	gndRenderState.srcBlendColor = blib::RenderState::SRC_ALPHA;
@@ -328,6 +369,8 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 	gndShadow = resourceManager->getResource<blib::Texture>(2048, 2048);
 	gndNoShadow = resourceManager->getResource<blib::Texture>(1,1);
+	gndTileColorWhite = resourceManager->getResource<blib::Texture>("assets/textures/whitepixel.png");
+	gndTileColors = resourceManager->getResource<blib::Texture>(1024, 1024);
 	gndTextureGridVbo = resourceManager->getResource<blib::VBO>();
 	gndTextureGridVbo->setVertexFormat<blib::VertexP3>();
 
@@ -347,6 +390,10 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::s_texture, "s_texture", blib::Shader::Int);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::highlightColor, "highlightColor", blib::Shader::Vec4);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::billboard, "billboard", blib::Shader::Float);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::lightAmbient, "lightAmbient", blib::Shader::Vec3);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::lightDiffuse, "lightDiffuse", blib::Shader::Vec3);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::lightIntensity, "lightIntensity", blib::Shader::Float);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::lightDirection, "lightDirection", blib::Shader::Vec3);
 	rswRenderState.activeShader->finishUniformSetup();
 
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
@@ -388,7 +435,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndShadowDirty = false;
 	gndTextureGridDirty = true;
 	gndGridDirty = true;
-
+	gndTileColorDirty = false;
 
 
 	for (int i = 0; i < 7; i++)
@@ -429,6 +476,7 @@ void MapRenderer::setMap(const Map* map)
 	gndShadowDirty = true;
 	gndTextureGridDirty = true;
 	gndGridDirty = true;
+	gndTileColorDirty = true;
 
 	//load textures if needed
 	for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
@@ -454,47 +502,86 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 
 		new blib::BackgroundTask<char*>(app,
 			[this, renderer] {
-				char* data = new char[2048*2048*4];
-				int x = 0; int y = 0;
-				for(size_t i = 0; i < map->getGnd()->lightmaps.size(); i++)
+			char* data = new char[2048 * 2048 * 4];
+			int x = 0; int y = 0;
+			for (size_t i = 0; i < map->getGnd()->lightmaps.size(); i++)
+			{
+				Gnd::Lightmap* lightMap = map->getGnd()->lightmaps[i];
+				for (int xx = 0; xx < 8; xx++)
 				{
-					Gnd::Lightmap* lightMap = map->getGnd()->lightmaps[i];
-					for(int xx = 0; xx < 8; xx++)
+					for (int yy = 0; yy < 8; yy++)
 					{
-						for(int yy = 0; yy < 8; yy++)
-						{
-							int xxx = 8*x + xx;
-							int yyy = 8*y + yy;
+						int xxx = 8 * x + xx;
+						int yyy = 8 * y + yy;
 
-							data[4*(xxx+2048*yyy)+0] = (lightMap->data[64+3*(xx+8*yy)+0]>>4)<<4;
-							data[4*(xxx+2048*yyy)+1] = (lightMap->data[64+3*(xx+8*yy)+1]>>4)<<4;
-							data[4*(xxx+2048*yyy)+2] = (lightMap->data[64+3*(xx+8*yy)+2]>>4)<<4;
-							data[4*(xxx+2048*yyy)+3] = lightMap->data[xx+8*yy];
-						}
-					}
-					x++;
-					if(x*8 >= 2048)
-					{
-						x = 0;
-						y++;
+						data[4 * (xxx + 2048 * yyy) + 0] = (lightMap->data[64 + 3 * (xx + 8 * yy) + 0] >> 4) << 4;
+						data[4 * (xxx + 2048 * yyy) + 1] = (lightMap->data[64 + 3 * (xx + 8 * yy) + 1] >> 4) << 4;
+						data[4 * (xxx + 2048 * yyy) + 2] = (lightMap->data[64 + 3 * (xx + 8 * yy) + 2] >> 4) << 4;
+						data[4 * (xxx + 2048 * yyy) + 3] = lightMap->data[xx + 8 * yy];
 					}
 				}
-				return data;
-			}, [renderer, this](char* data)
+				x++;
+				if (x * 8 >= 2048)
+				{
+					x = 0;
+					y++;
+				}
+			}
+			return data;
+		}, [renderer, this](char* data)
+		{
+			renderer->setTextureSubImage(gndShadow, 0, 0, 2048, 2048, data);
+
+		});
+
+		gndShadowDirty = false;
+	}
+
+
+	if (gndTileColorDirty)
+	{
+
+		new blib::BackgroundTask<char*>(app,
+			[this, renderer] {
+			char* data = new char[1024 * 1024 * 4];
+			for (int x = 0; x < map->getGnd()->width; x++)
 			{
-				renderer->setTextureSubImage(gndShadow, 0, 0, 2048, 2048, data);
+				for (int y = 0; y < map->getGnd()->height; y++)
+				{
+					if (map->getGnd()->cubes[x][y]->tileUp != -1)
+					{
+						Gnd::Tile* tile = map->getGnd()->tiles[map->getGnd()->cubes[x][y]->tileUp];
+						data[4 * (x + 1024 * y) + 0] = tile->color.r;
+						data[4 * (x + 1024 * y) + 1] = tile->color.g;
+						data[4 * (x + 1024 * y) + 2] = tile->color.b;
+						data[4 * (x + 1024 * y) + 3] = tile->color.a;
+					}
+				}
+			}
+			return data;
+		}, [renderer, this](char* data)
+		{
+			renderer->setTextureSubImage(gndTileColors, 0, 0, 1024, 1024, data);
 
-			});
+		});
 
-			gndShadowDirty = false;
+		gndTileColorDirty = false;
 	}
 
 	//render gnd chunks
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::ModelViewMatrix, cameraMatrix);
+
+
 	if (drawShadows)
+	{
 		gndRenderState.activeTexture[1] = gndShadow;
+		gndRenderState.activeTexture[2] = gndTileColors;
+	}
 	else
+	{
 		gndRenderState.activeTexture[1] = gndNoShadow;
+		gndRenderState.activeTexture[2] = gndTileColorWhite;
+	}
 	for (auto r : gndChunks)
 		for(auto c : r)
 			c->render(map->getGnd(), app, gndRenderState, renderer);
@@ -545,7 +632,7 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 
 	for (auto a : vertIndices)
 	{
-		if (a.texture >= gnd->textures.size())
+		if (a.texture >= (int)gnd->textures.size())
 		{
 			vertIndices.clear();
 			break;
@@ -571,10 +658,10 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10*x,	-cube->h3,10*gnd->height-10*y),	tile->v3,		glm::vec2(lm1.x,lm2.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v2(glm::vec3(10*x+10,	-cube->h4,10*gnd->height-10*y),	tile->v4,		glm::vec2(lm2.x,lm2.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v3(glm::vec3(10*x,	-cube->h1,10*gnd->height-10*y+10), tile->v1,	glm::vec2(lm1.x,lm1.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v4(glm::vec3(10*x+10,	-cube->h2,10*gnd->height-10*y+10), tile->v2,	glm::vec2(lm2.x,lm1.y), tile->color, glm::vec3(0,1,0));
+					GndVertex v1(glm::vec3(10*x,	-cube->h3,10*gnd->height-10*y),	tile->v3,		glm::vec2(lm1.x,lm2.y), glm::vec2(x/1024.0f,	(y+1)/1024.0f), cube->normals[2]);
+					GndVertex v2(glm::vec3(10*x+10,	-cube->h4,10*gnd->height-10*y),	tile->v4,		glm::vec2(lm2.x,lm2.y), glm::vec2((x+1)/1024.0f,(y+1)/1024.0f), cube->normals[3]);
+					GndVertex v3(glm::vec3(10*x,	-cube->h1,10*gnd->height-10*y+10), tile->v1,	glm::vec2(lm1.x,lm1.y), glm::vec2(x/1024.0f,	(y)/1024.0f),	cube->normals[0]);
+					GndVertex v4(glm::vec3(10*x+10,	-cube->h2,10*gnd->height-10*y+10), tile->v2,	glm::vec2(lm2.x,lm1.y), glm::vec2((x+1)/1024.0f,(y)/1024.0f),	cube->normals[1]);
 
 					verts[tile->textureIndex].push_back(v1); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v3);
 					verts[tile->textureIndex].push_back(v3); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v4);
@@ -587,10 +674,10 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10 * x + 10, -cube->h2, 10 * gnd->height - 10 * y + 10),						tile->v2, glm::vec2(lm2.x, lm1.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),							tile->v1, glm::vec2(lm1.x, lm1.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v3(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h1,	10 * gnd->height - 10 * y + 10),	tile->v4, glm::vec2(lm2.x, lm2.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v4(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h3,	10 * gnd->height - 10 * y),			tile->v3, glm::vec2(lm1.x, lm2.y), tile->color, glm::vec3(0,1,0));
+					GndVertex v1(glm::vec3(10 * x + 10, -cube->h2, 10 * gnd->height - 10 * y + 10),						tile->v2, glm::vec2(lm2.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),							tile->v1, glm::vec2(lm1.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v3(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h1,	10 * gnd->height - 10 * y + 10),	tile->v4, glm::vec2(lm2.x, lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v4(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h3,	10 * gnd->height - 10 * y),			tile->v3, glm::vec2(lm1.x, lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
 					
 					verts[tile->textureIndex].push_back(v1); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v3);
 					verts[tile->textureIndex].push_back(v3); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v4);
@@ -603,10 +690,10 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10 * x, -cube->h3, 10 * gnd->height - 10 * y),			tile->v1, glm::vec2(lm1.x, lm1.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),		tile->v2, glm::vec2(lm2.x, lm1.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v4(glm::vec3(10*x+10, -gnd->cubes[x][y+1]->h2,10*gnd->height-10*y),	tile->v4, glm::vec2(lm2.x,lm2.y), tile->color, glm::vec3(0,1,0));
-					GndVertex v3(glm::vec3(10*x,    -gnd->cubes[x][y+1]->h1,10*gnd->height-10*y),	tile->v3, glm::vec2(lm1.x,lm2.y), tile->color, glm::vec3(0,1,0));
+					GndVertex v1(glm::vec3(10 * x, -cube->h3, 10 * gnd->height - 10 * y),			tile->v1, glm::vec2(lm1.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),		tile->v2, glm::vec2(lm2.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v4(glm::vec3(10*x+10, -gnd->cubes[x][y+1]->h2,10*gnd->height-10*y),	tile->v4, glm::vec2(lm2.x,lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v3(glm::vec3(10*x,    -gnd->cubes[x][y+1]->h1,10*gnd->height-10*y),	tile->v3, glm::vec2(lm1.x,lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
 
 					verts[tile->textureIndex].push_back(v1); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v3);
 					verts[tile->textureIndex].push_back(v3); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v4);

@@ -144,7 +144,7 @@ public:
 	struct  
 	{
 		int			longitude;
-		int			lattitude;
+		int			latitude;
 		glm::vec3	diffuse;
 		glm::vec3	ambient;
 		float		intensity;

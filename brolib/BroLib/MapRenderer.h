@@ -51,7 +51,7 @@ public:
 class MapRenderer : public blib::gl::GlResizeRegister
 {
 public:
-	typedef blib::VertexP3T2T2C3N3 GndVertex; //TODO: T2T2T2 , use a 2d map for the colors
+	typedef blib::VertexP3T2T2T2N3 GndVertex;
 private:
 	int width;
 	int height;
@@ -85,12 +85,20 @@ private:
 			ModelViewMatrix,
 			s_texture,
 			s_lighting,
+			s_tileColor,
+			lightAmbient,
+			lightDiffuse,
+			lightIntensity,
+			lightDirection,
 		};
 	};	
 	std::vector<std::vector<GndChunk*> > gndChunks;
 	blib::Texture* gndShadow;
 	blib::Texture* gndNoShadow;
+	blib::Texture* gndTileColorWhite;
+	blib::Texture* gndTileColors;
 	bool gndShadowDirty;
+	bool gndTileColorDirty;
 #pragma endregion
 #pragma region RSW
 	blib::RenderState rswRenderState;
@@ -106,6 +114,10 @@ private:
 			s_texture,
 			highlightColor,
 			billboard,
+			lightAmbient,
+			lightDiffuse,
+			lightIntensity,
+			lightDirection
 		};
 	};
 

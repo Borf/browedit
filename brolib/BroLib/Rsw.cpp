@@ -25,7 +25,7 @@ Rsw::Rsw()
 	water.animSpeed = 3;
 
 	light.longitude = 45.0f;
-	light.lattitude = 45.0f;
+	light.latitude = 45.0f;
 	light.diffuse = glm::vec3(1, 1, 1);
 	light.ambient = glm::vec3(0.55f, 0.55f, 0.55f);
 	light.intensity = 0.5f;
@@ -80,7 +80,7 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 
 
 	light.longitude = 45;//TODO: remove the defaults here and put defaults of the water somewhere too
-	light.lattitude = 45;
+	light.latitude = 45;
 	light.diffuse = glm::vec3(1,1,1);
 	light.ambient = glm::vec3(0.3f,0.3f,0.3f);
 	light.intensity = 0.5f;
@@ -88,7 +88,7 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 	if(version >= 0x105)
 	{
 		light.longitude = file->readInt();
-		light.lattitude = file->readInt();
+		light.latitude = file->readInt();
 		light.diffuse = file->readVec3();
 		light.ambient = file->readVec3();
 	}
@@ -236,7 +236,7 @@ void Rsw::save(const std::string &fileName)
 	if (version >= 0x105)
 	{
 		pFile->writeInt(light.longitude);
-		pFile->writeInt(light.lattitude);
+		pFile->writeInt(light.latitude);
 		pFile->writeVec3(light.diffuse);
 		pFile->writeVec3(light.ambient);
 	}

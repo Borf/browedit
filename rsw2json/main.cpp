@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 	data["water"]["animSpeed"] = rsw->water.animSpeed;
 
 	data["light"]["longitude"] = rsw->light.longitude;
-	data["light"]["lattitude"] = rsw->light.lattitude;
+	data["light"]["lattitude"] = rsw->light.latitude;
 	data["light"]["diffuse"] = vec3(rsw->light.diffuse);
 	data["light"]["ambient"]= vec3(rsw->light.ambient);
 	data["light"]["intensity"] = rsw->light.intensity;

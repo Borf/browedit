@@ -1,7 +1,7 @@
 attribute vec3 a_position;
 attribute vec2 a_texture;
 attribute vec2 a_texture2;
-attribute vec3 a_color;
+attribute vec2 a_tileColorCoord;
 attribute vec3 a_normal;
 
 uniform mat4 projectionMatrix;
@@ -9,12 +9,14 @@ uniform mat4 modelViewMatrix;
 
 varying vec2 texCoord;
 varying vec2 texCoord2;
-varying vec3 color;
+varying vec2 tileColorCoord;
+varying vec3 normal;
 
 void main()
 {
 	texCoord = a_texture;
 	texCoord2 = a_texture2;
-	color = a_color;
+	tileColorCoord = a_tileColorCoord;
+	normal = a_normal;
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(a_position,1);
 }

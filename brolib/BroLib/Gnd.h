@@ -37,7 +37,7 @@ public:
 		glm::vec2 v1,v2,v3,v4;
 		int textureIndex;
 		int lightmapIndex;
-		glm::vec3 color;
+		glm::ivec4 color;
 	};
 
 	class Cube
@@ -57,6 +57,12 @@ public:
 		};
 		int tileUp, tileSide, tileFront;
 		bool selected;
+
+		glm::vec3 normal;
+		glm::vec3 normals[4];
+
+		void calcNormal();
+		void calcNormals(Gnd* gnd, int x, int y);
 	};
 
 
