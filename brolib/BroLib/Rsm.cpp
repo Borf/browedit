@@ -328,7 +328,8 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 		f->smoothGroup = rsmFile->readInt();
 
 		faces[i] = f;
-		//faces[i].normal = (vertices[faces[i].vertices[1]] - vertices[faces[i].vertices[0]]).cross(vertices[faces[i].vertices[2]] - vertices[faces[i].vertices[0]]).getNormalized();
+		
+		f->normal = glm::normalize(glm::cross(vertices[f->vertices[1]] - vertices[f->vertices[0]], vertices[f->vertices[2]] - vertices[f->vertices[0]]));
 	}
 
 	int frameCount = rsmFile->readInt();

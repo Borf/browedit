@@ -73,7 +73,6 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightIntensity, map->getRsw()->light.intensity);
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDirection, lightDirection);
 
-
 	renderGnd(renderer);
 	renderer->unproject(mousePosition, &mouse3d, &mouseRay, cameraMatrix, projectionMatrix);
 
@@ -394,6 +393,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::lightDiffuse, "lightDiffuse", blib::Shader::Vec3);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::lightIntensity, "lightIntensity", blib::Shader::Float);
 	rswRenderState.activeShader->setUniformName(RswShaderAttributes::lightDirection, "lightDirection", blib::Shader::Vec3);
+	rswRenderState.activeShader->setUniformName(RswShaderAttributes::shadeType, "shadeType", blib::Shader::Int);
 	rswRenderState.activeShader->finishUniformSetup();
 
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::s_texture, 0);
@@ -775,6 +775,7 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 			model->model->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + model->model->textures[i]));
 	}
 
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::shadeType, model->model->shadeType);
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, model->matrixCache);
 	renderMesh(model->model->rootMesh, glm::mat4(), model->model->renderer, renderer);
 }
@@ -929,6 +930,7 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::scale(glm::rotate(glm::mat4(), rotation, glm::vec3(0, 1, 0)), glm::vec3(1, 1, 1)));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
+
 
 	rswRenderState.activeVbo = NULL;
 	rswRenderState.activeFbo = fbo;

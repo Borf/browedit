@@ -24,8 +24,8 @@ Rsw::Rsw()
 	water.surfaceCurve = 50.0f;
 	water.animSpeed = 3;
 
-	light.longitude = 45.0f;
-	light.latitude = 45.0f;
+	light.longitude = 45;
+	light.latitude = 45;
 	light.diffuse = glm::vec3(1, 1, 1);
 	light.ambient = glm::vec3(0.55f, 0.55f, 0.55f);
 	light.intensity = 0.5f;

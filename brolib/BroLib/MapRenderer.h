@@ -117,7 +117,8 @@ private:
 			lightAmbient,
 			lightDiffuse,
 			lightIntensity,
-			lightDirection
+			lightDirection,
+			shadeType,
 		};
 	};
 
