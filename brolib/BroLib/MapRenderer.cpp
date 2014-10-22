@@ -674,10 +674,10 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10 * x + 10, -cube->h2, 10 * gnd->height - 10 * y + 10),						tile->v2, glm::vec2(lm2.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
-					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),							tile->v1, glm::vec2(lm1.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
-					GndVertex v3(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h1,	10 * gnd->height - 10 * y + 10),	tile->v4, glm::vec2(lm2.x, lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
-					GndVertex v4(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h3,	10 * gnd->height - 10 * y),			tile->v3, glm::vec2(lm1.x, lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v1(glm::vec3(10 * x + 10, -cube->h2, 10 * gnd->height - 10 * y + 10),						tile->v2, glm::vec2(lm2.x, lm1.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(1,0,0));
+					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),							tile->v1, glm::vec2(lm1.x, lm1.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(1,0,0));
+					GndVertex v3(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h1,	10 * gnd->height - 10 * y + 10),	tile->v4, glm::vec2(lm2.x, lm2.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(1,0,0));
+					GndVertex v4(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h3,	10 * gnd->height - 10 * y),			tile->v3, glm::vec2(lm1.x, lm2.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(1,0,0));
 					
 					verts[tile->textureIndex].push_back(v1); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v3);
 					verts[tile->textureIndex].push_back(v3); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v4);
@@ -690,10 +690,10 @@ void MapRenderer::GndChunk::rebuild( const Gnd* gnd, blib::App* app, blib::Rende
 					glm::vec2 lm1((tile->lightmapIndex%256)*(8.0f/2048.0f) + 1.0f/2048.0f, (tile->lightmapIndex/256)*(8.0f/2048.0f) + 1.0f/2048.0f);
 					glm::vec2 lm2(lm1 + glm::vec2(6.0f/2048.0f, 6.0f/2048.0f));
 
-					GndVertex v1(glm::vec3(10 * x, -cube->h3, 10 * gnd->height - 10 * y),			tile->v1, glm::vec2(lm1.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
-					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),		tile->v2, glm::vec2(lm2.x, lm1.y), glm::vec2(x,y), glm::vec3(0,1,0));
-					GndVertex v4(glm::vec3(10*x+10, -gnd->cubes[x][y+1]->h2,10*gnd->height-10*y),	tile->v4, glm::vec2(lm2.x,lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
-					GndVertex v3(glm::vec3(10*x,    -gnd->cubes[x][y+1]->h1,10*gnd->height-10*y),	tile->v3, glm::vec2(lm1.x,lm2.y), glm::vec2(x,y), glm::vec3(0,1,0));
+					GndVertex v1(glm::vec3(10 * x, -cube->h3, 10 * gnd->height - 10 * y),			tile->v1, glm::vec2(lm1.x, lm1.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(0,0,1));
+					GndVertex v2(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y),		tile->v2, glm::vec2(lm2.x, lm1.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(0,0,1));
+					GndVertex v4(glm::vec3(10*x+10, -gnd->cubes[x][y+1]->h2,10*gnd->height-10*y),	tile->v4, glm::vec2(lm2.x,lm2.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(0,0,1));
+					GndVertex v3(glm::vec3(10*x,    -gnd->cubes[x][y+1]->h1,10*gnd->height-10*y),	tile->v3, glm::vec2(lm1.x,lm2.y), glm::vec2(x/1024.0f,y/1024.0f), glm::vec3(0,0,1));
 
 					verts[tile->textureIndex].push_back(v1); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v3);
 					verts[tile->textureIndex].push_back(v3); verts[tile->textureIndex].push_back(v2); verts[tile->textureIndex].push_back(v4);

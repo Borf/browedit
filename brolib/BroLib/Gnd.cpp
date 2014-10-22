@@ -139,9 +139,9 @@ Gnd::Gnd( const std::string &fileName )
 
 
 
-			tile->color.r = (unsigned char)file->get();
-			tile->color.g = (unsigned char)file->get();
 			tile->color.b = (unsigned char)file->get();
+			tile->color.g = (unsigned char)file->get();
+			tile->color.r = (unsigned char)file->get();
 			tile->color.a = (unsigned char)file->get();
 			tiles.push_back(tile);
 		}
@@ -266,10 +266,10 @@ void Gnd::save(std::string fileName)
 			pFile->writeWord(tile->textureIndex);
 			pFile->writeWord(tile->lightmapIndex);
 	
+			pFile->put(tile->color.b);
+			pFile->put(tile->color.g);
+			pFile->put(tile->color.r);
 			pFile->put(tile->color.a);
-			pFile->put(tile->color.z);
-			pFile->put(tile->color.y);
-			pFile->put(tile->color.x);
 		}
 
 		for (size_t y = 0; y < height; y++)
