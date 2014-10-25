@@ -460,6 +460,9 @@ void BrowEdit::draw()
 			rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
 			rot = glm::translate(rot, glm::vec3(-texCenter, 0));
 
+			std::vector<blib::VertexP3> vertsGrid;
+
+
 			for (int x = 0; x < cursorWidth; x++)
 			{
 				for (int y = 0; y < cursorHeight; y++)
@@ -482,11 +485,30 @@ void BrowEdit::draw()
 					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx,			-cube->h1 + 0.1f, 10 * (mapHeight - yy)),		glm::vec2(rot * glm::vec4(t1.x,t1.y,0,1))));
 					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx + 10,	-cube->h4 + 0.1f, 10 * (mapHeight - yy)-10),	glm::vec2(rot * glm::vec4(t2.x,t2.y,0,1))));
 					verts.push_back(blib::VertexP3T2(glm::vec3(10 * xx,			-cube->h3 + 0.1f, 10 * (mapHeight - yy)-10),	glm::vec2(rot * glm::vec4(t1.x,t2.y,0,1))));
+
+
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx,		-cube->h1 + 0.15f, 10 * (mapHeight - yy))));
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx + 10,	-cube->h2 + 0.15f, 10 * (mapHeight - yy))));
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx + 10,	-cube->h2 + 0.15f, 10 * (mapHeight - yy))));
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx + 10,	-cube->h4 + 0.15f, 10 * (mapHeight - yy)-10)));
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx + 10,	-cube->h4 + 0.15f, 10 * (mapHeight - yy)-10)));
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx,		-cube->h3 + 0.15f, 10 * (mapHeight - yy)-10)));
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx,		-cube->h3 + 0.15f, 10 * (mapHeight - yy)-10)));
+					vertsGrid.push_back(blib::VertexP3(glm::vec3(10 * xx,		-cube->h1 + 0.15f, 10 * (mapHeight - yy))));
 				}
 			}
-
-
 			renderer->drawTriangles(verts, highlightRenderState);
+
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+			renderer->drawLines(vertsGrid, highlightRenderState);
+
+
+
+
+
+
+
 		}
 
 
