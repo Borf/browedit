@@ -18,9 +18,16 @@ void BrowEdit::textureEditUpdate()
 		textureFlipH = !textureFlipH;
 	if (keyState.isPressed(blib::Key::V) && !lastKeyState.isPressed(blib::Key::V))
 		textureFlipV = !textureFlipV;
-	if ((keyState.isPressed(blib::Key::PLUS) && !lastKeyState.isPressed(blib::Key::PLUS)) || (keyState.isPressed(blib::Key::EQUALS) && !lastKeyState.isPressed(blib::Key::EQUALS)))
+	if ((keyState.isPressed(blib::Key::PLUS) && !lastKeyState.isPressed(blib::Key::PLUS)) || 
+		(keyState.isPressed(blib::Key::EQUALS) && !lastKeyState.isPressed(blib::Key::EQUALS)) ||
+		(keyState.isPressed(blib::Key::BRACKETRIGHT) && !lastKeyState.isPressed(blib::Key::BRACKETRIGHT))
+		)
 		textureTargetSize += glm::ivec2(1, 1);
-	if ((keyState.isPressed(blib::Key::MINUS) && !lastKeyState.isPressed(blib::Key::MINUS)) || (keyState.isPressed(blib::Key::UNDERSCORE) && !lastKeyState.isPressed(blib::Key::UNDERSCORE)))
+	if ((keyState.isPressed(blib::Key::MINUS) && !lastKeyState.isPressed(blib::Key::MINUS)) || 
+		(keyState.isPressed(blib::Key::UNDERSCORE) && !lastKeyState.isPressed(blib::Key::UNDERSCORE)) ||
+		(keyState.isPressed(blib::Key::BRACKETLEFT) && !lastKeyState.isPressed(blib::Key::BRACKETLEFT))
+
+		)
 		textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(-1, -1));
 	if (keyState.isPressed(blib::Key::LEFT) && !lastKeyState.isPressed(blib::Key::LEFT))
 		textureTargetSize = glm::max(glm::ivec2(1, 1), textureTargetSize + glm::ivec2(-1, 0));
