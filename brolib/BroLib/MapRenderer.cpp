@@ -49,9 +49,12 @@ float mod(float x, float m)
 glm::vec2 mod(const glm::vec2 &a, float m)
 {
 	return glm::vec2(mod(a.x, m), mod(a.y, m));
-}float dist(const glm::vec2 &a, const glm::vec2 &b)
+}
+
+float dist(const glm::vec2 &a, const glm::vec2 &b)
 {
-	return glm::length(glm::min(mod(a - b, 1), mod(b - a, 1)));
+	return glm::length(a - b);
+	//return glm::length(glm::min(mod(a - b, 1), mod(b - a, 1)));
 }
 
 
