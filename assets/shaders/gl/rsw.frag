@@ -24,7 +24,7 @@ void main()
 
 
 	if(shadeType == 1 || shadeType == 2)
-		color.rgb *= clamp(abs(dot(normalize(normal), lightDirection)),0.0,1.0) * lightDiffuse + lightIntensity * lightAmbient;
+		color.rgb *= lightIntensity * clamp(dot(normalize(normal), lightDirection),0.0,1.0) * lightDiffuse + lightAmbient;
 
 	gl_FragData[0] = color;
 	gl_FragData[1] = highlightColor;

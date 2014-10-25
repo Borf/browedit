@@ -61,8 +61,8 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 	glm::vec3 lightDirection;
 	lightDirection[0] = -glm::cos(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
-	lightDirection[1] = -glm::cos(glm::radians((float)map->getRsw()->light.latitude));
-	lightDirection[2] = -glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
+	lightDirection[1] = glm::cos(glm::radians((float)map->getRsw()->light.latitude));
+	lightDirection[2] = glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::lightAmbient, map->getRsw()->light.ambient);
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::lightDiffuse, map->getRsw()->light.diffuse);
 	gndRenderState.activeShader->setUniform(GndShaderAttributes::lightIntensity, map->getRsw()->light.intensity);
