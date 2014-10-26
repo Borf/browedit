@@ -48,7 +48,7 @@ using blib::util::Log;
 #endif
 
 
-BrowEdit::BrowEdit(const Json::Value &config, v8::Isolate* isolate) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
+BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
 {
 	this->config = config;
 	this->isolate = isolate;
@@ -137,7 +137,7 @@ BrowEdit::~BrowEdit(void)
 void BrowEdit::init()
 {
 	std::list<blib::BackgroundTask<int>*> tasks;
-	for (Json::ArrayIndex i = 0; i < config["data"]["grfs"].size(); i++)
+	for (size_t i = 0; i < config["data"]["grfs"].size(); i++)
 		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
 	for (blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();

@@ -14,6 +14,6 @@
 	"skiploadingscreen" : false,
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
-	"fov" : 45,
+	"fov" : 45.0,
 	"vsync" : false
 }

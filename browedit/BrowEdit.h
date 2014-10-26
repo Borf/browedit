@@ -3,7 +3,7 @@
 #include <blib/App.h>
 #include <blib/MouseListener.h>
 #include <BroLib/MapRenderer.h>
-#include <json/value.h>
+#include <blib/json.h>
 #include "TranslatorTool.h"
 #include "RotateTool.h"
 #include "ScaleTool.h"
@@ -41,7 +41,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 
 	EditMode editMode;
 
-	Json::Value config;
+	blib::json::Value config;
 
 	blib::MouseState lastMouseState;
 	blib::MouseState startMouseState;
@@ -72,7 +72,7 @@ public:
 	ObjectWindow* objectWindow;
 
 
-	BrowEdit(const Json::Value &config, v8::Isolate* isolate);
+	BrowEdit(const blib::json::Value &config, v8::Isolate* isolate);
 	~BrowEdit(void);
 
 	virtual void init();

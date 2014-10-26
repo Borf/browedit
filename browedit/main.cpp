@@ -29,7 +29,7 @@ using blib::util::Log;
 #pragma comment(lib, "wininet.lib")
 #endif
 
-void mergeConfig(Json::Value &config, const Json::Value &newConfig);
+void mergeConfig(blib::json::Value &config, const blib::json::Value &newConfig);
 
 
 #pragma comment(lib, "icui18n.lib")
@@ -100,7 +100,7 @@ int main()
 	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler("../blib"));
 
 	Log::out<<"Loading configuration..."<<Log::newline;
-	Json::Value config = blib::util::FileSystem::getJson("assets/configs/config.default.json");
+	blib::json::Value config = blib::util::FileSystem::getJson("assets/configs/config.default.json");
 #ifdef WIN32
 	blib::platform::win32::RegistryKey key( HKEY_CURRENT_USER, "Software\\Browedit" );
 	if( !key.exists() && !key.create() ){
@@ -120,7 +120,7 @@ int main()
 
 #else
 	Log::out<<"Loading assets/configs/config.linux.json"<<Log::newline;
-	Json::Value linuxConfig = blib::util::FileSystem::getJson("assets/configs/config.linux.json");
+	blib::json::Value linuxConfig = blib::util::FileSystem::getJson("assets/configs/config.linux.json");
 	Log::out<<"Linux config size: "<<linuxConfig.size()<<Log::newline;
 	mergeConfig(config, linuxConfig);
 #endif
@@ -148,15 +148,14 @@ int main()
 
 
 
-	void mergeConfig(Json::Value &config, const Json::Value &newConfig)
+	void mergeConfig(blib::json::Value &config, const blib::json::Value &newConfig)
 	{
-		Json::Value::Members values = newConfig.getMemberNames();
-		for(size_t i = 0; i < values.size(); i++)
-			if(config.isMember(values[i]))
-				if(config[values[i]].isObject())
-					mergeConfig(config[values[i]], newConfig[values[i]]);
+		for (auto it = newConfig.begin(); it != newConfig.end(); it++)
+			if(config.isMember(it.key()))
+				if(config[it.key()].isObject())
+					mergeConfig(config[it.key()], it.value());
 				else
-					config[values[i]] = newConfig[values[i]];
+					config[it.key()] = it.value();
 			else
-				config[values[i]] = newConfig[values[i]];
+				config[it.key()] = it.value();
 	}

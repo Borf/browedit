@@ -1,15 +1,14 @@
 #include <BroLib/Rsw.h>
 #include <fstream>
-#include <json/json.h>
-#include <json/writer.h>
+#include <blib/json.h>
 #include <string>
 
 #include <blib/util/FileSystem.h>
 
 
-Json::Value vec3(const glm::vec3 &val)
+blib::json::Value vec3(const glm::vec3 &val)
 {
-	Json::Value ret;
+	blib::json::Value ret;
 	ret[0u] = val.x;
 	ret[1u] = val.y;
 	ret[2u] = val.z;
@@ -28,7 +27,7 @@ int main(int argc, char* argv[])
 
 	Rsw* rsw = new Rsw(filename, false);
 
-	Json::Value data;
+	blib::json::Value data;
 
 	data["version"] = rsw->version;
 	data["inifile"] = rsw->iniFile;
@@ -52,9 +51,9 @@ int main(int argc, char* argv[])
 		data["unknown"][i] = rsw->unknown[i];
 
 
-	for (int i = 0; i < rsw->objects.size(); i++)
+	for (size_t i = 0; i < rsw->objects.size(); i++)
 	{
-		Json::Value o;
+		blib::json::Value o;
 
 		Rsw::Object* object = rsw->objects[i];
 		switch (object->type)
@@ -116,14 +115,11 @@ int main(int argc, char* argv[])
 		}
 			break;
 		}
-		data["objects"].append(o);
+		data["objects"].push_back(o);
 	}
 
 
-	Json::StyledStreamWriter writer;
-	std::ofstream file((filename + ".json").c_str(), std::ios_base::out | std::ios_base::binary);
-	writer.write(file, data);
-	file.close();
+	std::ofstream((filename + ".json").c_str(), std::ios_base::out | std::ios_base::binary) << data;
 
 	printf("Wrote to %s\n", (filename + ".json").c_str());
 	return 0;

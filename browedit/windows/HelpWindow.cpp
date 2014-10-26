@@ -9,11 +9,11 @@
 
 HelpWindow::HelpWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : Window("Help", "HelpWindow.json", resourceManager)
 {
-	Json::Value help = blib::util::FileSystem::getJson("assets/help.json");
+	blib::json::Value help = blib::util::FileSystem::getJson("assets/help.json");
 
 	blib::wm::widgets::List* list = getComponent<blib::wm::widgets::List>("lstTopics");
 
-	for (Json::ArrayIndex i = 0; i < help.size(); i++)
+	for (size_t i = 0; i < help.size(); i++)
 	{
 		list->items.push_back(help[i]["title"].asString());
 	}

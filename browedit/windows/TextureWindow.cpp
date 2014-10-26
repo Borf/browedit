@@ -391,7 +391,7 @@ void SelectableImage::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, bli
 	if ((selectX1 == 0 && selectX2 == 0 && selectY1 == 0 && selectY2 == 0) || textureWindow->selectedImage != index)
 		return;
 
-	Json::Value skin = blib::wm::WM::getInstance()->skin["list"];
+	blib::json::Value skin = blib::wm::WM::getInstance()->skin["list"];
 	blib::Texture* texture = blib::wm::WM::getInstance()->skinTexture;
 
 	spriteBatch.drawStretchyRect(texture, glm::translate(matrix, glm::vec3(x + selectX1, y + selectY1, 0)), skin, glm::vec2(selectX2 - selectX1, selectY2 - selectY1), glm::vec4(1, 1, 1, 0.5f));

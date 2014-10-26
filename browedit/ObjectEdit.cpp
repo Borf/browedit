@@ -24,7 +24,7 @@ void BrowEdit::objectEditUpdate()
 				newModel = NULL;
 		}
 
-		else if (mouseState.leftButton && !lastMouseState.leftButton || mouseState.rightButton && !lastMouseState.rightButton)
+		else if (mouseState.leftButton && !lastMouseState.leftButton)
 		{//down
 			startMouseState = mouseState;
 			mouse3dstart = mapRenderer.mouse3d;
