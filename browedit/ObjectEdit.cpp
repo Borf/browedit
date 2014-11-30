@@ -14,7 +14,7 @@
 
 void BrowEdit::objectEditUpdate()
 {
-	if (!wm->inWindow(mouseState.x, mouseState.y))
+	if (!wm->inWindow(mouseState.position))
 	{
 		if (newModel)
 		{
@@ -73,9 +73,9 @@ void BrowEdit::objectEditUpdate()
 				perform(action);
 				objectEditActions.clear();
 			}
-			else if (abs(startMouseState.x - lastMouseState.x) < 2 && abs(startMouseState.y - lastMouseState.y) < 2)
+			else if (abs(startMouseState.position.x - lastMouseState.position.x) < 2 && abs(startMouseState.position.y - lastMouseState.position.y) < 2)
 			{ //click
-				if (!wm->inWindow(mouseState.x, mouseState.y))
+				if (!wm->inWindow(mouseState.position))
 				{
 					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 					{
@@ -124,29 +124,29 @@ void BrowEdit::objectEditUpdate()
 						if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::X) != 0)
 							o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
 						if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Y) != 0)
-							o->position.y += (mouseState.y - lastMouseState.y) / 5.0f;
+							o->position.y += (mouseState.position.y - lastMouseState.position.y) / 5.0f;
 						if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Z) != 0)
 							o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
 					}
 					if (objectRotateDirection != RotatorTool::Axis::NONE)
 					{
 						if (objectRotateDirection == RotatorTool::Axis::X)
-							o->rotation.x -= mouseState.x - lastMouseState.x;
+							o->rotation.x -= mouseState.position.x - lastMouseState.position.x;
 						if (objectRotateDirection == RotatorTool::Axis::Y)
-							o->rotation.y -= mouseState.x - lastMouseState.x;
+							o->rotation.y -= mouseState.position.x - lastMouseState.position.x;
 						if (objectRotateDirection == RotatorTool::Axis::Z)
-							o->rotation.z -= mouseState.x - lastMouseState.x;
+							o->rotation.z -= mouseState.position.x - lastMouseState.position.x;
 					}
 					if (objectScaleDirection != ScaleTool::Axis::NONE)
 					{
 						if (objectScaleDirection == ScaleTool::Axis::X)
-							o->scale.x *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
+							o->scale.x *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
 						if (objectScaleDirection == ScaleTool::Axis::Y)
-							o->scale.y *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
+							o->scale.y *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
 						if (objectScaleDirection == ScaleTool::Axis::Z)
-							o->scale.z *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
+							o->scale.z *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
 						if (objectScaleDirection == ScaleTool::Axis::ALL)
-							o->scale *= 1 - (mouseState.x - lastMouseState.x + mouseState.y - lastMouseState.y) * 0.01f;
+							o->scale *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
 					}
 
 					((Rsw::Model*)o)->matrixCached = false;

@@ -53,8 +53,8 @@ BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mous
 	this->config = config;
 	this->isolate = isolate;
 
-	appSetup.width = config["resolution"][0u].asInt();
-	appSetup.height = config["resolution"][1u].asInt();
+	appSetup.window.setWidth((float)config["resolution"][0u].asInt());
+	appSetup.window.setHeight((float)config["resolution"][1u].asInt());
 	appSetup.vsync = false;
 	appSetup.icon = 0;
 	appSetup.renderer = blib::AppSetup::GlRenderer;
@@ -309,14 +309,14 @@ void BrowEdit::update( double elapsedTime )
 		{
 			if (mouseState.clickcount == 2)
 				camera->angle = 60;
-			camera->direction += (mouseState.x - lastMouseState.x) / 2.0f;
-			camera->angle = glm::clamp(camera->angle + (mouseState.y - lastMouseState.y) / 2.0f, 0.0f, 90.0f);
+			camera->direction += (mouseState.position.x - lastMouseState.position.x) / 2.0f;
+			camera->angle = glm::clamp(camera->angle + (mouseState.position.y - lastMouseState.position.y) / 2.0f, 0.0f, 90.0f);
 		}
 		else
 		{
 			if (mouseState.clickcount == 2)
 				camera->direction = 0;
-			camera->position -= glm::vec2(glm::vec4(mouseState.x - lastMouseState.x, mouseState.y - lastMouseState.y, 0, 0) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0, 0, 1)));
+			camera->position -= glm::vec2(glm::vec4(mouseState.position.x - lastMouseState.position.x, mouseState.position.y - lastMouseState.position.y, 0, 0) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0, 0, 1)));
 			camera->targetPosition = camera->position;
 		}
 	}
@@ -359,9 +359,9 @@ void BrowEdit::update( double elapsedTime )
 			if (mouseState.rightButton)
 			{
 				if (keyState.isPressed(blib::Key::SHIFT))
-					map->heightImportMax -= (mouseState.y - lastMouseState.y) * 0.1f;
+					map->heightImportMax -= (mouseState.position.y - lastMouseState.position.y) * 0.1f;
 				else
-					map->heightImportMin -= (mouseState.y - lastMouseState.y) * 0.1f;
+					map->heightImportMin -= (mouseState.position.y - lastMouseState.position.y) * 0.1f;
 			}
 
 			if (keyState.isPressed(blib::Key::ENTER))
@@ -406,7 +406,7 @@ void BrowEdit::draw()
 
 	if (map)
 	{
-		mapRenderer.render(renderer, glm::vec2(mouseState.x, mouseState.y));
+		mapRenderer.render(renderer, glm::vec2(mouseState.position));
 
 
 		//depthinfo will be gone after rendering the fbo, so render things that need depthtesting to the fbo here
@@ -514,7 +514,7 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::ObjectEdit)
 		{
-			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && (
+			if (glm::length(glm::vec3(mapRenderer.mouse3d - mouse3dstart)) > 1 && mouseState.leftButton && !wm->inWindow(mouseState.position) && (
 				(objectEditModeTool == ObjectEditModeTool::Translate && objectTranslateDirection == TranslatorTool::Axis::NONE) ||
 				(objectEditModeTool == ObjectEditModeTool::Rotate && objectRotateDirection == RotatorTool::Axis::NONE) ||
 				(objectEditModeTool == ObjectEditModeTool::Scale && objectScaleDirection == ScaleTool::Axis::NONE)

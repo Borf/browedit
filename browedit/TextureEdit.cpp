@@ -43,7 +43,7 @@ void BrowEdit::textureEditUpdate()
 	int mapHeight = map->getGnd()->height;
 
 
-	if (mouseState.leftButton && !lastMouseState.leftButton && !wm->inWindow(mouseState.x, mouseState.y) && textureWindow->selectedImage != -1)
+	if (mouseState.leftButton && !lastMouseState.leftButton && !wm->inWindow(mouseState.position) && textureWindow->selectedImage != -1)
 	{
 		int cursorWidth = textureTargetSize.x;
 		int cursorHeight = textureTargetSize.y;

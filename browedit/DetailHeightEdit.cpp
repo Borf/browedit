@@ -44,7 +44,7 @@ void BrowEdit::detailHeightEditUpdate()
 				cube->height[primIndex] += diff;
 			};
 
-			float diff = (mouseState.y - lastMouseState.y) / 10.0f;
+			float diff = (mouseState.position.y - lastMouseState.position.y) / 10.0f;
 
 			changeHeight(detailHeightCursor, detailHeightOffset, diff);
 			if (dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("heighttools/connect"))->getValue())

@@ -272,9 +272,9 @@ void Gnd::save(std::string fileName)
 			pFile->put(tile->color.a);
 		}
 
-		for (size_t y = 0; y < height; y++)
+		for (int y = 0; y < height; y++)
 		{
-			for (size_t x = 0; x < width; x++)
+			for (int x = 0; x < width; x++)
 			{
 				Cube* cube = cubes[x][y];
 				pFile->writeFloat(cube->h1);
