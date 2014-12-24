@@ -268,6 +268,8 @@ void BrowEdit::init()
 	rootMenu->setAction("objecttools/rotate", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Rotate));
 
 
+	setEditMode(EditMode::TextureEdit);
+
 //	loadMap("data/c_tower1");
 #ifdef WIN32
 	loadMap("data/" + config["defaultmap"].asString());
@@ -1013,15 +1015,19 @@ bool BrowEdit::onScroll( int delta )
 void BrowEdit::setEditMode(EditMode newMode)
 {
 	this->editMode = newMode;
-	rootMenu->setEnabled("editmode/textureedit", editMode == EditMode::TextureEdit);
-	rootMenu->setEnabled("editmode/objectedit", editMode == EditMode::ObjectEdit);
-	rootMenu->setEnabled("editmode/heightedit", editMode == EditMode::HeightEdit);
-	rootMenu->setEnabled("editmode/detailheight", editMode == EditMode::DetailHeightEdit);
-	rootMenu->setEnabled("editmode/walledit", editMode == EditMode::WallEdit);
+	rootMenu->setToggleValue("editmode/textureedit", editMode == EditMode::TextureEdit);
+	rootMenu->setToggleValue("editmode/objectedit", editMode == EditMode::ObjectEdit);
+	rootMenu->setToggleValue("editmode/heightedit", editMode == EditMode::HeightEdit);
+	rootMenu->setToggleValue("editmode/detailheight", editMode == EditMode::DetailHeightEdit);
+	rootMenu->setToggleValue("editmode/walledit", editMode == EditMode::WallEdit);
 
+	rootMenu->getItem("heighttools")->enabled = editMode == EditMode::HeightEdit;
+	rootMenu->getItem("objecttools")->enabled = editMode == EditMode::ObjectEdit;
 
 	textureWindow->setVisible(editMode == EditMode::TextureEdit || editMode == EditMode::WallEdit);
 	objectWindow->setVisible(editMode == EditMode::ObjectEdit);
+
+
 
 
 
@@ -1030,9 +1036,9 @@ void BrowEdit::setEditMode(EditMode newMode)
 void BrowEdit::setObjectEditMode(ObjectEditModeTool newMode)
 {
 	this->objectEditModeTool = newMode;
-	rootMenu->setEnabled("objecttools/move", objectEditModeTool == ObjectEditModeTool::Translate);
-	rootMenu->setEnabled("objecttools/scale", objectEditModeTool == ObjectEditModeTool::Scale);
-	rootMenu->setEnabled("objecttools/rotate", objectEditModeTool == ObjectEditModeTool::Rotate);
+	rootMenu->setToggleValue("objecttools/move", objectEditModeTool == ObjectEditModeTool::Translate);
+	rootMenu->setToggleValue("objecttools/scale", objectEditModeTool == ObjectEditModeTool::Scale);
+	rootMenu->setToggleValue("objecttools/rotate", objectEditModeTool == ObjectEditModeTool::Rotate);
 }
 
 void BrowEdit::addModel(const std::string &fileName)
