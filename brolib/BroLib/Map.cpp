@@ -44,6 +44,16 @@ Map::Map(const std::string &fileName, int width, int height)
 	gat = new Gat(width*2, height*2);
 }
 
+Map::~Map()
+{
+	delete gnd;
+	delete rsw;
+	delete gat;
+	gnd = NULL;
+	rsw = NULL;
+	gat = NULL;
+}
+
 
 void Map::save(const std::string &filename)
 {

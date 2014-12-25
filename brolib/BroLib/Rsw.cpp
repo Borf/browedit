@@ -4,6 +4,7 @@
 #include "MapRenderer.h"
 #include <blib/util/Log.h>
 #include <blib/Util.h>
+#include <blib/linq.h>
 using blib::util::Log;
 
 #include <blib/util/FileSystem.h>
@@ -199,6 +200,15 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 	delete file;
 }
 
+
+Rsw::~Rsw()
+{
+	delete quadtree;
+	blib::linq::deleteall(objects);
+
+	for (auto rsm : rsmCache)
+		delete rsm.second;
+}
 
 
 void Rsw::save(const std::string &fileName)
@@ -603,4 +613,11 @@ Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::const_iterator &it, int 
 		return;
 	for (size_t i = 0; i < 4; i++)
 		children[i] = new QuadTreeNode(it, level + 1);
+}
+
+Rsw::QuadTreeNode::~QuadTreeNode()
+{
+	for (int i = 0; i < 4; i++)
+		if (children[i])
+			delete children[i];
 }

@@ -110,7 +110,7 @@ browedit :
 	'map' :
 	{
 		save(),																			//TODO
-		load(),																			//TODO
+		load(string filename),															//TODO
 
 		getName();
 

@@ -44,6 +44,7 @@ public:
 
 
 		Mesh(Rsm* model, blib::util::StreamInFile* rsmFile);
+		~Mesh();
 
 		std::string						name;
 		std::string						parentName;

@@ -13,6 +13,7 @@ public:
 	float direction;
 	float angle;
 	float distance;
+	bool ortho;
 
 	glm::mat4 getMatrix() const;
 	void update(double elapsedTime);

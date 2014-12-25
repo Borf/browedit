@@ -2,6 +2,7 @@
 
 #include <blib/util/FileSystem.h>
 #include <blib/util/Log.h>
+#include <blib/linq.h>
 #include <blib/Texture.h>
 using blib::util::Log;
 
@@ -209,6 +210,19 @@ Gnd::Gnd( const std::string &fileName )
 		}
 	}
 	Log::out<<"GND: Done calculating normals" << Log::newline;
+}
+
+Gnd::~Gnd()
+{
+	blib::linq::deleteall(textures);
+	blib::linq::deleteall(lightmaps);
+	blib::linq::deleteall(tiles);
+
+	for (size_t i = 0; i < cubes.size(); i++)
+		for (size_t ii = 0; ii < cubes[i].size(); ii++)
+			if (cubes[i][ii])
+				delete cubes[i][ii];
+
 }
 
 

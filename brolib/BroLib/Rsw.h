@@ -120,7 +120,7 @@ public:
 	{
 	public:
         QuadTreeNode(std::vector<glm::vec3>::const_iterator &it, int level = 0);
-
+		~QuadTreeNode();
 		blib::math::AABB bbox;
 		glm::vec3 range[2];
 	};
@@ -159,6 +159,7 @@ public:
 
 	Rsw(const std::string &fileName, bool loadModels = true);
 	Rsw();
+	~Rsw();
 
 	Rsm* getRsm( const std::string &fileName );
 	void save(const std::string &fileName);

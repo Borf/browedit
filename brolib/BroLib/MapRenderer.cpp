@@ -36,6 +36,7 @@ MapRenderer::MapRenderer() : mouseRay(glm::vec3(0, 0,0), glm::vec3(1,0,0))
 	fbo = NULL;
 	fov = 90;
 	mouse3d = glm::vec4(0, 0, 0, -1);
+	orthoDistance = 1000;
 }
 
 float mod(float x, float m)
@@ -61,6 +62,8 @@ float dist(const glm::vec2 &a, const glm::vec2 &b)
 void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
 	renderer->clear(glm::vec4(0, 0, 0, 0), blib::Renderer::Color | blib::Renderer::Depth, gndRenderState);
+
+	this->resizeGl(width, height); //meh
 
 	glm::vec3 lightDirection;
 	lightDirection[0] = -glm::cos(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
@@ -837,9 +840,15 @@ void MapRenderer::resizeGl(int width, int height)
 {
 	this->width = width;
 	this->height = height;
-	if (fbo)
+	if (fbo && (fbo->width != width || fbo->height != height))
 		fbo->setSize(width, height);
-	projectionMatrix = glm::perspective(fov, width / (float)height, 5.0f, 5000.0f);
+
+	float ratio = width / (float)height;
+
+	if (orthoDistance > 0)
+		projectionMatrix = glm::ortho(-orthoDistance*ratio, orthoDistance*ratio, -orthoDistance, orthoDistance, -5000.0f, 5000.0f);
+	else
+		projectionMatrix = glm::perspective(fov, ratio, 5.0f, 5000.0f);
 	if (gndRenderState.activeShader)
 		gndRenderState.activeShader->setUniform(GndShaderAttributes::ProjectionMatrix, projectionMatrix);
 	if (rswRenderState.activeShader)
@@ -869,6 +878,14 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 		}
 		else
 		{
+			if (o->type == Rsw::Object::Type::Light && !drawLights)
+				continue;
+			if (o->type == Rsw::Object::Type::Effect && !drawEffects)
+				continue;
+			if (o->type == Rsw::Object::Type::Sound && !drawSounds)
+				continue;
+
+
 			blib::Texture* t = NULL;
 			if (o->type == Rsw::Object::Type::Light)
 				t = rswLightTexture;

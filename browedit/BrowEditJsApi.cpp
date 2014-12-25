@@ -1,5 +1,6 @@
 #include "BrowEdit.h"
 #include "v8.h"
+#include "Camera.h"
 
 #include <BroLib/Map.h>
 #include <BroLib/Gnd.h>
@@ -57,10 +58,10 @@ public:
 			//browEdit->runLater<bool>([this](bool bla)
 			//{
 
-				v8::Isolate::Scope isolate_scope(isolate);
-				v8::HandleScope handle_scope(isolate);
-				v8::Local<v8::Context> context = v8::Context::New(isolate, NULL);
-				v8::Context::Scope context_scope(context);
+//				v8::Isolate::Scope isolate_scope(isolate);
+//				v8::HandleScope handle_scope(isolate);
+//				v8::Persistent<v8::Context> context = v8::Context::New(isolate, NULL);
+				//v8::Context::Scope context_scope(context);
 
 
 				v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(obj->Get(v8::String::NewFromUtf8(this->isolate, "action")));
@@ -86,12 +87,27 @@ void BrowEdit::loadJsPlugins()
 	brow->Set(v8::String::NewFromUtf8(isolate, "log"),   v8::FunctionTemplate::New(isolate, Print)->GetFunction());
 
 
+	brow->Set(v8::String::NewFromUtf8(isolate, "afterDraw"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		JsRunner* runner = new JsRunner();
+		runner->isolate = args.GetIsolate();
+		runner->func.Reset(args.GetIsolate(), v8::Local<v8::Function>::Cast(args[0]));
+		runner->obj.Reset(args.GetIsolate(), v8::Local<v8::Object>::Cast(args[1]));
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->runNext.push_back(runner);
+	})->GetFunction());
+
+
+
 	v8::Handle<v8::Object> map = v8::Object::New(isolate);
 	brow->Set(v8::String::NewFromUtf8(isolate, "map"), map);
 
 	map->Set(v8::String::NewFromUtf8(isolate, "getFile"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
 		args.GetReturnValue().Set(v8::String::NewFromUtf8(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getFileName().c_str()));
+	})->GetFunction());
+	map->Set(v8::String::NewFromUtf8(isolate, "load"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->loadMap(*v8::String::Utf8Value(args[0]->ToString()), false);
 	})->GetFunction());
 
 
@@ -189,7 +205,55 @@ void BrowEdit::loadJsPlugins()
 	{
 		args.GetReturnValue().Set(v8::Integer::New(args.GetIsolate(), static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->map->getRsw()->water.animSpeed));
 	})->GetFunction());
+///display
+	v8::Handle<v8::Object> display = v8::Object::New(isolate);
+	brow->Set(v8::String::NewFromUtf8(isolate, "display"), display);
 
+	display->Set(v8::String::NewFromUtf8(isolate, "showGrid"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->rootMenu->setToggleValue("display/grid", args[0]->BooleanValue());
+	})->GetFunction());
+	display->Set(v8::String::NewFromUtf8(isolate, "showLightmap"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->rootMenu->setToggleValue("display/shadows", args[0]->BooleanValue());
+	})->GetFunction());
+	display->Set(v8::String::NewFromUtf8(isolate, "showLights"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->rootMenu->setToggleValue("display/lights", args[0]->BooleanValue());
+	})->GetFunction());
+	display->Set(v8::String::NewFromUtf8(isolate, "showEffects"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->rootMenu->setToggleValue("display/effects", args[0]->BooleanValue());
+	})->GetFunction());
+	display->Set(v8::String::NewFromUtf8(isolate, "showSounds"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->rootMenu->setToggleValue("display/sounds", args[0]->BooleanValue());
+	})->GetFunction());
+///display.camera
+	v8::Handle<v8::Object> camera = v8::Object::New(isolate);
+	display->Set(v8::String::NewFromUtf8(isolate, "camera"), camera);
+
+	camera->Set(v8::String::NewFromUtf8(isolate, "setOrtho"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->ortho = args[0]->BooleanValue();
+	})->GetFunction());
+	camera->Set(v8::String::NewFromUtf8(isolate, "setCenter"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->position.x = (float)args[0]->NumberValue();
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->position.y = (float)args[1]->NumberValue();
+	})->GetFunction());
+	camera->Set(v8::String::NewFromUtf8(isolate, "setDistance"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->distance = (float)args[0]->NumberValue();
+	})->GetFunction());
+	camera->Set(v8::String::NewFromUtf8(isolate, "setAngle"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->angle = (float)args[0]->NumberValue();
+	})->GetFunction());
+	camera->Set(v8::String::NewFromUtf8(isolate, "setDirection"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
+	{
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->direction = (float)args[0]->NumberValue();
+	})->GetFunction());
 
 
 	

@@ -1,6 +1,7 @@
 #include "Rsm.h"
 
 #include <blib/util/FileSystem.h>
+#include <blib/linq.h>
 #include <blib/util/Log.h>
 #include <blib/util/Profiler.h>
 
@@ -96,6 +97,7 @@ Rsm::Rsm(std::string fileName)
 
 Rsm::~Rsm()
 {
+	delete rootMesh;
 }
 
 
@@ -351,6 +353,13 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 //	calcVbos();
 }
 
+
+Rsm::Mesh::~Mesh()
+{
+	blib::linq::deleteall(faces);
+	blib::linq::deleteall(frames);
+	blib::linq::deleteall(children);
+}
 
 
 

@@ -74,7 +74,7 @@ int main()
 	Log::out<<"||    | |_) |_ __ _____      _| |__   __| |_| |_            ||"<<Log::newline;
 	Log::out<<"||    |  _ <| '__/ _ \\ \\ /\\ / /  __| / _` | | __|           ||"<<Log::newline;
 	Log::out<<"||    | |_) | | | (_) \\ V  V /| |___| (_| | | |_            ||"<<Log::newline;
-	Log::out<<"||    |____/|_|  \\___/ \\_/\\_/ |______\\__,_|_|\\__|	    ||"<<Log::newline;
+	Log::out<<"||    |____/|_|  \\___/ \\_/\\_/ |______\\__,_|_|\\__|	          ||"<<Log::newline;
 	Log::out<<"||                                                          ||"<<Log::newline;
 	Log::out<<"||                   Coded by:      Borf                    ||"<<Log::newline;
 	Log::out<<"||                                                          ||"<<Log::newline;
@@ -133,16 +133,21 @@ int main()
 
 
 	v8::Isolate* isolate = v8::Isolate::New();
-	v8::Isolate::Scope isolate_scope(isolate);
-	v8::HandleScope handle_scope(isolate);
-	v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
-	v8::Local<v8::Context> context = v8::Context::New(isolate, NULL, global);
-	v8::Context::Scope context_scope(context);
+	{
+		v8::Isolate::Scope isolate_scope(isolate);
+		v8::HandleScope handle_scope(isolate);
+		v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
+		v8::Local<v8::Context> context = v8::Context::New(isolate, NULL, global);
+		v8::Context::Scope context_scope(context);
 
-	BrowEdit* app = new BrowEdit(config, isolate);
-	app->version = version;
-	app->start();
-	delete app;
+		BrowEdit* app = new BrowEdit(config, isolate);
+		app->version = version;
+		app->start();
+		delete app;
+		blib::util::FileSystem::dispose();
+	}
+	isolate->Dispose();
+
 	return 0;
 }
 

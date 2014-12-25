@@ -132,6 +132,25 @@ BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mous
 
 BrowEdit::~BrowEdit(void)
 {
+	if (map)
+		delete map;
+	map = NULL;
+	//	mapRenderer.dispose();
+	
+	delete textureWindow;
+	delete objectWindow;
+	delete camera;
+
+	delete wm;
+	delete rootMenu;
+
+	blib::linq::deleteall(objectEditActions);
+	blib::linq::deleteall(actions);
+	blib::linq::deleteall(undone);
+
+
+	wm = NULL;
+	rootMenu = NULL;
 }
 
 void BrowEdit::init()
@@ -256,6 +275,9 @@ void BrowEdit::init()
 	rootMenu->setAction("display/help", [this]() { new HelpWindow(resourceManager, this);  });
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
+	rootMenu->linkToggle("display/lights", &mapRenderer.drawLights);
+	rootMenu->linkToggle("display/sounds", &mapRenderer.drawSounds);
+	rootMenu->linkToggle("display/effects", &mapRenderer.drawEffects);
 	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
 	rootMenu->setAction("editmode/heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::HeightEdit));
@@ -296,6 +318,7 @@ void BrowEdit::update( double elapsedTime )
 	camera->update(elapsedTime);
 
 	mapRenderer.cameraMatrix = camera->getMatrix();
+	mapRenderer.orthoDistance = camera->ortho ? camera->distance : 0;
 	mapRenderer.drawTextureGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && editMode == EditMode::TextureEdit; // TODO: fix this
 	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit || editMode == EditMode::DetailHeightEdit || editMode == EditMode::WallEdit); // TODO: fix this
 
@@ -303,6 +326,17 @@ void BrowEdit::update( double elapsedTime )
 		mouseRay = mapRenderer.mouseRay;
 
 
+
+	if (!runNext.empty())
+	{
+		for (auto it : runNext)
+		{
+			it->counter--;
+			if (it->counter <= 0)
+				it->run();
+		}
+		blib::linq::deletewhere(runNext, [](JsRunner* r) { return r->counter <= 0; });
+	}
 
 
 	if(mouseState.middleButton)
@@ -396,6 +430,9 @@ void BrowEdit::update( double elapsedTime )
 	lastMouseState = mouseState;
 
 	wm->keyPressed = false;
+
+	if (!running)
+		isolate->Exit();
 }
 
 void BrowEdit::draw()
@@ -986,20 +1023,29 @@ void BrowEdit::draw()
 	spriteBatch->end();
 }
 
-void BrowEdit::loadMap(std::string fileName)
+void BrowEdit::loadMap(std::string fileName, bool threaded)
 {
 	if(map)
 		delete map;
 	map = NULL;
-
-	new blib::BackgroundTask<Map*>(this, 	[fileName] () { return new Map(fileName); }, 
-							[this] (Map* param) { map = param;
-										camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
-										camera->targetPosition = camera->position;
-										mapRenderer.setMap(map);
-										textureWindow->updateTextures(map); //TODO: textures aren't loaded here yet!
-										objectWindow->updateObjects(map);
-	} );
+	if (threaded)
+		new blib::BackgroundTask<Map*>(this, 	[fileName] () { return new Map(fileName); }, 
+								[this] (Map* param) { map = param;
+											camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
+											camera->targetPosition = camera->position;
+											mapRenderer.setMap(map);
+											textureWindow->updateTextures(map); //TODO: textures aren't loaded here yet!
+											objectWindow->updateObjects(map);
+		} );
+	else
+	{
+		map = new Map(fileName);
+		camera->position = glm::vec2(map->getGnd()->width * 5, map->getGnd()->height * 5);
+		camera->targetPosition = camera->position;
+		mapRenderer.setMap(map);
+		textureWindow->updateTextures(map); //TODO: textures aren't loaded here yet!
+		objectWindow->updateObjects(map);
+	}
 }
 
 bool BrowEdit::onScroll( int delta )
@@ -1092,4 +1138,14 @@ void BrowEdit::redo()
 		actions.push_back(a);
 		a->perform(map, mapRenderer);
 	}
+}
+
+void JsRunner::run()
+{
+	v8::Handle<v8::Value> args[1] = {};
+	//args[0] = browObject;
+
+	v8::Local<v8::Function> f = v8::Local<v8::Function>::New(isolate, func);
+	v8::Local<v8::Object> o = v8::Local<v8::Object>::New(isolate, obj);
+	f->Call(o, 0, args);
 }

@@ -11,6 +11,7 @@ class Gnd
 public:
 	Gnd(const std::string &fileName);
 	Gnd(int width, int height);
+	~Gnd();
 
 	void save(std::string fileName);
 

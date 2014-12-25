@@ -62,6 +62,15 @@ Gat::Gat(int width, int height)
 	}
 }
 
+Gat::~Gat()
+{
+	for (size_t i = 0; i < tiles.size(); i++)
+		for (size_t ii = 0; ii < tiles[i].size(); ii++)
+			if (tiles[i][ii])
+				delete tiles[i][ii];
+	tiles.clear();
+}
+
 void Gat::save(const std::string &fileName)
 {
 	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".gat");

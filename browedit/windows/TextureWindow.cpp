@@ -124,6 +124,11 @@ TextureWindow::TextureWindow(blib::ResourceManager* resourceManager, BrowEdit* b
 	setDirectory("RO/ÇÊµå¹Ù´Ú/");
 }
 
+TextureWindow::~TextureWindow()
+{
+
+}
+
 
 void TextureWindow::updateTextures(Map* map)
 {

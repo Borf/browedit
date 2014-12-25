@@ -34,6 +34,11 @@ GrfFileSystemHandler::GrfFileSystemHandler( const std::string &grfFile ) : blib:
 		lookup[sanitizeFileName(grf->files[i].name)] = i;
 }
 
+GrfFileSystemHandler::~GrfFileSystemHandler()
+{
+	grf_close(grf);
+}
+
 
 blib::util::StreamInFile* GrfFileSystemHandler::openRead( const std::string &fileName )
 {

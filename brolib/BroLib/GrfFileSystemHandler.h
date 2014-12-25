@@ -13,6 +13,7 @@ class GrfFileSystemHandler : public blib::util::FileSystemHandler
 	std::map<std::string, int> lookup;
 public:
 	GrfFileSystemHandler(const std::string &grfFile);
+	~GrfFileSystemHandler();
 
 	virtual blib::util::StreamInFile* openRead( const std::string &fileName );
 	virtual void getFileList( const std::string &path, std::vector<std::string> &files );

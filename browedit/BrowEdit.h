@@ -24,6 +24,20 @@ class Action;
 class ObjectEditAction;
 class SelectObjectAction;
 
+
+class JsRunner
+{
+public:
+	v8::Persistent<v8::Object> obj;
+	v8::Persistent<v8::Function> func;
+	v8::Isolate* isolate;
+
+	void run();
+
+	int counter = 4;
+
+};
+
 class BrowEdit : public blib::App, public blib::MouseListener
 {
 	blib::wm::WM* wm;
@@ -83,7 +97,7 @@ public:
 
 	virtual void draw();
 
-	void loadMap(std::string fileName);
+	void loadMap(std::string fileName, bool threaded = true);
 	void saveMap(std::string fileName);
 
 	virtual bool onScroll( int delta );
@@ -162,6 +176,9 @@ public:
 	//v8::HandleScope* handle_scope;
 
 	v8::Handle<v8::Object> brow;
+
+	std::list<JsRunner*> runNext;
+
 	int version;
 	void loadJsPlugins();
 
