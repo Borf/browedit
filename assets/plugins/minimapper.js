@@ -14,27 +14,7 @@ var maps = [
     "c_tower1",
     "c_tower2",
     "c_tower3",
-    "c_tower4",
-   "gef_dun00",
-   "gef_dun01",
-   "gef_dun02",
-   "gef_dun03",
-   "gef_fild00",
-   "gef_fild01",
-   "gef_fild02",
-   "gef_fild03",
-   "gef_fild04",
-   "gef_fild05",
-   "gef_fild06",
-   "gef_fild07",
-   "gef_fild08",
-   "gef_fild09",
-   "gef_fild10",
-   "gef_fild11",
-   "gef_fild12",
-   "gef_fild13",
-   "gef_fild14",
-   "gef_tower"
+    "c_tower4"
 ];
 
 

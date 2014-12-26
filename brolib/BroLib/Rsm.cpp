@@ -1,4 +1,5 @@
 #include "Rsm.h"
+#include "MapRenderer.h"
 
 #include <blib/util/FileSystem.h>
 #include <blib/linq.h>
@@ -97,6 +98,8 @@ Rsm::Rsm(std::string fileName)
 
 Rsm::~Rsm()
 {
+	if (renderer)
+		delete renderer;
 	delete rootMesh;
 }
 
@@ -356,6 +359,8 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 
 Rsm::Mesh::~Mesh()
 {
+	if (renderer)
+		delete renderer;
 	blib::linq::deleteall(faces);
 	blib::linq::deleteall(frames);
 	blib::linq::deleteall(children);
