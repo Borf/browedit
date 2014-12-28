@@ -369,6 +369,8 @@ SelectableImage::SelectableImage(blib::Texture* texture, int index, TextureWindo
 		selectY2 = height;
 		alignToGrid();
 		this->textureWindow->setActiveTexture(this->index);
+		this->textureWindow->tx1 = glm::vec2(selectX1, selectY1) / glm::vec2(width, height);
+		this->textureWindow->tx2 = glm::vec2(selectX2, selectY2) / glm::vec2(width, height);
 		return true;
 	});
 
