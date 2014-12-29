@@ -18,6 +18,8 @@
 #include <blib/util/FileSystem.h>
 #include <blib/ResourceManager.h>
 #include <blib/util/Profiler.h>
+#include <blib/json.h>
+#include <blib/wm/Menu.h>
 
 using blib::util::Log;
 
@@ -197,8 +199,10 @@ void TextureWindow::setDirectory(std::string directory)
 			image->x = px;
 			image->y = py;
 
-			image->addClickHandler([this, it](int x, int y, int clickCount) {
-				if (clickCount == 2)
+			image->addClickHandler([this, it, image](int x, int y, int clickCount) {
+				blib::wm::WM::getInstance()->popupMenu = new blib::wm::Menu(blib::json::readJson("[{ \"name\" : \"Add to map\", \"type\" : \"item\" }, { \"name\" : \"Replace selected\", \"type\" : \"item\" } ]"));
+				blib::wm::WM::getInstance()->setPopupMenuPosition(glm::vec2(image->parent->absoluteX() + x + this->x, image->parent->absoluteY() + y + this->y + 12));
+				blib::wm::WM::getInstance()->popupMenu->setAction("Add to map", [this, it]()
 				{
 					Gnd::Texture* tex = new Gnd::Texture();
 					tex->file = it.second;
@@ -207,7 +211,17 @@ void TextureWindow::setDirectory(std::string directory)
 
 					browEdit->map->getGnd()->textures.push_back(tex);
 					updateTextures(browEdit->map);
-				}
+				});
+				blib::wm::WM::getInstance()->popupMenu->setAction("Replace selected", [this, it]()
+				{
+					Gnd::Texture* tex = new Gnd::Texture();
+					tex->file = it.second;
+					tex->name = it.second;
+					tex->texture = resourceManager->getResource<blib::Texture>("data/texture/" + it.second);;
+					delete browEdit->map->getGnd()->textures[this->selectedImage];
+					browEdit->map->getGnd()->textures[this->selectedImage] = tex;
+					updateTextures(browEdit->map);
+				});
 				return true;
 			});
 
