@@ -42,6 +42,7 @@ void mergeConfig(blib::json::Value &config, const blib::json::Value &newConfig);
 int main()
 {
 #if defined(BLIB_WIN)
+#if 0
 	HINSTANCE hInst = GetModuleHandle(0);
 	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA1), "data");
 	HGLOBAL hMem = LoadResource(NULL, hRes);
@@ -56,6 +57,10 @@ int main()
 
 	free(text);
 	FreeResource(hMem);
+#else
+	std::string appname = "Browedit 2.0";
+	int version = 999;
+#endif
 
 
 #if !defined(_DEBUG)
