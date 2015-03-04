@@ -67,8 +67,7 @@
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>$(SolutionDir)\..\externals\v8\get.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,8 +93,7 @@
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /q /y /c "c:\Program Files\TortoiseSVN\bin\svnversion.exe" "$(ProjectDir)..\vs2013\svnversion.exe"
-"$(ProjectDir)..\vs2013\svnversion.exe" "$(ProjectPath)" &gt; "$(MSBuildProjectDirectory)\version.h"</Command>
+      <Command>$(SolutionDir)\..\externals\v8\get.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
