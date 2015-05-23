@@ -1,202 +1,174 @@
 {
-	"menubar" : 
-	{
-		"color" : "FFFFFFFF",
-		"fontcolor" : "000000FF",
-		"highlight" : "3333E5FF",
-		"menu" : 
-		{
-			"color" : "FFFFFF",
-			"fontcolor" : "000000",
-			"highlight" : "3333E5",
-			"targetopacity" : 0.75,
-			"startopacity" : 0
-		}
-	},
-	"color" : "FFFFFFFF",
-	"colorblurred" : "FFFFFFAA",
-	"texture" : "assets/textures/skins/ro.png",
-	"font" : "assets/fonts/tahoma",
-	"radialfont" : "tahomabig",
-	"window" : 
-	{
-		"title" : 
-		{
-			"fontcolor" : "000000",
-			"xoff" : 15,
-			"yoff" : 4
-		},
-		"fontcolor" : "000000",
-		"top" :
-		{
-			"height" : 19,
-			"pos" : 0
-		},
-		"left" :
-		{
-			"width" : 14,
-			"pos" : 0
-		},
-		"right" :
-		{
-			"width" : 3,
-			"pos" : 15
-		},
-		"bottom" :
-		{
-			"height" : 30,
-			"pos" : 21
-		},
-		"offsets" : 
-		{
-			"top" : 20,
-			"bottom" : 8,
-			"left" : 8,
-			"right" : 8
-		}
-	},
-	"button" : 
-	{
-		"fontcolor" : "000000",
-		"top" :
-		{
-			"height" : 9,
-			"pos" : 60
-		},
-		"left" :
-		{
-			"width" : 7,
-			"pos" : 0
-		},
-		"right" :
-		{
-			"width" : 7,
-			"pos" : 14
-		},
-		"bottom" :
-		{
-			"height" : 9,
-			"pos" : 71
-		}
-	},
-	"miniwindow" : 
-	{
-		"fontcolor" : "000000",
-		"top" :
-		{
-			"height" : 9,
-			"pos" : 60
-		},
-		"left" :
-		{		
-			"width" : 7,
-			"pos" : 0
-		},
-		"right" :
-		{
-			"width" : 7,
-			"pos" : 14
-		},
-		"bottom" : 
-		{
-			"height" : 9,
-			"pos" : 71
-		},
-		"offsets" : 
-		{
-			"top" : 7,
-			"bottom" : 5,
-			"left" : 2,
-			"right" : 2
-		}
-	},
-	"input" : 
-	{
-		"fontcolor" : "000000",
-		"selectcolor" : "6666FF",
-		"selectfontcolor" : "FFFFFF",
-		"top" :
-		{
-			"height" : 2,
-			"pos" : 90
-		},
-		"left" :
-		{
-			"width" : 2,
-			"pos" : 0
-		},
-		"right" :
-		{
-			"width" : 2,
-			"pos" : 3
-		},
-		"bottom" :
-		{
-			"height" : 2,
-			"pos" : 93
-		},
-		"defaultheight" : 20
-	},
-	"list" : 
-	{
-		"fontcolor" : "000000",
-		"top" :
-		{
-			"height" : 2,
-			"pos" : 90
-		},
-		"left" :
-		{
-			"width" : 2,
-			"pos" : 0
-		},
-		"right" :
-		{
-			"width" : 2,
-			"pos" : 3
-		},
-		"bottom" :
-		{
-			"height" : 2,
-			"pos" : 93
-		},
-		"selectcolor" : "6666FF",
-		"selectfontcolor" : "FFFFFF",
-		"scroll" : 
-		{
-			"width" : 13,
-			"left" : 23,
-			"centerheight" : 0,
-			"background" : 
-			{
-				"left" : 23,
-				"top" : 21,
-				"height" : 1
-			},
-			"buttonup" : 
-			{
-				"left" : 23,
-				"top" : 10,
-				"height" : 10
-			},
-			"buttondown" : 
-			{
-				"left" : 23,
-				"top" : 41,
-				"height" : 10
-			},
-			"top" :
-			{
-				"height" : 4,
-				"pos" : 27
-			},
-			"bottom" :
-			{
-				"height" : 4,
-				"pos" : 35
-			}
-		}
-	},
+    "menubar": {
+        "color": "FFFFFFFF",
+        "fontcolor": "000000FF",
+        "highlight": "3333E5FF",
+        "menu": {
+            "color": "FFFFFF",
+            "fontcolor": "000000",
+            "highlight": "3333E5",
+            "targetopacity": 0.75,
+            "startopacity": 0
+        }
+    },
+    "color": "FFFFFFFF",
+    "colorblurred": "FFFFFFAA",
+    "texture": "assets/textures/skins/ro.png",
+    "font": "assets/fonts/tahoma",
+    "radialfont": "tahomabig",
+    "window": {
+        "title": {
+            "fontcolor": "000000",
+            "xoff": 15,
+            "yoff": 4
+        },
+        "fontcolor": "000000",
+        "top": {
+            "height": 19,
+            "pos": 0
+        },
+        "left": {
+            "width": 14,
+            "pos": 0
+        },
+        "right": {
+            "width": 3,
+            "pos": 15
+        },
+        "bottom": {
+            "height": 30,
+            "pos": 21
+        },
+        "offsets": {
+            "top": 20,
+            "bottom": 8,
+            "left": 8,
+            "right": 8
+        }
+    },
+    "button": {
+        "fontcolor": "000000",
+        "top": {
+            "height": 9,
+            "pos": 60
+        },
+        "left": {
+            "width": 7,
+            "pos": 0
+        },
+        "right": {
+            "width": 7,
+            "pos": 14
+        },
+        "bottom": {
+            "height": 9,
+            "pos": 71
+        }
+    },
+    "miniwindow": {
+        "fontcolor": "000000",
+        "top": {
+            "height": 9,
+            "pos": 60
+        },
+        "left": {
+            "width": 7,
+            "pos": 0
+        },
+        "right": {
+            "width": 7,
+            "pos": 14
+        },
+        "bottom": {
+            "height": 9,
+            "pos": 71
+        },
+        "offsets": {
+            "top": 7,
+            "bottom": 5,
+            "left": 2,
+            "right": 2
+        }
+    },
+    "input": {
+        "fontcolor": "000000",
+        "selectcolor": "6666FF",
+        "selectfontcolor": "FFFFFF",
+        "top": {
+            "height": 2,
+            "pos": 90
+        },
+        "left": {
+            "width": 2,
+            "pos": 0
+        },
+        "right": {
+            "width": 2,
+            "pos": 3
+        },
+        "bottom": {
+            "height": 2,
+            "pos": 93
+        },
+        "defaultheight": 20
+    },
+    "list": {
+        "fontcolor": "000000",
+        "top": {
+            "height": 2,
+            "pos": 90
+        },
+        "left": {
+            "width": 2,
+            "pos": 0
+        },
+        "right": {
+            "width": 2,
+            "pos": 3
+        },
+        "bottom": {
+            "height": 2,
+            "pos": 93
+        },
+        "selectcolor": "6666FF",
+        "selectfontcolor": "FFFFFF",
+        "scroll": {
+            "width": 13,
+            "left": 23,
+            "centerheight": 0,
+            "background": {
+                "left": 23,
+                "top": 21,
+                "height": 1
+            },
+            "buttonup": {
+                "left": 23,
+                "top": 10,
+                "height": 10
+            },
+            "buttondown": {
+                "left": 23,
+                "top": 41,
+                "height": 10
+            },
+            "top": {
+                "height": 4,
+                "pos": 27
+            },
+            "bottom": {
+                "height": 4,
+                "pos": 35
+            },
+            "handle": {
+                "left": 23,
+                "width": 13,
+                "height": 12,
+                "top": 27,
+                "center" :  4
+            }
+
+        }
+    },
 	"frame" : 
 	{
 		"fontcolor" : "000000",
