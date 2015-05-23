@@ -957,10 +957,10 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::
 	rswRenderState.depthTest = true;
 
 
-	renderer->setViewPort(fbo->originalWidth, fbo->originalHeight);
+	renderer->setViewPort(0,0, fbo->originalWidth, fbo->originalHeight);
 	renderer->clear(glm::vec4(0, 0, 0, 1), blib::Renderer::Color | blib::Renderer::Depth, rswRenderState);
 	renderMesh(rsm->rootMesh, glm::mat4(), rsm->renderer, renderer);
-	renderer->setViewPort(width, height);
+	renderer->setViewPort(0, 0, width, height);
 
 	rswRenderState.activeFbo = oldFbo;
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
