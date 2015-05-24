@@ -158,7 +158,7 @@ public:
 	std::map<std::string, Rsm*> rsmCache;
 
 	Rsw(const std::string &fileName, bool loadModels = true);
-	Rsw();
+	Rsw(int width, int height);
 	~Rsw();
 
 	Rsm* getRsm( const std::string &fileName );

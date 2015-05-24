@@ -15,7 +15,7 @@ using blib::util::Log;
 
 using blib::util::Log;
 
-Rsw::Rsw()
+Rsw::Rsw(int width, int height)
 {
 	version = 0x0201;
 	water.height = 1;
@@ -36,6 +36,37 @@ Rsw::Rsw()
 	unknown[1] = 34004;
 	unknown[2] = 512;
 	unknown[3] = 0;
+
+
+	std::vector<glm::vec3> data;
+	std::function<void(int, float, float, float, float)> fill;
+	fill = [&data, &fill](int level, float width, float height, float centerx, float centery)
+	{
+		glm::vec3 bbmin(centerx - width * 5, 0, centerx - height * 5);
+		glm::vec3 bbmax(centerx + width * 5, 0, centerx + height * 5);
+		glm::vec3 range((bbmax - bbmin) / 2.0f);
+		data.push_back(bbmin);
+		data.push_back(bbmax);
+		data.push_back(range);
+		data.push_back(bbmax - range);
+
+		if (level < 5)
+		{
+			fill(level + 1, width / 2, height / 2, centerx - width*2.5f, centery - height*2.5f);
+			fill(level + 1, width / 2, height / 2, centerx - width*2.5f, centery + height*2.5f);
+			fill(level + 1, width / 2, height / 2, centerx + width*2.5f, centery + height*2.5f);
+			fill(level + 1, width / 2, height / 2, centerx + width*2.5f, centery - height*2.5f);
+		}
+	};
+	
+	fill(0, (float)width, (float)height, 0.0f, 0.0f);
+
+
+
+	quadtree = new QuadTreeNode(data.cbegin());
+
+
+
 }
 
 Rsw::Rsw(const std::string &fileName, bool loadModels)

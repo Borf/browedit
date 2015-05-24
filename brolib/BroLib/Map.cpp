@@ -40,7 +40,7 @@ Map::Map(const std::string &fileName, int width, int height)
 	this->fileName = fileName;
 
 	gnd = new Gnd(width, height);
-	rsw = new Rsw();
+	rsw = new Rsw(width, height);
 	gat = new Gat(width*2, height*2);
 }
 

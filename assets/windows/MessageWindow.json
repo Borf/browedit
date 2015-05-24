@@ -1,7 +1,7 @@
 {
 	"size" : [ 300, 100 ],
 	"resizable" : false,
-	"model" : true,
+	"modal" : true,
 	"widgets" :
 	{
 		"message" :
