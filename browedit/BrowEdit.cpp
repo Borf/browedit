@@ -845,7 +845,7 @@ void BrowEdit::draw()
 					int cursorY = map->getGnd()->height - (int)glm::round(mapRenderer.mouse3d.z / 10);
 
 
-					if (map->inMap(cursorX, cursorY))
+					if (map->inMap(cursorX, cursorY) && map->inMap(cursorX + 1, cursorY + 1))
 					{
 						glm::vec4 heights = map->getHeightsAt(cursorX + 1, cursorY + 1);
 						float minHeight = glm::min(glm::min(glm::min(-heights.x, -heights.y), -heights.z), -heights.w);

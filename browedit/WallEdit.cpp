@@ -146,6 +146,8 @@ void BrowEdit::wallEditUpdate()
 				{
 					for (int y = glm::min(cursorY, lastCursorY); y <= glm::max(cursorY, lastCursorY); y++)
 					{
+						if (!map->inMap(x, y))
+							continue;
 						int newTile = -1;
 						if (!keyState.isPressed(blib::Key::CONTROL))
 						{

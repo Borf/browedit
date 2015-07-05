@@ -103,13 +103,16 @@ void BrowEdit::objectEditUpdate()
 					o->selected = pos.x > tl.x && pos.x < br.x && pos.y > tl.y && pos.y < br.y;
 				}
 			}
-			selectObjectAction->finish(map->getRsw());
-			if (selectObjectAction->hasDifference())
-				perform(selectObjectAction);
-			else
+			if (selectObjectAction)
 			{
-				delete selectObjectAction;
-				selectObjectAction = NULL;
+				selectObjectAction->finish(map->getRsw());
+				if (selectObjectAction->hasDifference())
+					perform(selectObjectAction);
+				else
+				{
+					delete selectObjectAction;
+					selectObjectAction = NULL;
+				}
 			}
 		}
 		else if (mouseState.leftButton && lastMouseState.leftButton)

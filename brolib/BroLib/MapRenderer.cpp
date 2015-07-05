@@ -859,7 +859,7 @@ void MapRenderer::resizeGl(int width, int height)
 
 void MapRenderer::setTileDirty(int xx, int yy)
 {
-	if (yy >= 0 && yy < height && xx >= 0 && xx < width)
+	if (yy >= 0 && yy < map->getGnd()->height && xx >= 0 && xx < map->getGnd()->width)
 		gndChunks[yy / CHUNKSIZE][xx / CHUNKSIZE]->dirty = true;
 	gndTextureGridDirty = true;
 }
