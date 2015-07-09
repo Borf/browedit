@@ -14,6 +14,7 @@ using blib::util::Log;
 
 Rsm::Rsm(std::string fileName)
 {
+	rootMesh = NULL;
 	renderer = NULL;
 	loaded = false;
 	blib::util::StreamInFile* rsmFile = new blib::util::StreamInFile(fileName);
@@ -100,7 +101,8 @@ Rsm::~Rsm()
 {
 	if (renderer)
 		delete renderer;
-	delete rootMesh;
+	if (rootMesh)
+		delete rootMesh;
 }
 
 
