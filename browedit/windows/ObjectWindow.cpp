@@ -42,7 +42,8 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	getComponent<blib::wm::widgets::TreeView>("lstObjects")->addClickHandler([this, browEdit](int, int, int)
 	{
 		blib::wm::widgets::TreeView* treeView = getComponent<blib::wm::widgets::TreeView>("lstObjects");
-
+		if (treeView->selectedItem >= treeView->currentList.size())
+			return true;
 		ObjectTreeNode* node = dynamic_cast<ObjectTreeNode*>(treeView->currentList[treeView->selectedItem].second);
 		if (!node)
 			return false;
@@ -120,6 +121,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	lightsNode = new blib::wm::widgets::TreeView::TreeNode("Lights", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
 	effectsNode = new blib::wm::widgets::TreeView::TreeNode("Effects", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
 	soundsNode = new blib::wm::widgets::TreeView::TreeNode("Sounds", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	getComponent<blib::wm::widgets::TreeView>("lstObjects")->buildList();
 
 
 	setDirectory("/");
