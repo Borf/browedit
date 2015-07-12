@@ -45,6 +45,7 @@ void BrowEdit::objectEditUpdate()
 				center /= selectCount;
 				objectTranslateDirection = TranslatorTool::Axis::NONE;
 				objectRotateDirection = RotatorTool::Axis::NONE;
+				objectScaleDirection = ScaleTool::Axis::NONE;
 
 				if (objectEditModeTool == ObjectEditModeTool::Translate)
 					objectTranslateDirection = translatorTool.selectedAxis(mapRenderer.mouseRay, center);

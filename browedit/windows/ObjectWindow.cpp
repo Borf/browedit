@@ -107,11 +107,44 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	std::vector<std::string> dirs;
 	for (auto d : dirLookup)
 		dirs.push_back(d.first);
-	getComponent<blib::wm::widgets::List>("lstFolders")->items = dirs;
-	getComponent<blib::wm::widgets::List>("lstFolders")->addClickHandler([this](int, int, int) {
-		blib::wm::widgets::List* l = getComponent<blib::wm::widgets::List>("lstFolders");
-		if (l->selectedItem() >= 0 && l->selectedItem() < (int)l->items.size())
-			setDirectory(l->items[l->selectedItem()] + "/");
+
+	blib::wm::widgets::TreeView* tree = getComponent<blib::wm::widgets::TreeView>("lstFolders");
+
+
+	tree->root = new blib::wm::widgets::TreeView::TreeNode();
+	for (auto d : dirs)
+	{
+		blib::util::trim(d);
+		std::vector<std::string> folders = blib::util::split(d, "/");
+		if (folders.size() == 1)
+			continue;
+		blib::wm::widgets::TreeView::TreeNode* node = NULL;
+
+		node = tree->root;
+		for (size_t i = 0; i < folders.size() - 1; i++)
+		{
+			blib::wm::widgets::TreeView::TreeNode* child = node->getNode(folders[i]);
+			if (!child)
+				child = new blib::wm::widgets::TreeView::TreeNode(folders[i], node);
+			node = child;
+		}
+		new blib::wm::widgets::TreeView::TreeNode(folders[folders.size() - 1], node);
+	}
+	tree->buildList();
+
+	tree->addClickHandler([this, tree](int, int, int) {
+		if (tree->selectedItem >= 0 && tree->selectedItem < (int)tree->currentList.size())
+		{
+			blib::wm::widgets::TreeView::TreeNode* n = tree->currentList[tree->selectedItem].second;
+			std::string dir = "";
+			while (n)
+			{
+				dir = n->text + "/" + dir;
+				n = n->parent;
+			}
+			dir = dir.substr(1);
+			setDirectory(dir);
+		}
 		return true;
 	});
 
