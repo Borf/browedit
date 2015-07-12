@@ -185,5 +185,24 @@ void BrowEdit::objectEditUpdate()
 				}
 			}
 		}
+		if (keyState.isPressed(blib::Key::D) && !lastKeyState.isPressed(blib::Key::D))
+		{
+			for (int i = 0; i < (int)map->getRsw()->objects.size(); i++)
+			{
+				if (map->getRsw()->objects[i]->selected)
+				{
+					if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
+						addModel(((Rsw::Model*)map->getRsw()->objects[i])->fileName);
+
+					map->getRsw()->objects[map->getRsw()->objects.size() - 1]->rotation = map->getRsw()->objects[i]->rotation;
+					map->getRsw()->objects[map->getRsw()->objects.size() - 1]->scale = map->getRsw()->objects[i]->scale;
+
+					map->getRsw()->objects[i]->selected = false;
+					map->getRsw()->objects[map->getRsw()->objects.size()-1]->selected = true;
+					objectWindow->updateObjects(map);
+					break;
+				}
+			}
+		}
 	}
 }
