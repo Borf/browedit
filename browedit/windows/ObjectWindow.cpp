@@ -44,6 +44,8 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 		blib::wm::widgets::TreeView* treeView = getComponent<blib::wm::widgets::TreeView>("lstObjects");
 		if (treeView->selectedItem >= treeView->currentList.size())
 			return true;
+		if (!browEdit->map)
+			return true;
 		ObjectTreeNode* node = dynamic_cast<ObjectTreeNode*>(treeView->currentList[treeView->selectedItem].second);
 		if (!node)
 			return false;

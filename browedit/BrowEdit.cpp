@@ -213,11 +213,9 @@ void BrowEdit::init()
 	composeRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
 	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
 	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::s_texture2, "s_texture2", blib::Shader::Int);
-	composeRenderState.activeShader->setUniformName(ComposeShaderUniforms::sampleSize, "sampleSize", blib::Shader::Vec2);
 	composeRenderState.activeShader->finishUniformSetup();
 	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::s_texture, 0);
 	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::s_texture2, 1);
-	composeRenderState.activeShader->setUniform(ComposeShaderUniforms::sampleSize, glm::vec2(1.0f / 1024.0f, 1.0f / 1024.0f));
 
 
 
@@ -439,17 +437,20 @@ void BrowEdit::update( double elapsedTime )
 
 void BrowEdit::draw()
 {
+	if (map)
+	{
+		mapRenderer.render(renderer, glm::vec2(mouseState.position));
+	}
 	renderer->clear(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), blib::Renderer::Color | blib::Renderer::Depth);
 
 	spriteBatch->begin();
 	spriteBatch->draw(gradientBackground, blib::math::easyMatrix(gradientBackground, blib::math::Rectangle(0,0,window->getWidth(), window->getHeight())));
 	spriteBatch->end();
 
+
+
 	if (map)
 	{
-		mapRenderer.render(renderer, glm::vec2(mouseState.position));
-
-
 		//depthinfo will be gone after rendering the fbo, so render things that need depthtesting to the fbo here
 		composeRenderState.activeTexture[0] = mapRenderer.fbo;
 
@@ -465,7 +466,6 @@ void BrowEdit::draw()
 		};
 
 		renderer->drawTriangles(verts, 6, composeRenderState);
-
 
 		int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
 		int cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
