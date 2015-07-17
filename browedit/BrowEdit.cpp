@@ -7,6 +7,7 @@
 #include "windows/MessageWindow.h"
 #include "windows/HelpWindow.h"
 #include "windows/NewMapWindow.h"
+#include "windows/MapSettingsWindow.h"
 
 #include "actions/TextureEditAction.h"
 #include "actions/ObjectEditAction.h"
@@ -272,7 +273,8 @@ void BrowEdit::init()
 	});
 
 
-	rootMenu->setAction("display/help", [this]() { new HelpWindow(resourceManager, this);  });
+	rootMenu->setAction("window/Help", [this]() { new HelpWindow(resourceManager, this);  });
+//	rootMenu->setAction("window/Map Settings", [this]() { new MapSettingsWindow(resourceManager, this); });
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
 	rootMenu->linkToggle("display/lights", &mapRenderer.drawLights);
