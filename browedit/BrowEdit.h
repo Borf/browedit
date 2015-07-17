@@ -67,7 +67,6 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	{
 		s_texture,
 		s_texture2,
-		sampleSize,
 	};
 
 
