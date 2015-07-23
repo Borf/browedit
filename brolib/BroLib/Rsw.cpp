@@ -572,14 +572,15 @@ std::vector<glm::vec3> collisions_(Rsm::Mesh* mesh, const blib::math::Ray &ray, 
 
 		if (newRay.LineIntersectPolygon(verts, t))
 		{
-			ret.push_back(newRay.origin + t * newRay.dir);
+			ret.push_back(glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(newRay.origin + t * newRay.dir, 1)));
 		}
 	}
 
 	for (size_t i = 0; i < mesh->children.size(); i++)
 	{
 		std::vector<glm::vec3> other = collisions_(mesh->children[i], ray, matrix);
-		ret.insert(ret.end(), other.begin(), other.end());
+		if (!other.empty())
+			ret.insert(ret.end(), other.begin(), other.end());
 	}
 	return ret;
 }

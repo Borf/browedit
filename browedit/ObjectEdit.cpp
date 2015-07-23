@@ -1,6 +1,9 @@
 #include "BrowEdit.h"
+#include "Camera.h"
 
 #include <blib/wm/WM.h>
+#include <blib/util/Log.h>
+
 
 #include <BroLib/Map.h>
 #include <BroLib/Gnd.h>
@@ -11,6 +14,8 @@
 
 #include "windows/ModelPropertiesWindow.h"
 #include "windows/ObjectWindow.h"
+
+using blib::util::Log;
 
 void BrowEdit::objectEditUpdate()
 {
@@ -78,18 +83,40 @@ void BrowEdit::objectEditUpdate()
 			{ //click
 				if (!wm->inWindow(mouseState.position))
 				{
+					glm::vec3 cameraPos(camera->getMatrix() * glm::vec4(0, 0, 0, 1));
+					cameraPos = glm::vec3(1,1,-1) * cameraPos;
+					Rsw::Object* closestObject = NULL;
+					float closestDist = 9999999999;
 					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 					{
 						Rsw::Object* o = map->getRsw()->objects[i];
 						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
 						float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
-						o->selected = o->collides(mapRenderer.mouseRay);
-						if (o->selected && mouseState.clickcount == 2)
+						std::vector<glm::vec3> collisions = o->collisions(mapRenderer.mouseRay);
+						o->selected = false;
+						if (collisions.size() > 0)
 						{
-							if (o->type == Rsw::Object::Type::Model)
-								new ModelPropertiesWindow((Rsw::Model*)o, resourceManager, this);
+							for(glm::vec3& c : collisions)
+							{
+								if (glm::distance(c, cameraPos) < closestDist)
+								{
+									closestDist = glm::distance(c, cameraPos);
+									closestObject = o;
+								}
+							}
 						}
 					}
+
+					if (closestObject)
+					{
+						closestObject->selected = closestObject->collides(mapRenderer.mouseRay);
+						if (closestObject->selected && mouseState.clickcount == 2)
+						{
+							if (closestObject->type == Rsw::Object::Type::Model)
+								new ModelPropertiesWindow((Rsw::Model*)closestObject, resourceManager, this);
+						}
+					}
+
 				}
 			}
 			else
