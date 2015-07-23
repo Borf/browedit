@@ -1,11 +1,48 @@
 #include "FileOpenWindow.h"
 #include "../BrowEdit.h"
+#include <BroLib/Map.h>
 
 #include <blib/wm/WM.h>
 #include <blib/wm/widgets/textbox.h>
 #include <blib/util/FileSystem.h>
+#include <blib/Util.h>
 #include <algorithm>
 
+#include <direct.h>
+#include <commdlg.h>
+
+
+std::string getOpenFile(const char* defaultFilename, const char* filter)
+{
+#ifdef WIN32
+	char curdir[100];
+	_getcwd(curdir, 100);
+	HWND hWnd = NULL;// ::GetActiveWindow();
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+
+	char buf[256];
+	ZeroMemory(buf, 256);
+	strcpy(buf, defaultFilename);
+	ofn.lpstrFile = buf;
+	ofn.nMaxFile = 256;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 2;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_ENABLESIZING;
+	if (GetOpenFileName(&ofn))
+	{
+		_chdir(curdir);
+		return buf;
+	}
+	_chdir(curdir);
+#endif
+	return "";
+}
 
 
 FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Open File", "OpenWindow.json", resourceManager)
@@ -37,6 +74,22 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 	selectedWidget = getComponent("txtFilter");
 	selectedWidget->selected = true;
 
+
+	getComponent("btnBrowse")->addClickHandler([this, browEdit](int, int, int) 
+	{ 
+		std::string fileName = browEdit->getConfig()["data"]["ropath"].asString() + "/" + browEdit->map->getFileName() + ".rsw";
+		fileName = blib::util::replace(fileName, "/", "\\");
+
+		fileName = getOpenFile(fileName.c_str(), "All\0*.*\0RO Maps\0*.rsw\0");
+		if (fileName != "")
+		{
+			fileName = fileName.substr(0, fileName.rfind("."));
+			browEdit->loadMap(fileName);
+		}
+		close();
+		return true; 
+	
+	});
 
 	getComponent("btnCancel")->addClickHandler([this](int, int, int) { close(); return true; });
 

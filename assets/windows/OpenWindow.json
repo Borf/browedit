@@ -4,7 +4,22 @@
 	"resizable" : true,
 	"widgets" :
 	{
-		"btnOpen" :
+       	"btnBrowse" :
+		{
+			"type" : "button",
+			"text" : "Browse",
+
+			"position" : [ 0, 0],
+			"size" : [ 200, -1],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+       	"btnOpen" :
 		{
 			"type" : "button",
 			"text" : "Open",
@@ -38,7 +53,7 @@
 		{
 			"type" : "list",
 			
-			"position" : [ 0, 0 ],
+			"position" : [ 0, 25 ],
 			"size" : [ 200, 250],
 			"positionhelp" :
 			{

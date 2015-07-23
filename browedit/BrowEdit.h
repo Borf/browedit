@@ -114,6 +114,7 @@ public:
 	int textureRot;
 	bool textureFlipH;
 	bool textureFlipV;
+	inline const blib::json::Value &getConfig() { return config; }
 
 
 	TranslatorTool translatorTool;
