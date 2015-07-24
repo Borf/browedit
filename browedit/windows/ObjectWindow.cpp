@@ -325,6 +325,8 @@ ModelWidget::ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowE
 	rotation = 0;
 }
 
+int blablaindex = 0;
+
 void ModelWidget::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const
 {
 	if (width - 4 != fbo->width || height - 4 != fbo->height)
@@ -338,6 +340,9 @@ void ModelWidget::draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::R
 	{
 		const_cast<ModelWidget*>(this)->rotation++;	//ahem
 		browedit->mapRenderer.renderMeshFbo(rsm, rotation, fbo, renderer);
+		char buf[100];
+		sprintf(buf, "%i.tga", blablaindex++);
+		renderer->saveFbo(fbo, buf);
 	}
 
 	spriteBatch.drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, glm::vec3(x, y, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(width, height));
