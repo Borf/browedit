@@ -86,7 +86,7 @@ void BrowEdit::objectEditUpdate()
 					glm::vec3 cameraPos(camera->getMatrix() * glm::vec4(0, 0, 0, 1));
 					cameraPos = glm::vec3(1,1,-1) * cameraPos;
 					Rsw::Object* closestObject = NULL;
-					float closestDist = 9999999999;
+					float closestDist = 9999999999.0f;
 					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 					{
 						Rsw::Object* o = map->getRsw()->objects[i];
@@ -214,22 +214,26 @@ void BrowEdit::objectEditUpdate()
 		}
 		if (keyState.isPressed(blib::Key::D) && !lastKeyState.isPressed(blib::Key::D))
 		{
-			for (int i = 0; i < (int)map->getRsw()->objects.size(); i++)
+			int count = map->getRsw()->objects.size(); // array grows, so save it
+			for (int i = 0; i < count; i++)
 			{
 				if (map->getRsw()->objects[i]->selected)
 				{
 					if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
+					{
 						addModel(((Rsw::Model*)map->getRsw()->objects[i])->fileName);
 
-					map->getRsw()->objects[map->getRsw()->objects.size() - 1]->rotation = map->getRsw()->objects[i]->rotation;
-					map->getRsw()->objects[map->getRsw()->objects.size() - 1]->scale = map->getRsw()->objects[i]->scale;
+						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->position = map->getRsw()->objects[i]->position + glm::vec3(10,0,10);
+						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->rotation = map->getRsw()->objects[i]->rotation;
+						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->scale = map->getRsw()->objects[i]->scale;
 
-					map->getRsw()->objects[i]->selected = false;
-					map->getRsw()->objects[map->getRsw()->objects.size()-1]->selected = true;
-					objectWindow->updateObjects(map);
-					break;
+						map->getRsw()->objects[i]->selected = false;
+						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->selected = true;
+					}
 				}
 			}
+			newModel = NULL;
+			objectWindow->updateObjects(map);
 		}
 	}
 }

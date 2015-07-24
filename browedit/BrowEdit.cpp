@@ -271,6 +271,62 @@ void BrowEdit::init()
 	});
 
 
+	rootMenu->setAction("Actions/Calculate Lightmaps", [this]()
+	{
+		if (!map)
+			return;
+		Log::out << "Making lightmaps unique" << Log::newline;
+		map->getGnd()->makeLightmapsUnique();
+		mapRenderer.setAllDirty();
+
+		int height = map->getGnd()->height;
+		float s = 10 / 6.0f;
+		Log::out << "Making lightmap..." << Log::newline;
+		for (int x = 0; x < map->getGnd()->width; x++)
+		{
+			for (int y = 0; y < map->getGnd()->height; y++)
+			{
+				Gnd::Cube* cube = map->getGnd()->cubes[x][y];
+				int tileId = cube->tileUp;
+				if (tileId == -1)
+					continue;
+				Gnd::Tile* tile = map->getGnd()->tiles[tileId];
+				assert(tile && tile->lightmapIndex != -1);
+				Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
+				for (int xx = 0; xx < 8; xx++)
+				{
+					for (int yy = 0; yy < 8; yy++)
+					{
+						int intensity = 255;
+						//todo: use proper height with raycasting
+						glm::vec3 groundPos(10 * x + s * (xx - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * (yy - 1));
+						blib::math::Ray ray(groundPos, glm::vec3(-1, 1.45f, 1));
+
+
+
+						for (Rsw::Object* o : map->getRsw()->objects)
+						{
+							if (o->collides(ray))
+							{
+								intensity = 127;
+								break;
+							}
+						}
+
+
+						lightmap->data[xx + 8 * yy] = intensity;
+
+						lightmap->data[64 + 3 * (xx + 8 * yy) + 0] = 0;
+						lightmap->data[64 + 3 * (xx + 8 * yy) + 1] = 0;
+						lightmap->data[64 + 3 * (xx + 8 * yy) + 2] = 0;
+					}
+				}
+			}
+		}
+	});
+
+
+
 	rootMenu->setAction("window/Help", [this]() { new HelpWindow(resourceManager, this);  });
 //	rootMenu->setAction("window/Map Settings", [this]() { new MapSettingsWindow(resourceManager, this); });
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
@@ -425,14 +481,14 @@ void BrowEdit::update( double elapsedTime )
 		else if (editMode == EditMode::WallEdit)
 			wallEditUpdate();
 	}
-	lastmouse3d = mapRenderer.mouse3d;
-	lastKeyState = keyState;
-	lastMouseState = mouseState;
 
 	wm->keyPressed = false;
 
 	if (!running)
 		isolate->Exit();
+	lastmouse3d = mapRenderer.mouse3d;
+	lastKeyState = keyState;
+	lastMouseState = mouseState;
 }
 
 void BrowEdit::draw()
@@ -1105,8 +1161,6 @@ void BrowEdit::addModel(const std::string &fileName)
 	newModel->scale = glm::vec3(1,1,1);
 	newModel->model = map->getRsw()->getRsm(newModel->fileName);
 	newModel->selected = true;
-
-	std::for_each(map->getRsw()->objects.begin(), map->getRsw()->objects.end(), [](Rsw::Object* o) { o->selected = false; });
 
 	map->getRsw()->objects.push_back(newModel);
 }

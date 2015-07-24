@@ -1,5 +1,7 @@
 #include "Gnd.h"
 
+#include <set>
+
 #include <blib/util/FileSystem.h>
 #include <blib/util/Log.h>
 #include <blib/linq.h>
@@ -366,5 +368,39 @@ void Gnd::Cube::calcNormals(Gnd* gnd, int x, int y)
 				normals[i] += gnd->cubes[x + xx][y + yy]->normal;
 		}
 		normals[i] = glm::normalize(normals[i]);
+	}
+}
+
+
+void Gnd::makeLightmapsUnique()
+{
+	std::set<int> taken;
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			if (cubes[x][y]->tileUp == -1)
+				continue;
+			if (taken.find(cubes[x][y]->tileUp) == taken.end())
+				taken.insert(cubes[x][y]->tileUp);
+			else
+			{
+				Tile* t = new Tile(*tiles[cubes[x][y]->tileUp]);
+				cubes[x][y]->tileUp = tiles.size();
+				tiles.push_back(t);
+			}
+		}
+	}
+	taken.clear();
+	for (Tile* t : tiles)
+	{
+		if (taken.find(t->lightmapIndex) == taken.end())
+			taken.insert(t->lightmapIndex);
+		else
+		{
+			Lightmap* l = new Lightmap();// *lightmaps[t->lightmapIndex]);
+			t->lightmapIndex = lightmaps.size();
+			lightmaps.push_back(l);
+		}
 	}
 }

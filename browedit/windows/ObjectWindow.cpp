@@ -240,6 +240,7 @@ void ObjectWindow::setDirectory(const std::string &directory)
 
 			modelWidget->addClickHandler([this, it](int, int, int) {
 				Log::out << it.second << Log::newline;
+				std::for_each(browEdit->map->getRsw()->objects.begin(), browEdit->map->getRsw()->objects.end(), [](Rsw::Object* o) { o->selected = false; });
 				browEdit->addModel(it.second.substr(11));
 				getComponent<blib::wm::widgets::Button>("btnExpand")->onMouseClick(0, 0, 1);
 				return true;

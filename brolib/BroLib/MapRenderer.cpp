@@ -862,6 +862,16 @@ void MapRenderer::setTileDirty(int xx, int yy)
 	if (yy >= 0 && yy < map->getGnd()->height && xx >= 0 && xx < map->getGnd()->width)
 		gndChunks[yy / CHUNKSIZE][xx / CHUNKSIZE]->dirty = true;
 	gndTextureGridDirty = true;
+	gndShadowDirty = true;
+}
+
+void MapRenderer::setAllDirty()
+{
+	for (size_t i = 0; i < gndChunks.size(); i++)
+		for (size_t ii = 0; ii < gndChunks[i].size(); ii++)
+			gndChunks[i][ii]->dirty = true;
+	gndTextureGridDirty = true;
+	gndShadowDirty = true;
 }
 
 void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
