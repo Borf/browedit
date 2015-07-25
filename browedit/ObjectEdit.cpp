@@ -186,8 +186,11 @@ void BrowEdit::objectEditUpdate()
 		}
 
 
-		if (!mouseState.rightButton && lastMouseState.rightButton)
+		if (!mouseState.rightButton && lastMouseState.rightButton && !mouseState.leftButton)
 		{
+			objectTranslateDirection = TranslatorTool::Axis::NONE;
+			objectRotateDirection = RotatorTool::Axis::NONE;
+			objectScaleDirection = ScaleTool::Axis::NONE;
 			for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 				map->getRsw()->objects[i]->selected = false;
 		}
