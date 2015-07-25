@@ -77,7 +77,12 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 
 	getComponent("btnBrowse")->addClickHandler([this, browEdit](int, int, int) 
 	{ 
-		std::string fileName = browEdit->getConfig()["data"]["ropath"].asString() + "/" + browEdit->map->getFileName() + ".rsw";
+		char curdir[100];
+		_getcwd(curdir, 100);
+
+		chdir(blib::util::replace(browEdit->getConfig()["data"]["ropath"].asString(), "/", "\\").c_str());
+
+		std::string fileName = browEdit->map->getFileName() + ".rsw";
 		fileName = blib::util::replace(fileName, "/", "\\");
 
 		fileName = getOpenFile(fileName.c_str(), "All\0*.*\0RO Maps\0*.rsw\0");
@@ -86,6 +91,8 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 			fileName = fileName.substr(0, fileName.rfind("."));
 			browEdit->loadMap(fileName);
 		}
+
+		_chdir(curdir);
 		close();
 		return true; 
 	
