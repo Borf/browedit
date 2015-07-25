@@ -176,8 +176,8 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 			{
 				Light* light = new Light();
 				light->name = file->readString(40);
-				light->position = file->readVec3();
 				light->todo = file->readString(40);
+				light->position = file->readVec3();
 				light->color = file->readVec3();
 				light->todo2 = file->readFloat();
 
@@ -327,8 +327,8 @@ void Rsw::save(const std::string &fileName)
 			pFile->writeInt(2);
 			Light* light = (Light*)object;
 			pFile->writeString(light->name, 40);
-			pFile->writeVec3(light->position);
 			pFile->writeString(light->todo, 40);
+			pFile->writeVec3(light->position);
 			pFile->writeVec3(light->color);
 			pFile->writeFloat(light->todo2);
 		}
