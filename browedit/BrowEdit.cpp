@@ -38,6 +38,7 @@
 #include <blib/util/Log.h>
 #include <blib/linq.h>
 
+#include <direct.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
@@ -242,7 +243,13 @@ void BrowEdit::init()
 		new blib::BackgroundTask<bool>(this, [this]()
 		{
 			if (map)
-				map->save(config["data"]["ropath"].asString() + "/" + map->getFileName());
+			{
+				char prevDir[1024];
+				_getcwd(prevDir, 1024);
+				_chdir(blib::util::replace(config["data"]["ropath"].asString(), "/", "\\").c_str());
+				map->save(map->getFileName());
+				_chdir(prevDir);
+			}
 			return true;
 		}, [dialog](bool bla)
 		{
@@ -255,7 +262,13 @@ void BrowEdit::init()
 		new blib::BackgroundTask<bool>(this, [this]()
 		{
 			if (map)
-				map->saveHeightmap(config["data"]["ropath"].asString() + "/" + map->getFileName() + ".height.png");
+			{
+				char prevDir[1024];
+				_getcwd(prevDir, 1024);
+				_chdir(blib::util::replace(config["data"]["ropath"].asString(), "/", "\\").c_str());
+				map->saveHeightmap(map->getFileName() + ".height.png");
+				_chdir(prevDir);
+			}
 			return true;
 		}, [dialog](bool bla)	{	dialog->close();	});
 	});
