@@ -3,7 +3,7 @@
 
 #include <blib/wm/WM.h>
 #include <blib/util/Log.h>
-
+#include <blib/Math.h>
 
 #include <BroLib/Map.h>
 #include <BroLib/Gnd.h>
@@ -145,46 +145,77 @@ void BrowEdit::objectEditUpdate()
 		}
 		else if (mouseState.leftButton && lastMouseState.leftButton)
 		{ // dragging				
+			glm::vec3 center(0, 0, 0);
+			int count = 0;
 			for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
-			{
-				Rsw::Object* o = map->getRsw()->objects[i];
-				if (o->selected)
+				if (map->getRsw()->objects[i]->selected)
 				{
-					if (objectTranslateDirection != TranslatorTool::Axis::NONE)
-					{
-						if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::X) != 0)
-							o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
-						if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Y) != 0)
-							o->position.y += (mouseState.position.y - lastMouseState.position.y) / 5.0f;
-						if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Z) != 0)
-							o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
-					}
-					if (objectRotateDirection != RotatorTool::Axis::NONE)
-					{
-						if (objectRotateDirection == RotatorTool::Axis::X)
-							o->rotation.x -= mouseState.position.x - lastMouseState.position.x;
-						if (objectRotateDirection == RotatorTool::Axis::Y)
-							o->rotation.y -= mouseState.position.x - lastMouseState.position.x;
-						if (objectRotateDirection == RotatorTool::Axis::Z)
-							o->rotation.z -= mouseState.position.x - lastMouseState.position.x;
-					}
-					if (objectScaleDirection != ScaleTool::Axis::NONE)
-					{
-						if (objectScaleDirection == ScaleTool::Axis::X)
-							o->scale.x *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
-						if (objectScaleDirection == ScaleTool::Axis::Y)
-							o->scale.y *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
-						if (objectScaleDirection == ScaleTool::Axis::Z)
-							o->scale.z *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
-						if (objectScaleDirection == ScaleTool::Axis::ALL)
-							o->scale *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
-					}
+					center += map->getRsw()->objects[i]->position;
+					count++;
+				}
+			if (count > 0)
+			{
+				center /= count;
 
-					((Rsw::Model*)o)->matrixCached = false;
+
+				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+				{
+					Rsw::Object* o = map->getRsw()->objects[i];
+					if (o->selected)
+					{
+						if (objectTranslateDirection != TranslatorTool::Axis::NONE)
+						{
+							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::X) != 0)
+								o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
+							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Y) != 0)
+								o->position.y += (mouseState.position.y - lastMouseState.position.y) / 5.0f;
+							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Z) != 0)
+								o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
+						}
+						if (objectRotateDirection != RotatorTool::Axis::NONE)
+						{
+							if (objectRotateDirection == RotatorTool::Axis::X)
+							{
+								glm::vec2 newPos(glm::distance(glm::vec2(o->position.y, o->position.z), glm::vec2(center.y, center.z)) *
+									blib::math::fromAngle(glm::radians(glm::degrees(atan2(o->position.z - center.z, o->position.y - center.y)) + (mouseState.position.x - lastMouseState.position.x))));
+								o->position.y = center.y + newPos.x;
+								o->position.z = center.z + newPos.y;
+								o->rotation.x += mouseState.position.x - lastMouseState.position.x;
+							}
+							if (objectRotateDirection == RotatorTool::Axis::Y)
+							{
+								glm::vec2 newPos(					glm::distance(glm::vec2(o->position.x, o->position.z), glm::vec2(center.x, center.z)) * 
+									blib::math::fromAngle(glm::radians(glm::degrees(atan2(o->position.z - center.z, o->position.x - center.x))  + (mouseState.position.x - lastMouseState.position.x))));
+								o->position.x = center.x + newPos.x;
+								o->position.z = center.z + newPos.y;
+								o->rotation.y -= mouseState.position.x - lastMouseState.position.x;
+							}
+							if (objectRotateDirection == RotatorTool::Axis::Z)
+							{
+								glm::vec2 newPos(glm::distance(glm::vec2(o->position.x, o->position.y), glm::vec2(center.x, center.y)) *
+									blib::math::fromAngle(glm::radians(glm::degrees(atan2(o->position.y - center.y, o->position.x - center.x)) + (mouseState.position.x - lastMouseState.position.x))));
+								o->position.x = center.x + newPos.x;
+								o->position.y = center.y + newPos.y;
+								o->rotation.z += mouseState.position.x - lastMouseState.position.x;
+							}
+						}
+						if (objectScaleDirection != ScaleTool::Axis::NONE)
+						{
+							if (objectScaleDirection == ScaleTool::Axis::X)
+								o->scale.x *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+							if (objectScaleDirection == ScaleTool::Axis::Y)
+								o->scale.y *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+							if (objectScaleDirection == ScaleTool::Axis::Z)
+								o->scale.z *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+							if (objectScaleDirection == ScaleTool::Axis::ALL)
+								o->scale *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+						}
+
+						((Rsw::Model*)o)->matrixCached = false;
+					}
 				}
 			}
 		}
-
 
 		if (!mouseState.rightButton && lastMouseState.rightButton && !mouseState.leftButton)
 		{
