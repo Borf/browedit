@@ -163,6 +163,7 @@ void BrowEdit::objectEditUpdate()
 					Rsw::Object* o = map->getRsw()->objects[i];
 					if (o->selected)
 					{
+						glm::vec3 diff = o->position - center;
 						if (objectTranslateDirection != TranslatorTool::Axis::NONE)
 						{
 							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::X) != 0)
@@ -201,14 +202,31 @@ void BrowEdit::objectEditUpdate()
 						}
 						if (objectScaleDirection != ScaleTool::Axis::NONE)
 						{
+							diff /= o->scale;
 							if (objectScaleDirection == ScaleTool::Axis::X)
+							{
 								o->scale.x *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+								diff *= o->scale;
+								o->position.x = center.x + diff.x;
+							}
 							if (objectScaleDirection == ScaleTool::Axis::Y)
+							{
 								o->scale.y *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+								diff *= o->scale;
+								o->position.y = center.y + diff.y;
+							}
 							if (objectScaleDirection == ScaleTool::Axis::Z)
+							{
 								o->scale.z *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+								diff *= o->scale;
+								o->position.z = center.z + diff.z;
+							}
 							if (objectScaleDirection == ScaleTool::Axis::ALL)
-								o->scale *= 1 - (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+							{
+								o->scale *= 1 + (mouseState.position.x - lastMouseState.position.x + mouseState.position.y - lastMouseState.position.y) * 0.01f;
+								diff *= o->scale;
+								o->position = center + diff;
+							}
 						}
 
 						((Rsw::Model*)o)->matrixCached = false;
