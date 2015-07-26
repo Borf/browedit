@@ -17,6 +17,7 @@
 #include <BroLib/GrfFileSystemHandler.h>
 #include <BroLib/Map.h>
 #include <BroLib/Gnd.h>
+#include <BroLib/Gat.h>
 
 #include <blib/Renderer.h>
 #include <blib/SpriteBatch.h>
@@ -167,6 +168,7 @@ void BrowEdit::init()
 
 
 	gradientBackground = resourceManager->getResource<blib::Texture>("assets/textures/gradient.png");
+	gatMapTexture = resourceManager->getResource<blib::Texture>("assets/textures/gat.png");
 
 	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
 
@@ -306,9 +308,9 @@ void BrowEdit::init()
 				Gnd::Tile* tile = map->getGnd()->tiles[tileId];
 				assert(tile && tile->lightmapIndex != -1);
 				Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
-				for (int xx = 0; xx < 8; xx++)
+				for (int xx = 1; xx < 7; xx++)
 				{
-					for (int yy = 0; yy < 8; yy++)
+					for (int yy = 1; yy < 7; yy++)
 					{
 						int intensity = 255;
 						//todo: use proper height with raycasting
@@ -336,6 +338,8 @@ void BrowEdit::init()
 				}
 			}
 		}
+
+		map->getGnd()->makeLightmapBorders();
 	});
 
 
@@ -345,40 +349,9 @@ void BrowEdit::init()
 			return;
 		Log::out << "Making lightmaps unique" << Log::newline;
 		map->getGnd()->makeLightmapsUnique();
-		mapRenderer.setAllDirty();
-
-		Log::out << "Smoothing..." << Log::newline;
-		for (int x = 0; x < map->getGnd()->width; x++)
-		{
-			for (int y = 0; y < map->getGnd()->height; y++)
-			{
-				Gnd::Cube* cube = map->getGnd()->cubes[x][y];
-				int tileId = cube->tileUp;
-				if (tileId == -1)
-					continue;
-				Gnd::Tile* tile = map->getGnd()->tiles[tileId];
-				assert(tile && tile->lightmapIndex != -1);
-				Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
-
-				char newData[64];
-
-				for (int xx = 1; xx < 7; xx++)
-				{
-					for (int yy = 1; yy < 7; yy++)
-					{
-						int total = 0;
-						for (int xxx = xx - 1; xxx <= xx + 1; xxx++)
-							for (int yyy = yy - 1; yyy <= yy + 1; yyy++)
-								total += lightmap->data[xxx + 8 * yyy];
-						newData[xx + 8 * yy] = total / 9;
-					}
-				}
-				memcpy(lightmap->data, newData, 64 * sizeof(char));
-			}
-		}
-
+		map->getGnd()->makeLightmapsSmooth();
 		map->getGnd()->makeLightmapBorders();
-
+		mapRenderer.setAllDirty();
 	});
 
 
@@ -394,6 +367,8 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::HeightEdit));
 	rootMenu->setAction("editmode/detail heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::DetailHeightEdit));
 	rootMenu->setAction("editmode/walledit", std::bind(&BrowEdit::setEditMode, this, EditMode::WallEdit));
+	rootMenu->setAction("editmode/gatedit", std::bind(&BrowEdit::setEditMode, this, EditMode::GatEdit));
+	rootMenu->setAction("editmode/detail gatedit", std::bind(&BrowEdit::setEditMode, this, EditMode::DetailGatEdit));
 
 	
 	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
@@ -535,6 +510,10 @@ void BrowEdit::update( double elapsedTime )
 			detailHeightEditUpdate();
 		else if (editMode == EditMode::WallEdit)
 			wallEditUpdate();
+		else if (editMode == EditMode::GatEdit)
+			gatEditUpdate();
+		else if (editMode == EditMode::DetailGatEdit)
+			detailGatEditUpdate();
 	}
 
 	wm->keyPressed = false;
@@ -1070,6 +1049,67 @@ void BrowEdit::draw()
 		}
 
 
+		if (editMode == EditMode::GatEdit)
+		{
+			std::vector<blib::VertexP3T2> verts;
+			Gat* gat = map->getGat();
+
+			if (!selectLasso.empty())
+			{
+				for (size_t i = 0; i < selectLasso.size(); i++)
+				{
+					int x = selectLasso[i].x;
+					int y = selectLasso[i].y;
+					
+					Gat::Tile* cube = gat->tiles[x][y];
+
+					blib::VertexP3 v1(glm::vec3(10 * x, -cube->cells[2] + 0.1f, 10 * gat->height - 10 * y));
+					blib::VertexP3 v2(glm::vec3(10 * x + 10, -cube->cells[3] + 0.1f, 10 * gat->height - 10 * y));
+					blib::VertexP3 v3(glm::vec3(10 * x, -cube->cells[0] + 0.1f, 10 * gat->height - 10 * y + 10));
+					blib::VertexP3 v4(glm::vec3(10 * x + 10, -cube->cells[1] + 0.1f, 10 * gat->height - 10 * y + 10));
+
+					//verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+					//verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+				}
+			}
+
+
+
+			float s = 0.25f;
+
+			for (int x = 0; x < gat->width; x++)
+			{
+				for (int y = 0; y < gat->height; y++)
+				{
+					Gat::Tile* cube = gat->tiles[x][y];
+//					if (!cube->selected)
+//						continue;
+					float tx = (cube->type % 4) * s;
+					float ty = (cube->type / 4) * s;
+
+					blib::VertexP3T2 v1(glm::vec3(5 * x, -cube->cells[2] + 0.1f, 5 * gat->height - 5 * y), glm::vec2(tx,ty));
+					blib::VertexP3T2 v2(glm::vec3(5 * x + 5, -cube->cells[3] + 0.1f, 5 * gat->height - 5 * y), glm::vec2(tx+s, ty));
+					blib::VertexP3T2 v3(glm::vec3(5 * x, -cube->cells[0] + 0.1f, 5 * gat->height - 5 * y + 5), glm::vec2(tx, ty+s));
+					blib::VertexP3T2 v4(glm::vec3(5 * x + 5, -cube->cells[1] + 0.1f, 5 * gat->height - 5 * y + 5), glm::vec2(tx+s, ty+s));
+
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+					verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+				}
+			}
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0,0,0,0));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.33f));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+			highlightRenderState.activeTexture[0] = gatMapTexture;
+			highlightRenderState.activeVbo = NULL;
+			renderer->drawTriangles(verts, highlightRenderState);
+			highlightRenderState.activeTexture[0] = NULL;
+		}
+
+
+
+
 
 		if (!map->heightImportCubes.empty())
 		{
@@ -1259,4 +1299,17 @@ void JsRunner::run()
 	v8::Local<v8::Function> f = v8::Local<v8::Function>::New(isolate, func);
 	v8::Local<v8::Object> o = v8::Local<v8::Object>::New(isolate, obj);
 	f->Call(o, 0, args);
+}
+
+
+
+//TODO: move these to their own files when visual studio decides to start working again
+void BrowEdit::gatEditUpdate()
+{
+
+}
+
+void BrowEdit::detailGatEditUpdate()
+{
+
 }

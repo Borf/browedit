@@ -99,5 +99,5 @@ public:
 	void makeLightmapsUnique();
 	void makeLightmapBorders();
 	int getLightmapBrightness(int x, int y, int lightmapX, int lightmapY);
-
+	void makeLightmapsSmooth();
 };

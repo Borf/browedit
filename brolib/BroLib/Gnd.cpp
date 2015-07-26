@@ -450,3 +450,37 @@ int Gnd::getLightmapBrightness(int x, int y, int lightmapX, int lightmapY)
 	return lightmap->data[lightmapX + 8 * lightmapY];
 
 }
+
+void Gnd::makeLightmapsSmooth()
+{
+	Log::out << "Smoothing..." << Log::newline;
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			Gnd::Cube* cube = cubes[x][y];
+			int tileId = cube->tileUp;
+			if (tileId == -1)
+				continue;
+			Gnd::Tile* tile = tiles[tileId];
+			assert(tile && tile->lightmapIndex != -1);
+			Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
+
+			char newData[64];
+
+			for (int xx = 1; xx < 7; xx++)
+			{
+				for (int yy = 1; yy < 7; yy++)
+				{
+					int total = 0;
+					for (int xxx = xx - 1; xxx <= xx + 1; xxx++)
+						for (int yyy = yy - 1; yyy <= yy + 1; yyy++)
+							total += lightmap->data[xxx + 8 * yyy];
+					newData[xx + 8 * yy] = total / 9;
+				}
+			}
+			memcpy(lightmap->data, newData, 64 * sizeof(char));
+		}
+	}
+
+}

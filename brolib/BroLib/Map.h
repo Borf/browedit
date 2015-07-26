@@ -29,6 +29,10 @@ public:
 	{
 		return rsw;
 	}
+	inline Gat* getGat() const
+	{
+		return gat;
+	}
 
 	inline const std::string getFileName() const
 	{
