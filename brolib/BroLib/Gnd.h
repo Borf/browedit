@@ -29,12 +29,12 @@ public:
 	class Lightmap
 	{
 	public:
-		Lightmap() { memset(data, 0, 256 * sizeof(char));  };
+		Lightmap() { memset(data, 0, 256 * sizeof(unsigned char)); };
 		Lightmap(const Lightmap& other)
 		{
-			memcpy(data, other.data, 256 * sizeof(char));
+			memcpy(data, other.data, 256 * sizeof(unsigned char));
 		}
-		char data[256];
+		unsigned char data[256];
 	};
 
 	class Tile
@@ -97,7 +97,7 @@ public:
 
 
 	void makeLightmapsUnique();
-
-
+	void makeLightmapBorders();
+	int getLightmapBrightness(int x, int y, int lightmapX, int lightmapY);
 
 };

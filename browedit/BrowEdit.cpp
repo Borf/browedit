@@ -339,6 +339,48 @@ void BrowEdit::init()
 	});
 
 
+	rootMenu->setAction("Actions/Smooth Lightmaps", [this]()
+	{
+		if (!map)
+			return;
+		Log::out << "Making lightmaps unique" << Log::newline;
+		map->getGnd()->makeLightmapsUnique();
+		mapRenderer.setAllDirty();
+
+		Log::out << "Smoothing..." << Log::newline;
+		for (int x = 0; x < map->getGnd()->width; x++)
+		{
+			for (int y = 0; y < map->getGnd()->height; y++)
+			{
+				Gnd::Cube* cube = map->getGnd()->cubes[x][y];
+				int tileId = cube->tileUp;
+				if (tileId == -1)
+					continue;
+				Gnd::Tile* tile = map->getGnd()->tiles[tileId];
+				assert(tile && tile->lightmapIndex != -1);
+				Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
+
+				char newData[64];
+
+				for (int xx = 1; xx < 7; xx++)
+				{
+					for (int yy = 1; yy < 7; yy++)
+					{
+						int total = 0;
+						for (int xxx = xx - 1; xxx <= xx + 1; xxx++)
+							for (int yyy = yy - 1; yyy <= yy + 1; yyy++)
+								total += lightmap->data[xxx + 8 * yyy];
+						newData[xx + 8 * yy] = total / 9;
+					}
+				}
+				memcpy(lightmap->data, newData, 64 * sizeof(char));
+			}
+		}
+
+		map->getGnd()->makeLightmapBorders();
+
+	});
+
 
 	rootMenu->setAction("window/Help", [this]() { new HelpWindow(resourceManager, this);  });
 //	rootMenu->setAction("window/Map Settings", [this]() { new MapSettingsWindow(resourceManager, this); });

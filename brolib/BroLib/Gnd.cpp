@@ -114,7 +114,7 @@ Gnd::Gnd( const std::string &fileName )
 		for(int i = 0; i < lightmapCount; i++)
 		{
 			Lightmap* lightmap = new Lightmap();
-			file->read(lightmap->data, 256);
+			file->read((char*)lightmap->data, 256);
 			lightmaps.push_back(lightmap);
 		}
 
@@ -264,7 +264,7 @@ void Gnd::save(std::string fileName)
 		pFile->writeInt(gridSizeCell);
 
 		for (size_t i = 0; i < lightmaps.size(); i++)
-			pFile->write(lightmaps[i]->data, 256);
+			pFile->write((char*)lightmaps[i]->data, 256);
 
 		pFile->writeInt(tiles.size());
 		for (size_t i = 0; i < tiles.size(); i++)
@@ -398,9 +398,55 @@ void Gnd::makeLightmapsUnique()
 			taken.insert(t->lightmapIndex);
 		else
 		{
-			Lightmap* l = new Lightmap();// *lightmaps[t->lightmapIndex]);
+			Lightmap* l = new Lightmap(*lightmaps[t->lightmapIndex]);
 			t->lightmapIndex = lightmaps.size();
 			lightmaps.push_back(l);
 		}
 	}
+}
+
+void Gnd::makeLightmapBorders()
+{
+	makeLightmapsUnique();
+	Log::out << "Fixing borders" << Log::newline;
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			Gnd::Cube* cube = cubes[x][y];
+			int tileId = cube->tileUp;
+			if (tileId == -1)
+				continue;
+			Gnd::Tile* tile = tiles[tileId];
+			assert(tile && tile->lightmapIndex != -1);
+			Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
+
+			for (int i = 0; i < 8; i++)
+			{
+				lightmap->data[i + 8 * 0] = getLightmapBrightness(x, y - 1, i, 6);
+				lightmap->data[i + 8 * 7] = getLightmapBrightness(x, y + 1, i, 1);
+				lightmap->data[0 + 8 * i] = getLightmapBrightness(x - 1, y, 6, i);
+				lightmap->data[7 + 8 * i] = getLightmapBrightness(x + 1, y, 1, i);
+			}
+		}
+	}
+
+
+}
+
+int Gnd::getLightmapBrightness(int x, int y, int lightmapX, int lightmapY)
+{
+	if (x < 0 || y < 0 || x >= width || y >= height)
+		return 0;
+
+	Gnd::Cube* cube = cubes[x][y];
+	int tileId = cube->tileUp;
+	if (tileId == -1)
+		return 0;
+	Gnd::Tile* tile = tiles[tileId];
+	assert(tile && tile->lightmapIndex != -1);
+	Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
+
+	return lightmap->data[lightmapX + 8 * lightmapY];
+
 }
