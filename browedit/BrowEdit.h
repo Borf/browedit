@@ -186,5 +186,6 @@ public:
 
 	int version;
 	void loadJsPlugins();
+	void lightmapEditUpdate();
 };
 

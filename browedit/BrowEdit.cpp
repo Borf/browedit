@@ -337,7 +337,6 @@ void BrowEdit::init()
 				}
 			}
 		}
-
 		map->getGnd()->makeLightmapBorders();
 	});
 
@@ -350,6 +349,14 @@ void BrowEdit::init()
 		map->getGnd()->makeLightmapsUnique();
 		map->getGnd()->makeLightmapsSmooth();
 		map->getGnd()->makeLightmapBorders();
+		mapRenderer.setAllDirty();
+	});
+
+	rootMenu->setAction("Actions/Unique Lightmaps", [this]()
+	{
+		if (!map)
+			return;
+		map->getGnd()->makeLightmapsUnique();
 		mapRenderer.setAllDirty();
 	});
 
@@ -368,6 +375,9 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/walledit", std::bind(&BrowEdit::setEditMode, this, EditMode::WallEdit));
 	rootMenu->setAction("editmode/gatedit", std::bind(&BrowEdit::setEditMode, this, EditMode::GatEdit));
 	rootMenu->setAction("editmode/detail gatedit", std::bind(&BrowEdit::setEditMode, this, EditMode::DetailGatEdit));
+	rootMenu->setAction("editmode/Lightmap edit", std::bind(&BrowEdit::setEditMode, this, EditMode::LightmapEdit));
+	rootMenu->setAction("editmode/Color Edit", std::bind(&BrowEdit::setEditMode, this, EditMode::ColorEdit));
+
 
 	
 	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
@@ -514,6 +524,8 @@ void BrowEdit::update( double elapsedTime )
 			gatEditUpdate();
 		else if (editMode == EditMode::DetailGatEdit)
 			detailGatEditUpdate();
+		else if (editMode == EditMode::LightmapEdit)
+			lightmapEditUpdate();
 	}
 
 	wm->keyPressed = false;
@@ -1381,4 +1393,59 @@ void JsRunner::run()
 	v8::Local<v8::Function> f = v8::Local<v8::Function>::New(isolate, func);
 	v8::Local<v8::Object> o = v8::Local<v8::Object>::New(isolate, obj);
 	f->Call(o, 0, args);
+}
+
+
+
+void BrowEdit::lightmapEditUpdate()
+{
+	if (mouseState.leftButton || lastMouseState.rightButton)
+	{
+		int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
+		int cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
+		if (cursorX >= 0 && cursorX < map->getGnd()->width && cursorY >= 0 && cursorY < map->getGnd()->height)
+		{
+			Gnd::Cube* cube = map->getGnd()->cubes[cursorX][cursorY];
+			assert(cube);
+			if (cube->tileUp >= 0)
+			{
+				Gnd::Tile* tile = map->getGnd()->tiles[cube->tileUp]; // TODO: determine which one to get, the floor or the walls
+				Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
+				assert(lightmap);
+				
+				float cursorXOff = -(cursorX - (mapRenderer.mouse3d.x / 10));
+				float cursorYOff = cursorY - (map->getGnd()->height - (mapRenderer.mouse3d.z / 10));
+				if (cursorXOff >= 0 && cursorXOff <= 1 && cursorYOff >= 0 && cursorYOff <= 1)
+				{
+					int px = (int)(cursorXOff * 6) + 1;
+					int py = (int)((1-cursorYOff) * 6) + 1;
+					
+					int oldVal = lightmap->data[px + 8 * py];
+					lightmap->data[px + 8 * py] = mouseState.leftButton ? 127 : 255;
+					if (lightmap->data[px + 8 * py] != oldVal)
+						mapRenderer.setShadowDirty();
+				}
+
+			}
+			
+		}
+
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

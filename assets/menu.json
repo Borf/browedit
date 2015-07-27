@@ -140,7 +140,21 @@
 				"type" : "toggle",
 				"initial" : false,
 				"key" : "f7"
+			},
+			{
+				"name" : "Lightmap edit",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "f8"
 			}
+,
+			{
+				"name" : "Color Edit",
+				"type" : "toggle",
+				"initial" : false,
+				"key" : "f9"
+			}
+
 		]
 
 	},
@@ -194,6 +208,10 @@
 			},
 			{
 				"name" : "Smooth Lightmaps",
+				"type" : "item"
+			},
+			{
+				"name" : "Unique Lightmaps",
 				"type" : "item"
 			}
 		]

@@ -541,13 +541,17 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 				{
 					x = 0;
 					y++;
+					if (y * 8 >= 2048)
+					{
+						Log::out << "Lightmap too big!" << Log::newline;
+					}
 				}
 			}
 			return data;
 		}, [renderer, this](char* data)
 		{
 			renderer->setTextureSubImage(gndShadow, 0, 0, 2048, 2048, data);
-
+			delete[] data;
 		});
 
 		gndShadowDirty = false;
@@ -1032,6 +1036,11 @@ void MapRenderer::renderGat(blib::Renderer* renderer)
 		highlightRenderState.depthTest = true;
 
 	}
+}
+
+void MapRenderer::setShadowDirty()
+{
+	gndShadowDirty = true;
 }
 
 
