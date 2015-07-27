@@ -41,7 +41,7 @@ void BrowEdit::detailHeightEditUpdate()
 				else if (off.x > 0.5 && off.y < 0.5)
 					primIndex = 3;
 
-				cube->height[primIndex] += diff;
+				cube->heights[primIndex] += diff;
 			};
 
 			float diff = (mouseState.position.y - lastMouseState.position.y) / 10.0f;

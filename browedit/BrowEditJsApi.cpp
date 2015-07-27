@@ -130,7 +130,7 @@ void BrowEdit::loadJsPlugins()
 		v8::Handle<v8::Object> ret = v8::Object::New(args.GetIsolate());
 		v8::Handle<v8::Array> heights = v8::Array::New(args.GetIsolate(), 4);
 		for (int i = 0; i < 4; i++)
-			heights->Set(i, v8::Number::New(args.GetIsolate(), cube->height[i]));
+			heights->Set(i, v8::Number::New(args.GetIsolate(), cube->heights[i]));
 		ret->Set(v8::String::NewFromUtf8(args.GetIsolate(), "heights"), heights);
 
 		v8::Handle<v8::Array> tiles = v8::Array::New(args.GetIsolate(), 3);
@@ -154,7 +154,7 @@ void BrowEdit::loadJsPlugins()
 		v8::Handle<v8::Array> tiles = v8::Handle<v8::Array>::Cast(t->Get(v8::String::NewFromUtf8(args.GetIsolate(), "tiles")));
 
 		for (int i = 0; i < 4; i++)
-			cube->height[i] = (float)heights->Get(i)->NumberValue();
+			cube->heights[i] = (float)heights->Get(i)->NumberValue();
 
 		cube->tileUp = tiles->Get(0)->Int32Value();
 		cube->tileSide = tiles->Get(1)->Int32Value();

@@ -36,7 +36,7 @@ Gat::Gat(const std::string &fileName)
 		{
 			Tile* tile = new Tile();
 			for (int i = 0; i < 4; i++)
-				tile->cells[i] = file->readFloat();
+				tile->heights[i] = file->readFloat();
 			tile->type = file->readInt();
 			tiles[x][y] = tile;
 		}
@@ -55,7 +55,7 @@ Gat::Gat(int width, int height)
 		{
 			Tile* tile = new Tile();
 			for (int i = 0; i < 4; i++)
-				tile->cells[i] = 0;
+				tile->heights[i] = 0;
 			tile->type = 0;
 			tiles[x][y] = tile;
 		}
@@ -90,7 +90,7 @@ void Gat::save(const std::string &fileName)
 		{
 			Tile* tile = tiles[x][y];
 			for (int i = 0; i < 4; i++)
-				pFile->writeFloat(tile->cells[i]);
+				pFile->writeFloat(tile->heights[i]);
 			pFile->writeInt(tile->type);
 		}
 	}

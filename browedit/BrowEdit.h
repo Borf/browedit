@@ -52,6 +52,8 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		DetailHeightEdit,
 		GatEdit,
 		DetailGatEdit,
+		LightmapEdit,
+		ColorEdit,
 	};
 
 	EditMode editMode;
@@ -80,7 +82,6 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	blib::math::Ray mouseRay;
 
 	blib::Texture* gradientBackground;
-	blib::Texture* gatMapTexture;
 
 public:
 	TextureWindow* textureWindow;

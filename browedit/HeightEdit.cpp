@@ -13,7 +13,6 @@
 
 void BrowEdit::heightEditUpdate()
 {
-
 	if (!wm->inWindow(mouseState.position))
 	{
 		if (mouseState.leftButton && !lastMouseState.leftButton)
@@ -177,7 +176,7 @@ void BrowEdit::heightEditUpdate()
 								int yy = y + (-(ii / 2)) + (i / 2);
 								if (map->inMap(xx, yy))
 								{
-									avgs[i] += map->getGnd()->cubes[xx][yy]->height[ii];
+									avgs[i] += map->getGnd()->cubes[xx][yy]->heights[ii];
 									count++;
 								}
 							}
@@ -195,7 +194,7 @@ void BrowEdit::heightEditUpdate()
 								int yy = y + (-(ii / 2)) + (i / 2);
 								if (map->inMap(xx, yy))
 								{
-									map->getGnd()->cubes[xx][yy]->height[ii] = avgs[i];
+									map->getGnd()->cubes[xx][yy]->heights[ii] = avgs[i];
 									mapRenderer.setTileDirty(xx, yy);
 								}
 							}
@@ -221,7 +220,7 @@ void BrowEdit::heightEditUpdate()
 						int yy = y + (-(ii / 2));
 						if (map->inMap(xx, yy))
 						{
-							avg += map->getGnd()->cubes[xx][yy]->height[ii];
+							avg += map->getGnd()->cubes[xx][yy]->heights[ii];
 							count++;
 						}
 					}
@@ -254,7 +253,7 @@ void BrowEdit::heightEditUpdate()
 									}
 								}
 							}
-							map->getGnd()->cubes[xx][yy]->height[ii] = total / count;
+							map->getGnd()->cubes[xx][yy]->heights[ii] = total / count;
 							mapRenderer.setTileDirty(xx, yy);
 						}
 					}
@@ -274,7 +273,7 @@ void BrowEdit::heightEditUpdate()
 					if (!c->selected)
 						continue;
 					for (int i = 0; i < 4; i++)
-						avg += c->height[i];
+						avg += c->heights[i];
 					count += 4;
 				}
 			}
@@ -287,7 +286,7 @@ void BrowEdit::heightEditUpdate()
 					if (!c->selected)
 						continue;
 					for (int i = 0; i < 4; i++)
-						c->height[i] = avg;
+						c->heights[i] = avg;
 					mapRenderer.setTileDirty(x, y);
 				}
 			}

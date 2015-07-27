@@ -126,7 +126,9 @@
     <ClCompile Include="BrowEdit.cpp" />
     <ClCompile Include="BrowEditJsApi.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DetailGatEdit.cpp" />
     <ClCompile Include="DetailHeightEdit.cpp" />
+    <ClCompile Include="GatEdit.cpp" />
     <ClCompile Include="HeightEdit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ObjectEdit.cpp" />

@@ -191,7 +191,7 @@
 			{
 				"name" : "Calculate Lightmaps",
 				"type" : "item"
-			}.
+			},
 			{
 				"name" : "Smooth Lightmaps",
 				"type" : "item"

@@ -3,6 +3,7 @@
 #include "Gnd.h"
 #include "Rsw.h"
 #include "Rsm.h"
+#include "Gat.h"
 #include "Renderer.h"
 
 #include <blib/Shader.h>
@@ -324,7 +325,8 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 	
 
 
-
+	if (drawGat)
+		renderGat(renderer);
 
 
 
@@ -416,9 +418,12 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("highlight");
 	highlightRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	highlightRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
+	highlightRenderState.activeShader->bindAttributeLocation("a_normal", 3);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::color, "color", blib::Shader::Vec4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::diffuse, "diffuse", blib::Shader::Float);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::texMult, "texMult", blib::Shader::Vec4);
+	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::normalMatrix, "normalMatrix", blib::Shader::Mat3);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::modelviewMatrix, "modelviewMatrix", blib::Shader::Mat4);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::projectionMatrix, "projectionMatrix", blib::Shader::Mat4);
 	highlightRenderState.activeShader->finishUniformSetup();
@@ -441,6 +446,7 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndShadowDirty = false;
 	gndTextureGridDirty = true;
 	gndGridDirty = true;
+	gatDirty = true;
 	gndTileColorDirty = false;
 
 
@@ -458,8 +464,12 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 		waterTextures.push_back(textures);
 	}
-		
+	
 
+	gatVbo = resourceManager->getResource<blib::VBO>();
+	gatVbo->setVertexFormat<blib::VertexP3T2>();
+
+	gatTexture = resourceManager->getResource<blib::Texture>("assets/textures/gat.png");
 
 }
 
@@ -863,6 +873,7 @@ void MapRenderer::setTileDirty(int xx, int yy)
 		gndChunks[yy / CHUNKSIZE][xx / CHUNKSIZE]->dirty = true;
 	gndTextureGridDirty = true;
 	gndShadowDirty = true;
+	gatDirty = true;
 }
 
 void MapRenderer::setAllDirty()
@@ -872,6 +883,7 @@ void MapRenderer::setAllDirty()
 			gndChunks[i][ii]->dirty = true;
 	gndTextureGridDirty = true;
 	gndShadowDirty = true;
+	gatDirty = true;
 }
 
 void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
@@ -974,6 +986,52 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::
 
 	rswRenderState.activeFbo = oldFbo;
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
+}
+
+void MapRenderer::renderGat(blib::Renderer* renderer)
+{
+	if (gatDirty) //TODO: background thread
+	{
+		std::vector<blib::VertexP3T2> verts;
+		Gat* gat = map->getGat();
+
+		float s = 0.25f;
+		for (int x = 0; x < gat->width; x++)
+		{
+			for (int y = 0; y < gat->height; y++)
+			{
+				Gat::Tile* cube = gat->tiles[x][y];
+				float tx = (cube->type % 4) * s;
+				float ty = (cube->type / 4) * s;
+
+				blib::VertexP3T2 v1(glm::vec3(5 * x, -cube->heights[2] + 0.1f, 5 * gat->height - 5 * y + 5), glm::vec2(tx, ty));
+				blib::VertexP3T2 v2(glm::vec3(5 * x + 5, -cube->heights[3] + 0.1f, 5 * gat->height - 5 * y + 5), glm::vec2(tx + s, ty));
+				blib::VertexP3T2 v3(glm::vec3(5 * x, -cube->heights[0] + 0.1f, 5 * gat->height - 5 * y + 10), glm::vec2(tx, ty + s));
+				blib::VertexP3T2 v4(glm::vec3(5 * x + 5, -cube->heights[1] + 0.1f, 5 * gat->height - 5 * y + 10), glm::vec2(tx + s, ty + s));
+
+				verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+				verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+			}
+		}
+		renderer->setVbo(gatVbo, verts);
+		gatDirty = false;
+	}
+
+	if (gatVbo->getLength() > 0)
+	{
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, cameraMatrix);
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, projectionMatrix);
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 1));
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+		highlightRenderState.depthTest = false;
+		highlightRenderState.activeTexture[0] = gatTexture;
+		highlightRenderState.activeVbo = gatVbo;
+		renderer->drawTriangles<blib::VertexP3T2>(gatVbo->getLength(), highlightRenderState);
+		highlightRenderState.activeTexture[0] = NULL;
+		highlightRenderState.depthTest = true;
+
+	}
 }
 
 

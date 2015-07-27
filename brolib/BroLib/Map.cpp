@@ -82,8 +82,8 @@ void Map::saveHeightmap( const std::string &fileName )
 		{
 			for (int i = 0; i < 4; i++)
 			{
-				minHeight = glm::min(minHeight, gnd->cubes[x][y]->height[i]);
-				maxHeight = glm::max(maxHeight, gnd->cubes[x][y]->height[i]);
+				minHeight = glm::min(minHeight, gnd->cubes[x][y]->heights[i]);
+				maxHeight = glm::max(maxHeight, gnd->cubes[x][y]->heights[i]);
 			}
 		}
 	}
@@ -98,7 +98,7 @@ void Map::saveHeightmap( const std::string &fileName )
 				int yy = i / 2;
 				int index = ((2 * x + xx) + (gnd->width * 2) * (2 * y + yy)) * 3;
 				for (int ii = 0; ii < 3; ii++)
-					data[index+ii] = (unsigned char)((gnd->cubes[x][y]->height[i] - minHeight) * (255 / (maxHeight - minHeight)));
+					data[index+ii] = (unsigned char)((gnd->cubes[x][y]->heights[i] - minHeight) * (255 / (maxHeight - minHeight)));
 			}
 		}
 	}
@@ -130,8 +130,8 @@ void Map::loadHeightmap(const std::string &fileName)
 		{
 			for (int i = 0; i < 4; i++)
 			{
-				minHeight = glm::min(minHeight, gnd->cubes[x][y]->height[i]);
-				maxHeight = glm::max(maxHeight, gnd->cubes[x][y]->height[i]);
+				minHeight = glm::min(minHeight, gnd->cubes[x][y]->heights[i]);
+				maxHeight = glm::max(maxHeight, gnd->cubes[x][y]->heights[i]);
 			}
 		}
 	}
@@ -145,7 +145,7 @@ void Map::loadHeightmap(const std::string &fileName)
 				int xx = i % 2;
 				int yy = i / 2;
 				int index = ((2 * x + xx) + (gnd->width * 2) * (2 * y + yy)) * 3;
-				heightImportCubes[x][y].height[i] = data[index] / 255.0f;
+				heightImportCubes[x][y].heights[i] = data[index] / 255.0f;
 			}
 		}
 	}
@@ -166,9 +166,9 @@ glm::vec4 Map::getHeightsAt(int x, int y)
 		int xx = i % 2;
 		int yy = i / 2;
 		if (inMap(x - xx, y - yy))
-			ret[i] = gnd->cubes[x - xx][y - yy]->height[i];
+			ret[i] = gnd->cubes[x - xx][y - yy]->heights[i];
 		else
-			ret[i] = gnd->cubes[x][y]->height[0];
+			ret[i] = gnd->cubes[x][y]->heights[0];
 	}
 	return glm::vec4(ret[0], ret[1], ret[2], ret[3]);
 }

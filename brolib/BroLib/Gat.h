@@ -9,8 +9,9 @@ public:
 	class Tile
 	{
 	public:
-		float cells[4];
+		float heights[4];
 		int type;
+		bool selected;
 	};
 	int version;
 	int width;

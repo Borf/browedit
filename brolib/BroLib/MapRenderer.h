@@ -128,6 +128,8 @@ private:
 		s_texture,
 		modelviewMatrix,
 		projectionMatrix,
+		normalMatrix,
+		diffuse,
 		color,
 		texMult,
 	};
@@ -143,6 +145,9 @@ private:
 	glm::mat4 billboardMatrix;
 
 #pragma endregion
+
+	blib::VBO* gatVbo;
+	blib::Texture* gatTexture;
 
 	blib::ResourceManager* resourceManager;
 
@@ -165,6 +170,7 @@ public:
 	bool drawTextureGrid;
 	bool drawObjectGrid;
 	bool drawQuadTree;
+	bool drawGat;
 
 	float fov;
 
@@ -179,6 +185,7 @@ public:
 	void render(blib::Renderer* renderer, glm::vec2 mousePosition);
 	void renderGnd(blib::Renderer* renderer);
 	void renderRsw( blib::Renderer* renderer );
+	void renderGat(blib::Renderer* renderer);
 
 	void renderObjects(blib::Renderer* renderer, bool selected);
 
@@ -189,8 +196,8 @@ public:
 	void setTileDirty(int xx, int yy);
 	void setAllDirty();
 	void renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
-
 	bool gndTextureGridDirty;
 	bool gndGridDirty;
+	bool gatDirty;
 
 };

@@ -168,7 +168,6 @@ void BrowEdit::init()
 
 
 	gradientBackground = resourceManager->getResource<blib::Texture>("assets/textures/gradient.png");
-	gatMapTexture = resourceManager->getResource<blib::Texture>("assets/textures/gat.png");
 
 	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
 
@@ -191,7 +190,7 @@ void BrowEdit::init()
 	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("highlight");
 	highlightRenderState.activeShader->bindAttributeLocation("a_position", 0);
 	highlightRenderState.activeShader->bindAttributeLocation("a_texcoord", 1);
-	highlightRenderState.activeShader->bindAttributeLocation("a_normal", 1);
+	highlightRenderState.activeShader->bindAttributeLocation("a_normal", 3);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::s_texture, "s_texture", blib::Shader::Int);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::color, "color", blib::Shader::Vec4);
 	highlightRenderState.activeShader->setUniformName(HighlightShaderUniforms::diffuse, "diffuse", blib::Shader::Float);
@@ -407,6 +406,7 @@ void BrowEdit::update( double elapsedTime )
 	mapRenderer.orthoDistance = camera->ortho ? camera->distance : 0;
 	mapRenderer.drawTextureGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && editMode == EditMode::TextureEdit; // TODO: fix this
 	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit || editMode == EditMode::DetailHeightEdit || editMode == EditMode::WallEdit); // TODO: fix this
+	mapRenderer.drawGat = editMode == EditMode::GatEdit || editMode == EditMode::DetailGatEdit;
 
 	if (mouseState.leftButton)
 		mouseRay = mapRenderer.mouseRay;
@@ -493,7 +493,7 @@ void BrowEdit::update( double elapsedTime )
 					for (int y = 0; y < map->getGnd()->height; y++)
 					{
 						for (int i = 0; i < 4; i++)
-							map->getGnd()->cubes[x][y]->height[i] = -(-map->heightImportCubes[x][y].height[i] * (map->heightImportMax - map->heightImportMin) + map->heightImportMin);
+							map->getGnd()->cubes[x][y]->heights[i] = -(-map->heightImportCubes[x][y].heights[i] * (map->heightImportMax - map->heightImportMin) + map->heightImportMin);
 						mapRenderer.setTileDirty(x, y);
 					}
 				}
@@ -1051,7 +1051,7 @@ void BrowEdit::draw()
 
 		if (editMode == EditMode::GatEdit)
 		{
-			std::vector<blib::VertexP3T2> verts;
+			std::vector<blib::VertexP3> verts;
 			Gat* gat = map->getGat();
 
 			if (!selectLasso.empty())
@@ -1063,34 +1063,27 @@ void BrowEdit::draw()
 					
 					Gat::Tile* cube = gat->tiles[x][y];
 
-					blib::VertexP3 v1(glm::vec3(10 * x, -cube->cells[2] + 0.1f, 10 * gat->height - 10 * y));
-					blib::VertexP3 v2(glm::vec3(10 * x + 10, -cube->cells[3] + 0.1f, 10 * gat->height - 10 * y));
-					blib::VertexP3 v3(glm::vec3(10 * x, -cube->cells[0] + 0.1f, 10 * gat->height - 10 * y + 10));
-					blib::VertexP3 v4(glm::vec3(10 * x + 10, -cube->cells[1] + 0.1f, 10 * gat->height - 10 * y + 10));
+					blib::VertexP3 v1(glm::vec3(5 * x, -cube->heights[2] + 0.1f, 5 * gat->height - 5 * y + 5));
+					blib::VertexP3 v2(glm::vec3(5 * x + 5, -cube->heights[3] + 0.1f, 5 * gat->height - 5 * y + 5));
+					blib::VertexP3 v3(glm::vec3(5 * x, -cube->heights[0] + 0.1f, 5 * gat->height - 5 * y + 10));
+					blib::VertexP3 v4(glm::vec3(5 * x + 5, -cube->heights[1] + 0.1f, 5 * gat->height - 5 * y + 10));
 
-					//verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
-					//verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
+					verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
+					verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
 				}
 			}
-
-
-
-			float s = 0.25f;
 
 			for (int x = 0; x < gat->width; x++)
 			{
 				for (int y = 0; y < gat->height; y++)
 				{
 					Gat::Tile* cube = gat->tiles[x][y];
-//					if (!cube->selected)
-//						continue;
-					float tx = (cube->type % 4) * s;
-					float ty = (cube->type / 4) * s;
-
-					blib::VertexP3T2 v1(glm::vec3(5 * x, -cube->cells[2] + 0.1f, 5 * gat->height - 5 * y), glm::vec2(tx,ty));
-					blib::VertexP3T2 v2(glm::vec3(5 * x + 5, -cube->cells[3] + 0.1f, 5 * gat->height - 5 * y), glm::vec2(tx+s, ty));
-					blib::VertexP3T2 v3(glm::vec3(5 * x, -cube->cells[0] + 0.1f, 5 * gat->height - 5 * y + 5), glm::vec2(tx, ty+s));
-					blib::VertexP3T2 v4(glm::vec3(5 * x + 5, -cube->cells[1] + 0.1f, 5 * gat->height - 5 * y + 5), glm::vec2(tx+s, ty+s));
+					if (!cube->selected)
+						continue;
+					blib::VertexP3 v1(glm::vec3(5 * x, -cube->heights[2] + 0.1f, 5 * gat->height - 5 * y+5));
+					blib::VertexP3 v2(glm::vec3(5 * x + 5, -cube->heights[3] + 0.1f, 5 * gat->height - 5 * y+5));
+					blib::VertexP3 v3(glm::vec3(5 * x, -cube->heights[0] + 0.1f, 5 * gat->height - 5 * y+10));
+					blib::VertexP3 v4(glm::vec3(5 * x + 5, -cube->heights[1] + 0.1f, 5 * gat->height - 5 * y+10 ));
 
 					verts.push_back(v1); verts.push_back(v2); verts.push_back(v3);
 					verts.push_back(v3); verts.push_back(v2); verts.push_back(v4);
@@ -1098,15 +1091,102 @@ void BrowEdit::draw()
 			}
 			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
 			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
-			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0,0,0,0));
-			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, 0.33f));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1,1,1,0.5f));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
-			highlightRenderState.activeTexture[0] = gatMapTexture;
+			highlightRenderState.activeTexture[0] = NULL;
 			highlightRenderState.activeVbo = NULL;
 			renderer->drawTriangles(verts, highlightRenderState);
 			highlightRenderState.activeTexture[0] = NULL;
 		}
+		if (editMode == EditMode::DetailGatEdit)
+		{
+			std::vector<blib::VertexP3> verts;
+			Gat* gat = map->getGat();
+			if (map->inMap(cursorX, cursorY))
+			{
+				if (!mouseState.leftButton)
+				{
+					cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 5);
+					cursorY = map->getGat()->height - (int)glm::floor(mapRenderer.mouse3d.z / 5) + 1;
 
+					detailHeightCursor = glm::vec2(cursorX, cursorY);
+
+					float cursorXOff = -(cursorX - (mapRenderer.mouse3d.x / 5));
+					float cursorYOff = cursorY - (map->getGat()->height - (mapRenderer.mouse3d.z / 5) + 1);
+
+					detailHeightOffset = glm::vec2(cursorXOff, cursorYOff);
+				}
+				auto drawTriangle = [&verts, this, gat](int x, int y, float xoff, float yoff){
+					if (!map->inMap(x/2, y/2))
+						return;
+					Gat::Tile* tile = gat->tiles[x][y];
+					blib::VertexP3 allVerts[4] = {
+						blib::VertexP3(glm::vec3(5 * x, -tile->heights[2] + 0.1f, 5 * gat->height - 5 * y + 5)),
+						blib::VertexP3(glm::vec3(5 * x + 5, -tile->heights[3] + 0.1f, 5 * gat->height - 5 * y + 5)),
+						blib::VertexP3(glm::vec3(5 * x, -tile->heights[0] + 0.1f, 5 * gat->height - 5 * y + 10)),
+						blib::VertexP3(glm::vec3(5 * x + 5, -tile->heights[1] + 0.1f, 5 * gat->height - 5 * y + 10)),
+					};
+					int primIndex = 0;
+					if (xoff < 0.5 && yoff < 0.5)
+						primIndex = 0;
+					else if (xoff > 0.5 && yoff < 0.5)
+						primIndex = 1;
+					else if (xoff < 0.5 && yoff > 0.5)
+						primIndex = 2;
+					else if (xoff > 0.5 && yoff > 0.5)
+						primIndex = 3;
+
+					verts.push_back(allVerts[primIndex]);
+					if (xoff < 0.5)
+						verts.push_back(allVerts[(primIndex + 1) % 4]);
+					else
+						verts.push_back(allVerts[(primIndex + 3) % 4]);
+					verts.push_back(allVerts[(primIndex + 2) % 4]);
+				};
+
+
+
+				drawTriangle(detailHeightCursor.x, detailHeightCursor.y, detailHeightOffset.x, detailHeightOffset.y);
+				if (dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("heighttools/connect"))->getValue())
+				{
+					if (detailHeightOffset.x < 0.5)
+					{
+						drawTriangle(detailHeightCursor.x - 1, detailHeightCursor.y, 1, detailHeightOffset.y);
+						if (detailHeightOffset.y > 0.5)
+							drawTriangle(detailHeightCursor.x - 1, detailHeightCursor.y - 1, 1, 0);
+						else
+							drawTriangle(detailHeightCursor.x - 1, detailHeightCursor.y + 1, 1, 1);
+					}
+					else
+					{
+						drawTriangle(detailHeightCursor.x + 1, detailHeightCursor.y, 0, detailHeightOffset.y);
+						if (detailHeightOffset.y > 0.5)
+							drawTriangle(detailHeightCursor.x + 1, detailHeightCursor.y - 1, 0, 0);
+						else
+							drawTriangle(detailHeightCursor.x + 1, detailHeightCursor.y + 1, 0, 1);
+					}
+
+					if (detailHeightOffset.y > 0.5)
+						drawTriangle(detailHeightCursor.x, detailHeightCursor.y - 1, detailHeightOffset.x, 0);
+					else
+						drawTriangle(detailHeightCursor.x, detailHeightCursor.y + 1, detailHeightOffset.x, 1);
+				}
+
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1.0f, 1.0f, 1.0f, 0.75f));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+				highlightRenderState.activeTexture[0] = NULL;
+				highlightRenderState.activeVbo = NULL;
+				renderer->drawTriangles(verts, highlightRenderState);
+				highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+				highlightRenderState.renderStyle = blib::RenderState::WIREFRAME;
+				renderer->drawTriangles(verts, highlightRenderState);
+				highlightRenderState.renderStyle = blib::RenderState::FILLED;
+			}
+		}
 
 
 
@@ -1156,6 +1236,8 @@ void BrowEdit::draw()
 			editModeString = "Object Edit";
 		else if (editMode == EditMode::GatEdit)
 			editModeString = "GAT Edit";
+		else if (editMode == EditMode::DetailGatEdit)
+			editModeString = "Detail GAT Edit";
 		else if (editMode == EditMode::HeightEdit)
 			editModeString = "Height Edit";
 		else if (editMode == EditMode::DetailHeightEdit)
@@ -1299,17 +1381,4 @@ void JsRunner::run()
 	v8::Local<v8::Function> f = v8::Local<v8::Function>::New(isolate, func);
 	v8::Local<v8::Object> o = v8::Local<v8::Object>::New(isolate, obj);
 	f->Call(o, 0, args);
-}
-
-
-
-//TODO: move these to their own files when visual studio decides to start working again
-void BrowEdit::gatEditUpdate()
-{
-
-}
-
-void BrowEdit::detailGatEditUpdate()
-{
-
 }

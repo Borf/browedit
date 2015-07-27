@@ -167,6 +167,12 @@
     <ClCompile Include="windows\NewMapWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="GatEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DetailGatEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\menu.json">
