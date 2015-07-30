@@ -11,6 +11,7 @@
 #endif
 
 #include <v8.h>
+#include <libplatform/libplatform.h>
 #include "BrowEdit.h"
 #ifndef _DEBUG
 #include <BugTrap.h>
@@ -34,10 +35,25 @@ void mergeConfig(blib::json::Value &config, const blib::json::Value &newConfig);
 
 #pragma comment(lib, "icui18n.lib")
 #pragma comment(lib, "icuuc.lib")
-#pragma comment(lib, "v8_base.lib")
+#pragma comment(lib, "v8_base_0.lib")
+#pragma comment(lib, "v8_base_1.lib")
+#pragma comment(lib, "v8_base_2.lib")
+#pragma comment(lib, "v8_base_3.lib")
 #pragma comment(lib, "v8_libbase.lib")
 #pragma comment(lib, "v8_nosnapshot.lib")
 #pragma comment(lib, "v8_libplatform.lib")
+
+
+class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
+public:
+	virtual void* Allocate(size_t length) {
+		void* data = AllocateUninitialized(length);
+		return data == NULL ? data : memset(data, 0, length);
+	}
+	virtual void* AllocateUninitialized(size_t length) { return malloc(length); }
+	virtual void Free(void* data, size_t) { free(data); }
+};
+
 
 int main()
 {
@@ -136,8 +152,17 @@ int main()
 
 
 
+	v8::V8::InitializeICU();
+	v8::Platform* platform = v8::platform::CreateDefaultPlatform();
+	v8::V8::InitializePlatform(platform);
+	v8::V8::Initialize();
 
-	v8::Isolate* isolate = v8::Isolate::New();
+	// Create a new Isolate and make it the current one.
+	ArrayBufferAllocator allocator;
+	v8::Isolate::CreateParams create_params;
+	create_params.array_buffer_allocator = &allocator;
+	v8::Isolate* isolate = v8::Isolate::New(create_params);
+
 	{
 		v8::Isolate::Scope isolate_scope(isolate);
 		v8::HandleScope handle_scope(isolate);

@@ -1,6 +1,10 @@
 vs2013/Release/
 vs2013/Browedit.opensdf
 vs2013/Browedit.sdf
-externals/v8/
 vs2013/Debug/
+externals/v8/
 package/
+vs2015/Release/
+vs2015/Debug/
+vs2015/Browedit.opensdf
+vs2015/Browedit.sdf
