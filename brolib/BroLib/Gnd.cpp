@@ -60,7 +60,10 @@ Gnd::Gnd( const std::string &fileName )
 	if(header[0] == 'G' && header[1] == 'R' && header[2] == 'G' && header[3] == 'N')
 		version = file->readShort();
 	else
+	{
 		version = 0;
+		Log::out << "GND: Invalid GND file" << Log::newline;
+	}
 
 	int textureCount = 0;
 

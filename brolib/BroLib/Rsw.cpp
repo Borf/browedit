@@ -76,7 +76,7 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 	file->read(header, 4);
 	if(header[0] == 'G' && header[1] == 'R' && header[2] == 'G' && header[3] == 'W')
 	{
-		Log::out<<"Error loading rsw: invalid header"<<Log::newline;
+		Log::out<<"RSW: Error loading rsw: invalid header"<<Log::newline;
 		delete file;
 		return;
 	}
