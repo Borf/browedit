@@ -59,6 +59,22 @@ void BrowEdit::objectEditUpdate()
 				if (objectEditModeTool == ObjectEditModeTool::Scale)
 					objectScaleDirection = scaleTool.selectedAxis(mapRenderer.mouseRay, center);
 
+				if (objectEditModeTool == ObjectEditModeTool::Translate && objectTranslateDirection == TranslatorTool::Axis::NONE)
+				{//check if clicked on a selected model
+					glm::vec3 cameraPos(camera->getMatrix() * glm::vec4(0, 0, 0, 1));
+					cameraPos = glm::vec3(1, 1, -1) * cameraPos;
+					Rsw::Object* closestObject = NULL;
+					float closestDist = 9999999999.0f;
+					for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					{
+						Rsw::Object* o = map->getRsw()->objects[i];
+						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
+						float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
+						std::vector<glm::vec3> collisions = o->collisions(mapRenderer.mouseRay);
+						if (!collisions.empty())
+							objectTranslateDirection = TranslatorTool::Axis::XYZ;
+					}
+				}
 
 				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 					if (map->getRsw()->objects[i]->selected)
@@ -164,7 +180,7 @@ void BrowEdit::objectEditUpdate()
 					if (o->selected)
 					{
 						glm::vec3 diff = o->position - center;
-						if (objectTranslateDirection != TranslatorTool::Axis::NONE)
+						if (objectTranslateDirection != TranslatorTool::Axis::NONE && objectTranslateDirection != TranslatorTool::Axis::XYZ)
 						{
 							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::X) != 0)
 								o->position.x -= lastmouse3d.x - mapRenderer.mouse3d.x;
@@ -172,6 +188,14 @@ void BrowEdit::objectEditUpdate()
 								o->position.y += (mouseState.position.y - lastMouseState.position.y) / 5.0f;
 							if (((int)objectTranslateDirection & (int)TranslatorTool::Axis::Z) != 0)
 								o->position.z += lastmouse3d.z - mapRenderer.mouse3d.z;
+						}
+						if (objectTranslateDirection == TranslatorTool::Axis::XYZ)
+						{
+							glm::vec3 diff = (glm::vec3(
+								mapRenderer.mouse3d.x - 5 * map->getGnd()->width, 
+								-mapRenderer.mouse3d.y, 
+								10 + 5 * map->getGnd()->height - mapRenderer.mouse3d.z)) - center;
+							o->position += diff;
 						}
 						if (objectRotateDirection != RotatorTool::Axis::NONE)
 						{

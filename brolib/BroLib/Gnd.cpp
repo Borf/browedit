@@ -6,6 +6,7 @@
 #include <blib/util/Log.h>
 #include <blib/linq.h>
 #include <blib/Texture.h>
+#include <blib/ResourceManager.h>
 using blib::util::Log;
 
 Gnd::Gnd(int width, int height)
@@ -331,7 +332,7 @@ Gnd::Texture::Texture()
 Gnd::Texture::~Texture()
 {
 	if(texture)
-		texture->unload();
+		blib::ResourceManager::getInstance().dispose(texture);
 	texture = NULL;
 }
 
