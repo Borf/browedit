@@ -52,6 +52,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		DetailHeightEdit,
 		GatEdit,
 		DetailGatEdit,
+		GatTypeEdit,
 		LightmapEdit,
 		ColorEdit,
 	};
@@ -166,7 +167,7 @@ public:
 	void wallEditUpdate();
 	void gatEditUpdate();
 	void detailGatEditUpdate();
-
+	void gatTypeEditUpdate();
 
 	Rsw::Model* newModel;
 

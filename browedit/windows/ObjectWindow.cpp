@@ -42,7 +42,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	getComponent<blib::wm::widgets::TreeView>("lstObjects")->addClickHandler([this, browEdit](int, int, int)
 	{
 		blib::wm::widgets::TreeView* treeView = getComponent<blib::wm::widgets::TreeView>("lstObjects");
-		if (treeView->selectedItem >= treeView->currentList.size())
+		if (treeView->selectedItem >= (int)treeView->currentList.size())
 			return true;
 		if (!browEdit->map)
 			return true;

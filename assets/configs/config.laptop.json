@@ -4,8 +4,7 @@
 		"ropath" : "C:/vrcave/Runtime/data/RO",
 		"grfs" :
 		[
-			"C:/vrcave/Runtime/data/RO/data.grf",
-			"C:/vrcave/Runtime/data/RO/cookie.grf"
+			"C:/vrcave/Runtime/data/RO/data.grf"
 		]
 	},
 	"defaultmap" : "prontera",

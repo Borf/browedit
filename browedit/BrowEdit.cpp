@@ -74,7 +74,7 @@ BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mous
 	appSetup.icon = IDI_ICON1;
 
 	HINSTANCE hInst = GetModuleHandle(0);
-	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA1), "data");
+	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA1), "FILE");
 	HGLOBAL hMem = LoadResource(NULL, hRes);
 	DWORD size = SizeofResource(NULL, hRes);
 	char* resText = (char*)LockResource(hMem);
@@ -85,7 +85,7 @@ BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mous
 	free(text);
 	FreeResource(hMem);
 
-	hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA2), "data");
+	hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DATA2), "FILE");
 	hMem = LoadResource(NULL, hRes);
 	size = SizeofResource(NULL, hRes);
 	resText = (char*)LockResource(hMem);
@@ -375,6 +375,7 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/walledit", std::bind(&BrowEdit::setEditMode, this, EditMode::WallEdit));
 	rootMenu->setAction("editmode/gatedit", std::bind(&BrowEdit::setEditMode, this, EditMode::GatEdit));
 	rootMenu->setAction("editmode/detail gatedit", std::bind(&BrowEdit::setEditMode, this, EditMode::DetailGatEdit));
+	rootMenu->setAction("editmode/gattype", std::bind(&BrowEdit::setEditMode, this, EditMode::GatTypeEdit));
 	rootMenu->setAction("editmode/Lightmap edit", std::bind(&BrowEdit::setEditMode, this, EditMode::LightmapEdit));
 	rootMenu->setAction("editmode/Color Edit", std::bind(&BrowEdit::setEditMode, this, EditMode::ColorEdit));
 
@@ -416,7 +417,7 @@ void BrowEdit::update( double elapsedTime )
 	mapRenderer.orthoDistance = camera->ortho ? camera->distance : 0;
 	mapRenderer.drawTextureGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && editMode == EditMode::TextureEdit; // TODO: fix this
 	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit || editMode == EditMode::DetailHeightEdit || editMode == EditMode::WallEdit); // TODO: fix this
-	mapRenderer.drawGat = editMode == EditMode::GatEdit || editMode == EditMode::DetailGatEdit;
+	mapRenderer.drawGat = editMode == EditMode::GatEdit || editMode == EditMode::DetailGatEdit || editMode == EditMode::GatTypeEdit;
 
 	if (mouseState.leftButton)
 		mouseRay = mapRenderer.mouseRay;
@@ -524,6 +525,8 @@ void BrowEdit::update( double elapsedTime )
 			gatEditUpdate();
 		else if (editMode == EditMode::DetailGatEdit)
 			detailGatEditUpdate();
+		else if (editMode == EditMode::GatTypeEdit)
+			gatTypeEditUpdate();
 		else if (editMode == EditMode::LightmapEdit)
 			lightmapEditUpdate();
 	}
@@ -1254,8 +1257,12 @@ void BrowEdit::draw()
 			editModeString = "Height Edit";
 		else if (editMode == EditMode::DetailHeightEdit)
 			editModeString = "Detailed Height Edit";
+		else if (editMode == EditMode::GatTypeEdit)
+			editModeString = "GAT type editing";
 		else if (editMode == EditMode::WallEdit)
 			editModeString = "Wall Edit";
+		else if (editMode == EditMode::LightmapEdit)
+			editModeString = "Lightmap editor";
 		else
 			editModeString = "Unknown editmode: " + blib::util::toString((int)editMode);
 

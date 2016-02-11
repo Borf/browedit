@@ -142,17 +142,23 @@
 				"key" : "f7"
 			},
 			{
+				"name" : "gattype",
+				"type" :  "toggle",
+				"initial" :  false,
+				"key" : "f8"
+			},
+			{
 				"name" : "Lightmap edit",
 				"type" : "toggle",
 				"initial" : false,
-				"key" : "f8"
+				"key" : "f9"
 			}
 ,
 			{
 				"name" : "Color Edit",
 				"type" : "toggle",
 				"initial" : false,
-				"key" : "f9"
+				"key" : "f10"
 			}
 
 		]
