@@ -285,7 +285,7 @@ void BrowEdit::init()
 	});
 
 
-	rootMenu->setAction("Actions/Calculate Lightmaps", [this]()
+	rootMenu->setAction("Actions/Lightmaps/Calculate Lightmaps", [this]()
 	{
 		if (!map)
 			return;
@@ -341,7 +341,7 @@ void BrowEdit::init()
 	});
 
 
-	rootMenu->setAction("Actions/Smooth Lightmaps", [this]()
+	rootMenu->setAction("Actions/Lightmaps/Smooth Lightmaps", [this]()
 	{
 		if (!map)
 			return;
@@ -352,13 +352,16 @@ void BrowEdit::init()
 		mapRenderer.setAllDirty();
 	});
 
-	rootMenu->setAction("Actions/Unique Lightmaps", [this]()
+	rootMenu->setAction("Actions/Lightmaps/Unique Lightmaps", [this]()
 	{
 		if (!map)
 			return;
 		map->getGnd()->makeLightmapsUnique();
 		mapRenderer.setAllDirty();
 	});
+
+
+
 
 
 	rootMenu->setAction("window/Help", [this]() { new HelpWindow(resourceManager, this);  });
@@ -1258,7 +1261,7 @@ void BrowEdit::draw()
 		else if (editMode == EditMode::DetailHeightEdit)
 			editModeString = "Detailed Height Edit";
 		else if (editMode == EditMode::GatTypeEdit)
-			editModeString = "GAT type editing";
+			editModeString = "GAT type editing: " + std::to_string(activeGatTile);
 		else if (editMode == EditMode::WallEdit)
 			editModeString = "Wall Edit";
 		else if (editMode == EditMode::LightmapEdit)

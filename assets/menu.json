@@ -209,17 +209,41 @@
 		"subitems" :
 		[
 			{
-				"name" : "Calculate Lightmaps",
-				"type" : "item"
+				"name" :  "Lightmaps",
+				"type" :  "menu",
+				"subitems" :  
+				[
+					{
+						"name" : "Calculate Lightmaps",
+						"type" : "item"
+					},
+					{
+						"name" : "Smooth Lightmaps",
+						"type" : "item"
+					},
+					{
+						"name" : "Unique Lightmaps",
+						"type" : "item"
+					}
+				]
 			},
 			{
-				"name" : "Smooth Lightmaps",
-				"type" : "item"
-			},
-			{
-				"name" : "Unique Lightmaps",
-				"type" : "item"
+				"name" :  "GAT",
+				"type" :  "menu",
+				"subitems" : 
+				[
+					{
+						"name" :  "Calculate Height",
+						"type" :  "item"
+					},
+					{
+						"name" :  "Calculate collision",
+						"type" :  "item"
+					}
+				]
+
 			}
+			
 		]
 	}
 ]

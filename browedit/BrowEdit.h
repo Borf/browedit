@@ -135,7 +135,7 @@ public:
 
 	std::vector<glm::ivec2> selectLasso;
 
-
+	int activeGatTile = 0;
 	int newTextureSize = 4;
 
 
