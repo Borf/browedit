@@ -11,6 +11,8 @@ Gat::Gat(const std::string &fileName)
 	blib::util::StreamInFile* file = blib::util::FileSystem::openRead(fileName + ".gat");
 	if (!file)
 	{
+		height = 0;
+		width = 0;
 		Log::err << "GND: Unable to open gat file: " << fileName << ".gat" << Log::newline;
 		return;
 	}

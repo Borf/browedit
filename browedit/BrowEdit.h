@@ -60,6 +60,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 	EditMode editMode;
 
 	blib::json::Value config;
+	blib::json::Value translation;
 
 	blib::MouseState lastMouseState;
 	blib::MouseState startMouseState;

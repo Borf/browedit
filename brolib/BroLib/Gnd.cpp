@@ -42,20 +42,14 @@ Gnd::Gnd(int width, int height)
 Gnd::Gnd( const std::string &fileName )
 {
 	blib::util::StreamInFile* file = blib::util::FileSystem::openRead(fileName + ".gnd");
-	if(!file)
+	if(!file || !file->opened())
 	{
+		width = 0;
+		height = 0;
 		Log::err<<"GND: Unable to open gnd file: "<<fileName<<".gnd"<<Log::newline;
 		return;
 	}
 	Log::out<<"GND: Reading gnd file"<<Log::newline;
-
-	if(!file)
-	{
-		width = 0;
-		height = 0;
-		Log::err<<"GND: Error opening map "<<fileName<<"..."<<Log::newline;
-		return;
-	}
 	char header[4];
 	file->read(header, 4);
 	if(header[0] == 'G' && header[1] == 'R' && header[2] == 'G' && header[3] == 'N')

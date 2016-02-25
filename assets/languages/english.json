@@ -1,0 +1,8 @@
+{
+	"menu" :
+	{
+		"file" :		"File",
+		"file/new" :	"New",
+		"file/open" :	"Open"	
+	}
+}

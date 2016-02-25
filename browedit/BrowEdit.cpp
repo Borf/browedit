@@ -55,6 +55,10 @@ BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mous
 {
 	this->config = config;
 	this->isolate = isolate;
+	if(config.isMember("language"))
+		this->translation = blib::util::FileSystem::getJson("assets/languages/" + config["language"].asString() + ".json");
+	else
+		this->translation = blib::util::FileSystem::getJson("assets/languages/english.json");
 
 	appSetup.window.setWidth((float)config["resolution"][0u].asInt());
 	appSetup.window.setHeight((float)config["resolution"][1u].asInt());
@@ -172,7 +176,7 @@ void BrowEdit::init()
 	//TODO: make sure registerHandle is threadsafe!, make sure the background tasks are cleaned up
 
 	wm->setSkin("assets/skins/ro.json", resourceManager);
-	wm->setRadialMenu(rootMenu = wm->loadMenu("assets/menu.json"));
+	wm->setRadialMenu(rootMenu = wm->loadMenu("assets/menu.json", translation["menu"]));
 	wm->setMenuBar(rootMenu);
 	addMouseListener(wm);
 	addKeyListener(wm);

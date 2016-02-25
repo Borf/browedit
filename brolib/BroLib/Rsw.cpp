@@ -71,8 +71,13 @@ Rsw::Rsw(int width, int height)
 
 Rsw::Rsw(const std::string &fileName, bool loadModels)
 {
+	quadtree = NULL;
+
+
 	char header[4];
 	blib::util::StreamInFile* file = new blib::util::StreamInFile(fileName + ".rsw");
+	if (!file->opened())
+		return;
 	file->read(header, 4);
 	if(header[0] == 'G' && header[1] == 'R' && header[2] == 'G' && header[3] == 'W')
 	{
@@ -234,7 +239,8 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 
 Rsw::~Rsw()
 {
-	delete quadtree;
+	if(quadtree)
+		delete quadtree;
 	blib::linq::deleteall(objects);
 
 	for (auto rsm : rsmCache)
