@@ -1467,7 +1467,7 @@ void BrowEdit::setLightmap(float x, float y, int color, float blend)
 				int py = (int)((1 - cursorYOff) * 6) + 1;
 
 				int oldVal = lightmap->data[px + 8 * py];
-				lightmap->data[px + 8 * py] = (int)(blend * (mouseState.leftButton ? (255-color) : 255) + (1- blend) * lightmap->data[px + 8 * py]);
+				lightmap->data[px + 8 * py] = (int)(blend * (mouseState.leftButton ? color : 255) + (1- blend) * lightmap->data[px + 8 * py]);
 				if (lightmap->data[px + 8 * py] != oldVal)
 					mapRenderer.setShadowDirty();
 			}
