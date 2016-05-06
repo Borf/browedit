@@ -139,6 +139,16 @@ public:
 	int activeGatTile = 0;
 	int newTextureSize = 4;
 
+	class ShadowBrush
+	{
+	public:
+		std::vector<std::vector<glm::vec3>> brush;
+		std::string filename;
+	};
+	std::vector<ShadowBrush> shadowMapBrushes;
+	int shadowMapBrush = 0;
+	int shadowMapColor = 0;
+
 
 
 	enum class ObjectEditModeTool
@@ -169,6 +179,8 @@ public:
 	void gatEditUpdate();
 	void detailGatEditUpdate();
 	void gatTypeEditUpdate();
+
+	void setLightmap(float x, float y, int color, float blend);
 
 	Rsw::Model* newModel;
 

@@ -38,6 +38,7 @@
 #include <blib/Shapes.h>
 #include <blib/util/Log.h>
 #include <blib/linq.h>
+#include <blib/util/stb_image.h>
 
 #include <direct.h>
 #include <glm/glm.hpp>
@@ -394,6 +395,41 @@ void BrowEdit::init()
 
 
 	setEditMode(EditMode::TextureEdit);
+
+
+	{
+		std::vector<std::string> brushFiles = blib::util::FileSystem::getFileList("assets/textures/brushes");
+		for (const auto &b : brushFiles)
+		{
+			if (b[0] == '.')
+				continue;
+
+			char* fileData;
+			int length = blib::util::FileSystem::getData("assets/textures/brushes/" + b, fileData);
+			if (fileData)
+			{
+				int w, h, d;
+				unsigned char* tmpData = stbi_load_from_memory((stbi_uc*)fileData, length, &w, &h, &d, 3);
+				if (tmpData)
+				{
+					ShadowBrush brush;
+					brush.filename = b;
+					for (int y = 0; y < h; y++)
+					{
+						std::vector<glm::vec3> row;
+						for (int x = 0; x < w; x++)
+							row.push_back(glm::vec3(tmpData[(w*y + x) * 3 + 0], tmpData[(w*y + x) * 3 + 1], tmpData[(w*y + x) * 3 + 2]) / 255.0f);
+						brush.brush.push_back(row);
+					}
+					shadowMapBrushes.push_back(brush);
+				}
+				stbi_image_free(tmpData);
+				delete[] fileData;
+			}
+		}
+	}
+
+
 
 //	loadMap("data/c_tower1");
 #ifdef WIN32
@@ -1269,7 +1305,7 @@ void BrowEdit::draw()
 		else if (editMode == EditMode::WallEdit)
 			editModeString = "Wall Edit";
 		else if (editMode == EditMode::LightmapEdit)
-			editModeString = "Lightmap editor";
+			editModeString = "Lightmap editor, brightness " + std::to_string(shadowMapColor) + ", brush: " + shadowMapBrushes[shadowMapBrush].filename;
 		else
 			editModeString = "Unknown editmode: " + blib::util::toString((int)editMode);
 
@@ -1409,40 +1445,65 @@ void JsRunner::run()
 	f->Call(o, 0, args);
 }
 
+void BrowEdit::setLightmap(float x, float y, int color, float blend)
+{
+	int cursorX = (int)glm::floor(x / 10);
+	int cursorY = map->getGnd()->height - (int)glm::floor(y / 10);
+	if (cursorX >= 0 && cursorX < map->getGnd()->width && cursorY >= 0 && cursorY < map->getGnd()->height)
+	{
+		Gnd::Cube* cube = map->getGnd()->cubes[cursorX][cursorY];
+		assert(cube);
+		if (cube->tileUp >= 0)
+		{
+			Gnd::Tile* tile = map->getGnd()->tiles[cube->tileUp]; // TODO: determine which one to get, the floor or the walls
+			Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
+			assert(lightmap);
+
+			float cursorXOff = -(cursorX - (x / 10));
+			float cursorYOff = cursorY - (map->getGnd()->height - (y / 10));
+			if (cursorXOff >= 0 && cursorXOff <= 1 && cursorYOff >= 0 && cursorYOff <= 1)
+			{
+				int px = (int)(cursorXOff * 6) + 1;
+				int py = (int)((1 - cursorYOff) * 6) + 1;
+
+				int oldVal = lightmap->data[px + 8 * py];
+				lightmap->data[px + 8 * py] = (int)(blend * (mouseState.leftButton ? (255-color) : 255) + (1- blend) * lightmap->data[px + 8 * py]);
+				if (lightmap->data[px + 8 * py] != oldVal)
+					mapRenderer.setShadowDirty();
+			}
+
+		}
+
+	}
+}
 
 
 void BrowEdit::lightmapEditUpdate()
 {
+	if (keyState.isPressed(blib::Key::BRACKETLEFT) && !lastKeyState.isPressed(blib::Key::BRACKETLEFT))
+		shadowMapColor -= 16;
+	if (keyState.isPressed(blib::Key::BRACKETRIGHT) && !lastKeyState.isPressed(blib::Key::BRACKETRIGHT))
+		shadowMapColor += 16;
+	shadowMapColor = glm::clamp(shadowMapColor, 0, 256);
+	
+	if (keyState.isPressed(blib::Key::RIGHT) && !lastKeyState.isPressed(blib::Key::RIGHT))
+		shadowMapBrush = (shadowMapBrush+1)%shadowMapBrushes.size();
+	if (keyState.isPressed(blib::Key::LEFT) && !lastKeyState.isPressed(blib::Key::LEFT))
+		shadowMapBrush = (shadowMapBrush + (int)shadowMapBrushes.size() - 1) % shadowMapBrushes.size();
+	
 	if (mouseState.leftButton || lastMouseState.rightButton)
 	{
-		int cursorX = (int)glm::floor(mapRenderer.mouse3d.x / 10);
-		int cursorY = map->getGnd()->height - (int)glm::floor(mapRenderer.mouse3d.z / 10);
-		if (cursorX >= 0 && cursorX < map->getGnd()->width && cursorY >= 0 && cursorY < map->getGnd()->height)
+		if (mouseState.position != lastMouseState.position || (mouseState.leftButton && !lastMouseState.leftButton) || (mouseState.rightButton && !lastMouseState.rightButton))
 		{
-			Gnd::Cube* cube = map->getGnd()->cubes[cursorX][cursorY];
-			assert(cube);
-			if (cube->tileUp >= 0)
-			{
-				Gnd::Tile* tile = map->getGnd()->tiles[cube->tileUp]; // TODO: determine which one to get, the floor or the walls
-				Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
-				assert(lightmap);
-				
-				float cursorXOff = -(cursorX - (mapRenderer.mouse3d.x / 10));
-				float cursorYOff = cursorY - (map->getGnd()->height - (mapRenderer.mouse3d.z / 10));
-				if (cursorXOff >= 0 && cursorXOff <= 1 && cursorYOff >= 0 && cursorYOff <= 1)
-				{
-					int px = (int)(cursorXOff * 6) + 1;
-					int py = (int)((1-cursorYOff) * 6) + 1;
-					
-					int oldVal = lightmap->data[px + 8 * py];
-					lightmap->data[px + 8 * py] = mouseState.leftButton ? 127 : 255;
-					if (lightmap->data[px + 8 * py] != oldVal)
-						mapRenderer.setShadowDirty();
-				}
-
-			}
-			
+			ShadowBrush& brush = shadowMapBrushes[shadowMapBrush];
+			int h = brush.brush.size();
+			int w = brush.brush[0].size();
+			for (int y = 0; y < h; y++)
+				for (int x = 0; x < w; x++)
+					setLightmap(mapRenderer.mouse3d.x + x * 1 / 6.0f, mapRenderer.mouse3d.z + y * 1 / 6.0f, shadowMapColor, brush.brush[y][x].x);
 		}
+
+		
 
 
 	}
