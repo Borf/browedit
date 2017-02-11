@@ -32,11 +32,11 @@
 				"bottom" : "top"
 			}
 		},
-		"lblModel" :
+		"lblWater" :
 		{
 			"type" : "label",
-			"text" : "Model",
-			"position" : [0, 20],
+			"text" : "Water",
+			"position" : [0, 40],
 			"size" : [ 200, 20 ],
 			"positionhelp" :
 			{
@@ -46,40 +46,10 @@
 				"bottom" : "top"
 			}
 		},
-		"model" :
-		{
-			"type" : "textbox",
-			"text" : "",
-			"position" : [200, 20],
-			"size" : [ 200, 20 ],
-			"positionhelp" :
-			{
-				"left" : "left",
-				"right" : "right",
-				"top" : "top",
-				"bottom" : "top"
-			}
-		},
-		"btnModel" :
-		{
-			"type" : "button",
-			"text" : "browse",
-			"position" : [400, 20],
-			"size" : [ 100, 20 ],
-			"positionhelp" :
-			{
-				"left" : "right",
-				"right" : "right",
-				"top" : "top",
-				"bottom" : "top"
-			}
-		},
-
-
-		"lblPosition" :
+		"lblWaterHeight" :
 		{
 			"type" : "label",
-			"text" : "Position",
+			"text" : "Height",
 			"position" : [0, 60],
 			"size" : [ 200, 20 ],
 			"positionhelp" :
@@ -90,56 +60,24 @@
 				"bottom" : "top"
 			}
 		},
-		"positionx" :
+		"waterHeight" :
 		{
 			"type" : "textbox",
 			"text" : "",
 			"position" : [200, 60],
-			"size" : [ 100, 20 ],
+			"size" : [ 300, 20 ],
 			"positionhelp" :
 			{
-				"left" : "right",
+				"left" : "left",
 				"right" : "right",
 				"top" : "top",
 				"bottom" : "top"
 			}
 		},
-		"positiony" :
-		{
-			"type" : "textbox",
-			"text" : "",
-			"position" : [300, 60],
-			"size" : [ 100, 20 ],
-			"positionhelp" :
-			{
-				"left" : "right",
-				"right" : "right",
-				"top" : "top",
-				"bottom" : "top"
-			}
-		},
-		"positionz" :
-		{
-			"type" : "textbox",
-			"text" : "",
-			"position" : [400, 60],
-			"size" : [ 100, 20 ],
-			"positionhelp" :
-			{
-				"left" : "right",
-				"right" : "right",
-				"top" : "top",
-				"bottom" : "top"
-			}
-		},
-
-
-
-
-		"lblRotation" :
+		"lblWaterType" :
 		{
 			"type" : "label",
-			"text" : "Rotation",
+			"text" : "Type",
 			"position" : [0, 80],
 			"size" : [ 200, 20 ],
 			"positionhelp" :
@@ -150,53 +88,24 @@
 				"bottom" : "top"
 			}
 		},
-		"rotationx" :
+		"waterType" :
 		{
 			"type" : "textbox",
 			"text" : "",
 			"position" : [200, 80],
-			"size" : [ 100, 20 ],
+			"size" : [ 300, 20 ],
 			"positionhelp" :
 			{
-				"left" : "right",
+				"left" : "left",
 				"right" : "right",
 				"top" : "top",
 				"bottom" : "top"
 			}
-		},
-		"rotationy" :
-		{
-			"type" : "textbox",
-			"text" : "",
-			"position" : [300, 80],
-			"size" : [ 100, 20 ],
-			"positionhelp" :
-			{
-				"left" : "right",
-				"right" : "right",
-				"top" : "top",
-				"bottom" : "top"
-			}
-		},
-		"rotationz" :
-		{
-			"type" : "textbox",
-			"text" : "",
-			"position" : [400, 80],
-			"size" : [ 100, 20 ],
-			"positionhelp" :
-			{
-				"left" : "right",
-				"right" : "right",
-				"top" : "top",
-				"bottom" : "top"
-			}
-		},
-
-		"lblScale" :
+		},		
+		"lblWaterAmplitude" :
 		{
 			"type" : "label",
-			"text" : "Scale",
+			"text" : "Amplitude",
 			"position" : [0, 100],
 			"size" : [ 200, 20 ],
 			"positionhelp" :
@@ -207,43 +116,316 @@
 				"bottom" : "top"
 			}
 		},
-		"scalex" :
+		"waterAmplitude" :
 		{
 			"type" : "textbox",
 			"text" : "",
 			"position" : [200, 100],
-			"size" : [ 100, 20 ],
+			"size" : [ 300, 20 ],
 			"positionhelp" :
 			{
-				"left" : "right",
+				"left" : "left",
 				"right" : "right",
 				"top" : "top",
 				"bottom" : "top"
 			}
 		},
-		"scaley" :
+		"lblWaterPhase" :
+		{
+			"type" : "label",
+			"text" : "Phase",
+			"position" : [0, 120],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"waterPhase" :
 		{
 			"type" : "textbox",
 			"text" : "",
-			"position" : [300, 100],
-			"size" : [ 100, 20 ],
+			"position" : [200, 120],
+			"size" : [ 300, 20 ],
 			"positionhelp" :
 			{
-				"left" : "right",
+				"left" : "left",
 				"right" : "right",
 				"top" : "top",
 				"bottom" : "top"
 			}
 		},
-		"scalez" :
+		"lblWaterSurfaceCurve" :
+		{
+			"type" : "label",
+			"text" : "Surface Curve",
+			"position" : [0, 140],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"waterSurfaceCurve" :
 		{
 			"type" : "textbox",
 			"text" : "",
-			"position" : [400, 100],
+			"position" : [200, 140],
+			"size" : [ 300, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lblWaterAnimSpeed" :
+		{
+			"type" : "label",
+			"text" : "Animation Speed",
+			"position" : [0, 160],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"waterAnimSpeed" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 160],
+			"size" : [ 300, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+
+
+		"lblLight" :
+		{
+			"type" : "label",
+			"text" : "Global Light",
+			"position" : [0, 200],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+
+		"lblLightLongitude" :
+		{
+			"type" : "label",
+			"text" : "Longitude",
+			"position" : [0, 220],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightLongitude" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 220],
+			"size" : [ 300, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lblLightLatitude" :
+		{
+			"type" : "label",
+			"text" : "Latitude",
+			"position" : [0, 240],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightLatitude" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 240],
+			"size" : [ 300, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightDiffuse" :
+		{
+			"type" : "label",
+			"text" : "Diffuse",
+			"position" : [0, 260],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightDiffuseR" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 260],
 			"size" : [ 100, 20 ],
 			"positionhelp" :
 			{
-				"left" : "right",
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightDiffuseG" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [300, 260],
+			"size" : [ 100, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightDiffuseB" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [400, 260],
+			"size" : [ 100, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+
+
+		"lblLightAmbient" :
+		{
+			"type" : "label",
+			"text" : "Ambient",
+			"position" : [0, 280],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightAmbientR" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 280],
+			"size" : [ 100, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightAmbientG" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [300, 280],
+			"size" : [ 100, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightAmbientB" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [400, 280],
+			"size" : [ 100, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+
+
+		"lblLightIntensity" :
+		{
+			"type" : "label",
+			"text" : "Intensity",
+			"position" : [0, 300],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightIntensity" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 300],
+			"size" : [ 300, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
 				"right" : "right",
 				"top" : "top",
 				"bottom" : "top"
@@ -252,7 +434,20 @@
 
 
 
-
+		"btnApply" : 
+		{
+			"type" : "button",
+			"text" : "Apply",
+			"position" : [ 000, 350 ],
+			"size" : [ 100, 25 ],
+			"positionhelp" :
+			{
+				"left" : "right",
+				"right" : "right",
+				"top" : "bottom",
+				"bottom" : "bottom"
+			}
+		},
 
 		"btnOk" : 
 		{

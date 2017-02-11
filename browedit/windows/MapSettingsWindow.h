@@ -11,4 +11,5 @@ class MapSettingsWindow : public blib::wm::Window
 {
 public:
 	MapSettingsWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit);
+	void apply(BrowEdit* browedit);
 };
