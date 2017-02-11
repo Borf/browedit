@@ -111,6 +111,16 @@ bool FileOpenWindow::filter(blib::Key key)
 		open();
 		return true;
 	}
+	if (key == blib::Key::DOWN && !lstFiles->selectedItems.empty())
+	{
+		lstFiles->selectedItems = { glm::min(lstFiles->selectedItems[0] + 1, (int)lstFiles->items.size() - 1) };
+		return true;
+	}
+	if (key == blib::Key::UP && !lstFiles->selectedItems.empty())
+	{
+		lstFiles->selectedItems = { glm::max(lstFiles->selectedItems[0] - 1, 0) };
+		return true;
+	}
 
 	std::string filt = getComponent<blib::wm::widgets::Textbox>("txtFilter")->text;
 	std::transform(filt.begin(), filt.end(), filt.begin(), ::tolower);
