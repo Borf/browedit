@@ -1,4 +1,6 @@
 #include "ObjectWindow.h"
+#include "ModelPropertiesWindow.h"
+#include "EffectPropertiesWindow.h"
 #include "../BrowEdit.h"
 #include "../Camera.h"
 
@@ -39,7 +41,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	largeWidth = glm::min(1300, blib::wm::WM::getInstance()->screenSize.x - 100);
 	resizable = false;
 
-	getComponent<blib::wm::widgets::TreeView>("lstObjects")->addClickHandler([this, browEdit](int, int, int)
+	getComponent<blib::wm::widgets::TreeView>("lstObjects")->addClickHandler([this, browEdit, resourceManager](int x, int y, int clickCount)
 	{
 		blib::wm::widgets::TreeView* treeView = getComponent<blib::wm::widgets::TreeView>("lstObjects");
 		if (treeView->selectedItem >= (int)treeView->currentList.size())
@@ -55,6 +57,16 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 
 		for (size_t i = 0; i < browEdit->map->getRsw()->objects.size(); i++)
 			browEdit->map->getRsw()->objects[i]->selected = node->object == browEdit->map->getRsw()->objects[i];
+
+		if (clickCount == 2)
+		{
+			if (node->object->type == Rsw::Object::Type::Model)
+				new ModelPropertiesWindow((Rsw::Model*)node->object, resourceManager, browEdit);
+			if (node->object->type == Rsw::Object::Type::Effect)
+				new EffectPropertiesWindow((Rsw::Effect*)node->object, resourceManager, browEdit);
+
+		}
+
 		return true;
 	});
 

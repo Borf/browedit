@@ -108,6 +108,7 @@
     <ClInclude Include="RotateTool.h" />
     <ClInclude Include="ScaleTool.h" />
     <ClInclude Include="TranslatorTool.h" />
+    <ClInclude Include="windows\EffectPropertiesWindow.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
     <ClInclude Include="windows\HelpWindow.h" />
     <ClInclude Include="windows\MapSettingsWindow.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="TextureEdit.cpp" />
     <ClCompile Include="TranslatorTool.cpp" />
     <ClCompile Include="WallEdit.cpp" />
+    <ClCompile Include="windows\EffectPropertiesWindow.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\HelpWindow.cpp" />
     <ClCompile Include="windows\MapSettingsWindow.cpp" />
