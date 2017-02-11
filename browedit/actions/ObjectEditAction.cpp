@@ -29,6 +29,15 @@ void ObjectEditAction::undo(Map* map, MapRenderer& mapRenderer)
 	oldData.toObject(map->getRsw()->objects[index]);
 }
 
+bool ObjectEditAction::isChanged()
+{
+	if (oldData.position != object->position ||
+		oldData.rotation != object->rotation ||
+		oldData.scale != object->scale)
+		return true;
+	return false;
+}
+
 
 void ObjectEditAction::Data::fromObject(Rsw::Object* object)
 {

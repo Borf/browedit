@@ -25,4 +25,5 @@ public:
 
 	virtual void perform(Map* map, MapRenderer& mapRenderer);
 	virtual void undo(Map* map, MapRenderer& mapRenderer);
+	virtual bool isChanged();
 };

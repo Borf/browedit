@@ -72,7 +72,10 @@ void BrowEdit::objectEditUpdate()
 						float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
 						std::vector<glm::vec3> collisions = o->collisions(mapRenderer.mouseRay);
 						if (!collisions.empty())
-							objectTranslateDirection = TranslatorTool::Axis::XYZ;
+						{
+							if(o->selected)
+								objectTranslateDirection = TranslatorTool::Axis::XYZ;
+						}
 					}
 				}
 
@@ -87,13 +90,20 @@ void BrowEdit::objectEditUpdate()
 		}
 		else if (!mouseState.leftButton && lastMouseState.leftButton)
 		{//left up
-			if (objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE || objectScaleDirection != ScaleTool::Axis::NONE)
+			if ((objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE || objectScaleDirection != ScaleTool::Axis::NONE) &&
+				objectEditActions[0]->isChanged()
+				)
 			{
 				GroupAction* action = new GroupAction();
 				for (ObjectEditAction* a : objectEditActions)
 					action->add(a);
 				perform(action);
 				objectEditActions.clear();
+				if (selectObjectAction)
+				{
+					delete selectObjectAction;
+					selectObjectAction = nullptr;
+				}
 			}
 			else if (abs(startMouseState.position.x - lastMouseState.position.x) < 2 && abs(startMouseState.position.y - lastMouseState.position.y) < 2)
 			{ //click
@@ -159,7 +169,7 @@ void BrowEdit::objectEditUpdate()
 				}
 			}
 		}
-		else if (mouseState.leftButton && lastMouseState.leftButton)
+		else if (mouseState.leftButton && lastMouseState.leftButton && glm::distance(glm::vec2(mouseState.position), glm::vec2(lastMouseState.position)) > 0.1f)
 		{ // dragging				
 			glm::vec3 center(0, 0, 0);
 			int count = 0;

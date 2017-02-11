@@ -1,6 +1,63 @@
 [
     {
-        "title": "Welcome",
+        "title": "Overview",
+        "value" :  "This is the help for browedit. Browedit 2.0 works based on different modes. Please click one of the chapters for more information
+		"
+    },
+	{
+		"title" : "General Keys",
+		"value" : "
+ - Spacebar
+   Opens the radial menu
+ - O
+   Shows or hides the objects
+ - S
+   Shows or hides the shadows
+ - G
+   Shows or hides grids"
+	},
+	{
+		"title" : "EditModes",
+		"value" : ""
+	},
+	{
+		"title" : "- Texture Edit (F1)",
+		"value" : ""
+	},
+	{
+		"title" : "- Object Edit (F2)",
+		"value" : ""
+	},
+	{
+		"title" : "- Height Edit (F3)",
+		"value" : ""
+	},
+	{
+		"title" : "- Detailed Height Edit (F4)",
+		"value" : ""
+	},
+	{
+		"title" : "- Wall Edit (F5)",
+		"value" : ""
+	},
+	{
+		"title" : "- GAT Edit (F6)",
+		"value" : ""
+	},
+	{
+		"title" : "- Detail GAT Edit (F7)",
+		"value" : ""
+	},
+	{
+		"title" : "- Gat TypeEdit (F8)",
+		"value" : ""
+	},
+	{
+		"title" : "- Lightmap Edit (F9)",
+		"value" : ""
+	},
+	{
+        "title": "Layout Help",
         "value": "= Header =
 This is some text.Then there's some ways to add layouts
 *bold text*
@@ -24,10 +81,6 @@ yay
 > -listitem
 > -another listitem
 > -etc"
-    },
-    {
-        "title": "Chapter 1",
-        "value" :  "Yo"
     }
 
 
