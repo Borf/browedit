@@ -192,7 +192,7 @@ public:
 	void renderModel(Rsw::Model* model, blib::Renderer* renderer);
 	void renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
 
-	virtual void resizeGl(int width, int height);
+	virtual void resizeGl(int width, int height, int offsetx, int offsety) override;
 	void setTileDirty(int xx, int yy);
 	void setAllDirty();
 	void setShadowDirty();

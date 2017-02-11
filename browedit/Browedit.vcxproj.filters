@@ -90,6 +90,9 @@
     <ClInclude Include="windows\NewMapWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\MapSettingsWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -172,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="GatTypeEdit.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\MapSettingsWindow.cpp">
+      <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

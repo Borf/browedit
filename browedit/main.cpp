@@ -133,6 +133,10 @@ int main()
 	{
 		// we ask him for his choice
 		Log::err<< "Unable to find configuration file, please type the configuration filename" << Log::newline;
+		std::vector<std::string> configs = blib::util::FileSystem::getFileList("assets/configs");
+		for (const auto &file : configs)
+			if(file[0] != '.')
+				Log::err << " - " << file << Log::newline;
 		std::getline( std::cin, configFileName );
 	}
 	value.writeString( configFileName );

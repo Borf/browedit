@@ -25,7 +25,7 @@ void main()
 
 	texture.rgb *= abs(dot(normal, lightDirection)) * lightDiffuse + lightIntensity * lightAmbient;
 
-	texture += clamp(vec4(texture2D(s_lighting, texCoord2).rgb,1), 0, 1);
+	texture += clamp(vec4(texture2D(s_lighting, texCoord2).rgb,1.0), 0.0, 1.0);
 
 
 	gl_FragData[0] = texture;

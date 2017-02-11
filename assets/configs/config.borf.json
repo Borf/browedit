@@ -2,10 +2,10 @@
 	"resolution" : [ 1920, 1080 ],
 	"data" :
 	{
-		"ropath" : "d:/games/testro",
+		"ropath" : "d:/old/d/games/Woon_Renewal_Full",
 		"grfs" :
 		[
-			"d:/games/testro/data.grf"
+			"d:/old/d/games/Woon_Renewal_Full/data.grf"
 		]
 	},
 	"moveconsole" : true,

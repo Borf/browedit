@@ -110,6 +110,7 @@
     <ClInclude Include="TranslatorTool.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
     <ClInclude Include="windows\HelpWindow.h" />
+    <ClInclude Include="windows\MapSettingsWindow.h" />
     <ClInclude Include="windows\MessageWindow.h" />
     <ClInclude Include="windows\ModelPropertiesWindow.h" />
     <ClInclude Include="windows\NewMapWindow.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="WallEdit.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\HelpWindow.cpp" />
+    <ClCompile Include="windows\MapSettingsWindow.cpp" />
     <ClCompile Include="windows\MessageWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />
     <ClCompile Include="windows\NewMapWindow.cpp" />

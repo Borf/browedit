@@ -14,11 +14,11 @@ void main()
 	
 	
 	vec4 texColor2 = 
-		texture2DOffset(s_texture2, texCoord, ivec2(0,offset)) +
-		texture2DOffset(s_texture2, texCoord, ivec2(0,-offset)) +
-		texture2DOffset(s_texture2, texCoord, ivec2(offset,0)) +
-		texture2DOffset(s_texture2, texCoord, ivec2(-offset,0)) -
-		4.0 * texture2DOffset(s_texture2, texCoord, ivec2(0,0));
+		texture2DOffset(s_texture2, texCoord, ivec2(0.0,offset)) +
+		texture2DOffset(s_texture2, texCoord, ivec2(0.0,-offset)) +
+		texture2DOffset(s_texture2, texCoord, ivec2(offset,0.0)) +
+		texture2DOffset(s_texture2, texCoord, ivec2(-offset,0.0)) -
+		4.0 * texture2DOffset(s_texture2, texCoord, ivec2(0.0,0.0));
 
 
 	float edge = round(max(max(abs(texColor2.r), abs(texColor2.g)), abs(texColor2.b)));

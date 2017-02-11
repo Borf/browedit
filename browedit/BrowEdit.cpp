@@ -370,7 +370,7 @@ void BrowEdit::init()
 
 
 	rootMenu->setAction("window/Help", [this]() { new HelpWindow(resourceManager, this);  });
-//	rootMenu->setAction("window/Map Settings", [this]() { new MapSettingsWindow(resourceManager, this); });
+	rootMenu->setAction("window/Map Settings", [this]() { new MapSettingsWindow(resourceManager, this); });
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
 	rootMenu->linkToggle("display/shadows", &mapRenderer.drawShadows);
 	rootMenu->linkToggle("display/lights", &mapRenderer.drawLights);
@@ -1322,9 +1322,14 @@ void BrowEdit::draw()
 
 void BrowEdit::loadMap(std::string fileName, bool threaded)
 {
-	if(map)
-		delete map;
-	map = NULL;
+	if (map)
+	{
+		Map* m = map;
+		this->runLater<bool>([m](bool b) { 
+		//	delete m; TODO: fix this properly
+		}, true);
+		map = NULL;
+	}
 	if (threaded)
 		new blib::BackgroundTask<Map*>(this, 	[fileName] () { return new Map(fileName); }, 
 								[this] (Map* param) { map = param;

@@ -1,4 +1,4 @@
-#include "ModelPropertiesWindow.h"
+#include "MapSettingsWindow.h"
 #include "ObjectWindow.h"
 #include "../BrowEdit.h"
 

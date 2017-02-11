@@ -1,8 +1,8 @@
 #version 150
 
-attribute vec3 a_position;
-attribute vec2 a_texture;
-attribute vec3 a_normal;
+in vec3 a_position;
+in vec2 a_texture;
+in vec3 a_normal;
 
 uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;
@@ -10,8 +10,8 @@ uniform mat4 modelMatrix;
 uniform mat4 modelMatrix2;
 uniform float billboard;
 
-varying vec2 texCoord;
-varying vec3 normal;
+out vec2 texCoord;
+out vec3 normal;
 
 void main()
 {

@@ -64,7 +64,7 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 {
 	renderer->clear(glm::vec4(0, 0, 0, 0), blib::Renderer::Color | blib::Renderer::Depth, gndRenderState);
 
-	this->resizeGl(width, height); //meh
+	this->resizeGl(width, height, 0, 0); //meh
 
 	glm::vec3 lightDirection;
 	lightDirection[0] = -glm::cos(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
@@ -850,7 +850,7 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 
 }
 
-void MapRenderer::resizeGl(int width, int height)
+void MapRenderer::resizeGl(int width, int height, int offsetx, int offsety)
 {
 	this->width = width;
 	this->height = height;
