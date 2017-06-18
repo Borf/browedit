@@ -78,6 +78,10 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 	blib::util::StreamInFile* file = new blib::util::StreamInFile(fileName + ".rsw");
 	if (!file->opened())
 		return;
+
+
+	json extraProperties = blib::util::FileSystem::getJson(fileName + ".extra.json");
+
 	file->read(header, 4);
 	if(header[0] == 'G' && header[1] == 'R' && header[2] == 'G' && header[3] == 'W')
 	{
@@ -185,8 +189,39 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 				light->position = file->readVec3();
 				light->color = file->readVec3();
 				light->todo2 = file->readFloat();
-
 				objects.push_back(light);
+
+
+				light->range = 100;
+				light->type = Light::Type::Point;
+				light->givesShadow = true;
+				light->intensity = 20;
+				light->cutOff = 0;
+
+				if (extraProperties.is_object() && extraProperties["light"].is_array())
+				{
+					for (const json &l : extraProperties["light"])
+					{
+						if (l["id"] == i)
+						{
+							light->range = l["range"];
+							if (l["type"] == "directional")
+								light->type = Light::Type::Directional;
+							if (l["type"] == "point")
+								light->type = Light::Type::Point;
+							if (l["type"] == "spot")
+								light->type = Light::Type::Spot;
+							light->givesShadow = l["shadow"];
+							light->cutOff = l["cutoff"];
+							light->intensity = l["intensity"];
+						}
+					}
+
+
+				}
+
+
+
 			}
 			//file->readString(40 + 12 + 40 + 12 + 4);
 			break;
@@ -251,6 +286,8 @@ Rsw::~Rsw()
 void Rsw::save(const std::string &fileName)
 {
 	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".rsw");
+	json extraProperties;
+	extraProperties["light"] = json();
 
 	char header[5] = "GRSW";
 	pFile->write(header, 4);
@@ -337,6 +374,20 @@ void Rsw::save(const std::string &fileName)
 			pFile->writeVec3(light->position);
 			pFile->writeVec3(light->color);
 			pFile->writeFloat(light->todo2);
+
+			json l;
+			l["id"] = i;
+			if (light->type == Light::Type::Directional)
+				l["type"] = "directional";
+			if (light->type == Light::Type::Point)
+				l["type"] = "point";
+			if (light->type == Light::Type::Spot)
+				l["type"] = "spot";
+			l["range"] = light->range;
+			l["shadow"] = light->givesShadow;
+			l["cutoff"] = light->cutOff;
+			l["intensity"] = light->intensity;
+			extraProperties["light"].push_back(l);
 		}
 			break;
 		case Object::Type::Sound://3: //Sound
@@ -379,8 +430,11 @@ void Rsw::save(const std::string &fileName)
 		pFile->writeVec3(quadtreeFloats[i]);
 
 
-
-
+	blib::util::StreamOut* out= new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".extra.json");
+	std::stringstream ss;
+	ss << extraProperties;
+	out->writeLine(ss.str());
+	delete out;
 	delete pFile;
 }
 
@@ -658,4 +712,16 @@ Rsw::QuadTreeNode::~QuadTreeNode()
 	for (int i = 0; i < 4; i++)
 		if (children[i])
 			delete children[i];
+}
+
+
+float Rsw::Light::realRange()
+{
+	//formula from http://ogldev.atspace.co.uk/www/tutorial36/tutorial36.html and https://imdoingitwrong.wordpress.com/2011/01/31/light-attenuation/
+	float kC = 1;
+	float kL = 2.0f / range;
+	float kQ = 1.0f / (range * range);
+	float maxChannel = glm::max(glm::max(color.r, color.g), color.b);
+	float adjustedRange = (-kL + glm::sqrt(kL * kL - 4 * kQ * (kC - 128.0f * maxChannel * intensity))) / (2 * kQ);
+	return adjustedRange;
 }

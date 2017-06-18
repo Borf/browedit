@@ -215,7 +215,8 @@
 				[
 					{
 						"name" : "Calculate Lightmaps",
-						"type" : "item"
+						"type" : "item",
+						"key" : "l"
 					},
 					{
 						"name" : "Smooth Lightmaps",

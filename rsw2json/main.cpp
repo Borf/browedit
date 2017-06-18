@@ -1,14 +1,14 @@
 #include <BroLib/Rsw.h>
 #include <fstream>
-#include <blib/json.h>
+#include <blib/json.hpp>
 #include <string>
 
 #include <blib/util/FileSystem.h>
 
 
-blib::json::Value vec3(const glm::vec3 &val)
+json vec3(const glm::vec3 &val)
 {
-	blib::json::Value ret;
+	json ret;
 	ret[0u] = val.x;
 	ret[1u] = val.y;
 	ret[2u] = val.z;
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
 	Rsw* rsw = new Rsw(filename, false);
 
-	blib::json::Value data;
+	json data;
 
 	data["version"] = rsw->version;
 	data["inifile"] = rsw->iniFile;
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
 	for (size_t i = 0; i < rsw->objects.size(); i++)
 	{
-		blib::json::Value o;
+		json o;
 
 		Rsw::Object* object = rsw->objects[i];
 		switch (object->type)

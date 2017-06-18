@@ -178,21 +178,21 @@ void RotatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highl
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::diffuse, 0.75f);
 
 
-	glm::mat4 finalModelView = glm::rotate(cameraMat, 90.0f, glm::vec3(0, 0, 1)); // Y axis
+	glm::mat4 finalModelView = glm::rotate(cameraMat, glm::radians(90.0f), glm::vec3(0, 0, 1)); // Y axis
 	glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(finalModelView)));
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::modelviewMatrix, finalModelView);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::normalMatrix, normalMatrix);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(1, 0, 0, collides == Axis::Y ? 1 : 0.25f));
 	renderer->drawTriangles(arrow, highlightRenderState);
 
-	finalModelView = glm::rotate(cameraMat, 0.0f, glm::vec3(1, 0, 0));			// x axis
+	finalModelView = glm::rotate(cameraMat, glm::radians(0.0f), glm::vec3(1, 0, 0));			// x axis
 	normalMatrix = glm::transpose(glm::inverse(glm::mat3(finalModelView)));
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::modelviewMatrix, finalModelView);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::normalMatrix, normalMatrix);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(0, 1, 0, collides == Axis::X ? 1 : 0.25f));
 	renderer->drawTriangles(arrow, highlightRenderState);
 
-	finalModelView = glm::rotate(cameraMat, 90.0f, glm::vec3(0, 1, 0));			// z axis
+	finalModelView = glm::rotate(cameraMat, glm::radians(90.0f), glm::vec3(0, 1, 0));			// z axis
 	normalMatrix = glm::transpose(glm::inverse(glm::mat3(finalModelView)));
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::modelviewMatrix, finalModelView);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::normalMatrix, normalMatrix);
@@ -212,9 +212,9 @@ RotatorTool::Axis RotatorTool::selectedAxis(const blib::math::Ray& mouseRay, con
 	float t;
 
 
-	blib::math::Ray transformedRayX = mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 0.0f, glm::vec3(1, 0, 0)));
-	blib::math::Ray transformedRayY = mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 0, 1)));
-	blib::math::Ray transformedRayZ = mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), 90.0f, glm::vec3(0, 1, 0)));
+	blib::math::Ray transformedRayX = mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), glm::radians(0.0f), glm::vec3(1, 0, 0)));
+	blib::math::Ray transformedRayY = mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), glm::radians(90.0f), glm::vec3(0, 0, 1)));
+	blib::math::Ray transformedRayZ = mouseRay * glm::inverse(glm::rotate(glm::translate(glm::mat4(), center), glm::radians(90.0f), glm::vec3(0, 1, 0)));
 
 	std::vector<glm::vec3> polygon(3);
 	for (size_t i = 0; i < arrow.size(); i += 3)

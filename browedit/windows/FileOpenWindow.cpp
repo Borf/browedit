@@ -80,7 +80,7 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 		char curdir[100];
 		_getcwd(curdir, 100);
 
-		_chdir(blib::util::replace(browEdit->getConfig()["data"]["ropath"].asString(), "/", "\\").c_str());
+		_chdir(blib::util::replace(browEdit->getConfig()["data"]["ropath"].get<std::string>(), "/", "\\").c_str());
 
 		std::string fileName = browEdit->map->getFileName() + ".rsw";
 		fileName = blib::util::replace(fileName, "/", "\\");

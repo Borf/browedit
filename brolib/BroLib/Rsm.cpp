@@ -10,6 +10,8 @@ using blib::util::Log;
 
 #include <map>
 #include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 
 
 Rsm::Rsm(std::string fileName)
@@ -86,7 +88,7 @@ Rsm::Rsm(std::string fileName)
 
 	realbbmax = glm::vec3(-999999, -999999, -999999);
 	realbbmin = glm::vec3(999999, 999999, 999999);
-	glm::mat4 mat = glm::scale(glm::vec3(1,-1,1));
+	glm::mat4 mat = glm::scale(glm::mat4(), glm::vec3(1,-1,1));
 	rootMesh->setBoundingBox2(mat, realbbmin, realbbmax);
 	realbbrange = (realbbmax + realbbmin) / 2.0f;
 	maxRange = glm::max(glm::max(realbbmax.x, -realbbmin.x), glm::max(glm::max(realbbmax.y, -realbbmin.y), glm::max(realbbmax.z, -realbbmin.z)));
@@ -123,7 +125,7 @@ void Rsm::Mesh::calcMatrix1()
 	if(frames.size() == 0)
 	{
 		if(fabs(rotangle) > 0.01)
-			matrix1 = glm::rotate(matrix1, rotangle*180.0f/3.14159f, rotaxis);
+			matrix1 = glm::rotate(matrix1, glm::radians(rotangle*180.0f/3.14159f), rotaxis); //TODO: double conversion
 	}
 	else
 	{

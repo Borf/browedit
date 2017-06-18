@@ -44,6 +44,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
+#include <thread>
+#include <atomic>
+
 
 using blib::util::Log;
 
@@ -52,17 +55,17 @@ using blib::util::Log;
 #endif
 
 
-BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
+BrowEdit::BrowEdit(const json &config, v8::Isolate* isolate) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
 {
 	this->config = config;
 	this->isolate = isolate;
-	if(config.isMember("language"))
-		this->translation = blib::util::FileSystem::getJson("assets/languages/" + config["language"].asString() + ".json");
+	if(config.find("language") != config.end())
+		this->translation = blib::util::FileSystem::getJson("assets/languages/" + config["language"].get<std::string>() + ".json");
 	else
 		this->translation = blib::util::FileSystem::getJson("assets/languages/english.json");
 
-	appSetup.window.setWidth((float)config["resolution"][0u].asInt());
-	appSetup.window.setHeight((float)config["resolution"][1u].asInt());
+	appSetup.window.setWidth((float)config["resolution"][0u].get<int>());
+	appSetup.window.setHeight((float)config["resolution"][1u].get<int>());
 	appSetup.vsync = false;
 	appSetup.icon = 0;
 	appSetup.renderer = blib::AppSetup::GlRenderer;
@@ -123,9 +126,9 @@ BrowEdit::BrowEdit(const blib::json::Value &config, v8::Isolate* isolate) : mous
 
 
 
-	appSetup.threaded = config["threadedrendering"].asBool();
-	appSetup.backgroundTasks = config["backgroundworkers"].asBool();
-	appSetup.vsync = config["vsync"].asBool();
+	appSetup.threaded = config["threadedrendering"].get<bool>();
+	appSetup.backgroundTasks = config["backgroundworkers"].get<bool>();
+	appSetup.vsync = config["vsync"].get<bool>();
 
 //	appSetup.threaded = false;
 //	appSetup.backgroundTasks = false;
@@ -165,11 +168,11 @@ void BrowEdit::init()
 {
 	std::list<blib::BackgroundTask<int>*> tasks;
 	for (size_t i = 0; i < config["data"]["grfs"].size(); i++)
-		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].asString())); return 0; }));
+		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].get<std::string>())); return 0; }));
 	for (blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();
 
-	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler( config["data"]["ropath"].asString() ));
+	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler( config["data"]["ropath"].get<std::string>() ));
 
 
 	gradientBackground = resourceManager->getResource<blib::Texture>("assets/textures/gradient.png");
@@ -188,7 +191,7 @@ void BrowEdit::init()
 
 
 	mapRenderer.init(resourceManager, this);
-	mapRenderer.fov = config["fov"].asFloat();
+	mapRenderer.fov = config["fov"].get<float>();
 	camera = new Camera();
 
 
@@ -252,7 +255,7 @@ void BrowEdit::init()
 			{
 				char prevDir[1024];
 				_getcwd(prevDir, 1024);
-				_chdir(blib::util::replace(config["data"]["ropath"].asString(), "/", "\\").c_str());
+				_chdir(blib::util::replace(config["data"]["ropath"].get<std::string>(), "/", "\\").c_str());
 				map->save(map->getFileName());
 				_chdir(prevDir);
 			}
@@ -263,6 +266,49 @@ void BrowEdit::init()
 		});
 	});
 
+	rootMenu->setAction("file/save as", [this]() {
+
+		char fileName[1024];
+		strcpy(fileName, blib::util::replace(map->getFileName(), "/", "\\").c_str());
+
+		char curdir[100];
+		_getcwd(curdir, 100);
+		HWND hWnd = this->window->hWnd;
+		OPENFILENAME ofn;
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = hWnd;
+		ofn.lpstrFile = fileName;
+		ofn.nMaxFile = 1024;
+		ofn.lpstrFilter = "All\0*.*\0RO maps\0*.rsw\0";
+		ofn.nFilterIndex = 2;
+		ofn.lpstrFileTitle = NULL;
+		ofn.nMaxFileTitle = 0;
+		ofn.lpstrInitialDir = NULL;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT;
+		if (GetSaveFileName(&ofn))
+		{
+			std::string newFileName(fileName);
+			newFileName = blib::util::replace(newFileName, "/", "\\");
+			if (newFileName.rfind(".") > newFileName.rfind("\\"))
+				newFileName = newFileName.substr(0, newFileName.rfind("."));
+			_chdir(curdir);
+
+
+			MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+			new blib::BackgroundTask<bool>(this, [this, newFileName]()
+			{
+				if (map)
+					map->save(newFileName);
+				return true;
+			}, [dialog](bool bla)
+			{
+				dialog->close();
+			});
+		}
+		_chdir(curdir);
+	});
+
 	rootMenu->setAction("file/save heightmap", [this](){
 		MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
 		new blib::BackgroundTask<bool>(this, [this]()
@@ -271,7 +317,7 @@ void BrowEdit::init()
 			{
 				char prevDir[1024];
 				_getcwd(prevDir, 1024);
-				_chdir(blib::util::replace(config["data"]["ropath"].asString(), "/", "\\").c_str());
+				_chdir(blib::util::replace(config["data"]["ropath"].get<std::string>(), "/", "\\").c_str());
 				map->saveHeightmap(map->getFileName() + ".height.png");
 				_chdir(prevDir);
 			}
@@ -284,7 +330,7 @@ void BrowEdit::init()
 		new blib::BackgroundTask<bool>(this, [this]()
 		{
 			if (map)
-				map->loadHeightmap(config["data"]["ropath"].asString() + "/" + map->getFileName() + ".height.png");
+				map->loadHeightmap(config["data"]["ropath"].get<std::string>() + "/" + map->getFileName() + ".height.png");
 			return true;
 		}, [dialog](bool bla)	{	dialog->close();	});
 	});
@@ -301,47 +347,89 @@ void BrowEdit::init()
 		int height = map->getGnd()->height;
 		float s = 10 / 6.0f;
 		Log::out << "Making lightmap..." << Log::newline;
-		for (int x = 0; x < map->getGnd()->width; x++)
+
+
+
+		std::vector<Rsw::Light*> lights;
+		for (auto &o : map->getRsw()->objects)
+			if (o->type == Rsw::Object::Type::Light)
+				lights.push_back(dynamic_cast<Rsw::Light*>(o));
+
+
+		std::vector<std::thread> threads;
+		std::atomic<unsigned>    finishedX = 0;
+		for (int t = 0; t < 8; t++)
 		{
-			for (int y = 0; y < map->getGnd()->height; y++)
+			threads.push_back(std::thread([&]()
 			{
-				Gnd::Cube* cube = map->getGnd()->cubes[x][y];
-				int tileId = cube->tileUp;
-				if (tileId == -1)
-					continue;
-				Gnd::Tile* tile = map->getGnd()->tiles[tileId];
-				assert(tile && tile->lightmapIndex != -1);
-				Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
-				for (int xx = 1; xx < 7; xx++)
+				for (int x; (x = finishedX++) < map->getGnd()->width;)
 				{
-					for (int yy = 1; yy < 7; yy++)
+					for (int y = 0; y < map->getGnd()->height; y++)
 					{
-						int intensity = 255;
-						//todo: use proper height with raycasting
-						glm::vec3 groundPos(10 * x + s * (xx - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * (yy - 1));
-						blib::math::Ray ray(groundPos, glm::vec3(-1, 1.45f, 1));
-
-
-
-						for (Rsw::Object* o : map->getRsw()->objects)
+						Gnd::Cube* cube = map->getGnd()->cubes[x][y];
+						int tileId = cube->tileUp;
+						if (tileId == -1)
+							continue;
+						Gnd::Tile* tile = map->getGnd()->tiles[tileId];
+						assert(tile && tile->lightmapIndex != -1);
+						Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
+						for (int xx = 1; xx < 7; xx++)
 						{
-							if (o->collides(ray))
+							for (int yy = 1; yy < 7; yy++)
 							{
-								intensity = 127;
-								break;
+								int intensity = 0;
+								//todo: use proper height using barycentric coordinats
+								glm::vec3 groundPos(10 * x + s * (xx - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * (yy - 1));
+
+
+								for (auto light : lights)
+								{
+									glm::vec3 lightPosition(5 * map->getGnd()->width + light->position.x, -light->position.y, 5 * map->getGnd()->height - light->position.z);
+
+									float distance = glm::distance(lightPosition, groundPos);
+									if (distance > light->realRange())
+										continue;
+									
+									float d = glm::max(distance - light->range, 0.0f);
+									float denom = d / light->range + 1;
+									float attenuation = light->intensity / (denom * denom);
+									if (light->cutOff > 0)
+										attenuation = glm::max(0.0f, (attenuation - light->cutOff) / (1 - light->cutOff));
+								
+
+									blib::math::Ray ray(groundPos, glm::normalize(lightPosition - groundPos));
+									bool collides = false;
+									for (Rsw::Object* o : map->getRsw()->objects)
+									{
+										if (o->collides(ray))
+										{
+											collides = true;
+											break;
+										}
+									}
+									if (!collides)
+									{
+										intensity += attenuation;
+									}
+
+								}
+
+
+								lightmap->data[xx + 8 * yy] = intensity;
+
+								lightmap->data[64 + 3 * (xx + 8 * yy) + 0] = 0;
+								lightmap->data[64 + 3 * (xx + 8 * yy) + 1] = 0;
+								lightmap->data[64 + 3 * (xx + 8 * yy) + 2] = 0;
 							}
 						}
-
-
-						lightmap->data[xx + 8 * yy] = intensity;
-
-						lightmap->data[64 + 3 * (xx + 8 * yy) + 0] = 0;
-						lightmap->data[64 + 3 * (xx + 8 * yy) + 1] = 0;
-						lightmap->data[64 + 3 * (xx + 8 * yy) + 2] = 0;
 					}
 				}
-			}
+			}));
 		}
+
+		for (auto &t : threads)
+			t.join();
+
 		map->getGnd()->makeLightmapBorders();
 	});
 
@@ -433,7 +521,7 @@ void BrowEdit::init()
 
 //	loadMap("data/c_tower1");
 #ifdef WIN32
-	loadMap("data/" + config["defaultmap"].asString());
+	loadMap("data/" + config["defaultmap"].get<std::string>());
 #else
 	loadMap("data/prontera");
 #endif
@@ -492,7 +580,7 @@ void BrowEdit::update( double elapsedTime )
 		{
 			if (mouseState.clickcount == 2)
 				camera->direction = 0;
-			camera->position -= glm::vec2(glm::vec4(mouseState.position.x - lastMouseState.position.x, mouseState.position.y - lastMouseState.position.y, 0, 0) * glm::rotate(glm::mat4(), -camera->direction, glm::vec3(0, 0, 1)));
+			camera->position -= glm::vec2(glm::vec4(mouseState.position.x - lastMouseState.position.x, mouseState.position.y - lastMouseState.position.y, 0, 0) * glm::rotate(glm::mat4(), -glm::radians(camera->direction), glm::vec3(0, 0, 1)));
 			camera->targetPosition = camera->position;
 		}
 	}
@@ -645,7 +733,7 @@ void BrowEdit::draw()
 
 			glm::mat4 rot;
 			rot = glm::translate(rot, glm::vec3(texCenter, 0));
-			rot = glm::rotate(rot, 90.0f * textureRot, glm::vec3(0, 0, 1));
+			rot = glm::rotate(rot, glm::radians(90.0f * textureRot), glm::vec3(0, 0, 1));
 			rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
 			rot = glm::translate(rot, glm::vec3(-texCenter, 0));
 

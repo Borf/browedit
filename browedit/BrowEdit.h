@@ -3,7 +3,7 @@
 #include <blib/App.h>
 #include <blib/MouseListener.h>
 #include <BroLib/MapRenderer.h>
-#include <blib/json.h>
+#include <blib/json.hpp>
 #include "TranslatorTool.h"
 #include "RotateTool.h"
 #include "ScaleTool.h"
@@ -40,8 +40,6 @@ public:
 
 class BrowEdit : public blib::App, public blib::MouseListener
 {
-	blib::wm::WM* wm;
-	blib::wm::Menu* rootMenu;
 
 	enum class EditMode
 	{
@@ -59,8 +57,8 @@ class BrowEdit : public blib::App, public blib::MouseListener
 
 	EditMode editMode;
 
-	blib::json::Value config;
-	blib::json::Value translation;
+	json config;
+	json translation;
 
 	blib::MouseState lastMouseState;
 	blib::MouseState startMouseState;
@@ -90,7 +88,7 @@ public:
 	ObjectWindow* objectWindow;
 
 
-	BrowEdit(const blib::json::Value &config, v8::Isolate* isolate);
+	BrowEdit(const json &config, v8::Isolate* isolate);
 	~BrowEdit(void);
 
 	virtual void init();
@@ -110,6 +108,8 @@ public:
 	void setEditMode(EditMode newMode);
 
 
+	blib::wm::WM* wm;
+	blib::wm::Menu* rootMenu;
 
 	Map* map;
 	MapRenderer mapRenderer;
@@ -119,7 +119,7 @@ public:
 	int textureRot;
 	bool textureFlipH;
 	bool textureFlipV;
-	inline const blib::json::Value &getConfig() { return config; }
+	inline const json &getConfig() { return config; }
 
 
 	TranslatorTool translatorTool;

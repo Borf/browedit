@@ -35,7 +35,7 @@ MapRenderer::MapRenderer() : mouseRay(glm::vec3(0, 0,0), glm::vec3(1,0,0))
 	drawObjectGrid = true;
 	drawQuadTree = true;
 	fbo = NULL;
-	fov = 90;
+	fov = glm::radians(75.0f);
 	mouse3d = glm::vec4(0, 0, 0, -1);
 	orthoDistance = 1000;
 }
@@ -768,9 +768,9 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 		model->matrixCache = glm::mat4();
 		model->matrixCache = glm::scale(model->matrixCache, glm::vec3(1, 1, -1));
 		model->matrixCache = glm::translate(model->matrixCache, glm::vec3(5 * map->getGnd()->width + model->position.x, -model->position.y, -10-5 * map->getGnd()->height + model->position.z));
-		model->matrixCache = glm::rotate(model->matrixCache, -model->rotation.z, glm::vec3(0, 0, 1));
-		model->matrixCache = glm::rotate(model->matrixCache, -model->rotation.x, glm::vec3(1, 0, 0));
-		model->matrixCache = glm::rotate(model->matrixCache, model->rotation.y, glm::vec3(0, 1, 0));
+		model->matrixCache = glm::rotate(model->matrixCache, -glm::radians(model->rotation.z), glm::vec3(0, 0, 1));
+		model->matrixCache = glm::rotate(model->matrixCache, -glm::radians(model->rotation.x), glm::vec3(1, 0, 0));
+		model->matrixCache = glm::rotate(model->matrixCache, glm::radians(model->rotation.y), glm::vec3(0, 1, 0));
 		model->matrixCache = glm::scale(model->matrixCache, glm::vec3(model->scale.x, -model->scale.y, model->scale.z));
 		model->matrixCache = glm::translate(model->matrixCache, glm::vec3(-model->model->realbbrange.x, model->model->realbbmin.y, -model->model->realbbrange.z));
 		model->matrixCached = true;
@@ -931,9 +931,9 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 				o->matrixCache = glm::mat4();
 				o->matrixCache = glm::scale(o->matrixCache, glm::vec3(1, 1, -1));
 				o->matrixCache = glm::translate(o->matrixCache, glm::vec3(5 * map->getGnd()->width + o->position.x, -o->position.y, -10 - 5 * map->getGnd()->height + o->position.z));
-				o->matrixCache = glm::rotate(o->matrixCache, -o->rotation.z, glm::vec3(0, 0, 1));
-				o->matrixCache = glm::rotate(o->matrixCache, -o->rotation.x, glm::vec3(1, 0, 0));
-				o->matrixCache = glm::rotate(o->matrixCache, o->rotation.y, glm::vec3(0, 1, 0));
+				o->matrixCache = glm::rotate(o->matrixCache, -glm::radians(o->rotation.z), glm::vec3(0, 0, 1));
+				o->matrixCache = glm::rotate(o->matrixCache, -glm::radians(o->rotation.x), glm::vec3(1, 0, 0));
+				o->matrixCache = glm::rotate(o->matrixCache, glm::radians(o->rotation.y), glm::vec3(0, 1, 0));
 			//	o->matrixCache = glm::scale(o->matrixCache, glm::vec3(o->scale.x, -o->scale.y, o->scale.z));
 			//	o->matrixCache = glm::translate(o->matrixCache, glm::vec3(-o->model->realbbrange.x, model->model->realbbmin.y, -model->model->realbbrange.z));
 				o->matrixCached = true;
@@ -956,6 +956,11 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, o->matrixCache);
 			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, billboardMatrix);
 			rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 1.0f);
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::shadeType, 4);
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDiffuse, glm::vec3(1,1,1));
+			if (o->type == Rsw::Object::Type::Light)
+				rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDiffuse, dynamic_cast<Rsw::Light*>(o)->color);
+
 			renderer->drawTriangles(verts, 6, rswRenderState);
 			rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
 
@@ -971,10 +976,10 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::
 
 	float dist = glm::max(glm::max(rsm->realbbmax.x - rsm->realbbmin.x, rsm->realbbmax.y - rsm->realbbmin.y), rsm->realbbmax.z - rsm->realbbmin.z);
 
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(75.0f, 1.0f, 0.1f, 250.0f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(glm::radians(75.0f), 1.0f, 0.1f, 250.0f));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, glm::lookAt(rsm->realbbrange * glm::vec3(1, -1, 1) + glm::vec3(0, -dist/3, -dist), rsm->realbbrange * glm::vec3(1, -1, 1), glm::vec3(0, 1, 0)));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::scale(glm::rotate(glm::mat4(), rotation, glm::vec3(0, 1, 0)), glm::vec3(1, 1, 1)));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::scale(glm::rotate(glm::mat4(), glm::radians(rotation), glm::vec3(0, 1, 0)), glm::vec3(1, 1, 1)));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
 
 

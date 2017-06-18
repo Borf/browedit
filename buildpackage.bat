@@ -5,3 +5,4 @@ copy vs2015\release\BugTrap.dll package
 xcopy readme.txt package\
 xcopy /s assets\*.* package\assets\
 xcopy /s blib\assets\*.* package\assets\
+pause

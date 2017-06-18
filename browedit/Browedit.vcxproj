@@ -53,7 +53,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
@@ -78,7 +78,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -111,6 +111,7 @@
     <ClInclude Include="windows\EffectPropertiesWindow.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
     <ClInclude Include="windows\HelpWindow.h" />
+    <ClInclude Include="windows\LightPropertiesWindow.h" />
     <ClInclude Include="windows\MapSettingsWindow.h" />
     <ClInclude Include="windows\MessageWindow.h" />
     <ClInclude Include="windows\ModelPropertiesWindow.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="windows\EffectPropertiesWindow.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\HelpWindow.cpp" />
+    <ClCompile Include="windows\LightPropertiesWindow.cpp" />
     <ClCompile Include="windows\MapSettingsWindow.cpp" />
     <ClCompile Include="windows\MessageWindow.cpp" />
     <ClCompile Include="windows\ModelPropertiesWindow.cpp" />

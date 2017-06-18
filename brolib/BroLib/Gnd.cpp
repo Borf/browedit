@@ -425,6 +425,16 @@ void Gnd::makeLightmapBorders()
 				lightmap->data[i + 8 * 7] = getLightmapBrightness(x, y + 1, i, 1);
 				lightmap->data[0 + 8 * i] = getLightmapBrightness(x - 1, y, 6, i);
 				lightmap->data[7 + 8 * i] = getLightmapBrightness(x + 1, y, 1, i);
+
+				for (int c = 0; c < 3; c++)
+				{
+					lightmap->data[64 + 3 * (i + 8 * 0) + c] = getLightmapColor(x, y - 1, i, 6)[c];
+					lightmap->data[64 + 3 * (i + 8 * 7) + c] = getLightmapColor(x, y + 1, i, 1)[c];
+					lightmap->data[64 + 3 * (0 + 8 * i) + c] = getLightmapColor(x - 1, y, 6, i)[c];
+					lightmap->data[64 + 3 * (7 + 8 * i) + c] = getLightmapColor(x + 1, y, 1, i)[c];
+
+				}
+
 			}
 		}
 	}
@@ -446,6 +456,27 @@ int Gnd::getLightmapBrightness(int x, int y, int lightmapX, int lightmapY)
 	Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
 
 	return lightmap->data[lightmapX + 8 * lightmapY];
+
+}
+
+glm::ivec3 Gnd::getLightmapColor(int x, int y, int lightmapX, int lightmapY)
+{
+	if (x < 0 || y < 0 || x >= width || y >= height)
+		return glm::ivec3(0, 0, 0);
+
+	Gnd::Cube* cube = cubes[x][y];
+	int tileId = cube->tileUp;
+	if (tileId == -1)
+		return glm::ivec3(0,0,0);
+	Gnd::Tile* tile = tiles[tileId];
+	assert(tile && tile->lightmapIndex != -1);
+	Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
+
+	return glm::ivec3(
+		lightmap->data[64 + (lightmapX + 8 * lightmapY) * 3 + 0],
+		lightmap->data[64 + (lightmapX + 8 * lightmapY) * 3 + 1],
+		lightmap->data[64 + (lightmapX + 8 * lightmapY) * 3 + 2]);
+
 
 }
 

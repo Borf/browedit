@@ -56,7 +56,7 @@ void BrowEdit::textureEditUpdate()
 
 		glm::mat4 rot;
 		rot = glm::translate(rot, glm::vec3(texCenter, 0));
-		rot = glm::rotate(rot, 90.0f * textureRot, glm::vec3(0, 0, 1));
+		rot = glm::rotate(rot, glm::radians(90.0f * textureRot), glm::vec3(0, 0, 1));
 		rot = glm::scale(rot, glm::vec3(textureFlipH ? -1 : 1, textureFlipV ? -1 : 1, 1));
 		rot = glm::translate(rot, glm::vec3(-texCenter, 0));
 

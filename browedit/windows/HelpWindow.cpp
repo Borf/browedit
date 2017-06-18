@@ -9,13 +9,13 @@
 
 HelpWindow::HelpWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : Window("Help", "HelpWindow.json", resourceManager)
 {
-	blib::json::Value help = blib::util::FileSystem::getJson("assets/help.json");
+	json help = blib::util::FileSystem::getJson("assets/help.json");
 
 	blib::wm::widgets::List* list = getComponent<blib::wm::widgets::List>("lstTopics");
 
 	for (size_t i = 0; i < help.size(); i++)
 	{
-		list->items.push_back(help[i]["title"].asString());
+		list->items.push_back(help[i]["title"].get<std::string>());
 	}
 
 
@@ -24,7 +24,7 @@ HelpWindow::HelpWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdi
 		if (list->selectedItems.empty())
 			return false;
 
-		getComponent<blib::wm::widgets::BmlBox>("text")->setBml(help[list->selectedItems[0]]["value"].asString());
+		getComponent<blib::wm::widgets::BmlBox>("text")->setBml(help[list->selectedItems[0]]["value"].get<std::string>());
 		return true;
 	});
 

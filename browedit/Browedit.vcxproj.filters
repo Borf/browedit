@@ -96,6 +96,9 @@
     <ClInclude Include="windows\EffectPropertiesWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\LightPropertiesWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -183,6 +186,9 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="windows\EffectPropertiesWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\LightPropertiesWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>

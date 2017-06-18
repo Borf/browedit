@@ -80,10 +80,21 @@ public:
 		{
 		}
 		// custom properties!!!!!!!!!
-		/*float		range;
-		float		maxLightIncrement;
+		enum class Type
+		{
+			Directional,
+			Point,
+			Spot
+		} type;
+		float		range;
+		//float		maxLightIncrement;
 		bool		givesShadow;
-		float		lightFalloff;*/
+		//float		lightFalloff;
+
+		float cutOff;
+		float intensity;
+
+		float realRange();
 	};
 
 	class Sound : public Object

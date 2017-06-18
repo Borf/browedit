@@ -26,6 +26,9 @@ void main()
 	if(shadeType == 1 || shadeType == 2)
 		color.rgb *= lightIntensity * clamp(dot(normalize(normal), lightDirection),0.0,1.0) * lightDiffuse + lightAmbient;
 
+	if(shadeType == 4) // only for editor
+		color.rgb *= lightDiffuse;
+
 	gl_FragData[0] = color;
 	gl_FragData[1] = highlightColor;
 }
