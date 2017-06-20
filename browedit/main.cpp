@@ -54,6 +54,9 @@ public:
 	virtual void Free(void* data, size_t) { free(data); }
 };
 
+extern "C" {
+	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
 
 int main()
 {
