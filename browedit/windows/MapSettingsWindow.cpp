@@ -34,7 +34,8 @@ MapSettingsWindow::MapSettingsWindow(blib::ResourceManager* resourceManager, Bro
 	getComponent<blib::wm::widgets::Textbox>("lightAmbientB")->text =		blib::util::toString(browEdit->map->getRsw()->light.ambient.b);
 	getComponent<blib::wm::widgets::Textbox>("lightIntensity")->text =		blib::util::toString(browEdit->map->getRsw()->light.intensity);
 
-
+	getComponent<blib::wm::widgets::Textbox>("lightmapAmbient")->text = blib::util::toString(browEdit->map->getRsw()->light.lightmapAmbient);
+	getComponent<blib::wm::widgets::Textbox>("lightmapIntensity")->text = blib::util::toString(browEdit->map->getRsw()->light.lightmapIntensity);
 
 
 	getComponent<blib::wm::widgets::Button>("btnOk")->addClickHandler([this, browEdit](int, int, int) 

@@ -126,6 +126,14 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 	light.ambient = glm::vec3(0.3f,0.3f,0.3f);
 	light.intensity = 0.5f;
 
+	if (extraProperties.find("mapproperties") != extraProperties.end())
+	{
+		if (extraProperties["mapproperties"].find("lightmapAmbient") != extraProperties["mapproperties"].end())
+			light.lightmapAmbient = extraProperties["mapproperties"]["lightmapAmbient"];
+		if (extraProperties["mapproperties"].find("lightmapIntensity") != extraProperties["mapproperties"].end())
+			light.lightmapIntensity = extraProperties["mapproperties"]["lightmapIntensity"];
+	}
+
 	if(version >= 0x105)
 	{
 		light.longitude = file->readInt();
@@ -205,8 +213,6 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 						if (l["id"] == i)
 						{
 							light->range = l["range"];
-							if (l["type"] == "directional")
-								light->type = Light::Type::Directional;
 							if (l["type"] == "point")
 								light->type = Light::Type::Point;
 							if (l["type"] == "spot")
@@ -288,6 +294,9 @@ void Rsw::save(const std::string &fileName)
 	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".rsw");
 	json extraProperties;
 	extraProperties["light"] = json();
+	extraProperties["mapproperties"]["lightmapAmbient"] = light.lightmapAmbient;
+	extraProperties["mapproperties"]["lightmapIntensity"] = light.lightmapIntensity;
+
 
 	char header[5] = "GRSW";
 	pFile->write(header, 4);
@@ -377,8 +386,6 @@ void Rsw::save(const std::string &fileName)
 
 			json l;
 			l["id"] = i;
-			if (light->type == Light::Type::Directional)
-				l["type"] = "directional";
 			if (light->type == Light::Type::Point)
 				l["type"] = "point";
 			if (light->type == Light::Type::Spot)
@@ -586,6 +593,40 @@ Rsw::Model::~Model()
 }
 
 
+
+
+
+
+bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
+{
+	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
+	newMatrix = glm::inverse(newMatrix);
+	blib::math::Ray newRay = ray * newMatrix;
+
+
+	std::vector<glm::vec3> verts;
+	verts.resize(3);
+	float t;
+	for (size_t i = 0; i < mesh->faces.size(); i++)
+	{
+		for (size_t ii = 0; ii < 3; ii++)
+			verts[ii] = mesh->vertices[mesh->faces[i]->vertices[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+
+		if (newRay.LineIntersectPolygon(verts, t))
+			return true;
+	}
+
+	for (size_t i = 0; i < mesh->children.size(); i++)
+	{
+		if (collides_Texture(mesh->children[i], ray, matrix))
+			return true;
+	}
+	return false;
+}
+
+
+
+
 bool collides_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
 {
 	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
@@ -653,6 +694,17 @@ bool Rsw::Model::collides(const blib::math::Ray &ray)
 	return collides_(model->rootMesh, ray, matrixCache);
 	return true;
 }
+
+bool Rsw::Model::collidesTexture(const blib::math::Ray &ray)
+{
+	if (!aabb.hasRayCollision(ray, 0, 10000000))
+		return false;
+
+	return collides_Texture(model->rootMesh, ray, matrixCache);
+	return true;
+}
+
+
 
 std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray)
 {
@@ -725,3 +777,5 @@ float Rsw::Light::realRange()
 	float adjustedRange = (-kL + glm::sqrt(kL * kL - 4 * kQ * (kC - 128.0f * maxChannel * intensity))) / (2 * kQ);
 	return adjustedRange;
 }
+
+

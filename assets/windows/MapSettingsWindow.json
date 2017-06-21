@@ -1,5 +1,5 @@
 {
-	"size" : [ 500, 400 ],
+	"size" : [ 500, 450 ],
 	"modal" : false,
 	"resizable" : true,
 	"widgets" :
@@ -432,13 +432,68 @@
 			}
 		},
 
-
+		"lblLightMapAmbient" :
+		{
+			"type" : "label",
+			"text" : "Lightmap Ambient (0 - 1)",
+			"position" : [0, 350],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightmapAmbient" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 350],
+			"size" : [ 300, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lblLightMapIntensity" :
+		{
+			"type" : "label",
+			"text" : "Lightmap light intensity (0 - 1)",
+			"position" : [0, 370],
+			"size" : [ 200, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "left",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"lightmapIntensity" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [200, 370],
+			"size" : [ 300, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
 
 		"btnApply" : 
 		{
 			"type" : "button",
 			"text" : "Apply",
-			"position" : [ 000, 350 ],
+			"position" : [ 0, 400 ],
 			"size" : [ 100, 25 ],
 			"positionhelp" :
 			{
@@ -453,7 +508,7 @@
 		{
 			"type" : "button",
 			"text" : "Ok",
-			"position" : [ 400, 350 ],
+			"position" : [ 400, 400 ],
 			"size" : [ 100, 25 ],
 			"positionhelp" :
 			{
@@ -467,7 +522,7 @@
 		{
 			"type" : "button",
 			"text" : "Cancel",
-			"position" : [ 300, 350 ],
+			"position" : [ 300, 400 ],
 			"size" : [ 100, 25 ],
 			"positionhelp" :
 			{

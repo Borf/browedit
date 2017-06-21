@@ -7,6 +7,7 @@
 #include <functional>
 #include <blib/util/Tree.h>
 #include <blib/math/AABB.h>
+#include <blib/util/Watchable.h>
 class Gnd;
 class Rsm;
 
@@ -58,7 +59,7 @@ public:
 		bool collides(const blib::math::Ray &ray);
 		std::vector<glm::vec3> collisions(const blib::math::Ray &ray);
 		void foreachface(std::function<void(const std::vector<glm::vec3>&)> callback);
-
+		bool collidesTexture(const blib::math::Ray &ray);
 
 		Model() : Object(Object::Type::Model)
 		{
@@ -82,7 +83,6 @@ public:
 		// custom properties!!!!!!!!!
 		enum class Type
 		{
-			Directional,
 			Point,
 			Spot
 		} type;
@@ -146,7 +146,7 @@ public:
 	struct  
 	{
 		float	height;
-		int		type;
+		blib::util::Watchable<int>		type;
 		float	amplitude;
 		float	phase;
 		float	surfaceCurve;
@@ -160,6 +160,8 @@ public:
 		glm::vec3	diffuse;
 		glm::vec3	ambient;
 		float		intensity;
+		float		lightmapAmbient = 0.5f; //EXTRA
+		float		lightmapIntensity = 0.5f; // EXTRA
 	} light;
 
 	int			unknown[4];

@@ -288,7 +288,7 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 	float opacity = map->getRsw()->water.type != 4 && map->getRsw()->water.type != 6 ? 0.6f : 1.0f;
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, opacity));
-	highlightRenderState.activeTexture[0] = waterTextures[map->getRsw()->water.type][(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed) % waterTextures[map->getRsw()->water.type].size()];
+	highlightRenderState.activeTexture[0] = waterTextures[(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed) % waterTextures.size()];
 
 	{
 		float repeatX = map->getGnd()->width / 4.0f;
@@ -450,21 +450,6 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 	gndTileColorDirty = false;
 
 
-	for (int i = 0; i < 7; i++)
-	{
-		std::vector<blib::Texture*> textures;
-
-		for (int ii = 0; ii < 32; ii++)
-		{
-			char buf[128];
-			sprintf(buf, "data/texture/워터/water%i%02i%s", i, ii, ".jpg");
-			textures.push_back(resourceManager->getResource<blib::Texture>(buf));
-			textures.back()->setTextureRepeat(true);
-		}
-
-		waterTextures.push_back(textures);
-	}
-	
 
 	gatVbo = resourceManager->getResource<blib::VBO>();
 	gatVbo->setVertexFormat<blib::VertexP3T2>();
@@ -498,6 +483,13 @@ void MapRenderer::setMap(const Map* map)
 	for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
 		if (map->getGnd()->textures[i]->texture == NULL)
 			map->getGnd()->textures[i]->texture = resourceManager->getResource<blib::Texture>("data/texture/" + map->getGnd()->textures[i]->file);
+
+	updateWaterTextures();
+
+	map->getRsw()->water.type.callback = [this](const int &old, const int &newValue)
+	{
+		updateWaterTextures();
+	};
 
 }
 
@@ -995,6 +987,21 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::
 
 	rswRenderState.activeFbo = oldFbo;
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
+}
+
+void MapRenderer::updateWaterTextures()
+{
+	Log::out << "Reloading water textures, new texture " << map->getRsw()->water.type.value << Log::newline;
+	for (auto t : waterTextures)
+		resourceManager->dispose(t);
+	waterTextures.clear();
+	for (int ii = 0; ii < 32; ii++)
+	{
+		char buf[128];
+		sprintf(buf, "data/texture/워터/water%i%02i%s", map->getRsw()->water.type.value, ii, ".jpg");
+		waterTextures.push_back(resourceManager->getResource<blib::Texture>(buf));
+		waterTextures.back()->setTextureRepeat(true);
+	}
 }
 
 void MapRenderer::renderGat(blib::Renderer* renderer)

@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	data["gatfile"] = rsw->gatFile;
 
 	data["water"]["height"] = rsw->water.height;
-	data["water"]["type"] = rsw->water.type;
+	data["water"]["type"] = rsw->water.type.value;
 	data["water"]["amplitude"] = rsw->water.amplitude;
 	data["water"]["phase"] = rsw->water.phase;
 	data["water"]["surfaceCurve"] = rsw->water.surfaceCurve;

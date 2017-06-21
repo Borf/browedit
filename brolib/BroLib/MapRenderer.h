@@ -153,7 +153,7 @@ private:
 
 	const Map* map;
 	blib::App* app;
-	std::vector<std::vector<blib::Texture*> > waterTextures;
+	std::vector<blib::Texture*> waterTextures;
 
 
 public:
@@ -201,4 +201,6 @@ public:
 	bool gndGridDirty;
 	bool gatDirty;
 
+
+	void updateWaterTextures();
 };

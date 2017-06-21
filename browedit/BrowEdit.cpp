@@ -356,6 +356,12 @@ void BrowEdit::init()
 				lights.push_back(dynamic_cast<Rsw::Light*>(o));
 
 
+		glm::vec3 lightDirection;
+		lightDirection[0] = -glm::cos(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
+		lightDirection[1] = glm::cos(glm::radians((float)map->getRsw()->light.latitude));
+		lightDirection[2] = glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
+
+
 		std::vector<std::thread> threads;
 		std::atomic<unsigned>    finishedX = 0;
 		for (int t = 0; t < 8; t++)
@@ -382,6 +388,28 @@ void BrowEdit::init()
 								glm::vec3 groundPos(10 * x + s * (xx - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * (yy - 1));
 
 
+								if (map->getRsw()->light.lightmapAmbient > 0)
+									intensity = (int)(map->getRsw()->light.lightmapAmbient * 255);
+
+								if (map->getRsw()->light.lightmapIntensity > 0)
+								{
+									blib::math::Ray ray(groundPos, glm::normalize(lightDirection));
+									bool collides = false;
+									for (Rsw::Object* o : map->getRsw()->objects)
+									{
+										auto model = dynamic_cast<Rsw::Model*>(o);
+										if (model->collidesTexture(ray))
+										{
+											collides = true;
+											break;
+										}
+									}
+									if (!collides)
+									{
+										intensity += (int)(map->getRsw()->light.lightmapIntensity * 255);
+									}
+								}
+
 								for (auto light : lights)
 								{
 									glm::vec3 lightPosition(5 * map->getGnd()->width + light->position.x, -light->position.y, 5 * map->getGnd()->height - light->position.z);
@@ -389,13 +417,13 @@ void BrowEdit::init()
 									float distance = glm::distance(lightPosition, groundPos);
 									if (distance > light->realRange())
 										continue;
-									
+
 									float d = glm::max(distance - light->range, 0.0f);
 									float denom = d / light->range + 1;
 									float attenuation = light->intensity / (denom * denom);
 									if (light->cutOff > 0)
 										attenuation = glm::max(0.0f, (attenuation - light->cutOff) / (1 - light->cutOff));
-								
+
 
 									blib::math::Ray ray(groundPos, glm::normalize(lightPosition - groundPos));
 									bool collides = false;
@@ -411,8 +439,10 @@ void BrowEdit::init()
 									{
 										intensity += attenuation;
 									}
-
 								}
+
+								if (intensity > 255)
+									intensity = 255;
 
 
 								lightmap->data[xx + 8 * yy] = intensity;
