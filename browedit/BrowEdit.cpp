@@ -54,6 +54,11 @@ using blib::util::Log;
 #include "resource.h"
 #endif
 
+#include <mutex>
+extern std::mutex hitpointsMutex;
+extern std::vector<glm::vec3> hitpoints;
+
+
 
 BrowEdit::BrowEdit(const json &config, v8::Isolate* isolate) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
 {
@@ -383,64 +388,80 @@ void BrowEdit::init()
 						{
 							for (int yy = 1; yy < 7; yy++)
 							{
-								int intensity = 0;
 								//todo: use proper height using barycentric coordinats
-								glm::vec3 groundPos(10 * x + s * (xx - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * (yy - 1));
 
-
-								if (map->getRsw()->light.lightmapAmbient > 0)
-									intensity = (int)(map->getRsw()->light.lightmapAmbient * 255);
-
-								if (map->getRsw()->light.lightmapIntensity > 0)
+								int totalIntensity = 0;
+								int count = 0;
+								for (float xxx = 0; xxx < 1; xxx += 0.1f)
 								{
-									blib::math::Ray ray(groundPos, glm::normalize(lightDirection));
-									bool collides = false;
-									for (Rsw::Object* o : map->getRsw()->objects)
+									for (float yyy = 0; yyy < 1; yyy += 0.1f)
 									{
-										auto model = dynamic_cast<Rsw::Model*>(o);
-										if (model->collidesTexture(ray))
+										float intensity = 0;
+										glm::vec3 groundPos(10 * x + s * ((xx+ xxx) - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * ((yy+yyy) - 1));
+
+
+										if (map->getRsw()->light.lightmapAmbient > 0)
+											intensity = (int)(map->getRsw()->light.lightmapAmbient * 255);
+
+										if (map->getRsw()->light.lightmapIntensity > 0)
 										{
-											collides = true;
-											break;
+											blib::math::Ray ray(groundPos, glm::normalize(lightDirection));
+											bool collides = false;
+											for (Rsw::Object* o : map->getRsw()->objects)
+											{
+												auto model = dynamic_cast<Rsw::Model*>(o);
+												if (model->collidesTexture(ray))
+												{
+													collides = true;
+													break;
+												}
+											}
+											if (!collides)
+											{
+												intensity += (map->getRsw()->light.lightmapIntensity * 255);
+											}
 										}
-									}
-									if (!collides)
-									{
-										intensity += (int)(map->getRsw()->light.lightmapIntensity * 255);
+
+								/*		for (auto light : lights)
+										{
+											glm::vec3 lightPosition(5 * map->getGnd()->width + light->position.x, -light->position.y, 5 * map->getGnd()->height - light->position.z);
+
+											float distance = glm::distance(lightPosition, groundPos);
+											if (distance > light->realRange())
+												continue;
+
+											float d = glm::max(distance - light->range, 0.0f);
+											float denom = d / light->range + 1;
+											float attenuation = light->intensity / (denom * denom);
+											if (light->cutOff > 0)
+												attenuation = glm::max(0.0f, (attenuation - light->cutOff) / (1 - light->cutOff));
+
+
+											blib::math::Ray ray(groundPos, glm::normalize(lightPosition - groundPos));
+											bool collides = false;
+											for (Rsw::Object* o : map->getRsw()->objects)
+											{
+												if (o->collides(ray))
+												{
+													collides = true;
+													break;
+												}
+											}
+											if (!collides)
+											{
+												intensity += attenuation;
+											}
+										}*/
+
+										totalIntensity += intensity;
+										count++;
+
 									}
 								}
+								if (totalIntensity > 129*count && totalIntensity < 250*count)
+									Sleep(0);
 
-								for (auto light : lights)
-								{
-									glm::vec3 lightPosition(5 * map->getGnd()->width + light->position.x, -light->position.y, 5 * map->getGnd()->height - light->position.z);
-
-									float distance = glm::distance(lightPosition, groundPos);
-									if (distance > light->realRange())
-										continue;
-
-									float d = glm::max(distance - light->range, 0.0f);
-									float denom = d / light->range + 1;
-									float attenuation = light->intensity / (denom * denom);
-									if (light->cutOff > 0)
-										attenuation = glm::max(0.0f, (attenuation - light->cutOff) / (1 - light->cutOff));
-
-
-									blib::math::Ray ray(groundPos, glm::normalize(lightPosition - groundPos));
-									bool collides = false;
-									for (Rsw::Object* o : map->getRsw()->objects)
-									{
-										if (o->collides(ray))
-										{
-											collides = true;
-											break;
-										}
-									}
-									if (!collides)
-									{
-										intensity += attenuation;
-									}
-								}
-
+								int intensity = totalIntensity / count;
 								if (intensity > 255)
 									intensity = 255;
 
@@ -1364,6 +1385,24 @@ void BrowEdit::draw()
 			}
 		}
 
+
+		hitpointsMutex.lock();
+		if (!hitpoints.empty())
+		{
+			std::vector<blib::VertexP3> verts;
+			for (auto &v : hitpoints)
+				verts.push_back(v);
+
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, mapRenderer.cameraMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, mapRenderer.projectionMatrix);
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0.9f, 0.5f, 0.5f, 0.65f));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
+			highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::diffuse, 0.0f);
+			highlightRenderState.activeTexture[0] = NULL;
+			highlightRenderState.activeVbo = NULL;
+			renderer->drawPoints(verts, highlightRenderState);
+		}
+		hitpointsMutex.unlock();
 
 
 

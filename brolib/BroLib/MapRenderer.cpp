@@ -286,27 +286,29 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::projectionMatrix, projectionMatrix);
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(0, 0, 0, 0));
 
-	float opacity = map->getRsw()->water.type != 4 && map->getRsw()->water.type != 6 ? 0.6f : 1.0f;
-	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, opacity));
-	highlightRenderState.activeTexture[0] = waterTextures[(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed) % waterTextures.size()];
-
+	if (map->getRsw()->water.type.value >= 0)
 	{
-		float repeatX = map->getGnd()->width / 4.0f;
-		float repeatY = map->getGnd()->height / 4.0f;
+		float opacity = map->getRsw()->water.type != 4 && map->getRsw()->water.type != 6 ? 0.6f : 1.0f;
+		highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(1, 1, 1, opacity));
+		highlightRenderState.activeTexture[0] = waterTextures[(int)(blib::util::Profiler::getAppTime() * map->getRsw()->water.animSpeed) % waterTextures.size()];
 
-		float waterHeight = map->getRsw()->water.height;
+		{
+			float repeatX = map->getGnd()->width / 4.0f;
+			float repeatY = map->getGnd()->height / 4.0f;
 
-		std::vector<blib::VertexP3T2> verts;
-		verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 0), glm::vec2(0, 0)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
+			float waterHeight = map->getRsw()->water.height;
 
-		verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 10 * map->getGnd()->height), glm::vec2(repeatX, repeatY)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
-		verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
-		renderer->drawTriangles(verts, highlightRenderState);
+			std::vector<blib::VertexP3T2> verts;
+			verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 0), glm::vec2(0, 0)));
+			verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
+			verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
+
+			verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 10 * map->getGnd()->height), glm::vec2(repeatX, repeatY)));
+			verts.push_back(blib::VertexP3T2(glm::vec3(0, -waterHeight, 10 * map->getGnd()->height), glm::vec2(0, repeatY)));
+			verts.push_back(blib::VertexP3T2(glm::vec3(10 * map->getGnd()->width, -waterHeight, 0), glm::vec2(repeatX, 0)));
+			renderer->drawTriangles(verts, highlightRenderState);
+		}
 	}
-
 
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::color, glm::vec4(1, 0, 0, 1));
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
@@ -995,6 +997,10 @@ void MapRenderer::updateWaterTextures()
 	for (auto t : waterTextures)
 		resourceManager->dispose(t);
 	waterTextures.clear();
+
+	if (map->getRsw()->water.type.value < 0)
+		return;
+
 	for (int ii = 0; ii < 32; ii++)
 	{
 		char buf[128];

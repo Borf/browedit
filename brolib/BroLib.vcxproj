@@ -105,7 +105,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;_SECURE_SCL = 0;_HAS_ITERATOR_DEBUGGING = 0;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;GRF_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;GRF_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\externals\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>

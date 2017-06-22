@@ -72,4 +72,8 @@ void MapSettingsWindow::apply(BrowEdit* browEdit)
 	browEdit->map->getRsw()->light.ambient.b =		atof(getComponent<blib::wm::widgets::Textbox>("lightAmbientB")->text.c_str());
 	browEdit->map->getRsw()->light.intensity =		atof(getComponent<blib::wm::widgets::Textbox>("lightIntensity")->text.c_str());
 
+
+	browEdit->map->getRsw()->light.lightmapAmbient = atof(getComponent<blib::wm::widgets::Textbox>("lightmapAmbient")->text.c_str());
+	browEdit->map->getRsw()->light.lightmapIntensity = atof(getComponent<blib::wm::widgets::Textbox>("lightmapIntensity")->text.c_str());
+
 }
