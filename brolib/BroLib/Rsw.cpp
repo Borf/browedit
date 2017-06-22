@@ -16,11 +16,6 @@ using blib::util::Log;
 
 using blib::util::Log;
 
-#include <mutex>
-std::mutex hitpointsMutex;
-std::vector<glm::vec3> hitpoints;
-
-
 Rsw::Rsw(int width, int height)
 {
 	version = 0x0201;
@@ -656,6 +651,7 @@ public:
 
 };
 
+#include <mutex>
 std::mutex imageMutex;
 std::map<std::string, Image*> images;
 Image* getImage(const std::string &filename)
@@ -707,10 +703,6 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 			Image* img = getImage("data/texture/" + mesh->model->textures[mesh->faces[i]->texIndex]);
 			if (img->get(uv) < 0.01)
 				continue;
-
-			hitpointsMutex.lock();
-			//hitpoints.push_back(glm::vec3(glm::inverse(newMatrix) * glm::vec4(hitPoint,1)));
-			hitpointsMutex.unlock();
 			return true;
 		}
 	}
