@@ -645,7 +645,18 @@ public:
 		int y1 = floor(uv.y * height);
 		int x2 = ceil(uv.x * width);
 		int y2 = ceil(uv.y * height);
+
+#if 1
+		float fracX = glm::fract(uv.x * width);
+		float fracY = glm::fract(uv.y * height);
+
+		float top = glm::mix(data[x1 + width * y1], data[x2 + width * y1], fracX);
+		float bottom = glm::mix(data[x1 + width * y2], data[x2 + width * y2], fracX);
+		
+		return glm::mix(top, bottom, fracY) / 255.0f;
+#else
 		return ((data[x1 + width * y1] + data[x1 + width * y2] + data[x2 + width * y1] + data[x2 + width * y2]) / 4.0f) / 255.0f;
+#endif
 	}
 
 

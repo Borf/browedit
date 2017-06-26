@@ -71,7 +71,14 @@ public:
 			};
 			float heights[4];
 		};
-		int tileUp, tileSide, tileFront;
+		union
+		{
+			struct
+			{
+				int tileUp, tileSide, tileFront;
+			};
+			int tileIds[3];
+		};
 		bool selected;
 
 		glm::vec3 normal;

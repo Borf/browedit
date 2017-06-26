@@ -94,10 +94,6 @@ glm::mat4 ClassicCamera::getMatrix() const
 		glm::vec3(distance * cos(glm::radians(direction+90.0f)), distance, distance * sin(glm::radians(direction+90.0f))),
 						glm::vec3(position.x, increment, position.y),
 						glm::vec3(0, 1, 0));
-	
-	//ret = glm::translate(ret, glm::vec3(0, 0, -distance));
-	//ret = glm::translate(ret, glm::vec3(-position.x, 0, -position.y));
-
 	return ret;
 }
 
