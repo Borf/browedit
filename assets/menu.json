@@ -246,5 +246,23 @@
 			}
 			
 		]
+	},
+	{
+		"name" : "Camera",
+		"type" : "menu",
+		"subitems" :
+		[
+			{
+				"name" :  "Modern",
+				"type" :  "toggle",
+				"initial" : true
+			},
+			{
+				"name" :  "Classic",
+				"type" :  "toggle",
+				"initial" : false
+			}
+			
+		]
 	}
 ]

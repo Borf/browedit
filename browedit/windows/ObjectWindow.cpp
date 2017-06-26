@@ -52,9 +52,9 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 		ObjectTreeNode* node = dynamic_cast<ObjectTreeNode*>(treeView->currentList[treeView->selectedItem].second);
 		if (!node)
 			return false;
-		browEdit->camera->targetPosition = glm::vec2(
+		browEdit->camera->setTarget(glm::vec2(
 			5 * browEdit->map->getGnd()->width + node->object->position.x,
-			5 * browEdit->map->getGnd()->height - node->object->position.z);
+			5 * browEdit->map->getGnd()->height - node->object->position.z));
 
 		for (size_t i = 0; i < browEdit->map->getRsw()->objects.size(); i++)
 			browEdit->map->getRsw()->objects[i]->selected = node->object == browEdit->map->getRsw()->objects[i];

@@ -99,9 +99,6 @@ public:
 
 	virtual void draw();
 
-	void loadMap(std::string fileName, bool threaded = true);
-	void saveMap(std::string fileName);
-
 	virtual bool onScroll( int delta );
 
 
@@ -201,5 +198,12 @@ public:
 	int version;
 	void loadJsPlugins();
 	void lightmapEditUpdate();
+
+
+//menu
+	void setCamera(std::function<Camera*()>, const std::string &name);
+	void loadMap(std::string fileName, bool threaded = true);
+	void saveMap(std::string fileName);
+
 };
 

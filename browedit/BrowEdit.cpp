@@ -192,7 +192,7 @@ void BrowEdit::init()
 
 	mapRenderer.init(resourceManager, this);
 	mapRenderer.fov = config["fov"].get<float>();
-	camera = new Camera();
+	camera = new ModernCamera();
 
 
 	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("highlight");
@@ -393,7 +393,7 @@ void BrowEdit::init()
 								{
 									for (float yyy = 0; yyy < 1; yyy += quality)
 									{
-										float intensity = 0;
+										int intensity = 0;
 										glm::vec3 groundPos(10 * x + s * ((xx+ xxx) - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * ((yy+yyy) - 1));
 
 
@@ -416,7 +416,7 @@ void BrowEdit::init()
 											}
 											if (!collides)
 											{
-												intensity += (map->getRsw()->light.lightmapIntensity * 255);
+												intensity += (int)(map->getRsw()->light.lightmapIntensity * 255);
 											}
 										}
 
@@ -447,7 +447,7 @@ void BrowEdit::init()
 											}
 											if (!collides)
 											{
-												intensity += attenuation;
+												intensity += (int)attenuation;
 											}
 										}
 
@@ -528,6 +528,8 @@ void BrowEdit::init()
 	rootMenu->setAction("objecttools/scale", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Scale));
 	rootMenu->setAction("objecttools/rotate", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Rotate));
 
+	rootMenu->setAction("Camera/Modern", std::bind(&BrowEdit::setCamera, this, []() { return new ModernCamera(); }, "Modern"));
+	rootMenu->setAction("Camera/Classic", std::bind(&BrowEdit::setCamera, this, []() { return new ClassicCamera(); }, "Classic"));
 
 	setEditMode(EditMode::TextureEdit);
 
@@ -616,20 +618,7 @@ void BrowEdit::update( double elapsedTime )
 
 	if(mouseState.middleButton)
 	{
-		if(keyState.isPressed(blib::Key::SHIFT))
-		{
-			if (mouseState.clickcount == 2)
-				camera->angle = 60;
-			camera->direction += (mouseState.position.x - lastMouseState.position.x) / 2.0f;
-			camera->angle = glm::clamp(camera->angle + (mouseState.position.y - lastMouseState.position.y) / 2.0f, 0.0f, 90.0f);
-		}
-		else
-		{
-			if (mouseState.clickcount == 2)
-				camera->direction = 0;
-			camera->position -= glm::vec2(glm::vec4(mouseState.position.x - lastMouseState.position.x, mouseState.position.y - lastMouseState.position.y, 0, 0) * glm::rotate(glm::mat4(), -glm::radians(camera->direction), glm::vec3(0, 0, 1)));
-			camera->targetPosition = camera->position;
-		}
+		camera->handleMouse(mouseState, lastMouseState, keyState);
 	}
 	if (map)
 	{
@@ -1452,6 +1441,24 @@ void BrowEdit::draw()
 	spriteBatch->end();
 }
 
+void BrowEdit::setCamera(std::function<Camera*()> newCamera, const std::string &name)
+{
+	auto items = this->rootMenu->getItems("Camera");
+	for (auto i : items)
+	{
+		auto ti = dynamic_cast<blib::wm::ToggleMenuItem*>(i);
+		if (ti)
+			ti->setValue(ti->name == name);
+	}
+	Camera* oldCamera = this->camera;
+	this->camera = newCamera();
+	camera->position = oldCamera->position;
+	camera->targetPosition = oldCamera->targetPosition;
+	camera->distance = oldCamera->distance;
+	camera->direction = oldCamera->direction;
+
+}
+
 void BrowEdit::loadMap(std::string fileName, bool threaded)
 {
 	if (map)
@@ -1465,8 +1472,7 @@ void BrowEdit::loadMap(std::string fileName, bool threaded)
 	if (threaded)
 		new blib::BackgroundTask<Map*>(this, 	[fileName] () { return new Map(fileName); }, 
 								[this] (Map* param) { map = param;
-											camera->position = glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5);
-											camera->targetPosition = camera->position;
+											camera->setTarget(glm::vec2(map->getGnd()->width*5, map->getGnd()->height*5));
 											mapRenderer.setMap(map);
 											textureWindow->updateTextures(map); //TODO: textures aren't loaded here yet!
 											objectWindow->updateObjects(map);
@@ -1474,8 +1480,7 @@ void BrowEdit::loadMap(std::string fileName, bool threaded)
 	else
 	{
 		map = new Map(fileName);
-		camera->position = glm::vec2(map->getGnd()->width * 5, map->getGnd()->height * 5);
-		camera->targetPosition = camera->position;
+		camera->setTarget(glm::vec2(map->getGnd()->width * 5, map->getGnd()->height * 5));
 		mapRenderer.setMap(map);
 		textureWindow->updateTextures(map); //TODO: textures aren't loaded here yet!
 		objectWindow->updateObjects(map);

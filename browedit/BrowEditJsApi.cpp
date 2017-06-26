@@ -239,8 +239,8 @@ void BrowEdit::loadJsPlugins()
 	})->GetFunction());
 	camera->Set(v8::String::NewFromUtf8(isolate, "setCenter"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
-		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->position.x = (float)args[0]->NumberValue();
-		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->position.y = (float)args[1]->NumberValue();
+		glm::vec2 target((float)args[0]->NumberValue(), (float)args[1]->NumberValue());
+		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->setTarget(target);
 	})->GetFunction());
 	camera->Set(v8::String::NewFromUtf8(isolate, "setDistance"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
@@ -248,7 +248,10 @@ void BrowEdit::loadJsPlugins()
 	})->GetFunction());
 	camera->Set(v8::String::NewFromUtf8(isolate, "setAngle"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
-		static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera->angle = (float)args[0]->NumberValue();
+		auto camera = static_cast<BrowEdit*>(args.GetIsolate()->GetData(0))->camera;
+		auto modernCamera = dynamic_cast<ModernCamera*>(camera);
+		if(modernCamera)
+			modernCamera->angle = (float)args[0]->NumberValue();
 	})->GetFunction());
 	camera->Set(v8::String::NewFromUtf8(isolate, "setDirection"), v8::FunctionTemplate::New(isolate, [](const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
