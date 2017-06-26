@@ -724,7 +724,9 @@ void BrowEdit::update( double elapsedTime )
 				map->heightImportCubes.clear();
 			}
 		}
-		else if (editMode == EditMode::TextureEdit)
+		
+		
+		if (editMode == EditMode::TextureEdit)
 			textureEditUpdate();
 		else if (editMode == EditMode::ObjectEdit)
 			objectEditUpdate();
