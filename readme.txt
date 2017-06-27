@@ -16,7 +16,6 @@ Global Keys:
 
 Space			brings up the radial menu
 O			shows/hides objects
-S			shows/hides shadows
 G			shows/hides grids
 
 
@@ -55,6 +54,12 @@ Used to move scale objects. Drag to scale the object.
 
 Rotate (3)
 Used to move rotate objects. Drag to rotate the object. 
+
+Keys:
+G		grabs the object and moves in on the XZ plane
+R		rotates the object
+S		scales the object
+F		makes objects stick to the floor when grabbing
 
 
 

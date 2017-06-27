@@ -2,6 +2,7 @@
 #include "Camera.h"
 
 #include <blib/wm/WM.h>
+#include <blib/wm/ToggleMenuItem.h>
 #include <blib/util/Log.h>
 #include <blib/Math.h>
 
@@ -207,6 +208,13 @@ void BrowEdit::objectEditUpdate()
 								10 + 5 * map->getGnd()->height - mapRenderer.mouse3d.z)) - center;
 							o->position += diff;
 						}
+
+						if (objectTranslateDirection == TranslatorTool::Axis::XZ && objectModeSnapToFloor->getValue())
+						{
+							float height = map->getHeightAt((5 * map->getGnd()->width + o->position.x) / 10, (5 * map->getGnd()->height + o->position.y) / 10);
+							o->position.y = height;
+						}
+
 						if (objectRotateDirection != RotatorTool::Axis::NONE)
 						{
 							if (objectRotateDirection == RotatorTool::Axis::X)

@@ -17,6 +17,8 @@
 #include <blib/FBO.h>
 #include <blib/Shapes.h>
 #include <blib/util/Profiler.h>
+#include <blib/math/Plane.h>
+#include <blib/math/Ray.h>
 
 using blib::util::Log;
 
@@ -82,7 +84,13 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 
 	renderGnd(renderer);
 	renderer->unproject(mousePosition, &mouse3d, &mouseRay, cameraMatrix, projectionMatrix);
-
+	if (mouse3d.w >= 1)
+	{
+		float t = 0;
+		mouseRay.planeIntersection(blib::math::Plane(glm::vec3(0, 1, 0), 0), t);
+		glm::vec3 pos = mouseRay.origin + t * mouseRay.dir;
+		mouse3d = glm::vec4(pos, 0.5f);
+	}
 
 	if (drawTextureGrid)
 	{

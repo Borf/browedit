@@ -174,5 +174,19 @@ glm::vec4 Map::getHeightsAt(int x, int y)
 }
 
 
+float Map::getHeightAt(float x, float y)
+{
+	int ix = (int)x;
+	int iy = (int)y;
+
+	if (!inMap(ix, iy))
+		return 0;
+
+	//TODO: use barycentric coordinats
+	Gnd::Cube* c = gnd->cubes[ix][iy];
+	return (c->h1 + c->h2 + c->h3 + c->h4) / 4.0f;
+}
+
+
 template class blib::BackgroundTask<int>;
 

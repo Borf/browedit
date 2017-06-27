@@ -51,4 +51,5 @@ public:
 
 
 	glm::vec4 getHeightsAt(int x, int y);
+	float getHeightAt(float x, float y);
 };

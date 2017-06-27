@@ -1,4 +1,5 @@
 rmdir /q /s package
+del package
 mkdir package
 copy vs2015\release\browedit.exe package
 copy vs2015\release\BugTrap.dll package
