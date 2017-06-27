@@ -44,9 +44,16 @@ TranslatorTool::TranslatorTool()
 
 
 
-void TranslatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer)
+void TranslatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer, Axis draggingAxis)
 {
-	Axis collides = selectedAxis(mouseRay, center);
+	Axis collides = draggingAxis;
+	if(collides == Axis::NONE)
+		collides = selectedAxis(mouseRay, center);
+
+
+	float alpha = 0.25f;
+	if (draggingAxis != Axis::NONE)
+		alpha = 0.05f;
 
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));
 	highlightRenderState.activeTexture[0] = NULL;
@@ -63,7 +70,7 @@ void TranslatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& hi
 	sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
 	sheet[4] = blib::VertexP3(glm::vec3(0, 10, 0));
 	sheet[5] = blib::VertexP3(glm::vec3(-10, 10, 0));
-	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(1, 1, 0, collides == Axis::XY ? 1 : .25f));
+	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(1, 1, 0, collides == Axis::XY ? 1 : alpha));
 	renderer->drawTriangles(sheet, highlightRenderState);
 
 	sheet[0] = blib::VertexP3(glm::vec3(0, 0, 0));
@@ -72,7 +79,7 @@ void TranslatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& hi
 	sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
 	sheet[4] = blib::VertexP3(glm::vec3(0, 0, 10));
 	sheet[5] = blib::VertexP3(glm::vec3(-10, 0, 10));
-	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(1, 0, 1, collides == Axis::XZ ? 1 : .25f));
+	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(1, 0, 1, collides == Axis::XZ ? 1 : alpha));
 	renderer->drawTriangles(sheet, highlightRenderState);
 
 	sheet[0] = blib::VertexP3(glm::vec3(0, 0, 0));
@@ -81,7 +88,7 @@ void TranslatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& hi
 	sheet[3] = blib::VertexP3(glm::vec3(0, 0, 0));
 	sheet[4] = blib::VertexP3(glm::vec3(0, 0, 10));
 	sheet[5] = blib::VertexP3(glm::vec3(0, 10, 10));
-	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(0, 1, 1, collides == Axis::YZ ? 1 : .25f));
+	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(0, 1, 1, collides == Axis::YZ ? 1 : alpha));
 	renderer->drawTriangles(sheet, highlightRenderState);
 
 
@@ -92,21 +99,21 @@ void TranslatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& hi
 	glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(finalModelView)));
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::modelviewMatrix, finalModelView);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::normalMatrix, normalMatrix);
-	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(1, 0, 0, collides == Axis::X ? 1 : 0.25f));
+	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(1, 0, 0, collides == Axis::X ? 1 : alpha));
 	renderer->drawTriangles(arrow, highlightRenderState);
 
 	finalModelView = glm::rotate(cameraMat, glm::radians(0.0f), glm::vec3(1, 0, 0));
 	normalMatrix = glm::transpose(glm::inverse(glm::mat3(finalModelView)));
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::modelviewMatrix, finalModelView);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::normalMatrix, normalMatrix);
-	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(0, 1, 0, collides == Axis::Y ? 1 : 0.25f));
+	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(0, 1, 0, collides == Axis::Y ? 1 : alpha));
 	renderer->drawTriangles(arrow, highlightRenderState);
 
 	finalModelView = glm::rotate(cameraMat, glm::radians(90.0f), glm::vec3(1, 0, 0));
 	normalMatrix = glm::transpose(glm::inverse(glm::mat3(finalModelView)));
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::modelviewMatrix, finalModelView);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::normalMatrix, normalMatrix);
-	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(0, 0, 1, collides == Axis::Z ? 1 : 0.25f));
+	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::color, glm::vec4(0, 0, 1, collides == Axis::Z ? 1 : alpha));
 	renderer->drawTriangles(arrow, highlightRenderState);
 
 

@@ -64,6 +64,9 @@ BrowEdit::BrowEdit(const json &config, v8::Isolate* isolate) : mouseRay(glm::vec
 	else
 		this->translation = blib::util::FileSystem::getJson("assets/languages/english.json");
 
+	if (config.find("stupidolrox") != config.end())
+		stupidOlrox = config["stupidolrox"].get<bool>();
+
 	appSetup.window.setWidth((float)config["resolution"][0u].get<int>());
 	appSetup.window.setHeight((float)config["resolution"][1u].get<int>());
 	appSetup.vsync = false;
@@ -567,7 +570,7 @@ void BrowEdit::init()
 	rootMenu->setAction("editmode/gattype", std::bind(&BrowEdit::setEditMode, this, EditMode::GatTypeEdit));
 	rootMenu->setAction("editmode/Lightmap edit", std::bind(&BrowEdit::setEditMode, this, EditMode::LightmapEdit));
 	rootMenu->setAction("editmode/Color Edit", std::bind(&BrowEdit::setEditMode, this, EditMode::ColorEdit));
-
+	objectModeSnapToFloor = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("objecttools/snap height to floor"));
 
 	
 	rootMenu->setAction("objecttools/move", std::bind(&BrowEdit::setObjectEditMode, this, ObjectEditModeTool::Translate));
@@ -628,6 +631,8 @@ void BrowEdit::init()
 
 void BrowEdit::update( double elapsedTime )
 {
+	if (stupidOlrox)
+		std::swap(mouseState.rightButton, mouseState.middleButton);
 	if(keyState.isPressed(blib::Key::ESC))
 		running = false;
 	if (keyState.isPressed(blib::Key::ALT))
@@ -753,6 +758,8 @@ void BrowEdit::update( double elapsedTime )
 	lastmouse3d = mapRenderer.mouse3d;
 	lastKeyState = keyState;
 	lastMouseState = mouseState;
+	if (stupidOlrox)
+		std::swap(mouseState.rightButton, mouseState.middleButton);
 }
 
 void BrowEdit::draw()
@@ -905,7 +912,7 @@ void BrowEdit::draw()
 				center /= selectCount;
 
 				if (objectEditModeTool == ObjectEditModeTool::Translate)
-					translatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
+					translatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer, objectTranslateDirection);
 				else if (objectEditModeTool == ObjectEditModeTool::Rotate)
 					rotatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
 				else if (objectEditModeTool == ObjectEditModeTool::Scale)

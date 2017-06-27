@@ -94,22 +94,9 @@ void BrowEdit::objectEditUpdate()
 		}
 		else if (!mouseState.leftButton && lastMouseState.leftButton)
 		{//left up
-			if ((objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE || objectScaleDirection != ScaleTool::Axis::NONE) && 
-				objectEditActions[0]->isChanged())
+			if (objectTranslateDirection != TranslatorTool::Axis::NONE || objectRotateDirection != RotatorTool::Axis::NONE || objectScaleDirection != ScaleTool::Axis::NONE)
 			{
-				GroupAction* action = new GroupAction();
-				for (ObjectEditAction* a : objectEditActions)
-					action->add(a);
-				perform(action);
-				objectEditActions.clear();
-				if (selectObjectAction)
-				{
-					delete selectObjectAction;
-					selectObjectAction = nullptr;
-				}
-				objectTranslateDirection = TranslatorTool::Axis::NONE;
-				objectRotateDirection = RotatorTool::Axis::NONE;
-				objectScaleDirection = ScaleTool::Axis::NONE;
+				finishObjectTransformAction();
 			}
 			else if (abs(startMouseState.position.x - lastMouseState.position.x) < 2 && abs(startMouseState.position.y - lastMouseState.position.y) < 2)
 			{ //click
@@ -284,11 +271,7 @@ void BrowEdit::objectEditUpdate()
 
 		if (!mouseState.rightButton && lastMouseState.rightButton && !mouseState.leftButton)
 		{
-			objectTranslateDirection = TranslatorTool::Axis::NONE;
-			objectRotateDirection = RotatorTool::Axis::NONE;
-			objectScaleDirection = ScaleTool::Axis::NONE;
-			for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
-				map->getRsw()->objects[i]->selected = false;
+			cancelObjectTransformAction();
 		}
 	}
 
@@ -300,47 +283,126 @@ void BrowEdit::objectEditUpdate()
 	{
 		if (keyState.isPressed(blib::Key::DEL) && !lastKeyState.isPressed(blib::Key::DEL))
 		{
-			for (int i = 0; i < (int)map->getRsw()->objects.size(); i++)
-			{
-				if (map->getRsw()->objects[i]->selected)
-				{
-					map->getRsw()->objects.erase(map->getRsw()->objects.begin() + i);
-					i--;
-
-					objectWindow->updateObjects(map);
-				}
-			}
+			deleteSelectedObjects();
 		}
 		if (keyState.isPressed(blib::Key::D) && !lastKeyState.isPressed(blib::Key::D))
 		{
-			int count = map->getRsw()->objects.size(); // array grows, so save it
-			for (int i = 0; i < count; i++)
-			{
-				if (map->getRsw()->objects[i]->selected)
-				{
-					if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
-					{
-						addModel(((Rsw::Model*)map->getRsw()->objects[i])->fileName);
-
-						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->position = map->getRsw()->objects[i]->position + glm::vec3(10,0,10);
-						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->rotation = map->getRsw()->objects[i]->rotation;
-						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->scale = map->getRsw()->objects[i]->scale;
-
-						map->getRsw()->objects[i]->selected = false;
-						map->getRsw()->objects[map->getRsw()->objects.size() - 1]->selected = true;
-					}
-				}
-			}
-			newModel = NULL;
-			objectWindow->updateObjects(map);
+			duplicateSelectedObjects();
 		}
 
 		if (keyState.isPressed(blib::Key::G) && !lastKeyState.isPressed(blib::Key::G))
 		{
-			objectTranslateDirection = TranslatorTool::Axis::XZ;
-			for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
-				if (map->getRsw()->objects[i]->selected)
-					objectEditActions.push_back(new ObjectEditAction(map->getRsw()->objects[i], i));
+			if (objectEditModeTool != ObjectEditModeTool::Translate || objectTranslateDirection == TranslatorTool::Axis::NONE)
+			{
+				finishObjectTransformAction();
+				setObjectEditMode(ObjectEditModeTool::Translate);
+				objectTranslateDirection = TranslatorTool::Axis::XZ;
+				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					if (map->getRsw()->objects[i]->selected)
+						objectEditActions.push_back(new ObjectEditAction(map->getRsw()->objects[i], i));
+			}
+		}
+		else if (keyState.isPressed(blib::Key::S) && !lastKeyState.isPressed(blib::Key::S))
+		{
+			if (objectEditModeTool != ObjectEditModeTool::Scale || objectScaleDirection == ScaleTool::Axis::NONE)
+			{
+				finishObjectTransformAction();
+				setObjectEditMode(ObjectEditModeTool::Scale);
+				objectScaleDirection = ScaleTool::Axis::ALL;
+				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					if (map->getRsw()->objects[i]->selected)
+						objectEditActions.push_back(new ObjectEditAction(map->getRsw()->objects[i], i));
+			}
+		}
+		else if (keyState.isPressed(blib::Key::R) && !lastKeyState.isPressed(blib::Key::R))
+		{
+			if (objectEditModeTool != ObjectEditModeTool::Rotate || objectRotateDirection == RotatorTool::Axis::NONE)
+			{
+				finishObjectTransformAction();
+				setObjectEditMode(ObjectEditModeTool::Rotate);
+				objectRotateDirection = RotatorTool::Axis::Y;
+				for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+					if (map->getRsw()->objects[i]->selected)
+						objectEditActions.push_back(new ObjectEditAction(map->getRsw()->objects[i], i));
+			}
+		}
+
+	}
+}
+
+
+void BrowEdit::deleteSelectedObjects()
+{
+	for (int i = 0; i < (int)map->getRsw()->objects.size(); i++)
+	{
+		if (map->getRsw()->objects[i]->selected)
+		{
+			map->getRsw()->objects.erase(map->getRsw()->objects.begin() + i);
+			i--;
+
+			objectWindow->updateObjects(map);
 		}
 	}
+}
+
+
+void BrowEdit::duplicateSelectedObjects()
+{
+	int count = map->getRsw()->objects.size(); // array grows, so save it
+	for (int i = 0; i < count; i++)
+	{
+		if (map->getRsw()->objects[i]->selected)
+		{
+			if (map->getRsw()->objects[i]->type == Rsw::Object::Type::Model)
+			{
+				addModel(((Rsw::Model*)map->getRsw()->objects[i])->fileName);
+
+				map->getRsw()->objects[map->getRsw()->objects.size() - 1]->position = map->getRsw()->objects[i]->position + glm::vec3(10, 0, 10);
+				map->getRsw()->objects[map->getRsw()->objects.size() - 1]->rotation = map->getRsw()->objects[i]->rotation;
+				map->getRsw()->objects[map->getRsw()->objects.size() - 1]->scale = map->getRsw()->objects[i]->scale;
+
+				map->getRsw()->objects[i]->selected = false;
+				map->getRsw()->objects[map->getRsw()->objects.size() - 1]->selected = true;
+			}
+		}
+	}
+	newModel = NULL;
+	objectWindow->updateObjects(map);
+}
+
+
+
+void BrowEdit::finishObjectTransformAction()
+{
+	if (!objectEditActions.empty() && objectEditActions[0]->isChanged())
+	{
+		GroupAction* action = new GroupAction();
+		for (ObjectEditAction* a : objectEditActions)
+			action->add(a);
+		perform(action);
+		objectEditActions.clear();
+	}
+	if (selectObjectAction)
+	{
+		if(std::find(actions.begin(), actions.end(), selectObjectAction) == actions.end() &&
+			std::find(undone.begin(), undone.end(), selectObjectAction) == undone.end())
+			delete selectObjectAction;
+		selectObjectAction = nullptr;
+	}
+
+	objectTranslateDirection = TranslatorTool::Axis::NONE;
+	objectRotateDirection = RotatorTool::Axis::NONE;
+	objectScaleDirection = ScaleTool::Axis::NONE;
+}
+
+
+
+
+void BrowEdit::cancelObjectTransformAction()
+{
+	objectTranslateDirection = TranslatorTool::Axis::NONE;
+	objectRotateDirection = RotatorTool::Axis::NONE;
+	objectScaleDirection = ScaleTool::Axis::NONE;
+	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
+		map->getRsw()->objects[i]->selected = false;
 }

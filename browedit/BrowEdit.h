@@ -12,7 +12,7 @@
 
 namespace blib { 
 	class Texture; 
-	namespace wm { class WM; class Menu; }
+	namespace wm { class WM; class Menu; class ToggleMenuItem; }
 }
 
 class Map;
@@ -55,6 +55,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 		ColorEdit,
 	};
 
+	bool stupidOlrox = false;
 	EditMode editMode;
 
 	json config;
@@ -118,7 +119,7 @@ public:
 	bool textureFlipV;
 	inline const json &getConfig() { return config; }
 
-
+	//object edit
 	TranslatorTool translatorTool;
 	TranslatorTool::Axis objectTranslateDirection;
 
@@ -132,7 +133,11 @@ public:
 	SelectObjectAction* selectObjectAction;
 
 	std::vector<glm::ivec2> selectLasso;
+	
+	blib::wm::ToggleMenuItem* objectModeSnapToFloor;
 
+
+	//gat
 	int activeGatTile = 0;
 	int newTextureSize = 4;
 
@@ -176,6 +181,11 @@ public:
 	void gatEditUpdate();
 	void detailGatEditUpdate();
 	void gatTypeEditUpdate();
+
+	void finishObjectTransformAction(); // object edit
+	void cancelObjectTransformAction(); // object edit
+	void deleteSelectedObjects(); //object edit
+	void duplicateSelectedObjects(); //object edit
 
 	void setLightmap(float x, float y, int color, float blend);
 

@@ -15,5 +15,6 @@
 	"threadedrendering" : true,
 	"backgroundworkers" : true,
 	"fov" : 45.0,
-	"vsync" : false
+	"vsync" : false,
+	"stupidolrox" : false
 }

@@ -68,8 +68,7 @@
 			{
 				"name" : "shadows",
 				"type" : "toggle",
-				"initial" : true,
-				"key" : "s"
+				"initial" : true
 			},
 			{
 				"name" : "grid",
@@ -186,6 +185,12 @@
 				"type" : "toggle",
 				"initial" : false,
 				"key" : "3"
+			},
+			{
+				"name" : "snap height to floor",
+				"type" : "toggle",
+				"initial" : true,
+				"key" : "f"
 			}
 
 		]

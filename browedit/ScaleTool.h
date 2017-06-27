@@ -20,6 +20,9 @@ public:
 		X = 1,
 		Y = 2,
 		Z = 4,
+		XY = X | Y,
+		XZ = X | Z,
+		YZ = Y | Z,
 		ALL = X|Y|Z,
 	};
 
