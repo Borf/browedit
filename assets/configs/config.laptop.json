@@ -1,10 +1,10 @@
 {
 	"data" :
 	{
-		"ropath" : "C:/vrcave/Runtime/data/RO",
+		"ropath" : "RO",
 		"grfs" :
 		[
-			"C:/vrcave/Runtime/data/RO/data.grf"
+			"RO/data.grf"
 		]
 	},
 	"defaultmap" : "prontera",
