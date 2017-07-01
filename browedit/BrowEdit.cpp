@@ -339,6 +339,16 @@ void BrowEdit::init()
 	});
 
 
+	rootMenu->setAction("file/export obj", [this]() {
+		MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+		new blib::BackgroundTask<bool>(this, [this]()
+		{
+			if (map)
+				map->exportObj(config["data"]["ropath"].get<std::string>() + "/" + map->getFileName() + ".obj");
+			return true;
+		}, [dialog](bool bla) {	dialog->close();	});
+	});
+
 	rootMenu->setAction("Actions/Lightmaps/Calculate Lightmaps", [this]()
 	{
 		if (!map)

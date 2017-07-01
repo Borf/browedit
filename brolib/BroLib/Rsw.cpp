@@ -806,6 +806,33 @@ bool Rsw::Model::collidesTexture(const blib::math::Ray &ray)
 	return true;
 }
 
+void Rsw::Model::getWorldVerts(std::vector<int>& indices, std::vector<glm::vec3>& vertices)
+{
+	std::function<void(Rsm::Mesh*, glm::mat4 matrix)> gatherVerts;
+	gatherVerts = [&indices, &vertices, this, &gatherVerts](Rsm::Mesh* mesh, glm::mat4 matrix)
+	{
+		std::vector<glm::vec3> ret;
+
+		glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
+
+		for (size_t i = 0; i < mesh->faces.size(); i++)
+		{
+			for (size_t ii = 0; ii < 3; ii++)
+			{
+				indices.push_back(vertices.size());
+				vertices.push_back(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+			}
+		}
+
+		for (size_t i = 0; i < mesh->children.size(); i++)
+		{
+			gatherVerts(mesh->children[i], matrix);
+		}
+
+	};
+	gatherVerts(model->rootMesh, matrixCache);
+}
+
 
 
 std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray)

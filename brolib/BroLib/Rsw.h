@@ -61,6 +61,8 @@ public:
 		void foreachface(std::function<void(const std::vector<glm::vec3>&)> callback);
 		bool collidesTexture(const blib::math::Ray &ray);
 
+		void getWorldVerts(std::vector<int> &indices, std::vector<glm::vec3> &vertices);
+
 		Model() : Object(Object::Type::Model)
 		{
 			model = NULL;

@@ -27,6 +27,10 @@
 			{
 				"name" : "load heightmap",
 				"type" : "item"
+			},
+			{
+				"name" : "export obj",
+				"type" : "item"
 			}
 		]
 	},

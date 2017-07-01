@@ -43,7 +43,7 @@ public:
 	bool inMap(int xx, int yy);
 	void saveHeightmap(const std::string &fileName);
 	void loadHeightmap(const std::string &fileName);
-
+	void exportObj(const std::string &fileName);
 
 	float heightImportMin;
 	float heightImportMax;
