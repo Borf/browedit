@@ -334,6 +334,33 @@ void BrowEdit::objectEditUpdate()
 						objectEditActions.push_back(new ObjectEditAction(map->getRsw()->objects[i], i));
 			}
 		}
+		else if (keyState.isPressed(blib::Key::X) && !lastKeyState.isPressed(blib::Key::X))
+		{
+			if (objectEditModeTool == ObjectEditModeTool::Translate)
+				objectTranslateDirection = keyState.isPressed(blib::Key::SHIFT) ? TranslatorTool::Axis::YZ : TranslatorTool::Axis::X;
+			else if (objectEditModeTool == ObjectEditModeTool::Rotate)
+				objectRotateDirection = RotatorTool::Axis::X;
+			else if (objectEditModeTool == ObjectEditModeTool::Scale)
+				objectScaleDirection = keyState.isPressed(blib::Key::SHIFT) ? ScaleTool::Axis::YZ : ScaleTool::Axis::X;
+		}
+		else if (keyState.isPressed(blib::Key::Y) && !lastKeyState.isPressed(blib::Key::Y))
+		{
+			if (objectEditModeTool == ObjectEditModeTool::Translate)
+				objectTranslateDirection = keyState.isPressed(blib::Key::SHIFT) ? TranslatorTool::Axis::XZ : TranslatorTool::Axis::Y;
+			else if (objectEditModeTool == ObjectEditModeTool::Rotate)
+				objectRotateDirection = RotatorTool::Axis::Y;
+			else if (objectEditModeTool == ObjectEditModeTool::Scale)
+				objectScaleDirection = keyState.isPressed(blib::Key::SHIFT) ? ScaleTool::Axis::XZ : ScaleTool::Axis::Y;
+		}
+		else if (keyState.isPressed(blib::Key::Z) && !lastKeyState.isPressed(blib::Key::Z))
+		{
+			if (objectEditModeTool == ObjectEditModeTool::Translate)
+				objectTranslateDirection = keyState.isPressed(blib::Key::SHIFT) ? TranslatorTool::Axis::XY : TranslatorTool::Axis::Z;
+			else if (objectEditModeTool == ObjectEditModeTool::Rotate)
+				objectRotateDirection = RotatorTool::Axis::Z;
+			else if (objectEditModeTool == ObjectEditModeTool::Scale)
+				objectScaleDirection = keyState.isPressed(blib::Key::SHIFT) ? ScaleTool::Axis::XY : ScaleTool::Axis::Z;
+		}
 
 	}
 }
