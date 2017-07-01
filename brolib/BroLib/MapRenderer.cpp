@@ -480,6 +480,11 @@ void MapRenderer::setMap(const Map* map)
 		gndChunks.clear();
 	}
 
+
+
+	if (!map)
+		return;
+
 	gndChunks.resize((int)ceil(map->getGnd()->height / (float)CHUNKSIZE), std::vector<GndChunk*>((int)ceil(map->getGnd()->width / (float)CHUNKSIZE), NULL));
 	for(size_t y = 0; y < gndChunks.size(); y++)
 		for(size_t x = 0; x < gndChunks[y].size(); x++)
@@ -1074,3 +1079,10 @@ void MapRenderer::setShadowDirty()
 template class blib::BackgroundTask<char*>;
 
 #pragma endregion
+
+RsmModelRenderInfo::~RsmModelRenderInfo()
+{
+	for (auto t : textures)
+		blib::ResourceManager::getInstance().dispose(t);
+	textures.clear();
+}

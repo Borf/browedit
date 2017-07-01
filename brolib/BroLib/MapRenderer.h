@@ -45,6 +45,7 @@ public:
 class RsmModelRenderInfo
 {
 public:
+	~RsmModelRenderInfo();
 	std::vector<blib::Texture*> textures;
 };
 

@@ -200,6 +200,8 @@ void ObjectWindow::updateObjects(Map* map)
 	blib::linq::deleteall(lightsNode->children);
 	blib::linq::deleteall(soundsNode->children);
 
+	if (!map)
+		return;
 
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{

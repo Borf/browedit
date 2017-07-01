@@ -1519,10 +1519,15 @@ void BrowEdit::loadMap(std::string fileName, bool threaded)
 	if (map)
 	{
 		Map* m = map;
-		this->runLater<bool>([m](bool b) { 
-		//	delete m; TODO: fix this properly
+		map = nullptr;
+		mapRenderer.setMap(nullptr);
+		textureWindow->updateTextures(nullptr); //TODO: textures aren't loaded here yet!
+		objectWindow->updateObjects(nullptr);
+
+
+		this->runLater<bool>([m](bool b) {
+		delete m; //TODO: fix this properly
 		}, true);
-		map = NULL;
 	}
 	if (threaded)
 		new blib::BackgroundTask<Map*>(this, 	[fileName] () { return new Map(fileName); }, 

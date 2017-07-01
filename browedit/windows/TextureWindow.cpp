@@ -136,6 +136,8 @@ void TextureWindow::updateTextures(Map* map)
 {
 	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstTextures");
 	panel->clear();
+	if (!map)
+		return;
 	for (size_t i = 0; i < map->getGnd()->textures.size(); i++)
 	{
 		SelectableImage* img = new SelectableImage(map->getGnd()->textures[i]->texture, i, this);
