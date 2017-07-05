@@ -252,6 +252,10 @@
 					}
 				]
 
+			},
+			{
+				"name" : "Scale Down",
+				"type" : "item"
 			}
 			
 		]

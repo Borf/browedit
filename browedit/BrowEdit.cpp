@@ -560,6 +560,87 @@ void BrowEdit::init()
 	});
 
 
+	rootMenu->setAction("Actions/Scale Down", [this]()
+	{
+		Map* newMap = new Map("", map->getGnd()->width / 2, map->getGnd()->height / 2);
+		newMap->getRsw()->water = map->getRsw()->water;
+
+		for (auto l : map->getGnd()->lightmaps)
+			newMap->getGnd()->lightmaps.push_back(new Gnd::Lightmap(*l));
+
+		for (auto t : map->getGnd()->textures)
+		{
+			auto newTexture = new Gnd::Texture();
+			newTexture->file = t->file;
+			newTexture->name = t->name;
+			newTexture->texture = nullptr;
+			newMap->getGnd()->textures.push_back(newTexture);
+		}
+
+		for (int x = 0; x < newMap->getGnd()->width; x++)
+		{
+			for (int y = 0; y < newMap->getGnd()->height; y++)
+			{
+				if (map->getGnd()->cubes[x*2][y*2]->tileUp != -1)
+				{
+					Gnd::Tile* oldTile = map->getGnd()->tiles[map->getGnd()->cubes[x * 2][y * 2]->tileUp];
+					Gnd::Tile* t = new Gnd::Tile();
+					t->textureIndex = oldTile->textureIndex;
+					t->lightmapIndex = oldTile->lightmapIndex;
+					t->color = oldTile->color;
+
+					t->v1 = oldTile->v1;
+					t->v2 = map->getGnd()->tiles[map->getGnd()->cubes[x * 2+1][y * 2]->tileUp]->v2;
+					t->v3 = map->getGnd()->tiles[map->getGnd()->cubes[x * 2][y * 2+1]->tileUp]->v3;
+					t->v4 = map->getGnd()->tiles[map->getGnd()->cubes[x * 2+1][y * 2+1]->tileUp]->v4;
+
+					newMap->getGnd()->tiles.push_back(t);
+
+					newMap->getGnd()->cubes[x][y]->tileUp = newMap->getGnd()->tiles.size() - 1;
+					newMap->getGnd()->cubes[x][y]->h1 = map->getGnd()->cubes[x * 2][y * 2]->h1;
+					newMap->getGnd()->cubes[x][y]->h2 = map->getGnd()->cubes[x * 2+1][y * 2]->h2;
+					newMap->getGnd()->cubes[x][y]->h3 = map->getGnd()->cubes[x * 2][y * 2+1]->h3;
+					newMap->getGnd()->cubes[x][y]->h4 = map->getGnd()->cubes[x * 2+1][y * 2+1]->h4;
+				}
+
+			}
+		}
+
+
+		for (auto o : map->getRsw()->objects)
+		{
+			
+			if (o->type == Rsw::Object::Type::Model)
+			{
+				Rsw::Model* oldModel = dynamic_cast<Rsw::Model*>(o);
+
+				Rsw::Model* model = new Rsw::Model();
+				model->matrixCached = false;
+				if (version >= 0x103)
+				{
+					model->name = oldModel->name;
+					model->animType = oldModel->animType;
+					model->animSpeed = oldModel->animSpeed;
+					model->blockType = oldModel->blockType;
+				}
+				model->fileName = oldModel->fileName;
+				model->position = oldModel->position / 2.0f;
+				model->rotation = oldModel->rotation;
+				model->scale = oldModel->scale / 2.0f;
+				model->model = newMap->getRsw()->getRsm(model->fileName);
+				newMap->getRsw()->objects.push_back(model);
+			}
+
+		}
+
+
+		this->map = newMap;
+
+		mapRenderer.setMap(newMap);
+		textureWindow->updateTextures(newMap); //TODO: textures aren't loaded here yet!
+		objectWindow->updateObjects(newMap);
+	});
+
 
 
 
