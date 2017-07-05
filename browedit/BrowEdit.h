@@ -215,5 +215,16 @@ public:
 	void loadMap(std::string fileName, bool threaded = true);
 	void saveMap(std::string fileName);
 
+	void menuFileSave();
+	void menuFileSaveAs();
+	void menuFileSaveHeightmap();
+	void menuFileLoadHeightmap();
+	void menuFileExportObj();
+
+	void menuActionsLightmapCalculate();
+	void menuActionsLightmapSmooth();
+	void menuActionsLightmapUnique();
+
+	void menuActionsScaleDown();
 };
 
