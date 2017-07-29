@@ -39,6 +39,42 @@ ColorWindow::ColorWindow(blib::ResourceManager* resourceManager, BrowEdit* browE
 		return true;
 	});
 
+	rgb->addChangeHandler([=]()
+	{
+		this->color = blib::util::hex2rgb(rgb->text);
+		glm::vec3 hsv = blib::util::rgb2hsv(this->color);
+		hue->text = std::to_string(hsv[0]);
+		sat->text = std::to_string(hsv[1]);
+		val->text = std::to_string(hsv[2]);
+	});
+	hue->addChangeHandler([=]()
+	{
+		glm::vec3 hsv = blib::util::rgb2hsv(this->color);
+		hsv[0] = atof(hue->text.c_str());
+		this->color = blib::util::hsv2rgb(hsv);
+		sat->text = std::to_string(hsv[1]);
+		val->text = std::to_string(hsv[2]);
+		rgb->text = blib::util::rgb2hex(color);
+	});
+	sat->addChangeHandler([=]()
+	{
+		glm::vec3 hsv = blib::util::rgb2hsv(this->color);
+		hsv[1] = atof(sat->text.c_str());
+		this->color = blib::util::hsv2rgb(hsv);
+		hue->text = std::to_string(hsv[0]);
+		val->text = std::to_string(hsv[2]);
+		rgb->text = blib::util::rgb2hex(color);
+	});
+	val->addChangeHandler([=]()
+	{
+		glm::vec3 hsv = blib::util::rgb2hsv(this->color);
+		hsv[2] = atof(val->text.c_str());
+		this->color = blib::util::hsv2rgb(hsv);
+		hue->text = std::to_string(hsv[0]);
+		sat->text = std::to_string(hsv[1]);
+		rgb->text = blib::util::rgb2hex(color);
+	});
+
 
 }
 
