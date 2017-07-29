@@ -19,6 +19,7 @@ class Map;
 class Camera;
 class TextureWindow;
 class ObjectWindow;
+class ColorWindow;
 
 class Action;
 class ObjectEditAction;
@@ -87,6 +88,7 @@ class BrowEdit : public blib::App, public blib::MouseListener
 public:
 	TextureWindow* textureWindow;
 	ObjectWindow* objectWindow;
+	ColorWindow* colorWindow;
 
 
 	BrowEdit(const json &config, v8::Isolate* isolate);
@@ -181,6 +183,7 @@ public:
 	void gatEditUpdate();
 	void detailGatEditUpdate();
 	void gatTypeEditUpdate();
+	void colorEditUpdate();
 
 	void finishObjectTransformAction(); // object edit
 	void cancelObjectTransformAction(); // object edit

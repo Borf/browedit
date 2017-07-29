@@ -988,7 +988,11 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::scale(glm::rotate(glm::mat4(), glm::radians(rotation), glm::vec3(0, 1, 0)), glm::vec3(1, 1, 1)));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
-
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightAmbient, glm::vec3(0.7f, 0.7f, 0.7f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDiffuse, glm::vec3(0.7f, 0.7f, 0.7f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightIntensity, 1.0f);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec3(0, 0, 0));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDirection, glm::vec3(0, 1, 1));
 
 	rswRenderState.activeVbo = NULL;
 	rswRenderState.activeFbo = fbo;

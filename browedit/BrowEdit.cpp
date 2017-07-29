@@ -3,6 +3,7 @@
 #include "windows/FileOpenWindow.h"
 #include "windows/TextureWindow.h"
 #include "windows/ObjectWindow.h"
+#include "windows/ColorWindow.h"
 #include "windows/ModelPropertiesWindow.h"
 #include "windows/MessageWindow.h"
 #include "windows/HelpWindow.h"
@@ -151,6 +152,7 @@ BrowEdit::~BrowEdit(void)
 	
 	delete textureWindow;
 	delete objectWindow;
+	delete colorWindow;
 	delete camera;
 
 	delete wm;
@@ -233,6 +235,10 @@ void BrowEdit::init()
 	objectWindow = new ObjectWindow(resourceManager, this);
 	objectWindow->setPosition(window->getWidth() - objectWindow->getWidth(), 10);
 	objectWindow->hide();
+
+	colorWindow = new ColorWindow(resourceManager, this);
+	colorWindow->setPosition(window->getWidth() - objectWindow->getWidth(), 10);
+	colorWindow->hide();
 
 	loadJsPlugins();
 
@@ -1154,6 +1160,8 @@ void BrowEdit::draw()
 			editModeString = "Wall Edit";
 		else if (editMode == EditMode::LightmapEdit)
 			editModeString = "Lightmap editor, brightness " + std::to_string(shadowMapColor) + ", brush: " + shadowMapBrushes[shadowMapBrush].filename;
+		else if (editMode == EditMode::ColorEdit)
+			editModeString = "Color Edit";
 		else
 			editModeString = "Unknown editmode: " + blib::util::toString((int)editMode);
 
@@ -1243,11 +1251,7 @@ void BrowEdit::setEditMode(EditMode newMode)
 
 	textureWindow->setVisible(editMode == EditMode::TextureEdit || editMode == EditMode::WallEdit);
 	objectWindow->setVisible(editMode == EditMode::ObjectEdit);
-
-
-
-
-
+	colorWindow->setVisible(editMode == EditMode::ColorEdit);
 }
 
 void BrowEdit::setObjectEditMode(ObjectEditModeTool newMode)

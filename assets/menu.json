@@ -155,8 +155,7 @@
 				"type" : "toggle",
 				"initial" : false,
 				"key" : "f9"
-			}
-,
+			},
 			{
 				"name" : "Color Edit",
 				"type" : "toggle",

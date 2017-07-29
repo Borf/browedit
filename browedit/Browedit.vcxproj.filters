@@ -34,6 +34,15 @@
     <Filter Include="actions">
       <UniqueIdentifier>{2b3abe1c-7279-4242-a10d-488252d85259}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\menu">
+      <UniqueIdentifier>{75bff94f-7420-454b-94b7-c7c0a6e83a21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\editmodes">
+      <UniqueIdentifier>{df38a879-dc9d-4fcd-b896-59ba501cc86a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\tools">
+      <UniqueIdentifier>{f9827fb8-154e-48ff-8aed-6fd09790f4e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowEdit.h">
@@ -99,6 +108,9 @@
     <ClInclude Include="windows\LightPropertiesWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\ColorWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -128,15 +140,6 @@
     <ClCompile Include="actions\GroupAction.cpp">
       <Filter>actions</Filter>
     </ClCompile>
-    <ClCompile Include="TranslatorTool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RotateTool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ScaleTool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="actions\ObjectEditAction.cpp">
       <Filter>actions</Filter>
     </ClCompile>
@@ -146,22 +149,7 @@
     <ClCompile Include="windows\MessageWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
-    <ClCompile Include="TextureEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HeightEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DetailHeightEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BrowEditJsApi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WallEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="windows\HelpWindow.cpp">
@@ -170,18 +158,6 @@
     <ClCompile Include="windows\NewMapWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
-    <ClCompile Include="GatEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DetailGatEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GatTypeEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="windows\MapSettingsWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
@@ -189,6 +165,51 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="windows\LightPropertiesWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu_Actions.cpp">
+      <Filter>Source Files\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu_File.cpp">
+      <Filter>Source Files\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="DetailGatEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="DetailHeightEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GatEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GatTypeEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateTool.cpp">
+      <Filter>Source Files\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ScaleTool.cpp">
+      <Filter>Source Files\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="TranslatorTool.cpp">
+      <Filter>Source Files\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="WallEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\ColorWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>

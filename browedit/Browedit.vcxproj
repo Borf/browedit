@@ -108,6 +108,7 @@
     <ClInclude Include="RotateTool.h" />
     <ClInclude Include="ScaleTool.h" />
     <ClInclude Include="TranslatorTool.h" />
+    <ClInclude Include="windows\ColorWindow.h" />
     <ClInclude Include="windows\EffectPropertiesWindow.h" />
     <ClInclude Include="windows\FileOpenWindow.h" />
     <ClInclude Include="windows\HelpWindow.h" />
@@ -134,12 +135,15 @@
     <ClCompile Include="GatTypeEdit.cpp" />
     <ClCompile Include="HeightEdit.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu_Actions.cpp" />
+    <ClCompile Include="Menu_File.cpp" />
     <ClCompile Include="ObjectEdit.cpp" />
     <ClCompile Include="RotateTool.cpp" />
     <ClCompile Include="ScaleTool.cpp" />
     <ClCompile Include="TextureEdit.cpp" />
     <ClCompile Include="TranslatorTool.cpp" />
     <ClCompile Include="WallEdit.cpp" />
+    <ClCompile Include="windows\ColorWindow.cpp" />
     <ClCompile Include="windows\EffectPropertiesWindow.cpp" />
     <ClCompile Include="windows\FileOpenWindow.cpp" />
     <ClCompile Include="windows\HelpWindow.cpp" />
