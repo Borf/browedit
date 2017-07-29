@@ -1,54 +1,127 @@
 {
-	"size" : [ 212, 600 ],
+	"size" : [ 260, 360 ],
 	"modal" : false,
 	"resizable" : true,
 	"widgets" :
 	{
-		"lstObjects" :
+		"lblRgb" :
 		{
-			"type" : "tree",
+			"type" : "label",
+			"text" : "RGB",
 			"position" : [ 0, 0 ],
-			"size" : [ 212, 575 ],
+			"size" : [ 185, 20 ],
 			"positionhelp" :
 			{
 				"left" : "left",
-				"right" : "left",
+				"right" : "right",
 				"top" : "top",
 				"bottom" : "bottom"
 			}
 		},
-		"btnExpand" :
+		"rgb" :
 		{
-			"type" : "button",
-			"text" : ">",
-			"position" : [ 150, 575],
-			"size" : [ 50, 25 ],
+			"type" : "textbox",
+			"text" : "",
+			"position" : [ 75, 0 ],
+			"size" : [ 180, 20 ],
 			"positionhelp" :
 			{
 				"left" : "left",
-				"right" : "left",
-				"top" : "bottom",
-				"bottom" : "bottom"
-			}
-		},
-		"lstFolders" :
-		{
-			"type" : "tree",
-			"position" : [ 212, 0 ],
-			"size" : [ 200, 575 ],
-			"positionhelp" :
-			{
-				"left" : "left",
-				"right" : "left",
+				"right" : "right",
 				"top" : "top",
 				"bottom" : "bottom"
 			}
 		},
-		"lstAllTextures" :
+		"lblHue" :
 		{
-			"type" : "scrollpanel",
-			"position" : [ 412, 0 ],
-			"size" : [ -200, 575 ],
+			"type" : "label",
+			"text" : "Hue",
+			"position" : [ 0, 20 ],
+			"size" : [ 212, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"hue" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [ 75, 20 ],
+			"size" : [ 180, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"lblSat" :
+		{
+			"type" : "label",
+			"text" : "Saturation",
+			"position" : [ 0, 40 ],
+			"size" : [ 212, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"saturation" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [ 75, 40 ],
+			"size" : [ 180, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"lblValue" :
+		{
+			"type" : "label",
+			"text" : "Value",
+			"position" : [ 0, 60 ],
+			"size" : [ 212, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"value" :
+		{
+			"type" : "textbox",
+			"text" : "",
+			"position" : [ 75, 60 ],
+			"size" : [ 180, 20 ],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "bottom"
+			}
+		},
+		"hueslider" :
+		{
+			"type" : "image",
+			"src" : "assets/textures/hue.png",
+			"position" : [ 0, 80 ],
+			"size" : [ 256, 256 ],
 			"positionhelp" :
 			{
 				"left" : "left",

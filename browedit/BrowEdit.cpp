@@ -237,7 +237,7 @@ void BrowEdit::init()
 	objectWindow->hide();
 
 	colorWindow = new ColorWindow(resourceManager, this);
-	colorWindow->setPosition(window->getWidth() - objectWindow->getWidth(), 10);
+	colorWindow->setPosition(window->getWidth() - colorWindow->getWidth(), 10);
 	colorWindow->hide();
 
 	loadJsPlugins();
