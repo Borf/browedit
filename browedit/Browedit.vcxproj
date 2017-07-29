@@ -134,6 +134,7 @@
     <ClCompile Include="GatEdit.cpp" />
     <ClCompile Include="GatTypeEdit.cpp" />
     <ClCompile Include="HeightEdit.cpp" />
+    <ClCompile Include="LightmapEdit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu_Actions.cpp" />
     <ClCompile Include="Menu_File.cpp" />

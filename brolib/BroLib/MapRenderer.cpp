@@ -568,8 +568,8 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 	if (gndTileColorDirty)
 	{
 
-		new blib::BackgroundTask<char*>(app,
-			[this, renderer] {
+		/*new blib::BackgroundTask<char*>(app,
+			[this, renderer] {*/
 			char* data = new char[1024 * 1024 * 4];
 			for (int x = 0; x < map->getGnd()->width; x++)
 			{
@@ -585,12 +585,13 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 					}
 				}
 			}
-			return data;
-		}, [renderer, this](char* data)
-		{
+	//		return data;
+	//	}, [renderer, this](char* data)
+	//	{
 			renderer->setTextureSubImage(gndTileColors, 0, 0, 1024, 1024, data);
+			delete[] data;
 
-		});
+	//	});
 
 		gndTileColorDirty = false;
 	}

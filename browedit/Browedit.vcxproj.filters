@@ -212,6 +212,9 @@
     <ClCompile Include="windows\ColorWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="LightmapEdit.cpp">
+      <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\menu.json">

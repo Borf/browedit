@@ -197,6 +197,7 @@ public:
 	void setTileDirty(int xx, int yy);
 	void setAllDirty();
 	void setShadowDirty();
+	void setColorDirty() { gndTileColorDirty = true; }
 	void renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
 	bool gndTextureGridDirty;
 	bool gndGridDirty;
