@@ -32,6 +32,8 @@ using blib::util::Log;
 
 
 
+
+
 ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Objects", "ObjectWindow.json", resourceManager)
 {
 	this->browEdit = browEdit;
@@ -108,10 +110,68 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	});
 
 
+	blib::wm::widgets::TreeView* tree = getComponent<blib::wm::widgets::TreeView>("lstFolders");
+	tree->root = new blib::wm::widgets::TreeView::TreeNode();
+	newModelsNode = new blib::wm::widgets::TreeView::TreeNode("models", tree->root);
+	newLightsNode = new blib::wm::widgets::TreeView::TreeNode("lights", tree->root);
+	loadModelList();
+	lights = blib::util::FileSystem::getJson("assets/lights.json");
+	std::function<void(const json&, blib::wm::widgets::TreeView::TreeNode*)> addDir;
+	addDir = [&addDir](const json& data, blib::wm::widgets::TreeView::TreeNode* node)
+	{
+		for (auto item : data)
+		{
+			if (item["type"] == "dir")
+			{
+				auto newNode = new blib::wm::widgets::TreeView::TreeNode(item["name"], node);
+				addDir(item["items"], newNode);
+			}
+		}
+	};
+	addDir(lights, newLightsNode);
+
+
+	tree->buildList();
+
+	tree->addClickHandler([this, tree](int, int, int) {
+		if (tree->selectedItem >= 0 && tree->selectedItem < (int)tree->currentList.size())
+		{
+			blib::wm::widgets::TreeView::TreeNode* n = tree->currentList[tree->selectedItem].second;
+			std::string dir = "";
+			while (n->parent->parent)
+			{
+				dir = n->text + "/" + dir;
+				n = n->parent;
+			}
+			if (n == newModelsNode)
+				setModelDirectory(dir);
+			else if (n == newLightsNode)
+				setLightDirectory(dir);
+		}
+		return true;
+	});
+
+	//stuff in the map
+	getComponent<blib::wm::widgets::TreeView>("lstObjects")->root = new blib::wm::widgets::TreeView::TreeNode();
+	modelsNode = new blib::wm::widgets::TreeView::TreeNode("Models", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	lightsNode = new blib::wm::widgets::TreeView::TreeNode("Lights", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	effectsNode = new blib::wm::widgets::TreeView::TreeNode("Effects", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	soundsNode = new blib::wm::widgets::TreeView::TreeNode("Sounds", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
+	getComponent<blib::wm::widgets::TreeView>("lstObjects")->buildList();
+	setModelDirectory("/");
+
+}
+
+ObjectWindow::~ObjectWindow()
+{
+
+}
+
+
+void ObjectWindow::loadModelList()
+{
 	blib::util::StreamInFile* pFile = new blib::util::StreamInFile("assets/romodels.txt");
-
 	std::map<std::string, bool> dirLookup;
-
 	while (!pFile->eof())
 	{
 		std::string line = pFile->readLine();
@@ -126,10 +186,6 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	for (auto d : dirLookup)
 		dirs.push_back(d.first);
 
-	blib::wm::widgets::TreeView* tree = getComponent<blib::wm::widgets::TreeView>("lstFolders");
-
-
-	tree->root = new blib::wm::widgets::TreeView::TreeNode();
 	for (auto d : dirs)
 	{
 		blib::util::trim(d);
@@ -138,7 +194,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 			continue;
 		blib::wm::widgets::TreeView::TreeNode* node = NULL;
 
-		node = tree->root;
+		node = newModelsNode;
 		for (size_t i = 0; i < folders.size() - 1; i++)
 		{
 			blib::wm::widgets::TreeView::TreeNode* child = node->getNode(folders[i]);
@@ -148,39 +204,6 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 		}
 		new blib::wm::widgets::TreeView::TreeNode(folders[folders.size() - 1], node);
 	}
-	tree->buildList();
-
-	tree->addClickHandler([this, tree](int, int, int) {
-		if (tree->selectedItem >= 0 && tree->selectedItem < (int)tree->currentList.size())
-		{
-			blib::wm::widgets::TreeView::TreeNode* n = tree->currentList[tree->selectedItem].second;
-			std::string dir = "";
-			while (n)
-			{
-				dir = n->text + "/" + dir;
-				n = n->parent;
-			}
-			dir = dir.substr(1);
-			setDirectory(dir);
-		}
-		return true;
-	});
-
-
-	getComponent<blib::wm::widgets::TreeView>("lstObjects")->root = new blib::wm::widgets::TreeView::TreeNode();
-	modelsNode = new blib::wm::widgets::TreeView::TreeNode("Models", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
-	lightsNode = new blib::wm::widgets::TreeView::TreeNode("Lights", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
-	effectsNode = new blib::wm::widgets::TreeView::TreeNode("Effects", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
-	soundsNode = new blib::wm::widgets::TreeView::TreeNode("Sounds", getComponent<blib::wm::widgets::TreeView>("lstObjects")->root);
-	getComponent<blib::wm::widgets::TreeView>("lstObjects")->buildList();
-
-
-	setDirectory("/");
-
-}
-
-ObjectWindow::~ObjectWindow()
-{
 
 }
 
@@ -234,8 +257,9 @@ void ObjectWindow::updateObjects(Map* map)
 
 
 
-void ObjectWindow::setDirectory(const std::string &directory)
+void ObjectWindow::setModelDirectory(const std::string &directory)
 {
+	Log::out << "ObjectWindow::setModelDirectory(" << directory << ")" << Log::newline;
 	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
 	panel->clear();
 	panel->internalWidth = panel->width;
@@ -308,6 +332,90 @@ void ObjectWindow::setDirectory(const std::string &directory)
 
 
 
+void ObjectWindow::setLightDirectory(std::string directory)
+{
+	Log::out << "ObjectWindow::setLightsDirectory(" << directory << ")" << Log::newline;
+	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+	panel->clear();
+	panel->internalWidth = panel->width;
+
+
+
+	int px = 0;
+	int py = 0;
+
+	double start = blib::util::Profiler::getAppTime();
+	json currentPath = lights;
+	while (directory != "")
+	{
+		std::string d = directory.substr(0, directory.find("/"));
+		for(const auto & p : currentPath)
+			if (p["type"] == "dir" && p["name"] == d)
+			{
+				currentPath = p["items"];
+				break;
+			}
+		directory = directory.substr(directory.find("/") + 1);
+	}
+
+	for (const auto &item : currentPath)
+	{
+		if (item["type"] == "dir")
+			continue;
+		auto widget = new blib::wm::widgets::Image(nullptr);
+		widget->width = textureSize;
+		widget->height = textureSize;
+		widget->x = px;
+		widget->y = py;
+		panel->add(widget);
+
+		widget->addClickHandler([this, item](int, int, int) {
+			Log::out << item << Log::newline;
+			std::for_each(browEdit->map->getRsw()->objects.begin(), browEdit->map->getRsw()->objects.end(), [](Rsw::Object* o) { o->selected = false; });
+			browEdit->addLight(item);
+			getComponent<blib::wm::widgets::Button>("btnExpand")->onMouseClick(0, 0, 1);
+			return true;
+		});
+
+
+		px += textureSize;
+
+		if (px + textureSize > panel->width)
+		{
+			py += textureSize + 12;
+			px = 0;
+		}
+	}
+
+	px = 0;
+	py = 0;
+
+	for (const auto &item : currentPath)
+	{
+		if (item["type"] == "dir")
+			continue;
+		blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
+		label->text = item["name"];
+		label->width = textureSize;
+		label->height = 12;
+		label->x = px;
+		label->y = py + textureSize;
+		panel->add(label);
+		px += textureSize;
+		if (px + textureSize > panel->width)
+		{
+			py += textureSize + 12;
+			px = 0;
+		}
+	}
+
+
+	Log::out << "Time taken: " << blib::util::Profiler::getAppTime() - start << Log::newline;
+	panel->scrollX = 0;
+	panel->scrollY = 0;
+	panel->internalHeight = py + textureSize + 12;
+
+}
 
 
 

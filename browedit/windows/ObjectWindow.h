@@ -47,6 +47,8 @@ class ObjectWindow : public blib::wm::Window
 	};
 
 
+	void loadModelList();
+
 	int smallWidth;
 	int largeWidth;
 
@@ -56,6 +58,14 @@ class ObjectWindow : public blib::wm::Window
 
 	BrowEdit* browEdit;
 	std::map<std::string, std::string> textureFiles;
+
+	json lights;
+
+	blib::wm::widgets::TreeView::TreeNode* newModelsNode;
+	blib::wm::widgets::TreeView::TreeNode* newSoundsNode;
+	blib::wm::widgets::TreeView::TreeNode* newEffectsNode;
+	blib::wm::widgets::TreeView::TreeNode* newLightsNode;
+
 
 
 	blib::wm::widgets::TreeView::TreeNode* modelsNode;
@@ -67,7 +77,8 @@ public:
 	~ObjectWindow();
 
 	void updateObjects(Map* map);
-	void setDirectory(const std::string &dir);
+	void setModelDirectory(const std::string &dir);
+	void setLightDirectory(std::string dir);
 
 	virtual void arrangeComponents(int oldWidth, int oldHeight);
 };

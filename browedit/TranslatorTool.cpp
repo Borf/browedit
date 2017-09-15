@@ -47,7 +47,7 @@ TranslatorTool::TranslatorTool()
 void TranslatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer, Axis draggingAxis)
 {
 	Axis collides = draggingAxis;
-	if(collides == Axis::NONE)
+	if(collides == Axis::XYZ)
 		collides = selectedAxis(mouseRay, center);
 
 

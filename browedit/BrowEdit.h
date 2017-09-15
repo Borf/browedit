@@ -173,6 +173,7 @@ public:
 	};
 	void setObjectEditMode(ObjectEditModeTool newMode);
 	void addModel(const std::string &fileName);
+	void addLight(const json &lightProperties);
 
 	void perform(Action* action);
 	void undo();
@@ -192,7 +193,7 @@ public:
 
 	void setLightmap(float x, float y, int color, float blend);
 
-	Rsw::Model* newModel;
+	Rsw::Object* newObject;
 
 	glm::ivec2 detailHeightCursor;
 	glm::vec2 detailHeightOffset;

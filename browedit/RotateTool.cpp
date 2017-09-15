@@ -165,7 +165,7 @@ RotatorTool::RotatorTool()
 
 
 
-void RotatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer)
+void RotatorTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer, Axis activeAxis)
 {
 	Axis collides = selectedAxis(mouseRay, center);
 	highlightRenderState.activeShader->setUniform(BrowEdit::HighlightShaderUniforms::texMult, glm::vec4(0, 0, 0, 0));

@@ -22,12 +22,12 @@ void BrowEdit::objectEditUpdate()
 {
 	if (!wm->inWindow(mouseState.position))
 	{
-		if (newModel)
+		if (newObject)
 		{
-			newModel->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
-			newModel->matrixCached = false;
+			newObject->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
+			newObject->matrixCached = false;
 			if (mouseState.leftButton && !lastMouseState.leftButton)
-				newModel = NULL;
+				newObject= NULL;
 		}
 
 		else if (mouseState.leftButton && !lastMouseState.leftButton)
@@ -409,7 +409,7 @@ void BrowEdit::duplicateSelectedObjects()
 			}
 		}
 	}
-	newModel = NULL;
+	newObject = NULL;
 	objectWindow->updateObjects(map);
 }
 

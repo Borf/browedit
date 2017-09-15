@@ -41,7 +41,7 @@ ScaleTool::ScaleTool()
 
 
 
-void ScaleTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer)
+void ScaleTool::draw(const blib::math::Ray& mouseRay, blib::RenderState& highlightRenderState, const glm::vec3 &center, const glm::mat4 &modelView, blib::Renderer* renderer, Axis activeAxis)
 {
 	Axis collides = selectedAxis(mouseRay, center);
 

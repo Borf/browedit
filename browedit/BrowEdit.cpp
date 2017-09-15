@@ -114,7 +114,7 @@ BrowEdit::BrowEdit(const json &config, v8::Isolate* isolate) : mouseRay(glm::vec
 
 	editMode = EditMode::TextureEdit;
 	objectEditModeTool = ObjectEditModeTool::Translate;
-	newModel = NULL;
+	newObject = nullptr;
 	objectTranslateDirection = TranslatorTool::Axis::NONE;
 	objectRotateDirection = RotatorTool::Axis::NONE;
 	objectScaleDirection = ScaleTool::Axis::NONE;
@@ -596,9 +596,9 @@ void BrowEdit::draw()
 				if (objectEditModeTool == ObjectEditModeTool::Translate)
 					translatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer, objectTranslateDirection);
 				else if (objectEditModeTool == ObjectEditModeTool::Rotate)
-					rotatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
+					rotatorTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer, objectRotateDirection);
 				else if (objectEditModeTool == ObjectEditModeTool::Scale)
-					scaleTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer);
+					scaleTool.draw(mapRenderer.mouseRay, highlightRenderState, center, camera->getMatrix(), renderer, objectScaleDirection);
 			}
 
 		}
@@ -1268,7 +1268,8 @@ void BrowEdit::setObjectEditMode(ObjectEditModeTool newMode)
 
 void BrowEdit::addModel(const std::string &fileName)
 {
-	newModel = new Rsw::Model();
+	auto newModel = new Rsw::Model();
+	newObject = newModel;
 	newModel->matrixCached = false;
 	newModel->name = fileName;
 	newModel->animType = 0;
@@ -1284,6 +1285,32 @@ void BrowEdit::addModel(const std::string &fileName)
 	newModel->selected = true;
 
 	map->getRsw()->objects.push_back(newModel);
+}
+
+
+void BrowEdit::addLight(const json &properties)
+{
+	auto newLight = new Rsw::Light();
+	newObject = newLight;
+	newLight->matrixCached = false;
+	newLight->name = properties["name"];
+
+	newLight->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
+	newLight->rotation = glm::vec3(0, 0, 0);
+	newLight->scale = glm::vec3(1, 1, 1);
+	newLight->color = glm::vec3(1, 1, 1);
+	newLight->type = Rsw::Light::Type::Point;
+	newLight->range = 10;
+	newLight->givesShadow = true;
+	newLight->intensity = 10;
+	newLight->cutOff = 0;
+	newLight->selected = true;
+
+
+	if (properties.find("color") != properties.end())
+		newLight->color = glm::vec3(properties["color"][0], properties["color"][1], properties["color"][2]);
+
+	map->getRsw()->objects.push_back(newLight);
 }
 
 void BrowEdit::perform(Action* action)

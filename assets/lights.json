@@ -1,0 +1,37 @@
+[
+	{
+		"name" : "default pointlight",
+		"type" : "point"
+	},
+	{
+		"name" : "default spotlight",
+		"type" : "spot"
+	},
+
+
+
+
+	{
+		"name" : "colors",
+		"type" : "dir",
+		"items" :
+		[
+			{
+				"name" : "red",
+				"type" : "point",
+				"color" : [ 1, 0, 0 ]
+			},
+			{
+				"name" : "green",
+				"type" : "point",
+				"color" : [ 0, 1, 0 ]
+			},
+			{
+				"name" : "blue",
+				"type" : "point",
+				"color" : [ 0, 0, 1 ]
+			}
+
+		]
+	}
+]
