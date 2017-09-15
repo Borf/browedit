@@ -224,6 +224,8 @@ void BrowEdit::objectEditUpdate()
 								o->position.y = center.y + newPos.x;
 								o->position.z = center.z + newPos.y;
 								o->rotation.x += mouseState.position.x - lastMouseState.position.x;
+								if (keyState.isPressed(blib::Key::SHIFT))
+									o->rotation.x = glm::round(o->rotation.x / 45) * 45; //TODO: position properly too
 							}
 							if (objectRotateDirection == RotatorTool::Axis::Y)
 							{
@@ -232,6 +234,10 @@ void BrowEdit::objectEditUpdate()
 								o->position.x = center.x + newPos.x;
 								o->position.z = center.z + newPos.y;
 								o->rotation.y -= mouseState.position.x - lastMouseState.position.x;
+
+								if (keyState.isPressed(blib::Key::SHIFT))
+									o->rotation.y = glm::round(o->rotation.y / 45) * 45; //TODO: position properly too
+
 							}
 							if (objectRotateDirection == RotatorTool::Axis::Z)
 							{
@@ -240,6 +246,8 @@ void BrowEdit::objectEditUpdate()
 								o->position.x = center.x + newPos.x;
 								o->position.y = center.y + newPos.y;
 								o->rotation.z += mouseState.position.x - lastMouseState.position.x;
+								if (keyState.isPressed(blib::Key::SHIFT))
+									o->rotation.z = glm::round(o->rotation.z / 45) * 45; //TODO: position properly too
 							}
 						}
 						if (objectScaleDirection != ScaleTool::Axis::NONE)
