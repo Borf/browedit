@@ -183,6 +183,7 @@ void BrowEdit::menuActionsLightmapCalculate()
 		{
 			for (int x; (x = finishedX++) < map->getGnd()->width;)
 			{
+				Log::out << "Row " << x << Log::newline;
 				for (int y = 0; y < map->getGnd()->height; y++)
 				{
 					Gnd::Cube* cube = map->getGnd()->cubes[x][y];

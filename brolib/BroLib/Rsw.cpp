@@ -709,10 +709,14 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 			glm::vec2 uv3 = mesh->texCoords[mesh->faces[i]->texvertices[2]];
 			
 			glm::vec2 uv = uv1 * a1 + uv2 * a2 + uv3 * a3;
-			
+
+			if (uv.x > 1 || uv.x < 0)
+				uv.x -= glm::floor(uv.x);
+			if (uv.y > 1 || uv.y < 0)
+				uv.y -= glm::floor(uv.y);
 
 			Image* img = getImage("data/texture/" + mesh->model->textures[mesh->faces[i]->texIndex]);
-			if (img->get(uv) < 0.01)
+			if (img && img->get(uv) < 0.01)
 				continue;
 			return true;
 		}
