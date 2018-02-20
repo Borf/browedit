@@ -194,6 +194,8 @@ void BrowEdit::init()
 	mapRenderer.fov = config["fov"].get<float>();
 	camera = new ModernCamera();
 
+	spriteBatch->utf8 = false;
+	spriteBatch->tabsize = 15;
 
 	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("highlight");
 	highlightRenderState.activeShader->bindAttributeLocation("a_position", 0);

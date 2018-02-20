@@ -32,12 +32,14 @@ using blib::util::Log;
 
 
 
-
+blib::Texture* ObjectWindow::lightTexture = nullptr;
 
 ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Objects", "ObjectWindow.json", resourceManager)
 {
 	this->browEdit = browEdit;
 	this->resourceManager = resourceManager;
+	if (!lightTexture)
+		lightTexture = resourceManager->getResource<blib::Texture>("assets/light.png");
 	x = 1000;
 	y = 10;
 	textureSize = 128;
@@ -47,7 +49,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	getComponent<blib::wm::widgets::TreeView>("lstObjects")->addClickHandler([this, browEdit, resourceManager](int x, int y, int clickCount)
 	{
 		blib::wm::widgets::TreeView* treeView = getComponent<blib::wm::widgets::TreeView>("lstObjects");
-		if (treeView->selectedItem >= (int)treeView->currentList.size())
+		if (treeView->selectedItem >= (int)treeView->currentList.size() || treeView->selectedItem < 0)
 			return true;
 		if (!browEdit->map)
 			return true;
@@ -362,7 +364,7 @@ void ObjectWindow::setLightDirectory(std::string directory)
 	{
 		if (item["type"] == "dir")
 			continue;
-		auto widget = new blib::wm::widgets::Image(nullptr);
+		auto widget = new blib::wm::widgets::Image(lightTexture);
 		widget->width = textureSize;
 		widget->height = textureSize;
 		widget->x = px;

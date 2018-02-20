@@ -35,6 +35,7 @@ public:
 
 class ObjectWindow : public blib::wm::Window
 {
+	static blib::Texture* lightTexture;
 	class ObjectTreeNode : public blib::wm::widgets::TreeView::TreeNode
 	{
 	public:
