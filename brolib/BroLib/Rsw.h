@@ -112,6 +112,11 @@ public:
 		long	height;
 		float	range;
 		float	cycle;
+
+
+		char unknown6[8];
+		float unknown7;
+		float unknown8;
 	};
 
 	class Effect : public Object

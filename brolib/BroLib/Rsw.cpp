@@ -236,7 +236,14 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 			{
 				Sound* sound = new Sound();
 				sound->name = file->readString(80);
-				sound->fileName = file->readString(80);
+				sound->fileName = file->readString(40);
+
+				sound->unknown7 = file->readFloat();
+				sound->unknown8 = file->readFloat();
+				sound->rotation = file->readVec3();
+				sound->scale = file->readVec3();
+				file->read(sound->unknown6, 8);
+
 				sound->position = file->readVec3();
 				sound->vol = file->readFloat();
 				sound->width = file->readInt();
@@ -403,14 +410,21 @@ void Rsw::save(const std::string &fileName)
 			pFile->writeInt(3);
 			Sound* sound = (Sound*)object;
 			pFile->writeString(sound->name, 80);
-			pFile->writeString(sound->fileName, 80);
+			pFile->writeString(sound->fileName, 40);
+
+			pFile->writeFloat(sound->unknown7);
+			pFile->writeFloat(sound->unknown8);
+			pFile->writeVec3(sound->rotation);
+			pFile->writeVec3(sound->scale);
+			pFile->write(sound->unknown6, 8);
+
 			pFile->writeVec3(sound->position);
 			pFile->writeFloat(sound->vol);
 			pFile->writeInt(sound->width);
 			pFile->writeInt(sound->height);
 			pFile->writeFloat(sound->range);
 			if (version >= 0x0200)
-				pFile->writeFloat(0); //cycle
+				pFile->writeFloat(sound->cycle); //cycle
 		}
 			break;
 		case Object::Type::Effect://4: //Effect
