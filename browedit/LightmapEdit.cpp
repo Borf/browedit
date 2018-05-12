@@ -1,5 +1,6 @@
 #include "BrowEdit.h"
-
+#include <BroLib/Map.h>
+#include <BroLib/Gnd.h>
 
 void BrowEdit::lightmapEditUpdate()
 {

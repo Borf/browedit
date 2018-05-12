@@ -1382,8 +1382,10 @@ void BrowEdit::setLightmap(float x, float y, int color, float blend)
 				if (lightmap->data[px + 8 * py] != oldVal)
 					mapRenderer.setShadowDirty();
 			}
-
 		}
+		for (int xx = cursorX - 1; xx <= cursorX + 1; xx++)
+			for (int yy = cursorY - 1; yy <= cursorY + 1; yy++)
+				map->getGnd()->makeLightmapBorders(xx, yy);
 
 	}
 }

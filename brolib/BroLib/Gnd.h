@@ -105,6 +105,7 @@ public:
 
 	void makeLightmapsUnique();
 	void makeLightmapBorders();
+	void makeLightmapBorders(int x, int y);
 	int getLightmapBrightness(int x, int y, int lightmapX, int lightmapY);
 	glm::ivec3 getLightmapColor(int x, int y, int lightmapX, int lightmapY);
 	void makeLightmapsSmooth();

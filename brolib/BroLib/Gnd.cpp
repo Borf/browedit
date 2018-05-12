@@ -442,6 +442,38 @@ void Gnd::makeLightmapBorders()
 
 }
 
+
+void Gnd::makeLightmapBorders(int x, int y)
+{
+	if (x < 0 || x >= width || y < 0 || y >= height)
+		return;
+	Gnd::Cube* cube = cubes[x][y];
+	int tileId = cube->tileUp;
+	if (tileId == -1)
+		return;
+	Gnd::Tile* tile = tiles[tileId];
+	assert(tile && tile->lightmapIndex != -1);
+	Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
+
+	for (int i = 0; i < 8; i++)
+	{
+		lightmap->data[i + 8 * 0] = getLightmapBrightness(x, y - 1, i, 6);
+		lightmap->data[i + 8 * 7] = getLightmapBrightness(x, y + 1, i, 1);
+		lightmap->data[0 + 8 * i] = getLightmapBrightness(x - 1, y, 6, i);
+		lightmap->data[7 + 8 * i] = getLightmapBrightness(x + 1, y, 1, i);
+
+		for (int c = 0; c < 3; c++)
+		{
+			lightmap->data[64 + 3 * (i + 8 * 0) + c] = getLightmapColor(x, y - 1, i, 6)[c];
+			lightmap->data[64 + 3 * (i + 8 * 7) + c] = getLightmapColor(x, y + 1, i, 1)[c];
+			lightmap->data[64 + 3 * (0 + 8 * i) + c] = getLightmapColor(x - 1, y, 6, i)[c];
+			lightmap->data[64 + 3 * (7 + 8 * i) + c] = getLightmapColor(x + 1, y, 1, i)[c];
+
+		}
+	}
+}
+
+
 int Gnd::getLightmapBrightness(int x, int y, int lightmapX, int lightmapY)
 {
 	if (x < 0 || y < 0 || x >= width || y >= height)
