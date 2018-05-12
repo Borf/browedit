@@ -32,6 +32,7 @@ GrfFileSystemHandler::GrfFileSystemHandler( const std::string &grfFile ) : blib:
 	Log::out<<"Loaded GRF file "<<grfFile<<Log::newline;
 	for(unsigned int i = 0; i < grf->nfiles; i++)
 		lookup[sanitizeFileName(grf->files[i].name)] = i;
+	Log::out << lookup.size() << " files loaded"<< Log::newline;
 }
 
 GrfFileSystemHandler::~GrfFileSystemHandler()
