@@ -664,6 +664,8 @@ public:
 		float fracX = glm::fract(uv.x * width);
 		float fracY = glm::fract(uv.y * height);
 
+		if (std::isnan(fracX) || std::isnan(fracY))
+			return true;
 		float top = glm::mix(data[x1 + width * y1], data[x2 + width * y1], fracX);
 		float bottom = glm::mix(data[x1 + width * y2], data[x2 + width * y2], fracX);
 		
@@ -691,7 +693,7 @@ Image* getImage(const std::string &filename)
 
 
 
-bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
+bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix, Rsw::Model* rswModel)
 {
 	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
 	newMatrix = glm::inverse(newMatrix);
@@ -729,6 +731,12 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 			if (uv.y > 1 || uv.y < 0)
 				uv.y -= glm::floor(uv.y);
 
+			if (std::isnan(uv.x))
+			{
+				Log::out << "Error calculating lightmap for model " << rswModel->name << ", " << rswModel->fileName << Log::newline;
+				return false;
+			}
+
 			Image* img = getImage("data/texture/" + mesh->model->textures[mesh->faces[i]->texIndex]);
 			if (img && img->get(uv) < 0.01)
 				continue;
@@ -738,7 +746,7 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 
 	for (size_t i = 0; i < mesh->children.size(); i++)
 	{
-		if (collides_Texture(mesh->children[i], ray, matrix))
+		if (collides_Texture(mesh->children[i], ray, matrix, rswModel))
 			return true;
 	}
 	return false;
@@ -820,7 +828,7 @@ bool Rsw::Model::collidesTexture(const blib::math::Ray &ray)
 	if (!aabb.hasRayCollision(ray, 0, 10000000))
 		return false;
 
-	return collides_Texture(model->rootMesh, ray, matrixCache);
+	return collides_Texture(model->rootMesh, ray, matrixCache, this);
 	return true;
 }
 

@@ -37,6 +37,8 @@ void BrowEdit::menuActionsLightmapCalculate()
 	lightDirection[2] = glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
 
 
+	
+
 	const float quality = 1.0f / 4.0f;
 
 
@@ -176,7 +178,7 @@ void BrowEdit::menuActionsLightmapCalculate()
 
 
 	std::vector<std::thread> threads;
-	std::atomic<unsigned> finishedX(0);
+	std::atomic<unsigned> finishedX(22);
 	for (int t = 0; t < 8; t++)
 	{
 		threads.push_back(std::thread([&]()
