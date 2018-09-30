@@ -117,6 +117,7 @@ Gnd::Gnd( const std::string &fileName )
 		}
 
 		int tileCount = file->readInt();
+		Log::out << "Tilecount: " << tileCount << Log::newline;
 		tiles.reserve(tileCount);
 		for(int i = 0; i < tileCount; i++)
 		{
@@ -131,10 +132,12 @@ Gnd::Gnd( const std::string &fileName )
 			tile->v3.y = file->readFloat();
 			tile->v4.y = file->readFloat();
 			tile->textureIndex = file->readWord();
-			tile->lightmapIndex= file->readWord();
+			tile->lightmapIndex= file->readUWord();
 
-			if (tile->lightmapIndex < 0)
+
+			if (tile->lightmapIndex < 0 || tile->lightmapIndex == (unsigned short)-1)
 			{
+				Log::out << "Lightmapindex < 0" << Log::newline;
 				tile->lightmapIndex = 0;
 			}
 
@@ -170,9 +173,9 @@ Gnd::Gnd( const std::string &fileName )
 				}
 				else
 				{
-					cube->tileUp = file->readWord();
-					cube->tileSide = file->readWord();
-					cube->tileFront = file->readWord();
+					cube->tileUp = file->readUWord();
+					cube->tileSide = file->readUWord();
+					cube->tileFront = file->readUWord();
 				}
 
 				if (cube->tileUp >= (int)tiles.size())
@@ -277,8 +280,8 @@ void Gnd::save(std::string fileName)
 			pFile->writeFloat(tile->v2.y);
 			pFile->writeFloat(tile->v3.y);
 			pFile->writeFloat(tile->v4.y);
-			pFile->writeWord(tile->textureIndex);
-			pFile->writeWord(tile->lightmapIndex);
+			pFile->writeUWord(tile->textureIndex);
+			pFile->writeUWord(tile->lightmapIndex);
 	
 			pFile->put(tile->color.b);
 			pFile->put(tile->color.g);
@@ -303,9 +306,9 @@ void Gnd::save(std::string fileName)
 				}
 				else
 				{
-					pFile->writeWord(cube->tileUp);
-					pFile->writeWord(cube->tileSide);
-					pFile->writeWord(cube->tileFront);
+					pFile->writeUWord(cube->tileUp);
+					pFile->writeUWord(cube->tileSide);
+					pFile->writeUWord(cube->tileFront);
 				}
 			}
 		}
