@@ -178,7 +178,7 @@ void BrowEdit::menuActionsLightmapCalculate()
 
 
 	std::vector<std::thread> threads;
-	std::atomic<unsigned> finishedX(0);
+	std::atomic<unsigned> finishedX(22);
 	for (int t = 0; t < 8; t++)
 	{
 		threads.push_back(std::thread([&]()
