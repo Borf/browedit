@@ -37,6 +37,8 @@ void BrowEdit::menuActionsLightmapCalculate()
 	lightDirection[2] = glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
 
 
+	
+
 	const float quality = 1.0f / 4.0f;
 
 
