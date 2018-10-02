@@ -50,6 +50,8 @@ public:
 	std::vector<std::vector<Gnd::Cube> > heightImportCubes;
 
 
+	std::vector<glm::vec3> getMapQuads();
+
 	glm::vec4 getHeightsAt(int x, int y);
 	float getHeightAt(float x, float y);
 };

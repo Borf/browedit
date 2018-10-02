@@ -416,29 +416,154 @@ void Gnd::makeLightmapBorders()
 		{
 			Gnd::Cube* cube = cubes[x][y];
 			int tileId = cube->tileUp;
-			if (tileId == -1)
-				continue;
-			Gnd::Tile* tile = tiles[tileId];
-			assert(tile && tile->lightmapIndex != -1);
-			Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
-
-			for (int i = 0; i < 8; i++)
+			if (tileId != -1)
 			{
-				lightmap->data[i + 8 * 0] = getLightmapBrightness(x, y - 1, i, 6);
-				lightmap->data[i + 8 * 7] = getLightmapBrightness(x, y + 1, i, 1);
-				lightmap->data[0 + 8 * i] = getLightmapBrightness(x - 1, y, 6, i);
-				lightmap->data[7 + 8 * i] = getLightmapBrightness(x + 1, y, 1, i);
+				Gnd::Tile* tile = tiles[tileId];
+				assert(tile && tile->lightmapIndex != -1);
+				Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
 
-				for (int c = 0; c < 3; c++)
+				for (int i = 0; i < 8; i++)
 				{
-					lightmap->data[64 + 3 * (i + 8 * 0) + c] = getLightmapColor(x, y - 1, i, 6)[c];
-					lightmap->data[64 + 3 * (i + 8 * 7) + c] = getLightmapColor(x, y + 1, i, 1)[c];
-					lightmap->data[64 + 3 * (0 + 8 * i) + c] = getLightmapColor(x - 1, y, 6, i)[c];
-					lightmap->data[64 + 3 * (7 + 8 * i) + c] = getLightmapColor(x + 1, y, 1, i)[c];
+					lightmap->data[i + 8 * 0] = getLightmapBrightness(x, y - 1, i, 6);
+					lightmap->data[i + 8 * 7] = getLightmapBrightness(x, y + 1, i, 1);
+					lightmap->data[0 + 8 * i] = getLightmapBrightness(x - 1, y, 6, i);
+					lightmap->data[7 + 8 * i] = getLightmapBrightness(x + 1, y, 1, i);
+
+					for (int c = 0; c < 3; c++)
+					{
+						lightmap->data[64 + 3 * (i + 8 * 0) + c] = getLightmapColor(x, y - 1, i, 6)[c];
+						lightmap->data[64 + 3 * (i + 8 * 7) + c] = getLightmapColor(x, y + 1, i, 1)[c];
+						lightmap->data[64 + 3 * (0 + 8 * i) + c] = getLightmapColor(x - 1, y, 6, i)[c];
+						lightmap->data[64 + 3 * (7 + 8 * i) + c] = getLightmapColor(x + 1, y, 1, i)[c];
+
+					}
 
 				}
-
 			}
+			tileId = cube->tileSide;
+			if (tileId != -1)
+			{
+				Gnd::Tile* tile = tiles[tileId];
+				assert(tile && tile->lightmapIndex != -1);
+				Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
+
+				auto otherCube = cubes[x-1][y];
+				if (otherCube->tileSide != -1)
+				{
+					auto otherTile = tiles[otherCube->tileSide];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[0 + 8 * i] = otherLightmap->data[6 + 8 * i];
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[0 + 8 * i] = lightmap->data[1 + 8 * i];
+
+				otherCube = cubes[x+1][y];
+				if (otherCube->tileSide != -1)
+				{
+					auto otherTile = tiles[otherCube->tileSide];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[7 + 8 * i] = otherLightmap->data[1 + 8 * i];
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[7 + 8 * i] = lightmap->data[6 + 8 * i];
+
+				//top and bottom
+				otherCube = cubes[x][y+1];
+				if (otherCube->tileUp != -1)
+				{
+					auto otherTile = tiles[otherCube->tileUp];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 7] = otherLightmap->data[i + 8 * 1]; //bottom
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 7] = lightmap->data[i + 8 * 6];
+
+
+				otherCube = cubes[x][y];
+				if (otherCube->tileUp != -1)
+				{
+					auto otherTile = tiles[otherCube->tileUp];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 0] = otherLightmap->data[i + 8 * 1]; //bottom
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 0] = lightmap->data[i + 8 * 1];
+			}
+
+			tileId = cube->tileFront;
+			if (tileId != -1)
+			{
+				Gnd::Tile* tile = tiles[tileId];
+				assert(tile && tile->lightmapIndex != -1);
+				Gnd::Lightmap* lightmap = lightmaps[tile->lightmapIndex];
+
+				auto otherCube = cubes[x][y+1];
+				if (otherCube->tileFront != -1)
+				{
+					auto otherTile = tiles[otherCube->tileFront];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[0 + 8 * i] = otherLightmap->data[6 + 8 * i];
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[0 + 8 * i] = lightmap->data[1 + 8 * i];
+
+				otherCube = cubes[x][y-1];
+				if (otherCube->tileFront != -1)
+				{
+					auto otherTile = tiles[otherCube->tileFront];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[7 + 8 * i] = otherLightmap->data[1 + 8 * i];
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[7 + 8 * i] = lightmap->data[6 + 8 * i];
+
+				//top and bottom
+				otherCube = cubes[x+1][y];
+				if (otherCube->tileUp != -1)
+				{
+					auto otherTile = tiles[otherCube->tileUp];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 7] = otherLightmap->data[i + 8 * 1]; //bottom
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 7] = lightmap->data[i + 8 * 6];
+
+
+				otherCube = cubes[x][y];
+				if (otherCube->tileUp != -1)
+				{
+					auto otherTile = tiles[otherCube->tileUp];
+					auto otherLightmap = lightmaps[otherTile->lightmapIndex];
+
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 0] = otherLightmap->data[i + 8 * 1]; //bottom
+				}
+				else
+					for (int i = 0; i < 8; i++)
+						lightmap->data[i + 8 * 0] = lightmap->data[i + 8 * 1];
+			}
+
 		}
 	}
 

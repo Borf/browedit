@@ -4,6 +4,7 @@
 #include "windows/ObjectWindow.h"
 
 #include <blib/util/Log.h>
+#include <blib/math/Triangle.h>
 using blib::util::Log;
 
 #include <BroLib/Map.h>
@@ -36,24 +37,45 @@ void BrowEdit::menuActionsLightmapCalculate()
 	lightDirection[1] = glm::cos(glm::radians((float)map->getRsw()->light.latitude));
 	lightDirection[2] = glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
 
-
-	
-
 	const float quality = 1.0f / 4.0f;
 
 
-	auto calculateLight = [this, lightDirection, &lights](const glm::vec3 &groundPos, const glm::vec3 &normal)
+	//TODO: build mesh of floor & walls
+	// use generic collision to calculate collision between floor and floor and light
+
+	auto mapQuads = map->getMapQuads();
+	
+	auto collidesMap = [&mapQuads](const blib::math::Ray& ray)
+	{
+		std::vector<glm::vec3> quad;
+		quad.resize(4);
+		float t;
+		for (int i = 0; i < mapQuads.size(); i += 4)
+		{
+			for (int ii = 0; ii < 4; ii++)
+				quad[ii] = mapQuads[i + ii];
+			if (ray.LineIntersectPolygon(quad, t))
+				if (t > 0)
+					return true;
+		}
+		return false;
+	};
+
+
+
+	auto calculateLight = [this, lightDirection, &lights, collidesMap](const glm::vec3 &groundPos, const glm::vec3 &normal)
 	{
 		int intensity = 0;
 
 		if (map->getRsw()->light.lightmapAmbient > 0)
 			intensity = (int)(map->getRsw()->light.lightmapAmbient * 255);
 
-
+		//sunlight calculation
 		if (map->getRsw()->light.lightmapIntensity > 0 && glm::dot(normal, lightDirection) > 0)
 		{
 			blib::math::Ray ray(groundPos, glm::normalize(lightDirection));
 			bool collides = false;
+			//check objects
 			for (Rsw::Object* o : map->getRsw()->objects)
 			{
 				auto model = dynamic_cast<Rsw::Model*>(o);
@@ -64,12 +86,19 @@ void BrowEdit::menuActionsLightmapCalculate()
 						break;
 					}
 			}
+			//check floor
+			if (!collides && collidesMap(ray))
+				collides = true;
+			//check walls
+
+
 			if (!collides)
 			{
 				intensity += (int)(map->getRsw()->light.lightmapIntensity * 255);
 			}
 		}
 
+		//point light calculations
 		for (auto light : lights)
 		{
 			glm::vec3 lightPosition(5 * map->getGnd()->width + light->position.x, -light->position.y, 5 * map->getGnd()->height - light->position.z);
@@ -131,7 +160,7 @@ void BrowEdit::menuActionsLightmapCalculate()
 							groundPos = glm::vec3(10 * x + s * ((xx + xxx) - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * ((yy + yyy) - 1));
 							normal = glm::vec3(0, 1, 0);
 						}
-						else if (direction == 1) //front
+						else if (direction == 1) //side
 						{
 							auto otherCube = map->getGnd()->cubes[x][y + 1];
 							float h1 = glm::mix(cube->h3, cube->h4, ((xx + xxx) - 1) / 6.0f);
@@ -144,7 +173,7 @@ void BrowEdit::menuActionsLightmapCalculate()
 							if (h1 < h2)
 								normal = -normal;
 						}
-						else if (direction == 2) //side
+						else if (direction == 2) //front
 						{
 							auto otherCube = map->getGnd()->cubes[x + 1][y];
 							float h1 = glm::mix(cube->h2, cube->h4, ((xx + xxx) - 1) / 6.0f);
@@ -176,7 +205,6 @@ void BrowEdit::menuActionsLightmapCalculate()
 		}
 	};
 
-
 	std::vector<std::thread> threads;
 	std::atomic<unsigned> finishedX(0);
 	for (int t = 0; t < 8; t++)
@@ -200,6 +228,13 @@ void BrowEdit::menuActionsLightmapCalculate()
 
 	for (auto &t : threads)
 		t.join();
+
+
+	/*Gnd::Cube* cube = map->getGnd()->cubes[63][31];
+	for (int i = 0; i < 3; i++)
+		if (cube->tileIds[i] != -1)
+			calcPos(i, cube->tileIds[i], 63, 31);*/  //test single tile
+
 
 	map->getGnd()->makeLightmapBorders();
 

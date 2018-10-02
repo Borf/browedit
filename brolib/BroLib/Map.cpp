@@ -249,6 +249,74 @@ void Map::exportObj(const std::string &fileName)
 
 
 
+std::vector<glm::vec3> Map::getMapQuads()
+{
+	std::vector<glm::vec3> quads;
+
+	for (int x = 0; x < gnd->width; x++)
+	{
+		for (int y = 0; y < gnd->height; y++)
+		{
+			auto cube = gnd->cubes[x][y];
+			if (cube->tileUp != -1)
+			{
+				/*quads.push_back(glm::vec3((x + 0) * 10, -cube->heights[2], 10 * gnd->height - (y + 1) * 10 + 10));
+				quads.push_back(glm::vec3((x + 0) * 10, -cube->heights[0], 10 * gnd->height - (y + 0) * 10 + 10));
+				quads.push_back(glm::vec3((x + 1) * 10, -cube->heights[1], 10 * gnd->height - (y + 0) * 10 + 10));
+				quads.push_back(glm::vec3((x + 1) * 10, -cube->heights[3], 10 * gnd->height - (y + 1) * 10 + 10));*/
+			}
+			if (cube->tileSide != -1)
+			{
+				quads.push_back(glm::vec3(10 * x, -cube->h3, 10 * gnd->height - 10 * y));
+				quads.push_back(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y));
+				quads.push_back(glm::vec3(10 * x + 10, -gnd->cubes[x][y + 1]->h2, 10 * gnd->height - 10 * y));
+				quads.push_back(glm::vec3(10 * x, -gnd->cubes[x][y + 1]->h1, 10 * gnd->height - 10 * y));
+			}
+			if (cube->tileFront != -1)
+			{
+				quads.push_back(glm::vec3(10 * x + 10, -cube->h2, 10 * gnd->height - 10 * y + 10));
+				quads.push_back(glm::vec3(10 * x + 10, -cube->h4, 10 * gnd->height - 10 * y));
+				quads.push_back(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h3, 10 * gnd->height - 10 * y));
+				quads.push_back(glm::vec3(10 * x + 10, -gnd->cubes[x + 1][y]->h1, 10 * gnd->height - 10 * y + 10));
+			}
+		}
+	}
+
+		/*for (int x = 0; x < gnd->width; x++)
+		{
+			for (int y = 0; y < gnd->height; y++)
+			{
+				if (gnd->cubes[x][y]->tileUp != -1)
+				{
+					file << "f ";
+					for (int i = 0; i < 4; i++)
+						file << (x + y * gnd->width) * 4 + i + 1 << " ";
+					file << std::endl;
+				}
+				if (gnd->cubes[x][y]->tileSide != -1)
+				{
+					file << "f ";
+					file << (x + y * gnd->width) * 4 + 2 + 1 << " ";
+					file << (x + y * gnd->width) * 4 + 3 + 1 << " ";
+					file << (x + (y + 1) * gnd->width) * 4 + 0 + 1 << " ";
+					file << (x + (y + 1) * gnd->width) * 4 + 1 + 1 << " ";
+					file << std::endl;
+				}
+
+				if (gnd->cubes[x][y]->tileFront != -1)
+				{
+					file << "f ";
+					file << (x + y * gnd->width) * 4 + 3 + 1 << " ";
+					file << (x + y * gnd->width) * 4 + 0 + 1 << " ";
+					file << ((x + 1) + y * gnd->width) * 4 + 1 + 1 << " ";
+					file << ((x + 1) + y * gnd->width) * 4 + 2 + 1 << " ";
+					file << std::endl;
+				}
+			}
+		}*/
+	return quads;
+}
+
 glm::vec4 Map::getHeightsAt(int x, int y)
 {
 	assert(inMap(x, y));
