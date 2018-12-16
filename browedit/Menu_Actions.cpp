@@ -2,6 +2,7 @@
 
 #include "windows/TextureWindow.h"
 #include "windows/ObjectWindow.h"
+#include "windows/ProgressWindow.h"
 
 #include <blib/util/Log.h>
 #include <blib/math/Triangle.h>
@@ -11,234 +12,265 @@ using blib::util::Log;
 
 #include <thread>
 #include <atomic>
+#include <mutex>
 
 void BrowEdit::menuActionsLightmapCalculate()
 {
 	if (!map)
 		return;
-	Log::out << "Making lightmaps unique" << Log::newline;
-	map->getGnd()->makeLightmapsUnique();
-	mapRenderer.setAllDirty();
-
-	int height = map->getGnd()->height;
-	const float s = 10 / 6.0f;
-	Log::out << "Making lightmap..." << Log::newline;
 
 
+	ProgressWindow* window = new ProgressWindow(resourceManager, this);
+	window->setProgress(0);
 
-	std::vector<Rsw::Light*> lights;
-	for (auto &o : map->getRsw()->objects)
-		if (o->type == Rsw::Object::Type::Light)
-			lights.push_back(dynamic_cast<Rsw::Light*>(o));
-
-
-	glm::vec3 lightDirection;
-	lightDirection[0] = -glm::cos(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
-	lightDirection[1] = glm::cos(glm::radians((float)map->getRsw()->light.latitude));
-	lightDirection[2] = glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
-
-	const float quality = 1.0f / 4.0f;
-
-
-	//TODO: build mesh of floor & walls
-	// use generic collision to calculate collision between floor and floor and light
-
-	auto mapQuads = map->getMapQuads();
-	
-	auto collidesMap = [&mapQuads](const blib::math::Ray& ray)
+	auto thread = std::thread([this, window]()
 	{
-		std::vector<glm::vec3> quad;
-		quad.resize(4);
-		float t;
-		for (int i = 0; i < mapQuads.size(); i += 4)
+		Log::out << "Making lightmaps unique" << Log::newline;
+		map->getGnd()->makeLightmapsUnique();
+		mapRenderer.setAllDirty();
+
+		int height = map->getGnd()->height;
+		const float s = 10 / 6.0f;
+		Log::out << "Making lightmap..." << Log::newline;
+
+
+
+		std::vector<Rsw::Light*> lights;
+		for (auto &o : map->getRsw()->objects)
+			if (o->type == Rsw::Object::Type::Light)
+				lights.push_back(dynamic_cast<Rsw::Light*>(o));
+
+
+		glm::vec3 lightDirection;
+		lightDirection[0] = -glm::cos(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
+		lightDirection[1] = glm::cos(glm::radians((float)map->getRsw()->light.latitude));
+		lightDirection[2] = glm::sin(glm::radians((float)map->getRsw()->light.longitude)) * glm::sin(glm::radians((float)map->getRsw()->light.latitude));
+
+		const float quality = 1.0f / 4.0f;
+
+
+		//TODO: build mesh of floor & walls
+		// use generic collision to calculate collision between floor and floor and light
+
+		auto mapQuads = map->getMapQuads();
+
+		auto collidesMap = [&mapQuads](const blib::math::Ray& ray)
 		{
-			for (int ii = 0; ii < 4; ii++)
-				quad[ii] = mapQuads[i + ii];
-			if (ray.LineIntersectPolygon(quad, t))
-				if (t > 0)
-					return true;
-		}
-		return false;
-	};
-
-
-
-	auto calculateLight = [this, lightDirection, &lights, collidesMap](const glm::vec3 &groundPos, const glm::vec3 &normal)
-	{
-		int intensity = 0;
-
-		if (map->getRsw()->light.lightmapAmbient > 0)
-			intensity = (int)(map->getRsw()->light.lightmapAmbient * 255);
-
-		//sunlight calculation
-		if (map->getRsw()->light.lightmapIntensity > 0 && glm::dot(normal, lightDirection) > 0)
-		{
-			blib::math::Ray ray(groundPos, glm::normalize(lightDirection));
-			bool collides = false;
-			//check objects
-			for (Rsw::Object* o : map->getRsw()->objects)
+			std::vector<glm::vec3> quad;
+			quad.resize(4);
+			float t;
+			for (int i = 0; i < mapQuads.size(); i += 4)
 			{
-				auto model = dynamic_cast<Rsw::Model*>(o);
-				if (model)
-					if (model->collidesTexture(ray))
+				for (int ii = 0; ii < 4; ii++)
+					quad[ii] = mapQuads[i + ii];
+				if (ray.LineIntersectPolygon(quad, t))
+					if (t > 0)
+						return true;
+			}
+			return false;
+		};
+
+
+
+		auto calculateLight = [this, lightDirection, &lights, collidesMap](const glm::vec3 &groundPos, const glm::vec3 &normal)
+		{
+			int intensity = 0;
+
+			if (map->getRsw()->light.lightmapAmbient > 0)
+				intensity = (int)(map->getRsw()->light.lightmapAmbient * 255);
+
+			//sunlight calculation
+			if (map->getRsw()->light.lightmapIntensity > 0 && glm::dot(normal, lightDirection) > 0)
+			{
+				blib::math::Ray ray(groundPos, glm::normalize(lightDirection));
+				bool collides = false;
+				//check objects
+				for (Rsw::Object* o : map->getRsw()->objects)
+				{
+					auto model = dynamic_cast<Rsw::Model*>(o);
+					if (model)
+						if (model->collidesTexture(ray))
+						{
+							collides = true;
+							break;
+						}
+				}
+				//check floor
+				if (!collides && collidesMap(ray))
+					collides = true;
+				//check walls
+
+
+				if (!collides)
+				{
+					intensity += (int)(map->getRsw()->light.lightmapIntensity * 255);
+				}
+			}
+
+			//point light calculations
+			for (auto light : lights)
+			{
+				glm::vec3 lightPosition(5 * map->getGnd()->width + light->position.x, -light->position.y, 5 * map->getGnd()->height - light->position.z);
+
+				float distance = glm::distance(lightPosition, groundPos);
+				if (distance > light->realRange())
+					continue;
+
+				float d = glm::max(distance - light->range, 0.0f);
+				float denom = d / light->range + 1;
+				float attenuation = light->intensity / (denom * denom);
+				if (light->cutOff > 0)
+					attenuation = glm::max(0.0f, (attenuation - light->cutOff) / (1 - light->cutOff));
+
+
+				blib::math::Ray ray(groundPos, glm::normalize(lightPosition - groundPos));
+				bool collides = false;
+				for (Rsw::Object* o : map->getRsw()->objects)
+				{
+					if (o->collides(ray))
 					{
 						collides = true;
 						break;
 					}
-			}
-			//check floor
-			if (!collides && collidesMap(ray))
-				collides = true;
-			//check walls
-
-
-			if (!collides)
-			{
-				intensity += (int)(map->getRsw()->light.lightmapIntensity * 255);
-			}
-		}
-
-		//point light calculations
-		for (auto light : lights)
-		{
-			glm::vec3 lightPosition(5 * map->getGnd()->width + light->position.x, -light->position.y, 5 * map->getGnd()->height - light->position.z);
-
-			float distance = glm::distance(lightPosition, groundPos);
-			if (distance > light->realRange())
-				continue;
-
-			float d = glm::max(distance - light->range, 0.0f);
-			float denom = d / light->range + 1;
-			float attenuation = light->intensity / (denom * denom);
-			if (light->cutOff > 0)
-				attenuation = glm::max(0.0f, (attenuation - light->cutOff) / (1 - light->cutOff));
-
-
-			blib::math::Ray ray(groundPos, glm::normalize(lightPosition - groundPos));
-			bool collides = false;
-			for (Rsw::Object* o : map->getRsw()->objects)
-			{
-				if (o->collides(ray))
+				}
+				if (!collides)
 				{
-					collides = true;
-					break;
+					intensity += (int)attenuation;
 				}
 			}
-			if (!collides)
-			{
-				intensity += (int)attenuation;
-			}
-		}
 
-		return intensity;
-	};
+			return intensity;
+		};
 
 
-	auto calcPos = [this, quality, s, height, &calculateLight](int direction, int tileId, int x, int y)
-	{
-		Gnd::Tile* tile = map->getGnd()->tiles[tileId];
-		assert(tile && tile->lightmapIndex != -1);
-		Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
-
-		Gnd::Cube* cube = map->getGnd()->cubes[x][y];
-
-		for (int xx = 1; xx < 7; xx++)
+		auto calcPos = [this, quality, s, height, &calculateLight](int direction, int tileId, int x, int y)
 		{
-			for (int yy = 1; yy < 7; yy++)
+			Gnd::Tile* tile = map->getGnd()->tiles[tileId];
+			assert(tile && tile->lightmapIndex != -1);
+			Gnd::Lightmap* lightmap = map->getGnd()->lightmaps[tile->lightmapIndex];
+
+			Gnd::Cube* cube = map->getGnd()->cubes[x][y];
+
+			for (int xx = 1; xx < 7; xx++)
 			{
-				int totalIntensity = 0;
-				int count = 0;
-				for (float xxx = 0; xxx < 1; xxx += quality)
+				for (int yy = 1; yy < 7; yy++)
 				{
-					for (float yyy = 0; yyy < 1; yyy += quality)
+					int totalIntensity = 0;
+					int count = 0;
+					for (float xxx = 0; xxx < 1; xxx += quality)
 					{
-						glm::vec3 groundPos;
-						glm::vec3 normal;
-						//todo: use proper height using barycentric coordinats
-						if (direction == 0)
+						for (float yyy = 0; yyy < 1; yyy += quality)
 						{
-							groundPos = glm::vec3(10 * x + s * ((xx + xxx) - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * ((yy + yyy) - 1));
-							normal = glm::vec3(0, 1, 0);
+							glm::vec3 groundPos;
+							glm::vec3 normal;
+							//todo: use proper height using barycentric coordinats
+							if (direction == 0)
+							{
+								groundPos = glm::vec3(10 * x + s * ((xx + xxx) - 1), -(cube->h1 + cube->h2 + cube->h3 + cube->h4) / 4.0f, 10 * height + 10 - 10 * y - s * ((yy + yyy) - 1));
+								normal = glm::vec3(0, 1, 0);
+							}
+							else if (direction == 1) //side
+							{
+								auto otherCube = map->getGnd()->cubes[x][y + 1];
+								float h1 = glm::mix(cube->h3, cube->h4, ((xx + xxx) - 1) / 6.0f);
+								float h2 = glm::mix(otherCube->h2, otherCube->h1, ((xx + xxx) - 1) / 6.0f);
+								float h = glm::mix(h1, h2, ((yy + yyy) - 1) / 6.0f);
+
+								groundPos = glm::vec3(10 * x + s * ((xx + xxx) - 1), -h, 10 * height - 10 * y);
+								normal = glm::vec3(0, 0, 1);
+
+								if (h1 < h2)
+									normal = -normal;
+							}
+							else if (direction == 2) //front
+							{
+								auto otherCube = map->getGnd()->cubes[x + 1][y];
+								float h1 = glm::mix(cube->h2, cube->h4, ((xx + xxx) - 1) / 6.0f);
+								float h2 = glm::mix(otherCube->h1, otherCube->h3, ((xx + xxx) - 1) / 6.0f);
+								float h = glm::mix(h1, h2, ((yy + yyy) - 1) / 6.0f);
+
+								groundPos = glm::vec3(10 * x, -h, 10 * height + 10 - 10 * y + s * ((xx + xxx) - 1));
+								normal = glm::vec3(-1, 0, 0);
+
+								if (h1 < h2)
+									normal = -normal;
+
+							}
+
+							totalIntensity += calculateLight(groundPos, normal);
+							count++;
 						}
-						else if (direction == 1) //side
-						{
-							auto otherCube = map->getGnd()->cubes[x][y + 1];
-							float h1 = glm::mix(cube->h3, cube->h4, ((xx + xxx) - 1) / 6.0f);
-							float h2 = glm::mix(otherCube->h2, otherCube->h1, ((xx + xxx) - 1) / 6.0f);
-							float h = glm::mix(h1, h2, ((yy + yyy) - 1) / 6.0f);
+					}
 
-							groundPos = glm::vec3(10 * x + s * ((xx + xxx) - 1), -h, 10 * height - 10 * y);
-							normal = glm::vec3(0, 0, 1);
+					int intensity = totalIntensity / count;
+					if (intensity > 255)
+						intensity = 255;
 
-							if (h1 < h2)
-								normal = -normal;
-						}
-						else if (direction == 2) //front
-						{
-							auto otherCube = map->getGnd()->cubes[x + 1][y];
-							float h1 = glm::mix(cube->h2, cube->h4, ((xx + xxx) - 1) / 6.0f);
-							float h2 = glm::mix(otherCube->h1, otherCube->h3, ((xx + xxx) - 1) / 6.0f);
-							float h = glm::mix(h1, h2, ((yy + yyy) - 1) / 6.0f);
+					lightmap->data[xx + 8 * yy] = intensity;
+					lightmap->data[64 + 3 * (xx + 8 * yy) + 0] = 0;
+					lightmap->data[64 + 3 * (xx + 8 * yy) + 1] = 0;
+					lightmap->data[64 + 3 * (xx + 8 * yy) + 2] = 0;
+				}
+			}
+		};
 
-							groundPos = glm::vec3(10 * x, -h, 10 * height + 10 - 10 * y + s * ((xx + xxx) - 1));
-							normal = glm::vec3(-1, 0, 0);
+		std::vector<std::thread> threads;
+		std::atomic<unsigned> finishedX(0);
+		std::mutex progressMutex;
 
-							if (h1 < h2)
-								normal = -normal;
+		for (int t = 0; t < 8; t++)
+		{
+			threads.push_back(std::thread([&]()
+			{
+				for (int x; (x = finishedX++) < map->getGnd()->width;)
+				{
+					Log::out << "Row " << x << Log::newline;
 
-						}
+					progressMutex.lock();
+					window->setProgress((x / (float)map->getGnd()->width) * 100);
+					progressMutex.unlock();
 
-						totalIntensity += calculateLight(groundPos, normal);
-						count++;
+					for (int y = 0; y < map->getGnd()->height; y++)
+						//for (int y = 0; y < 10; y++)
+					{
+						Gnd::Cube* cube = map->getGnd()->cubes[x][y];
+
+						for (int i = 0; i < 3; i++)
+							if (cube->tileIds[i] != -1)
+								calcPos(i, cube->tileIds[i], x, y);
 					}
 				}
-
-				int intensity = totalIntensity / count;
-				if (intensity > 255)
-					intensity = 255;
-
-				lightmap->data[xx + 8 * yy] = intensity;
-				lightmap->data[64 + 3 * (xx + 8 * yy) + 0] = 0;
-				lightmap->data[64 + 3 * (xx + 8 * yy) + 1] = 0;
-				lightmap->data[64 + 3 * (xx + 8 * yy) + 2] = 0;
-			}
+			}));
 		}
-	};
 
-	std::vector<std::thread> threads;
-	std::atomic<unsigned> finishedX(0);
-	for (int t = 0; t < 8; t++)
-	{
 		threads.push_back(std::thread([&]()
 		{
-			for (int x; (x = finishedX++) < map->getGnd()->width;)
+			while (finishedX < map->getGnd()->width)
 			{
-				Log::out << "Row " << x << Log::newline;
-				for (int y = 0; y < map->getGnd()->height; y++)
-				{
-					Gnd::Cube* cube = map->getGnd()->cubes[x][y];
-
-					for (int i = 0; i < 3; i++)
-						if (cube->tileIds[i] != -1)
-							calcPos(i, cube->tileIds[i], x, y);
-				}
+				std::this_thread::sleep_for(std::chrono::seconds(5)); 
+				progressMutex.lock();
+				mapRenderer.setShadowDirty();
+				progressMutex.unlock();
 			}
 		}));
-	}
-
-	for (auto &t : threads)
-		t.join();
 
 
-	/*Gnd::Cube* cube = map->getGnd()->cubes[63][31];
-	for (int i = 0; i < 3; i++)
-		if (cube->tileIds[i] != -1)
-			calcPos(i, cube->tileIds[i], 63, 31);*/  //test single tile
+		for (auto &t : threads)
+			t.join();
 
 
-	map->getGnd()->makeLightmapBorders();
+		/*Gnd::Cube* cube = map->getGnd()->cubes[63][31];
+		for (int i = 0; i < 3; i++)
+			if (cube->tileIds[i] != -1)
+				calcPos(i, cube->tileIds[i], 63, 31);*/  //test single tile
 
 
+		map->getGnd()->makeLightmapBorders();
+		window->close();
+	});
+
+
+	thread.detach();
 }
 
 

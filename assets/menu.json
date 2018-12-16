@@ -25,6 +25,10 @@
 				"type" : "item"
 			},
 			{
+				"name" : "export lightmap",
+				"type" : "item"
+			},
+			{
 				"name" : "load heightmap",
 				"type" : "item"
 			},

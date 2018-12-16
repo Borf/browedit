@@ -109,7 +109,16 @@ void BrowEdit::menuFileLoadHeightmap()
 	}, [dialog](bool bla) {	dialog->close();	});
 }
 
-
+void BrowEdit::menuFileExportLightmap()
+{
+	MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+	new blib::BackgroundTask<bool>(this, [this]()
+	{
+		if (map)
+			map->exportLightmap(config["data"]["ropath"].get<std::string>() + "/" + map->getFileName() + ".light.png");
+		return true;
+	}, [dialog](bool bla) {	dialog->close();	});
+}
 void BrowEdit::menuFileExportObj()
 {
 	MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");

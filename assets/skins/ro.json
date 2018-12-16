@@ -334,59 +334,48 @@
 		{
 			"top" :
 			{
-				"height" : 9,
+				"height" : 3,
 				"pos" : 60
+			},
+			"bottom" :
+			{
+				"height" : 3,
+				"pos" : 66
 			},
 			"left" :
 			{
-				"width" : 4,
+				"width" : 10,
 				"pos" : 25
 			},
 			"right" :
 			{
-				"width" : 4,
-				"pos" : 45
+				"width" : 10,
+				"pos" : 39
 			}
 		},
-		"bars" :
-		[
+		"bar" :
+		{
+			"top" :
 			{
-				"cond" : 50,
-				"top" :
-				{
-					"height" : 9,
-					"pos" : 80
-				},
-				"left" :
-				{
-					"width" : 4,
-					"pos" : 25
-				},
-				"right" :
-				{
-					"width" : 4,
-					"pos" : 45
-				}
+				"height" : 3,
+				"pos" : 70
 			},
+			"bottom" :
 			{
-				"cond" : 100,
-				"top" :
-				{
-					"height" : 9,
-					"pos" : 70
-				},
-				"left" :
-				{
-					"width" : 4,
-					"left" : 25
-				},
-				"right" :
-				{
-					"width" : 4,
-					"right" : 45
-				}
+				"height" : 3,
+				"pos" : 76
+			},
+			"left" :
+			{
+				"width" : 10,
+				"pos" : 25
+			},
+			"right" :
+			{
+				"width" : 10,
+				"pos" : 39
 			}
-		]
+		}
 	},
 	"label" :
 	{

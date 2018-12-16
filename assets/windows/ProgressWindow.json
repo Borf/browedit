@@ -1,0 +1,34 @@
+{
+	"size" : [ 300, 100 ],
+	"modal" : true,
+	"resizable" : false,
+	"closable" : false,
+	"widgets" :
+	{
+		"text" :
+		{
+			"type" : "label",
+			"text" : "Progress",
+			"position" : [ 10, 10],
+			"size" : [ 300, 10],
+			"positionhelp" :
+			{
+				"left" : "left",
+				"right" : "right",
+				"top" : "top",
+				"bottom" : "top"
+			}
+		},
+		"bar": {
+			"type": "progressbar",
+			"position" : [ 10, 40],
+			"size": [ 280, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		}
+	}
+}

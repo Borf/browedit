@@ -223,6 +223,7 @@ public:
 	void menuFileSaveAs();
 	void menuFileSaveHeightmap();
 	void menuFileLoadHeightmap();
+	void menuFileExportLightmap();
 	void menuFileExportObj();
 
 	void menuActionsLightmapCalculate();

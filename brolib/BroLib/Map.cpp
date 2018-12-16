@@ -158,6 +158,34 @@ void Map::loadHeightmap(const std::string &fileName)
 }
 
 
+void Map::exportLightmap(const std::string &fileName)
+{
+	char* data = new char[(gnd->width * 6)  * (gnd->height * 6) * 3];
+
+	for (int y = 0; y < gnd->height; y++)
+	{
+		for (int x = 0; x < gnd->width; x++)
+		{
+			for (int xx = 0; xx < 6; xx++)
+			{
+				for (int yy = 0; yy < 6; yy++)
+				{
+					for (int i = 0; i < 4; i++)
+					{
+						int brightness = gnd->getLightmapBrightness(x, y, xx + 1, yy + 1);
+
+						int index = ((6 * x + xx) + (gnd->width * 6) * (6 * y + yy)) * 3;
+						for (int ii = 0; ii < 3; ii++)
+							data[index + ii] = brightness;
+					}
+				}
+			}
+		}
+	}
+
+	stbi_write_png(fileName.c_str(), gnd->width * 6, gnd->height * 6, 3, data, 0);
+	delete[] data;
+}
 
 void Map::exportObj(const std::string &fileName)
 {

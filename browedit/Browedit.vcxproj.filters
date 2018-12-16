@@ -111,6 +111,9 @@
     <ClInclude Include="windows\ColorWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\ProgressWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -214,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="LightmapEdit.cpp">
       <Filter>Source Files\editmodes</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\ProgressWindow.cpp">
+      <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
