@@ -102,6 +102,7 @@ private:
 	bool gndTileColorDirty;
 #pragma endregion
 #pragma region RSW
+public:
 	blib::RenderState rswRenderState;
 	class RswShaderAttributes
 	{
@@ -199,6 +200,7 @@ public:
 	void setShadowDirty();
 	void setColorDirty() { gndTileColorDirty = true; }
 	void renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
+	void renderMesh(Rsm* rsm, const glm::mat4& matrix, blib::Renderer* renderer);
 	bool gndTextureGridDirty;
 	bool gndGridDirty;
 	bool gatDirty;

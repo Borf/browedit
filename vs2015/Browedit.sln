@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blib", "..\blib\blib.vcxproj", "{22D5CA69-1AFF-4025-AC86-A4F056D79B53}"
 EndProject
@@ -22,6 +22,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rsw2json", "rsw2json.vcxproj", "{957E64C7-451A-4AA7-A22E-7F8176E7660A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22D5CA69-1AFF-4025-AC86-A4F056D79B53} = {22D5CA69-1AFF-4025-AC86-A4F056D79B53}
+		{E6E72CDE-7DAD-4576-825E-AB65026E0820} = {E6E72CDE-7DAD-4576-825E-AB65026E0820}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bromedit", "bromedit.vcxproj", "{1D31934E-0F8A-429C-8654-DD731EE13E96}"
 	ProjectSection(ProjectDependencies) = postProject
 		{22D5CA69-1AFF-4025-AC86-A4F056D79B53} = {22D5CA69-1AFF-4025-AC86-A4F056D79B53}
 		{E6E72CDE-7DAD-4576-825E-AB65026E0820} = {E6E72CDE-7DAD-4576-825E-AB65026E0820}
@@ -49,8 +55,15 @@ Global
 		{957E64C7-451A-4AA7-A22E-7F8176E7660A}.Debug|Win32.Build.0 = Debug|Win32
 		{957E64C7-451A-4AA7-A22E-7F8176E7660A}.Release|Win32.ActiveCfg = Release|Win32
 		{957E64C7-451A-4AA7-A22E-7F8176E7660A}.Release|Win32.Build.0 = Release|Win32
+		{1D31934E-0F8A-429C-8654-DD731EE13E96}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1D31934E-0F8A-429C-8654-DD731EE13E96}.Debug|Win32.Build.0 = Debug|Win32
+		{1D31934E-0F8A-429C-8654-DD731EE13E96}.Release|Win32.ActiveCfg = Release|Win32
+		{1D31934E-0F8A-429C-8654-DD731EE13E96}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96046F31-56B7-4EFB-8223-1A0B9987DA7E}
 	EndGlobalSection
 EndGlobal

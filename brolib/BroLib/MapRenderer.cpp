@@ -1000,13 +1000,43 @@ void MapRenderer::renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::
 	rswRenderState.depthTest = true;
 
 
-	renderer->setViewPort(0,0, fbo->originalWidth, fbo->originalHeight);
+	if(fbo != nullptr)
+		renderer->setViewPort(0,0, fbo->originalWidth, fbo->originalHeight);
 	renderer->clear(glm::vec4(0, 0, 0, 1), blib::Renderer::Color | blib::Renderer::Depth, rswRenderState);
 	renderMesh(rsm->rootMesh, glm::mat4(), rsm->renderer, renderer);
 	renderer->setViewPort(0, 0, width, height);
 
 	rswRenderState.activeFbo = oldFbo;
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
+}
+
+
+void MapRenderer::renderMesh(Rsm* rsm, const glm::mat4 &camera, blib::Renderer* renderer)
+{
+	blib::FBO* oldFbo = rswRenderState.activeFbo;
+
+	float dist = glm::max(glm::max(rsm->realbbmax.x - rsm->realbbmin.x, rsm->realbbmax.y - rsm->realbbmin.y), rsm->realbbmax.z - rsm->realbbmin.z);
+
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(glm::radians(75.0f), width / (float)height, 0.1f, 250.0f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, camera);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::mat4());
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightAmbient, glm::vec3(0.7f, 0.7f, 0.7f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDiffuse, glm::vec3(0.7f, 0.7f, 0.7f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightIntensity, 1.0f);
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::highlightColor, glm::vec3(0, 0, 0));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDirection, glm::vec3(0, 1, 1));
+
+	rswRenderState.activeVbo = NULL;
+	rswRenderState.activeFbo = nullptr;
+	rswRenderState.depthTest = true;
+
+
+	renderMesh(rsm->rootMesh, glm::mat4(), rsm->renderer, renderer);
+
+	rswRenderState.activeFbo = oldFbo;
+	//rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);
 }
 
 void MapRenderer::updateWaterTextures()
