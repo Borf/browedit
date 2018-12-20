@@ -172,6 +172,12 @@ void BromEdit::draw()
 
 	drawLine = [&,this](Rsm::Mesh* mesh, int level)
 	{
+		if (mesh == selectedMesh)
+		{
+			spriteBatch->drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, 
+				glm::vec3(0,0, 0)), blib::wm::WM::getInstance()->skin, glm::vec2(100, 12), blib::wm::WM::getInstance()->convertHexColor4(blib::wm::WM::getInstance()->skin["list"]["selectcolor"].get<std::string>()));
+		}
+
 		spriteBatch->draw(font, mesh->name, blib::math::easyMatrix(glm::vec2(5 + 16 * level, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 
 		spriteBatch->draw(font, "|", blib::math::easyMatrix(glm::vec2(100, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));

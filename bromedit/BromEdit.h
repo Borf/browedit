@@ -26,6 +26,9 @@ class BromEdit : public blib::App, public blib::MouseListener
 	glm::vec2 rotation;
 	float distance = 0;
 
+	Rsm::Mesh* selectedMesh = nullptr;
+
+
 	blib::Texture* grid;
 
 public:
