@@ -11,6 +11,7 @@ namespace blib {
 	namespace wm { class WM; class Menu; class ToggleMenuItem; }
 }
 
+class MeshProperties;
 
 class BromEdit : public blib::App, public blib::MouseListener
 {
@@ -45,6 +46,8 @@ public:
 
 	MapRenderer mapRenderer;
 	blib::wm::WM* wm;
+
+	MeshProperties* meshProperties;
 
 };
 

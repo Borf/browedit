@@ -834,8 +834,9 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 		mesh->renderer->matrix = matrix * mesh->matrix1 * mesh->matrix2;
 		mesh->renderer->matrixSub = matrix * mesh->matrix1;
 	}
-	if (!mesh->frames.empty())
+	if (!mesh->frames.empty() || mesh->matrixDirty)
 	{
+		mesh->matrixDirty = false;
 		mesh->calcMatrix1();
 		mesh->renderer->matrix = matrix * mesh->matrix1 * mesh->matrix2;
 		mesh->renderer->matrixSub = matrix * mesh->matrix1;

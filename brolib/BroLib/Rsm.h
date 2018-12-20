@@ -48,8 +48,6 @@ public:
 
 		std::string						name;
 		std::string						parentName;
-		int								unknown1;
-		float							unknown2;
 
 		glm::mat4						offset;
 		glm::vec3						pos_;
@@ -77,6 +75,7 @@ public:
 		glm::mat4 matrix2;
 		void calcMatrix1();
 		void calcMatrix2();
+		bool matrixDirty = true;
 
 		void setBoundingBox( glm::vec3& bbmin, glm::vec3& bbmax );
 		void setBoundingBox2( glm::mat4& mat, glm::vec3& realbbmin, glm::vec3& realbbmax );
@@ -86,6 +85,7 @@ public:
 public:
 	Rsm(std::string fileName);
 	~Rsm();
+	void updateMatrices();
 
 	bool loaded;
 

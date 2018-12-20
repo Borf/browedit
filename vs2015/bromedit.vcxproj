@@ -95,14 +95,15 @@
   <ItemGroup>
     <ClInclude Include="..\bromedit\BromEdit.h" />
     <ClInclude Include="..\bromedit\resource.h" />
+    <ClInclude Include="..\bromedit\windows\MeshProperties.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\bromedit\BromEdit.cpp" />
     <ClCompile Include="..\bromedit\main.cpp" />
+    <ClCompile Include="..\bromedit\windows\MeshProperties.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\bromedit\icon1.ico" />
-    <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\bromedit\bromedit.rc" />

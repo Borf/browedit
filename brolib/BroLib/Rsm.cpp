@@ -74,24 +74,7 @@ Rsm::Rsm(std::string fileName)
 	rootMesh->fetchChildren(meshes);
 
 
-
-	bbmin = glm::vec3(999999, 999999, 999999);
-	bbmax = glm::vec3(-999999, -999999, -9999999);
-	rootMesh->setBoundingBox(bbmin, bbmax);
-	bbrange = (bbmin + bbmax) / 2.0f;
-
-
-	rootMesh->calcMatrix1();
-	rootMesh->calcMatrix2();
-
-
-
-	realbbmax = glm::vec3(-999999, -999999, -999999);
-	realbbmin = glm::vec3(999999, 999999, 999999);
-	glm::mat4 mat = glm::scale(glm::mat4(), glm::vec3(1,-1,1));
-	rootMesh->setBoundingBox2(mat, realbbmin, realbbmax);
-	realbbrange = (realbbmax + realbbmin) / 2.0f;
-	maxRange = glm::max(glm::max(realbbmax.x, -realbbmin.x), glm::max(glm::max(realbbmax.y, -realbbmin.y), glm::max(realbbmax.z, -realbbmin.z)));
+	updateMatrices();
 
 
 	loaded = true;
@@ -105,6 +88,28 @@ Rsm::~Rsm()
 		delete renderer;
 	if (rootMesh)
 		delete rootMesh;
+}
+
+void Rsm::updateMatrices()
+{
+	bbmin = glm::vec3(999999, 999999, 999999);
+	bbmax = glm::vec3(-999999, -999999, -9999999);
+	rootMesh->setBoundingBox(bbmin, bbmax);
+	bbrange = (bbmin + bbmax) / 2.0f;
+
+
+	rootMesh->calcMatrix1();
+	rootMesh->calcMatrix2();
+
+
+
+	realbbmax = glm::vec3(-999999, -999999, -999999);
+	realbbmin = glm::vec3(999999, 999999, 999999);
+	glm::mat4 mat = glm::scale(glm::mat4(), glm::vec3(1, -1, 1));
+	rootMesh->setBoundingBox2(mat, realbbmin, realbbmax);
+	realbbrange = (realbbmax + realbbmin) / 2.0f;
+	maxRange = glm::max(glm::max(realbbmax.x, -realbbmin.x), glm::max(glm::max(realbbmax.y, -realbbmin.y), glm::max(realbbmax.z, -realbbmin.z)));
+
 }
 
 

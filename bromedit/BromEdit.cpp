@@ -1,6 +1,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "BromEdit.h"
 #include "resource.h"
+#include "windows/MeshProperties.h"
+
 #include <BroLib/GrfFileSystemHandler.h>
 
 #include <blib/wm/WM.h>
@@ -70,9 +72,9 @@ void BromEdit::init()
 	mapRenderer.fov = config["fov"].get<float>();
 
 
-	//model = new Rsm("data\\model\\크리스마스마을\\xmas_내부트리.rsm");
 	if (model == nullptr)
-		model = new Rsm("data\\model\\인던02\\인던02b중앙장식01.rsm");
+		model = new Rsm("data\\model\\크리스마스마을\\xmas_내부트리.rsm");
+	//model = new Rsm("data\\model\\인던02\\인던02b중앙장식01.rsm");
 	distance = glm::max(glm::max(model->realbbmax.x - model->realbbmin.x, model->realbbmax.y - model->realbbmin.y), model->realbbmax.z - model->realbbmin.z);
 
 	renderInfo = new RsmModelRenderInfo();
@@ -88,6 +90,11 @@ void BromEdit::init()
 	font = wm->font;
 	addMouseListener(wm);
 	addKeyListener(wm);
+
+	meshProperties = new MeshProperties(resourceManager);
+	meshProperties->setPosition(window->getWidth() - meshProperties->getWidth(), 10);
+
+	
 }
 
 void BromEdit::update(double elapsedTime)
@@ -101,9 +108,35 @@ void BromEdit::update(double elapsedTime)
 		glm::vec2 diff = glm::vec2(mouseState.position - lastMouseState.position) / 100.0f;
 		rotation += diff;
 	}
-
 	distance -= mouseState.scrollPosition / 10.0f;
 	mouseState.scrollPosition = 0;
+
+
+	if (mouseState.leftButton && !lastMouseState.leftButton)
+	{
+		float bary = window->getHeight() - 200.0f;
+		if (mouseState.position.y > bary)
+		{
+			int index = (int)((mouseState.position.y - bary - 40) / 13);
+			std::function<void(Rsm::Mesh*)> selectMesh;
+			selectMesh = [&, this](Rsm::Mesh* mesh)
+			{
+				if (index == 0)
+				{
+					selectedMesh = mesh;
+					meshProperties->selectMesh(mesh);
+				}
+				index--;
+				for (auto &m : mesh->children)
+					selectMesh(m);
+
+			};
+			selectMesh(model->rootMesh);
+
+		}
+	}
+
+
 
 
 	lastMouseState = mouseState;
@@ -174,11 +207,14 @@ void BromEdit::draw()
 	{
 		if (mesh == selectedMesh)
 		{
-			spriteBatch->drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(matrix, 
-				glm::vec3(0,0, 0)), blib::wm::WM::getInstance()->skin, glm::vec2(100, 12), blib::wm::WM::getInstance()->convertHexColor4(blib::wm::WM::getInstance()->skin["list"]["selectcolor"].get<std::string>()));
-		}
+			spriteBatch->drawStretchyRect(blib::wm::WM::getInstance()->skinTexture, glm::translate(glm::mat4(), 
+				glm::vec3(0, y + 40 + i * 13 - 1, 0)), blib::wm::WM::getInstance()->skin["list"], glm::vec2(100, 14), 
+				blib::wm::WM::getInstance()->convertHexColor4(blib::wm::WM::getInstance()->skin["list"]["selectcolor"].get<std::string>()));
 
-		spriteBatch->draw(font, mesh->name, blib::math::easyMatrix(glm::vec2(5 + 16 * level, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
+			spriteBatch->draw(font, mesh->name, blib::math::easyMatrix(glm::vec2(5 + 16 * level, y + 40 + i * 13)), glm::vec4(1, 1, 1, 1));
+		}
+		else
+			spriteBatch->draw(font, mesh->name, blib::math::easyMatrix(glm::vec2(5 + 16 * level, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 
 		spriteBatch->draw(font, "|", blib::math::easyMatrix(glm::vec2(100, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 
