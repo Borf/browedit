@@ -279,7 +279,7 @@ void BromEdit::draw()
 			spriteBatch->draw(font, symbol, blib::math::easyMatrix(glm::vec2(100 + frame->time / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 		}
 
-		if (mesh->frames.size() > 0)
+		if (mesh->frames.size() > 0 && mesh->frames[mesh->frames.size() - 1]->time != 0)
 		{
 			int tick = (int)(blib::util::Profiler::getAppTime() * 1000) % mesh->frames[mesh->frames.size() - 1]->time;
 			spriteBatch->draw(font, "|", blib::math::easyMatrix(glm::vec2(100 + tick / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
@@ -340,19 +340,51 @@ void BromEdit::addKeyframe()
 		}
 	}
 	selectedMesh->frames.push_back(frame);
-	
+	if (selectedMesh->frames.size() == 1)
+	{
+		frame = new Rsm::Mesh::Frame();
+		if(selectedMesh->frames[0]->time == 0)
+			frame->time = 1000;
+		else
+			frame->time = 0;
+		selectedMesh->frames.push_back(frame);
+
+		std::sort(selectedMesh->frames.begin(), selectedMesh->frames.end(), [](Rsm::Mesh::Frame* a, Rsm::Mesh::Frame* b)
+		{
+			return b->time > a->time;
+		});
+	}
+
+
 }
 
 void BromEdit::delKeyframe()
 {
-	for (auto frame : selectedMesh->frames)
+	for (auto it = selectedMesh->frames.begin(); it != selectedMesh->frames.end(); it++)
 	{
-		if (fabs(frame->time / 10.0 - timeSelect) < 5)
+		if (fabs((*it)->time / 10.0 - timeSelect) < 5)
 		{
-			selectedMesh->frames.erase(std::find(selectedMesh->frames.begin(), selectedMesh->frames.end(), frame));
-			frameProperties->selectFrame(nullptr);
+			auto frame = *it;
+			auto it2 = selectedMesh->frames.erase(it);
+			if (it2 == selectedMesh->frames.end())
+			{
+				frameProperties->selectFrame(selectedMesh->frames[0]);
+				timeSelect = selectedMesh->frames[0]->time / 10.0f;
+			}
+			else
+			{
+				frameProperties->selectFrame(*it2);
+				timeSelect = (*it2)->time / 10.0f;
+			}
+			delete frame;
 			break;
 		}
+	}
+
+	if (selectedMesh->frames.size() == 1)
+	{
+		delete selectedMesh->frames[0];
+		selectedMesh->frames.clear();
 	}
 
 }

@@ -134,7 +134,7 @@ void Rsm::Mesh::calcMatrix1()
 	}
 	else
 	{
-		if(true)
+		if(frames[frames.size() - 1]->time != 0)
 		{
 			int tick = (int)(blib::util::Profiler::getAppTime() * 1000) % frames[frames.size() - 1]->time;
 
