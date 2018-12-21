@@ -45,7 +45,7 @@ void MeshProperties::selectMesh(Rsm::Mesh * mesh)
 		c.first->text = *c.second(mesh);
 
 	for (auto& c : floatCallbacks)
-		c.first->text = std::to_string(*c.second(mesh));
+		c.first->text = blib::util::toString(*c.second(mesh));
 
 }
 

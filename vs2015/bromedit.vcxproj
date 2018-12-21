@@ -22,14 +22,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -95,11 +95,15 @@
   <ItemGroup>
     <ClInclude Include="..\bromedit\BromEdit.h" />
     <ClInclude Include="..\bromedit\resource.h" />
+    <ClInclude Include="..\bromedit\windows\FileOpenWindow.h" />
+    <ClInclude Include="..\bromedit\windows\FrameProperties.h" />
     <ClInclude Include="..\bromedit\windows\MeshProperties.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\bromedit\BromEdit.cpp" />
     <ClCompile Include="..\bromedit\main.cpp" />
+    <ClCompile Include="..\bromedit\windows\FileOpenWindow.cpp" />
+    <ClCompile Include="..\bromedit\windows\FrameProperties.cpp" />
     <ClCompile Include="..\bromedit\windows\MeshProperties.cpp" />
   </ItemGroup>
   <ItemGroup>

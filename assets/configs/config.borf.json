@@ -1,17 +1,16 @@
 {
-	"resolution" : [ 1920, 1080 ],
-	"data" :
-	{
-		"ropath" : "d:/old/d/games/Woon_Renewal_Full",
-		"grfs" :
-		[
-			"d:/old/d/games/Woon_Renewal_Full/data.grf"
+	"resolution": [ 1920, 1080 ],
+	"data": {
+		"ropath": "g:/games/RO",
+		"grfs": [
+			"g:/games/RO/data.grf",
+			"g:/games/RO/wicked_prt.grf"
 		]
 	},
-	"moveconsole" : true,
-	"defaultmap" : "prontera",
-	"threadedrendering" : true,
-	"backgroundworkers" : true,
-	"fov" : 45,
-	"vsync" : false
+	"moveconsole": true,
+	"defaultmap": "prontera_h",
+	"threadedrendering": true,
+	"backgroundworkers": true,
+	"fov": 45,
+	"vsync": false
 } 

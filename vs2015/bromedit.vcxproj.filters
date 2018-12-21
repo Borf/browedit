@@ -27,6 +27,12 @@
     <ClInclude Include="..\bromedit\windows\MeshProperties.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\bromedit\windows\FrameProperties.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bromedit\windows\FileOpenWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\bromedit\BromEdit.cpp">
@@ -36,6 +42,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\bromedit\windows\MeshProperties.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bromedit\windows\FrameProperties.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bromedit\windows\FileOpenWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,6 +2,8 @@
 #include "BromEdit.h"
 #include "resource.h"
 #include "windows/MeshProperties.h"
+#include "windows/FrameProperties.h"
+#include "windows/FileOpenWindow.h"
 
 #include <BroLib/GrfFileSystemHandler.h>
 
@@ -15,9 +17,12 @@
 #include <blib/Math.h>
 #include <blib/Window.h>
 #include <blib/util/Profiler.h>
+#include <blib/util/Log.h>
+#include <blib/wm/Menu.h>
 
 #include <glm/gtx/quaternion.hpp>
 
+using blib::util::Log;
 
 BromEdit::BromEdit(const json &config)
 {
@@ -71,30 +76,36 @@ void BromEdit::init()
 	mapRenderer.init(resourceManager, this);
 	mapRenderer.fov = config["fov"].get<float>();
 
+	spriteBatch->utf8 = false;
+
 
 	if (model == nullptr)
-		model = new Rsm("data\\model\\크리스마스마을\\xmas_내부트리.rsm");
-	//model = new Rsm("data\\model\\인던02\\인던02b중앙장식01.rsm");
-	distance = glm::max(glm::max(model->realbbmax.x - model->realbbmin.x, model->realbbmax.y - model->realbbmin.y), model->realbbmax.z - model->realbbmin.z);
-
-	renderInfo = new RsmModelRenderInfo();
-	for (size_t i = 0; i < model->textures.size(); i++)
-		renderInfo->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + model->textures[i]));
-
-	model->renderer = renderInfo;
+	//	loadModel("data\\model\\크리스마스마을\\xmas_내부트리.rsm");
+		loadModel("data\\model\\인던02\\인던02b중앙장식01.rsm");
 
 	grid = resourceManager->getResource<blib::Texture>("assets/textures/grid.png");
 	grid->setTextureRepeat(true);
+	buttons = resourceManager->getResource<blib::Texture>("assets/textures/bromedit_icons.png");
+	whitePixel = resourceManager->getResource<blib::Texture>("assets/textures/whitepixel.png");
 
+	auto rootMenu = wm->loadMenu("assets/bromedit.json", nullptr);
 	wm->setSkin("assets/skins/ro.json", resourceManager);
+	wm->setMenuBar(rootMenu);
 	font = wm->font;
 	addMouseListener(wm);
 	addKeyListener(wm);
 
 	meshProperties = new MeshProperties(resourceManager);
-	meshProperties->setPosition(window->getWidth() - meshProperties->getWidth(), 10);
+	meshProperties->setPosition(window->getWidth() - meshProperties->getWidth(), 20);
 
-	
+	frameProperties = new FrameProperties(resourceManager);
+	frameProperties->setPosition(window->getWidth() - meshProperties->getWidth(), 380);
+
+	rootMenu->setAction("file/new",				std::bind(&BromEdit::menuFileNew, this));
+	rootMenu->setAction("file/open", [this](){	new FileOpenWindow(resourceManager, this);	});
+	rootMenu->setAction("file/save",			std::bind(&BromEdit::menuFileSave, this));
+	rootMenu->setAction("file/save as",			std::bind(&BromEdit::menuFileSaveAs, this));
+
 }
 
 void BromEdit::update(double elapsedTime)
@@ -102,8 +113,10 @@ void BromEdit::update(double elapsedTime)
 	if (keyState.isPressed(blib::Key::ESC))
 		running = false;
 
+	if (wm->hasModalWindow())
+		return;
 
-	if (mouseState.middleButton)
+	if (mouseState.middleButton || mouseState.rightButton)
 	{
 		glm::vec2 diff = glm::vec2(mouseState.position - lastMouseState.position) / 100.0f;
 		rotation += diff;
@@ -112,10 +125,10 @@ void BromEdit::update(double elapsedTime)
 	mouseState.scrollPosition = 0;
 
 
+	float bary = window->getHeight() - 200.0f;
 	if (mouseState.leftButton && !lastMouseState.leftButton)
 	{
-		float bary = window->getHeight() - 200.0f;
-		if (mouseState.position.y > bary)
+		if (mouseState.position.y > bary+40)
 		{
 			int index = (int)((mouseState.position.y - bary - 40) / 13);
 			std::function<void(Rsm::Mesh*)> selectMesh;
@@ -133,7 +146,35 @@ void BromEdit::update(double elapsedTime)
 			};
 			selectMesh(model->rootMesh);
 
+			for (auto frame : selectedMesh->frames)
+				if (fabs(frame->time / 10.0 - timeSelect) < 5)
+					frameProperties->selectFrame(frame);
+
+
 		}
+		if (mouseState.position.y > bary && mouseState.position.y < bary + 40)
+		{
+			int buttonIndex = (mouseState.position.x - 5) / 37;
+			switch (buttonIndex)
+			{
+			case 0: pause(); break;
+			case 1: play(); break;
+			case 2: addKeyframe(); break;
+			case 3: delKeyframe(); break;
+			case 4: prevFrame(); break;
+			case 5: nextFrame(); break;
+			case 6: addMesh(); break;
+			case 7: delMesh(); break;
+			}
+		}
+	}
+
+	if (mouseState.position.y > bary + 40 && mouseState.position.x > 100 && mouseState.leftButton)
+	{
+		timeSelect = mouseState.position.x - 100.0f;
+		for (auto frame : selectedMesh->frames)
+			if (fabs(frame->time / 10.0 - timeSelect) < 5)
+				frameProperties->selectFrame(frame);
 	}
 
 
@@ -194,10 +235,23 @@ void BromEdit::draw()
 
 	for (int i = 0; i < 10; i++)
 	{
+		glm::vec4 color(1, 1, 1, 1);
+		if (blib::math::Rectangle(glm::vec2(5 + 37 * i, y + 5), 32, 32).contains(mouseState.position))
+			if(mouseState.leftButton)
+				color = glm::vec4(0.9f, 0.9f, 0.9f, 1.0f);
+			else
+				color = glm::vec4(0.9f, 0.9f, 1.0f, 1.0f);
 		spriteBatch->drawStretchyRect(
 			blib::wm::WM::getInstance()->skinTexture,
-			blib::math::easyMatrix(glm::vec2(5 + 37*i, y+5)), blib::wm::WM::getInstance()->skin["button"], glm::vec2(32, 32));
+			blib::math::easyMatrix(glm::vec2(5 + 37*i, y+5)), blib::wm::WM::getInstance()->skin["button"], glm::vec2(32, 32), color);
+		
+		spriteBatch->draw(buttons, blib::math::easyMatrix(glm::vec2(5 + 37 * i+4, y + 5+4)), glm::vec2(0, 0), blib::math::Rectangle(0.1f * i, 0.0f, 0.1f, 1.0f));
 	}
+
+
+	spriteBatch->draw(whitePixel, blib::math::easyMatrix(whitePixel, blib::math::Rectangle(100, (int)y+40, 1, 200)), glm::vec4(0,0,0,1));
+	spriteBatch->draw(whitePixel, blib::math::easyMatrix(whitePixel, blib::math::Rectangle((int)(100 + timeSelect), (int)y+ 40, 1, 200)), glm::vec4(0, 0, 0, 1));
+
 
 
 	int i = 0;
@@ -216,17 +270,17 @@ void BromEdit::draw()
 		else
 			spriteBatch->draw(font, mesh->name, blib::math::easyMatrix(glm::vec2(5 + 16 * level, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 
-		spriteBatch->draw(font, "|", blib::math::easyMatrix(glm::vec2(100, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 
 		for (auto frame : mesh->frames)
 		{
-			spriteBatch->draw(font, "o", blib::math::easyMatrix(glm::vec2(100 + frame->time / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
+			std::string symbol = "o";
+			if (abs(frame->time / 10 - timeSelect) < 5 && mesh == selectedMesh)
+				symbol = "x";
+			spriteBatch->draw(font, symbol, blib::math::easyMatrix(glm::vec2(100 + frame->time / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 		}
 
 		if (mesh->frames.size() > 0)
 		{
-			spriteBatch->draw(font, "X", blib::math::easyMatrix(glm::vec2(100 + mesh->frames[mesh->frames.size() - 1]->time / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
-
 			int tick = (int)(blib::util::Profiler::getAppTime() * 1000) % mesh->frames[mesh->frames.size() - 1]->time;
 			spriteBatch->draw(font, "|", blib::math::easyMatrix(glm::vec2(100 + tick / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 		}
@@ -244,5 +298,116 @@ void BromEdit::draw()
 
 	wm->draw(*spriteBatch, renderer);
 	spriteBatch->end();
+
+}
+
+
+void BromEdit::loadModel(const std::string &fileName)
+{
+	model = new Rsm(fileName);
+	distance = glm::min(100.0f, glm::max(glm::max(model->realbbmax.x - model->realbbmin.x, model->realbbmax.y - model->realbbmin.y), model->realbbmax.z - model->realbbmin.z));
+
+	renderInfo = new RsmModelRenderInfo();
+	for (size_t i = 0; i < model->textures.size(); i++)
+		renderInfo->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + model->textures[i]));
+
+	model->renderer = renderInfo;
+	selectedMesh = model->rootMesh;
+}
+
+
+void BromEdit::pause()
+{
+}
+
+void BromEdit::play()
+{
+}
+
+void BromEdit::addKeyframe()
+{
+	auto frame = new Rsm::Mesh::Frame();
+	frame->time = (int)(timeSelect * 10);
+
+	frameProperties->selectFrame(frame);
+
+	for (auto it = selectedMesh->frames.begin(); it != selectedMesh->frames.end(); it++)
+	{
+		if ((*it)->time / 10 > timeSelect) {
+			frame->quaternion = (*it)->quaternion;
+			selectedMesh->frames.insert(it, frame);
+			return;
+		}
+	}
+	selectedMesh->frames.push_back(frame);
+	
+}
+
+void BromEdit::delKeyframe()
+{
+	for (auto frame : selectedMesh->frames)
+	{
+		if (fabs(frame->time / 10.0 - timeSelect) < 5)
+		{
+			selectedMesh->frames.erase(std::find(selectedMesh->frames.begin(), selectedMesh->frames.end(), frame));
+			frameProperties->selectFrame(nullptr);
+			break;
+		}
+	}
+
+}
+
+void BromEdit::prevFrame()
+{
+	for (std::size_t i = 0; i < selectedMesh->frames.size(); i++)
+	{
+		auto frame = selectedMesh->frames[i];
+		if (fabs(frame->time / 10.0 - timeSelect) < 5)
+		{
+			frameProperties->selectFrame(selectedMesh->frames[(i + selectedMesh->frames.size() - 1) % selectedMesh->frames.size()]);
+			timeSelect = selectedMesh->frames[(i + selectedMesh->frames.size() - 1) % selectedMesh->frames.size()]->time / 10.0f;
+			break;
+		}
+	}
+}
+
+void BromEdit::nextFrame()
+{
+	for (std::size_t i = 0; i < selectedMesh->frames.size(); i++)
+	{
+		auto frame = selectedMesh->frames[i];
+		if (fabs(frame->time / 10.0 - timeSelect) < 5)
+		{
+			frameProperties->selectFrame(selectedMesh->frames[(i+1)% selectedMesh->frames.size()]);
+			timeSelect = selectedMesh->frames[(i + 1) % selectedMesh->frames.size()]->time / 10.0f;
+			break;
+		}
+	}
+}
+
+
+void BromEdit::addMesh()
+{
+
+}
+
+void BromEdit::delMesh()
+{
+
+}
+
+void BromEdit::menuFileNew()
+{
+
+}
+
+
+void BromEdit::menuFileSave()
+{
+
+}
+
+void BromEdit::menuFileSaveAs()
+{
 
 }

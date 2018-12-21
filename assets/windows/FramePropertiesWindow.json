@@ -1,0 +1,140 @@
+{
+	"size" : [ 200, 170 ],
+	"modal" : false,
+	"resizable" : true,
+	"widgets": {
+		"lblName": {
+			"type": "label",
+			"text": "Time",
+			"position": [ 0, 0 ],
+			"size": [ 190, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"time": {
+			"type": "textbox",
+			"text": "",
+			"position": [ 0, 20 ],
+			"size": [ 190, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"lblQuaternion": {
+			"type": "label",
+			"text": "Quaternion",
+			"position": [ 0, 40 ],
+			"size": [ 190, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"lblX": {
+			"type": "label",
+			"text": "x",
+			"position": [ 0, 60 ],
+			"size": [ 20, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"quatx": {
+			"type": "textbox",
+			"text": "",
+			"position": [ 20, 60 ],
+			"size": [ 170, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"lblY": {
+			"type": "label",
+			"text": "y",
+			"position": [ 0, 80 ],
+			"size": [ 20, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"quaty": {
+			"type": "textbox",
+			"text": "",
+			"position": [ 20, 80 ],
+			"size": [ 170, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"lblZ": {
+			"type": "label",
+			"text": "x",
+			"position": [ 0, 100 ],
+			"size": [ 20, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"quatz": {
+			"type": "textbox",
+			"text": "",
+			"position": [ 20, 100 ],
+			"size": [ 170, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"lblW": {
+			"type": "label",
+			"text": "w",
+			"position": [ 0, 120 ],
+			"size": [ 20, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"quatw": {
+			"type": "textbox",
+			"text": "",
+			"position": [ 20, 120 ],
+			"size": [ 170, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		}
+
+	}
+}

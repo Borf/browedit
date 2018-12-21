@@ -67,3 +67,12 @@ void GrfFileSystemHandler::getFileList( const std::string &path, std::vector<std
 			files.push_back(it->first);
 	}
 }
+
+void GrfFileSystemHandler::getFileList(const std::function<bool(const std::string&)> &filter, std::vector<std::string> &files)
+{
+	for (std::map<std::string, int>::iterator it = lookup.begin(); it != lookup.end(); it++)
+	{
+		if (filter(it->first))
+			files.push_back(it->first);
+	}
+}

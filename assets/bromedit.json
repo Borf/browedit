@@ -1,0 +1,25 @@
+[
+	{
+		"name" : "file",
+		"type" : "menu",
+		"subitems" :
+		[
+			{
+				"name" : "new",
+				"type" : "item"
+			},
+			{
+				"name" : "open",
+				"type" : "item"
+			},
+			{
+				"name" : "save",
+				"type" : "item"
+			},
+			{
+				"name" : "save as",
+				"type" : "item"
+			}
+		]
+	}
+]

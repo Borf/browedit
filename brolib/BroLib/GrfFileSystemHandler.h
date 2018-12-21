@@ -17,6 +17,8 @@ public:
 
 	virtual blib::util::StreamInFile* openRead( const std::string &fileName );
 	virtual void getFileList( const std::string &path, std::vector<std::string> &files );
+	virtual void getFileList(const std::function<bool(const std::string&)> &filter, std::vector<std::string> &files);
+
 
 private:
 	std::string sanitizeFileName(std::string fileName);

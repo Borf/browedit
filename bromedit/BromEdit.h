@@ -12,11 +12,10 @@ namespace blib {
 }
 
 class MeshProperties;
+class FrameProperties;
 
 class BromEdit : public blib::App, public blib::MouseListener
 {
-	json config;
-	json translation;
 
 	blib::MouseState lastMouseState;
 	blib::MouseState startMouseState;
@@ -24,13 +23,19 @@ class BromEdit : public blib::App, public blib::MouseListener
 
 	blib::Font* font;
 
+	//camera
 	glm::vec2 rotation;
 	float distance = 0;
 
 	Rsm::Mesh* selectedMesh = nullptr;
+	float timeSelect = 0;
+
+
 
 
 	blib::Texture* grid;
+	blib::Texture* buttons;
+	blib::Texture* whitePixel;
 
 public:
 	BromEdit(const json &config);
@@ -40,6 +45,7 @@ public:
 	virtual void update(double elapsedTime);
 	virtual void draw();
 
+	json config;
 
 	Rsm* model;
 	RsmModelRenderInfo* renderInfo;
@@ -48,6 +54,23 @@ public:
 	blib::wm::WM* wm;
 
 	MeshProperties* meshProperties;
+	FrameProperties* frameProperties;
 
+	void loadModel(const std::string &fileName);
+
+
+	void pause();
+	void play();
+	void addKeyframe();
+	void delKeyframe();
+	void prevFrame();
+	void nextFrame();
+	void addMesh();
+	void delMesh();
+
+
+	void menuFileNew();
+	void menuFileSave();
+	void menuFileSaveAs();
 };
 
