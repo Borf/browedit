@@ -62,7 +62,7 @@
       <PreprocessorDefinitions>NOMINMAX;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;$(SolutionDir)\..\bromedit\externals\assimp_build\include;$(SolutionDir)\..\bromedit\externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -70,8 +70,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)\..;$(SolutionDir)\..\externals\BugTrap;$(SolutionDir)\..\blib\externals\glew\lib;$(SolutionDir)\..\blib\externals\openal\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>brolib.lib;blib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)\..;$(SolutionDir)\..\externals\BugTrap;$(SolutionDir)\..\blib\externals\glew\lib;$(SolutionDir)\..\blib\externals\openal\libs;$(SolutionDir)\..\bromedit\externals\assimp_build\code\$(Configuration);$(SolutionDir)\..\bromedit\externals\assimp_build\contrib\irrXML\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>brolib.lib;blib.lib;assimp-vc140-mt.lib;IrrXML.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -83,13 +83,13 @@
       <PreprocessorDefinitions>NOMINMAX;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;$(SolutionDir)\..\bromedit\externals\assimp_build\include;$(SolutionDir)\..\bromedit\externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)\..;$(SolutionDir)\..\externals\BugTrap;$(SolutionDir)\..\blib\externals\glew\lib;$(SolutionDir)\..\blib\externals\openal\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>brolib.lib;blib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)\..;$(SolutionDir)\..\externals\BugTrap;$(SolutionDir)\..\blib\externals\glew\lib;$(SolutionDir)\..\blib\externals\openal\libs;$(SolutionDir)\..\bromedit\externals\assimp_build\code\$(Configuration);$(SolutionDir)\..\bromedit\externals\assimp_build\contrib\irrXML\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>brolib.lib;blib.lib;assimp-vc140-mt.lib;IrrXML.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -98,6 +98,7 @@
     <ClInclude Include="..\bromedit\windows\FileOpenWindow.h" />
     <ClInclude Include="..\bromedit\windows\FrameProperties.h" />
     <ClInclude Include="..\bromedit\windows\MeshProperties.h" />
+    <ClInclude Include="..\bromedit\windows\ModelProperties.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\bromedit\BromEdit.cpp" />
@@ -105,6 +106,7 @@
     <ClCompile Include="..\bromedit\windows\FileOpenWindow.cpp" />
     <ClCompile Include="..\bromedit\windows\FrameProperties.cpp" />
     <ClCompile Include="..\bromedit\windows\MeshProperties.cpp" />
+    <ClCompile Include="..\bromedit\windows\ModelProperties.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\bromedit\icon1.ico" />

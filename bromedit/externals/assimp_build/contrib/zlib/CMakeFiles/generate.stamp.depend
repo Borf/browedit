@@ -1,0 +1,10 @@
+# CMake generation dependency list for this directory.
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/contrib/zlib/CMakeLists.txt
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckTypeSize.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckFunctionExists.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckCSourceCompiles.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/contrib/zlib/zlib.pc.cmakein
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/contrib/zlib/zconf.h.cmakein

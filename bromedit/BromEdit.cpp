@@ -1,6 +1,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "BromEdit.h"
 #include "resource.h"
+#include "windows/ModelProperties.h"
 #include "windows/MeshProperties.h"
 #include "windows/FrameProperties.h"
 #include "windows/FileOpenWindow.h"
@@ -19,6 +20,13 @@
 #include <blib/util/Profiler.h>
 #include <blib/util/Log.h>
 #include <blib/wm/Menu.h>
+
+#include <assimp/Importer.hpp>	//OO version Header!
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <assimp/DefaultLogger.hpp>
+#include <assimp/LogStream.hpp>
+
 
 #include <glm/gtx/quaternion.hpp>
 
@@ -92,8 +100,15 @@ void BromEdit::init()
 	wm->setSkin("assets/skins/ro.json", resourceManager);
 	wm->setMenuBar(rootMenu);
 	font = wm->font;
+	font->utf8 = false;
 	addMouseListener(wm);
 	addKeyListener(wm);
+
+	modelProperties = new ModelProperties(resourceManager);
+	modelProperties->setPosition(window->getWidth() - modelProperties->getWidth(), 550);
+	if(model)
+		modelProperties->selectModel(model);
+
 
 	meshProperties = new MeshProperties(resourceManager);
 	meshProperties->setPosition(window->getWidth() - meshProperties->getWidth(), 20);
@@ -165,6 +180,7 @@ void BromEdit::update(double elapsedTime)
 			case 5: nextFrame(); break;
 			case 6: addMesh(); break;
 			case 7: delMesh(); break;
+			case 8: replaceMesh(); break;
 			}
 		}
 	}
@@ -313,6 +329,8 @@ void BromEdit::loadModel(const std::string &fileName)
 
 	model->renderer = renderInfo;
 	selectedMesh = model->rootMesh;
+	if(modelProperties)
+		modelProperties->selectModel(model);
 }
 
 
@@ -441,5 +459,75 @@ void BromEdit::menuFileSave()
 
 void BromEdit::menuFileSaveAs()
 {
+
+}
+
+
+
+void BromEdit::replaceMesh()
+{
+	std::string filename = "D:\\CloudStation\\Collection\\Models\\env\\_Stylized\\mini-house\\house.fbx";
+	auto mesh = model->rootMesh;
+	Assimp::Importer importer;
+
+	mesh->faces.clear();
+	mesh->vertices.clear();
+	mesh->renderer = nullptr; //todo
+
+	auto scene = importer.ReadFile(filename, aiProcessPreset_TargetRealtime_Quality);
+	// If the import failed, report it
+	if (!scene)
+	{
+		Log::out<<importer.GetErrorString()<<Log::newline;
+		return;
+	}
+
+	std::function<void(const aiScene*, aiNode*, const glm::mat4&)> scanMesh;
+
+	scanMesh = [&](const aiScene* scene, aiNode* node, const glm::mat4 &parentMatrix)
+	{
+		glm::mat4 matrix = parentMatrix * glm::transpose(glm::make_mat4((float*)&node->mTransformation));
+
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
+		{
+			auto m = scene->mMeshes[node->mMeshes[i]];
+
+			for (unsigned int ii = 0; ii < m->mNumVertices; ii++)
+			{
+				mesh->vertices.push_back(glm::vec3(m->mVertices[ii].x, m->mVertices[ii].y, m->mVertices[ii].z));
+				mesh->texCoords.push_back(glm::vec2(m->mTextureCoords[0][ii].x, m->mTextureCoords[0][ii].y));
+			}
+
+			for (unsigned int ii = 0; ii < m->mNumFaces; ii++)
+			{
+				Rsm::Mesh::Face* face = new Rsm::Mesh::Face();
+				const auto &f = m->mFaces[ii];
+
+				face->twoSide = false;
+				face->texIndex = 0;
+				face->smoothGroup = 0;
+
+				assert(f.mNumIndices == 3);
+				for (int iii = 0; iii < f.mNumIndices; iii++)
+				{
+					face->vertices[iii] = f.mIndices[iii];
+					face->texvertices[iii] = f.mIndices[iii];
+				}
+
+				mesh->faces.push_back(face);
+			}
+
+		}
+
+		for (int i  = 0; i < node->mNumChildren; i++)
+			scanMesh(scene, node->mChildren[i], matrix);
+	};
+
+	scanMesh(scene, scene->mRootNode, glm::mat4());
+
+
+
+
+
 
 }

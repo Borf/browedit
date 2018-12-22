@@ -1,0 +1,7 @@
+code/Debug
+code/Release
+code/assimp.dir
+contrib/irrXML/Debug
+contrib/irrXML/Release
+contrib/zlib/Debug
+contrib/zlib/Release

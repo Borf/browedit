@@ -1,0 +1,47 @@
+# CMake generation dependency list for this directory.
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/CMakeLists.txt
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/3.10.1/CMakeSystem.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/3.10.1/CMakeCCompiler.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/3.10.1/CMakeCXXCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeGenericSystem.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Platform/Windows.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Platform/WindowsPaths.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Platform/Windows-MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Platform/Windows-MSVC.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/3.10.1/CMakeRCCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeRCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeCXXInformation.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/revision.h.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/include/assimp/config.h.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/cmake-modules/FindPkgMacros.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/cmake-modules/PrecompiledHeader.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/cmake-modules/cmake_uninstall.cmake.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/assimp-config.cmake.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/assimpTargets.cmake.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/assimpTargets-debug.cmake.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/assimpTargets-release.cmake.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/assimp-config-version.cmake.in
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/cmake-modules/FindDirectX.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/cmake-modules/FindPkgMacros.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/cmake-modules/FindZLIB.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/cmake-modules/FindPkgMacros.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/FindPkgConfig.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckTypeSize.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/CMake/share/cmake-3.10/Modules/CheckFunctionExists.cmake
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/assimp.pc.in

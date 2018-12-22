@@ -33,6 +33,9 @@
     <ClInclude Include="..\bromedit\windows\FileOpenWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\bromedit\windows\ModelProperties.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\bromedit\BromEdit.cpp">
@@ -48,6 +51,9 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="..\bromedit\windows\FileOpenWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bromedit\windows\ModelProperties.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>

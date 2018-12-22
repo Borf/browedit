@@ -30,8 +30,17 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bromedit", "bromedit.vcxproj", "{1D31934E-0F8A-429C-8654-DD731EE13E96}"
 	ProjectSection(ProjectDependencies) = postProject
 		{22D5CA69-1AFF-4025-AC86-A4F056D79B53} = {22D5CA69-1AFF-4025-AC86-A4F056D79B53}
+		{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F} = {6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F}
 		{E6E72CDE-7DAD-4576-825E-AB65026E0820} = {E6E72CDE-7DAD-4576-825E-AB65026E0820}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "assimp", "..\bromedit\externals\assimp_build\code\assimp.vcxproj", "{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlibstatic", "..\bromedit\externals\assimp_build\contrib\zlib\zlibstatic.vcxproj", "{B8068EE6-E498-3770-8269-671E1CE714AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assimp+externals", "assimp+externals", "{F4AD8A12-3BC9-43A8-BAA9-CD3084C37935}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IrrXML", "..\bromedit\externals\assimp_build\contrib\irrXML\IrrXML.vcxproj", "{4F8977CD-B554-32B3-8072-DDEC78279D88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,9 +68,26 @@ Global
 		{1D31934E-0F8A-429C-8654-DD731EE13E96}.Debug|Win32.Build.0 = Debug|Win32
 		{1D31934E-0F8A-429C-8654-DD731EE13E96}.Release|Win32.ActiveCfg = Release|Win32
 		{1D31934E-0F8A-429C-8654-DD731EE13E96}.Release|Win32.Build.0 = Release|Win32
+		{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F}.Debug|Win32.Build.0 = Debug|Win32
+		{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F}.Release|Win32.ActiveCfg = Release|Win32
+		{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F}.Release|Win32.Build.0 = Release|Win32
+		{B8068EE6-E498-3770-8269-671E1CE714AB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B8068EE6-E498-3770-8269-671E1CE714AB}.Debug|Win32.Build.0 = Debug|Win32
+		{B8068EE6-E498-3770-8269-671E1CE714AB}.Release|Win32.ActiveCfg = Release|Win32
+		{B8068EE6-E498-3770-8269-671E1CE714AB}.Release|Win32.Build.0 = Release|Win32
+		{4F8977CD-B554-32B3-8072-DDEC78279D88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4F8977CD-B554-32B3-8072-DDEC78279D88}.Debug|Win32.Build.0 = Debug|Win32
+		{4F8977CD-B554-32B3-8072-DDEC78279D88}.Release|Win32.ActiveCfg = Release|Win32
+		{4F8977CD-B554-32B3-8072-DDEC78279D88}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F} = {F4AD8A12-3BC9-43A8-BAA9-CD3084C37935}
+		{B8068EE6-E498-3770-8269-671E1CE714AB} = {F4AD8A12-3BC9-43A8-BAA9-CD3084C37935}
+		{4F8977CD-B554-32B3-8072-DDEC78279D88} = {F4AD8A12-3BC9-43A8-BAA9-CD3084C37935}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96046F31-56B7-4EFB-8223-1A0B9987DA7E}

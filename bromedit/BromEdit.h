@@ -11,6 +11,7 @@ namespace blib {
 	namespace wm { class WM; class Menu; class ToggleMenuItem; }
 }
 
+class ModelProperties;
 class MeshProperties;
 class FrameProperties;
 
@@ -53,8 +54,9 @@ public:
 	MapRenderer mapRenderer;
 	blib::wm::WM* wm;
 
-	MeshProperties* meshProperties;
-	FrameProperties* frameProperties;
+	ModelProperties* modelProperties = nullptr;
+	MeshProperties* meshProperties = nullptr;
+	FrameProperties* frameProperties = nullptr;
 
 	void loadModel(const std::string &fileName);
 
@@ -67,6 +69,8 @@ public:
 	void nextFrame();
 	void addMesh();
 	void delMesh();
+
+	void replaceMesh();
 
 
 	void menuFileNew();

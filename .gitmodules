@@ -1,3 +1,6 @@
 [submodule "blib"]
 	path = blib
 	url = https://github.com/Borf/blib.git
+[submodule "bromedit/externals/assimp"]
+	path = bromedit/externals/assimp
+	url = https://github.com/assimp/assimp.git

@@ -1,0 +1,14 @@
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/uninstall.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/UpdateAssimpLibsDebugSymbolsAndDLLs.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/INSTALL.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/ALL_BUILD.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/contrib/zlib/CMakeFiles/zlib.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/contrib/zlib/CMakeFiles/zlibstatic.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/contrib/zlib/CMakeFiles/INSTALL.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/contrib/zlib/CMakeFiles/ALL_BUILD.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/contrib/CMakeFiles/INSTALL.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/contrib/irrXML/CMakeFiles/IrrXML.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/contrib/irrXML/CMakeFiles/INSTALL.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/code/CMakeFiles/assimp.dir
+C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/code/CMakeFiles/INSTALL.dir

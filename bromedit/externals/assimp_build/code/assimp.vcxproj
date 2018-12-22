@@ -1,0 +1,702 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6DFD2DAE-6CA6-3CE7-8A10-6B40E5EC862F}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>assimp</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">assimp.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">assimp-vc140-mt</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">assimp.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">assimp-vc140-mt</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\.;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\rapidjson\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\unzip;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\irrXML;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\openddlparser\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WIN32_LEAN_AND_MEAN;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\.;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\rapidjson\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\unzip;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\irrXML;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\openddlparser\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\.;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\rapidjson\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\unzip;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\irrXML;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\openddlparser\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\.;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\rapidjson\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\unzip;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\irrXML;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\openddlparser\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;ASSIMP_BUILD_NO_C4D_IMPORTER;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;ASSIMP_BUILD_DLL_EXPORT;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\.;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\rapidjson\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\unzip;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\irrXML;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\openddlparser\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\.;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\zlib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\rapidjson\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\unzip;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\irrXML;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\contrib\openddlparser\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\..\include;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/code/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HC:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp -BC:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build --check-stamp-file C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/code/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/code/CMakeLists.txt;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CMakeLists.txt;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\cmake-modules\FindRT.cmake;C:\Program Files\CMake\share\cmake-3.10\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.10\Modules\FindPackageMessage.cmake;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/code/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -HC:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp -BC:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build --check-stamp-file C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp_build/code/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/johan/Desktop/git/browedit/bromedit/externals/assimp/code/CMakeLists.txt;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CMakeLists.txt;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\cmake-modules\FindRT.cmake;C:\Program Files\CMake\share\cmake-3.10\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.10\Modules\FindPackageMessage.cmake;C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\code\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Assimp.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BaseImporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BaseProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BaseProcess.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ScenePrivate.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PostStepRegistry.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ImporterRegistry.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DefaultProgressHandler.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DefaultIOStream.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DefaultIOSystem.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CInterfaceIOWrapper.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CInterfaceIOWrapper.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\IFF.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SGSpatialSort.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\VertexTriangleAdjacency.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\VertexTriangleAdjacency.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SpatialSort.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SceneCombiner.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ScenePreprocessor.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ScenePreprocessor.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SkeletonMeshBuilder.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SplitByBoneCountProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SplitByBoneCountProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\StandardShapes.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TargetAnimation.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TargetAnimation.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\RemoveComments.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Subdivision.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\scene.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Bitmap.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Version.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CreateAnimMesh.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\simd.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\simd.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\DefaultLogger.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\LogStream.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Logger.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\NullLogger.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Win32DebugLogStream.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DefaultLogger.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FileLogStream.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\StdOStreamLogStream.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Exporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AssimpCExport.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\BlobIOSystem.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CalcTangentsProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CalcTangentsProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ComputeUVMappingProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ComputeUVMappingProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ConvertToLHProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ConvertToLHProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\EmbedTexturesProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\EmbedTexturesProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FindDegenerates.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FindDegenerates.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FindInstancesProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FindInstancesProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FindInvalidDataProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FindInvalidDataProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FixNormalsStep.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FixNormalsStep.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DropFaceNormalsProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DropFaceNormalsProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\GenFaceNormalsProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\GenFaceNormalsProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\GenVertexNormalsProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\GenVertexNormalsProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PretransformVertices.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PretransformVertices.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ImproveCacheLocality.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ImproveCacheLocality.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\JoinVerticesProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\JoinVerticesProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LimitBoneWeightsProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LimitBoneWeightsProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\RemoveRedundantMaterials.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\RemoveRedundantMaterials.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\RemoveVCProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\RemoveVCProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SortByPTypeProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SortByPTypeProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SplitLargeMeshes.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SplitLargeMeshes.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TextureTransform.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TextureTransform.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TriangulateProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TriangulateProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ValidateDataStructure.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ValidateDataStructure.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OptimizeGraph.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OptimizeGraph.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OptimizeMeshes.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OptimizeMeshes.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DeboneProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DeboneProcess.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ProcessHelper.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ProcessHelper.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PolyTools.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MakeVerboseFormat.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MakeVerboseFormat.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ScaleProcess.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ScaleProcess.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MaterialSystem.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MaterialSystem.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\STEPParser\STEPFileReader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\STEPParser\STEPFileReader.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\STEPParser\STEPFileEncoding.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\STEPParser\STEPFileEncoding.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AMFImporter.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AMFImporter_Macro.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AMFImporter_Node.hpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AMFImporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AMFImporter_Geometry.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AMFImporter_Material.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AMFImporter_Postprocess.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\3DSConverter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\3DSHelper.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\3DSLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\3DSLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\3DSExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\3DSExporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ACLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ACLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ASELoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ASELoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ASEParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ASEParser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AssbinExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AssbinExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AssbinLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AssbinLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AssxmlExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\AssxmlExporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\B3DImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\B3DImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BVHLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BVHLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ColladaHelper.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ColladaLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ColladaLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ColladaParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ColladaParser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ColladaExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ColladaExporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DXFLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DXFLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\DXFHelper.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CSMLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\CSMLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\HMPFileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\HMPLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\HMPLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\HalfLifeFileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\IRRMeshLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\IRRMeshLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\IRRShared.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\IRRShared.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\IRRLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\IRRLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWOAnimation.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWOAnimation.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWOBLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWOFileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWOLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWOLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWOMaterial.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWSLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\LWSLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD2FileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD2Loader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD2Loader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD2NormalTable.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD3FileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD3Loader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD3Loader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD5Loader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD5Loader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD5Parser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MD5Parser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDCFileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDCLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDCLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDCNormalTable.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDLDefaultColorMap.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDLFileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDLLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDLLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MDLMaterialLoader.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\NFFLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\NFFLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\NDOLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\NDOLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OFFLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OFFLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjFileData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjFileImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjFileImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjFileMtlImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjFileMtlImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjFileParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjFileParser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjTools.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\ObjExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreImporter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreStructs.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreParsingUtils.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreBinarySerializer.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreXmlSerializer.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreImporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreStructs.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreBinarySerializer.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreXmlSerializer.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OgreMaterial.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OpenGEXExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OpenGEXExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OpenGEXImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OpenGEXImporter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\OpenGEXStructs.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PlyLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PlyLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PlyParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PlyParser.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PlyExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\PlyExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MS3DLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MS3DLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\COBLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\COBLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\COBScene.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderDNA.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderDNA.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderDNA.inl" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderScene.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderScene.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderSceneGen.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderIntermediate.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderModifier.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderModifier.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderBMesh.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderBMesh.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderTessellator.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderTessellator.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderCustomData.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\BlenderCustomData.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCReaderGen1_2x3.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCReaderGen2_2x3.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCReaderGen_2x3.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCUtil.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCUtil.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCGeometry.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCMaterial.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCProfile.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCCurve.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCBoolean.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\IFC\IFCOpenings.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XGLLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XGLLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXCompileConfig.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXParser.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXTokenizer.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXTokenizer.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXImportSettings.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXConverter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXConverter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXUtil.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXUtil.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXDocument.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXDocument.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXProperties.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXProperties.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXMeshGeometry.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXMeshGeometry.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXMaterial.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXModel.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXAnimation.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXNodeAttribute.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXDeformer.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXBinaryTokenizer.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXDocumentUtil.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXExportNode.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXExportNode.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXExportProperty.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXExportProperty.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FBXCommon.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3DLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3DLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3BSPFileData.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3BSPFileParser.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3BSPFileParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3BSPFileImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3BSPFileImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3BSPZipArchive.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Q3BSPZipArchive.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\RawLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\RawLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SIBImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SIBImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SMDLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\SMDLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\STLLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\STLLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\STLExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\STLExporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TerragenLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\TerragenLoader.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\UnrealLoader.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\UnrealLoader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XFileHelper.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XFileImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XFileImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XFileParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XFileParser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XFileExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\XFileExporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DExporter.hpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter.hpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Geometry2D.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Geometry3D.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Group.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Light.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Macro.hpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Metadata.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Networking.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Node.hpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Postprocess.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Rendering.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Shape.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DImporter_Texturing.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FIReader.hpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\FIReader.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\X3DVocabulary.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFAsset.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFAsset.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFAssetWriter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFAssetWriter.inl" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFImporter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTFExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2Asset.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2Asset.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2AssetWriter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2AssetWriter.inl" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2Importer.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2Importer.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2Exporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\glTF2Exporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\D3MFImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\D3MFImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\D3MFExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\D3MFExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\D3MFOpcPackage.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\D3MFOpcPackage.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\3MFXmlTags.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MMDCpp14.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MMDImporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MMDImporter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MMDPmdParser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MMDPmxParser.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MMDPmxParser.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\MMDVmdParser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\STEPFile.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\StepFile\StepFileImporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\StepFile\StepFileImporter.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\StepFile\StepFileGen1.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\StepFile\StepFileGen2.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\StepFile\StepFileGen3.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\Importer\StepFile\StepReaderGen.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\StepExporter.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\code\StepExporter.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\irrXMLWrapper.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\unzip\crypt.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\unzip\ioapi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\unzip\ioapi.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\unzip\unzip.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\unzip\unzip.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\common\shapes.cc" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\common\shapes.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\common\utils.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\advancing_front.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\advancing_front.cc" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\cdt.cc" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\cdt.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\sweep.cc" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\sweep.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\sweep_context.cc" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\poly2tri\poly2tri\sweep\sweep_context.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\clipper\clipper.hpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\clipper\clipper.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\code\OpenDDLParser.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\code\DDLNode.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\code\OpenDDLCommon.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\code\OpenDDLExport.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\code\Value.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\code\OpenDDLStream.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\include\openddlparser\OpenDDLParser.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\include\openddlparser\OpenDDLParserUtils.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\include\openddlparser\OpenDDLCommon.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\include\openddlparser\OpenDDLExport.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\include\openddlparser\OpenDDLStream.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\include\openddlparser\DDLNode.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\openddlparser\include\openddlparser\Value.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcAdjacencyInfo.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcArithmeticCodec.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcArithmeticCodec.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcBinaryStream.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcCommon.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcDVEncodeParams.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcDynamicVectorDecoder.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcDynamicVectorDecoder.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcDynamicVectorEncoder.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcDynamicVectorEncoder.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcDynamicVector.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcFIFO.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcIndexedFaceSet.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcIndexedFaceSet.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcSC3DMCDecoder.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcSC3DMCDecoder.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcSC3DMCEncodeParams.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcSC3DMCEncoder.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcSC3DMCEncoder.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTimer.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTools.cpp" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTriangleFans.cpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTriangleFans.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTriangleListDecoder.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTriangleListDecoder.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTriangleListEncoder.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcTriangleListEncoder.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcVector.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\Open3DGC\o3dgcVector.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zip\src\miniz.h" />
+    <ClCompile Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zip\src\zip.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\contrib\zip\src\zip.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\anim.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\ai_assert.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\camera.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\color4.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\color4.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\include\assimp\config.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\defs.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Defines.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\cfileio.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\light.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\material.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\material.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\matrix3x3.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\matrix3x3.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\matrix4x4.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\matrix4x4.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\mesh.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\pbrmaterial.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\postprocess.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\quaternion.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\quaternion.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\scene.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\metadata.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\texture.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\types.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\vector2.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\vector2.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\vector3.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\vector3.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\version.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\cimport.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\importerdesc.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Importer.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\ProgressHandler.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\IOStream.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\IOSystem.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\cexport.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Exporter.hpp" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\DefaultIOStream.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\DefaultIOSystem.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\SceneCombiner.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\fast_atof.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\qnan.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\BaseImporter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Hash.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\MemoryIOWrapper.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\ParsingUtils.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\StreamReader.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\StreamWriter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\StringComparison.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\StringUtils.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\SGSpatialSort.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\GenericProperty.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\SpatialSort.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\SkeletonMeshBuilder.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\SmoothingGroups.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\SmoothingGroups.inl" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\StandardShapes.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\RemoveComments.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Subdivision.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Vertex.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\LineSplitter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\TinyFormatter.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Profiler.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\LogAux.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Bitmap.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\XMLTools.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\IOStreamBuffer.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\CreateAnimMesh.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\MathFunctions.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Macros.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Exceptional.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\ByteSwapper.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Compiler\poppack1.h" />
+    <ClInclude Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp\include\assimp\Compiler\pstdint.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\ZERO_CHECK.vcxproj">
+      <Project>{5B89CF5F-8EE2-3E32-AD78-AD5968974E09}</Project>
+      <Name>ZERO_CHECK</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\irrXML\IrrXML.vcxproj">
+      <Project>{4F8977CD-B554-32B3-8072-DDEC78279D88}</Project>
+      <Name>IrrXML</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\johan\Desktop\git\browedit\bromedit\externals\assimp_build\contrib\zlib\zlibstatic.vcxproj">
+      <Project>{B8068EE6-E498-3770-8269-671E1CE714AB}</Project>
+      <Name>zlibstatic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
