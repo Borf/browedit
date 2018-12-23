@@ -325,6 +325,7 @@ void BromEdit::loadModel(const std::string &fileName)
 {
 	model = new Rsm(fileName);
 	distance = glm::min(100.0f, glm::max(glm::max(model->realbbmax.x - model->realbbmin.x, model->realbbmax.y - model->realbbmin.y), model->realbbmax.z - model->realbbmin.z));
+	mouseState.scrollPosition = 0;
 
 	renderInfo = new RsmModelRenderInfo();
 	for (size_t i = 0; i < model->textures.size(); i++)

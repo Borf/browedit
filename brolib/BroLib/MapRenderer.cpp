@@ -1016,9 +1016,7 @@ void MapRenderer::renderMesh(Rsm* rsm, const glm::mat4 &camera, blib::Renderer* 
 {
 	blib::FBO* oldFbo = rswRenderState.activeFbo;
 
-	float dist = glm::max(glm::max(rsm->realbbmax.x - rsm->realbbmin.x, rsm->realbbmax.y - rsm->realbbmin.y), rsm->realbbmax.z - rsm->realbbmin.z);
-
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(glm::radians(75.0f), width / (float)height, 0.1f, 250.0f));
+	rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, glm::perspective(glm::radians(75.0f), width / (float)height, 0.1f, 5000.0f));
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::CameraMatrix, camera);
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::mat4());
 	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::mat4());
