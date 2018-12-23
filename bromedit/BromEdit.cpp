@@ -76,6 +76,9 @@ BromEdit::~BromEdit(void)
 void BromEdit::init()
 {
 	std::list<blib::BackgroundTask<int>*> tasks;
+
+	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(config["data"]["ropath"].get<std::string>()));
+
 	for (size_t i = 0; i < config["data"]["grfs"].size(); i++)
 		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].get<std::string>())); return 0; }));
 	for (blib::BackgroundTask<int>* task : tasks)
@@ -472,6 +475,7 @@ void BromEdit::replaceMesh()
 
 	mesh->faces.clear();
 	mesh->vertices.clear();
+	mesh->texCoords.clear();
 	mesh->renderer = nullptr; //todo
 
 	auto scene = importer.ReadFile(filename, aiProcessPreset_TargetRealtime_Quality);
@@ -495,8 +499,9 @@ void BromEdit::replaceMesh()
 			for (unsigned int ii = 0; ii < m->mNumVertices; ii++)
 			{
 				mesh->vertices.push_back(glm::vec3(m->mVertices[ii].x, m->mVertices[ii].y, m->mVertices[ii].z));
-				mesh->texCoords.push_back(glm::vec2(m->mTextureCoords[0][ii].x, m->mTextureCoords[0][ii].y));
+				mesh->texCoords.push_back(glm::vec2(m->mTextureCoords[0][ii].x, 1-m->mTextureCoords[0][ii].y));
 			}
+			auto material = scene->mMaterials[m->mMaterialIndex];
 
 			for (unsigned int ii = 0; ii < m->mNumFaces; ii++)
 			{

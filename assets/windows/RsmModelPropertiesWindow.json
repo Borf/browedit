@@ -1,0 +1,104 @@
+{
+	"size" : [ 200, 300 ],
+	"modal" : false,
+	"resizable" : true,
+	"widgets": {
+		"lblShadeType": {
+			"type": "label",
+			"text": "Shade Type",
+			"position": [ 0, 0 ],
+			"size": [ 190, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"shadetype": {
+			"type": "textbox",
+			"text": "",
+			"position": [ 0, 20 ],
+			"size": [ 190, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"lblTextures": {
+			"type": "label",
+			"text": "Textures",
+			"position": [ 0, 40 ],
+			"size": [ 190, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"textures": {
+			"type": "list",
+			"position": [ 0, 60 ],
+			"size": [ 190, 140 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"texture": {
+			"type": "textbox",
+			"text": "",
+			"position": [ 0, 200 ],
+			"size": [ 190, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"btnAdd": {
+			"type": "button",
+			"text": "Add",
+			"position": [ 0, 220 ],
+			"size": [ 60, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"btnEdit": {
+			"type": "button",
+			"text": "Edit",
+			"position": [ 65, 220 ],
+			"size": [ 60, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		},
+		"btnDelete": {
+			"type": "button",
+			"text": "Del",
+			"position": [ 130, 220 ],
+			"size": [ 60, 20 ],
+			"positionhelp": {
+				"left": "left",
+				"right": "right",
+				"top": "top",
+				"bottom": "top"
+			}
+		}
+
+
+	}
+}
