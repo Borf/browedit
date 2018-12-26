@@ -24,6 +24,7 @@ Rsm::Rsm(const std::string &fileName)
 	if(!rsmFile || !rsmFile->opened())
 	{
 		Log::out<<"Unable to open "<<fileName<<Log::newline;
+		delete rsmFile;
 		return;
 	}
 
@@ -33,6 +34,7 @@ Rsm::Rsm(const std::string &fileName)
 	if(header[0] == 'G' && header[1] == 'R' && header[2] == 'G' && header[3] == 'M')
 	{
 		Log::out<<"Unknown RSM header in file "<<fileName<<", stopped loading"<<Log::newline;
+		delete rsmFile;
 		return;
 	}
 
@@ -44,12 +46,14 @@ Rsm::Rsm(const std::string &fileName)
 	else
 		alpha = 0;
 	rsmFile->read(unknown, 16);
-
+	for(int i = 0; i < 16; i++)
+		assert(unknown[i] == 0);
 
 	int textureCount = rsmFile->readInt();
 	if (textureCount > 100)
 	{
 		Log::out << "Invalid textureCount, aborting" << Log::newline;
+		delete rsmFile;
 		return;
 	}
 
@@ -82,6 +86,13 @@ Rsm::Rsm(const std::string &fileName)
 
 	updateMatrices();
 
+
+	int numKeyFrames = rsmFile->readInt();
+	assert(numKeyFrames == 0);
+
+	int numVolumeBox = rsmFile->readInt();
+	if (numVolumeBox != 0)
+		Log::out << "WARNING! This model has " << numVolumeBox<<" volume boxes!" << Log::newline;
 
 	loaded = true;
 	delete rsmFile;
@@ -118,7 +129,7 @@ void Rsm::save(const std::string &fileName) const
 
 	pFile->writeInt(textures.size());
 
-	for (int i = 0; i < textures.size(); i++)
+	for (std::size_t i = 0; i < textures.size(); i++)
 		pFile->writeString(textures[i], 40);
 
 	pFile->writeString(rootMesh->name, 40);
@@ -128,6 +139,9 @@ void Rsm::save(const std::string &fileName) const
 	pFile->writeInt(meshCount);
 
 	rootMesh->foreach([pFile](Mesh* mesh) { mesh->save(pFile); });
+
+	pFile->writeInt(0); // translation keyframes
+	pFile->writeInt(0); // volume box?
 
 
 	delete pFile;
@@ -362,8 +376,12 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 	texCoords.resize(texCoordCount);
 	for(int i = 0; i < texCoordCount; i++)
 	{
-		if(model->version >= 0x0102)
-			rsmFile->readFloat();
+		float todo = 0;
+		if (model->version >= 0x0102)
+		{
+			todo = rsmFile->readFloat();
+			assert(todo == 0);
+		}
 		texCoords[i] = rsmFile->readVec2();
 		//texCoords[i].y = 1-texCoords[i].y;
 	}
@@ -381,7 +399,9 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 		f->texvertices[2] = rsmFile->readWord();
 
 		f->texIndex = rsmFile->readWord();
-		rsmFile->readWord();//TODO?
+		int padding = rsmFile->readWord(); //padding can be 0, -1, or other strange values?
+		
+
 		f->twoSide = rsmFile->readInt();
 		f->smoothGroup = rsmFile->readInt();
 
@@ -426,7 +446,7 @@ void Rsm::Mesh::save(blib::util::StreamOut* pFile)
 
 	pFile->writeInt(textures.size());
 	//TODO!
-	for (int i = 0; i < textures.size(); i++)
+	for (std::size_t i = 0; i < textures.size(); i++)
 		pFile->writeInt(textures[i]);
 
 	pFile->writeFloat(offset[0][0]);
@@ -448,19 +468,19 @@ void Rsm::Mesh::save(blib::util::StreamOut* pFile)
 	pFile->writeVec3(scale);
 
 	pFile->writeInt(vertices.size());
-	for (int i = 0; i < vertices.size(); i++)
+	for (std::size_t i = 0; i < vertices.size(); i++)
 		pFile->writeVec3(vertices[i]);
 
 	pFile->writeInt(texCoords.size());
-	for (int i = 0; i < texCoords.size(); i++)
+	for (std::size_t i = 0; i < texCoords.size(); i++)
 	{
 		if (model->version >= 0x0102)
-			pFile->writeFloat(0); //TODO: investigate what this is????????
+			pFile->writeFloat(0); //3d texture coordinate, always 0
 		pFile->writeVec2(texCoords[i]);
 	}
 
 	pFile->writeInt(faces.size());
-	for (int i = 0; i < faces.size(); i++)
+	for (std::size_t i = 0; i < faces.size(); i++)
 	{
 		Face* f = faces[i];
 		pFile->writeWord(f->vertices[0]);
@@ -471,13 +491,13 @@ void Rsm::Mesh::save(blib::util::StreamOut* pFile)
 		pFile->writeWord(f->texvertices[2]);
 
 		pFile->writeWord(f->texIndex);
-		pFile->writeWord(0); //TODO: investigate what this is???
+		pFile->writeWord(0); //padding, always 0
 		pFile->writeInt(f->twoSide);
 		pFile->writeInt(f->smoothGroup);
 	}
 
 	pFile->writeInt(frames.size());
-	for (int i = 0; i < frames.size(); i++)
+	for (std::size_t i = 0; i < frames.size(); i++)
 	{
 		pFile->writeInt(frames[i]->time);
 		pFile->writeFloat(frames[i]->quaternion.x);

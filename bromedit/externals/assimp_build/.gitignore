@@ -5,3 +5,4 @@ contrib/irrXML/Debug
 contrib/irrXML/Release
 contrib/zlib/Debug
 contrib/zlib/Release
+contrib/zlib/zlibstatic.dir

@@ -45,6 +45,7 @@ public:
 	virtual void init();
 	virtual void update(double elapsedTime);
 	virtual void draw();
+	void testStuff();
 
 	json config;
 

@@ -27,6 +27,8 @@
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
 
+#include <Windows.h>
+#include <direct.h>
 
 #include <glm/gtx/quaternion.hpp>
 
@@ -123,6 +125,9 @@ void BromEdit::init()
 	rootMenu->setAction("file/open", [this](){	new FileOpenWindow(resourceManager, this);	});
 	rootMenu->setAction("file/save",			std::bind(&BromEdit::menuFileSave, this));
 	rootMenu->setAction("file/save as",			std::bind(&BromEdit::menuFileSaveAs, this));
+
+
+	//testStuff();
 
 }
 
@@ -469,7 +474,39 @@ void BromEdit::menuFileSave()
 
 void BromEdit::menuFileSaveAs()
 {
+	std::string fileNameStr = model->fileName;
+	if (!(fileNameStr.find(":") != std::string::npos && fileNameStr.find("..") != std::string::npos))
+		fileNameStr = blib::util::replace(config["data"]["ropath"].get<std::string>() + "/" + fileNameStr, "/", "\\");
 
+	char fileName[1024];
+	strcpy_s(fileName, 1024, blib::util::replace(fileNameStr, "/", "\\").c_str());
+
+	char curdir[100];
+	_getcwd(curdir, 100);
+	HWND hWnd = this->window->hWnd;
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = 1024;
+	ofn.lpstrFilter = "All\0*.*\0RO maps\0*.rsw\0";
+	ofn.nFilterIndex = 2;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT;
+	if (GetSaveFileName(&ofn))
+	{
+		std::string newFileName(fileName);
+		newFileName = blib::util::replace(newFileName, "/", "\\");
+		if (newFileName.rfind(".") < newFileName.rfind("\\"))
+			newFileName = newFileName + ".rsm";
+		_chdir(curdir);
+
+		model->save(newFileName);
+	}
+	_chdir(curdir);
 }
 
 
@@ -542,4 +579,28 @@ void BromEdit::replaceMesh()
 
 
 
+}
+
+
+
+
+void BromEdit::testStuff()
+{
+	{
+		auto files = blib::util::FileSystem::getFileList([](const std::string &fileName)
+		{
+			if (fileName.size() < 4)
+				return false;
+			std::string ext = fileName.substr(fileName.length() - 4, 4);
+			std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+			return ext == ".rsm";
+		});
+
+		for (const auto &f : files)
+		{
+			Log::out << "Loading " << f << Log::newline;
+			Rsm* rsm = new Rsm(f);
+			delete rsm;
+		}
+	}
 }
