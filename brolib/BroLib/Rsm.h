@@ -45,6 +45,7 @@ public:
 
 
 		Mesh(Rsm* model, blib::util::StreamInFile* rsmFile);
+		Mesh(Rsm* model);
 		~Mesh();
 
 		void save(blib::util::StreamOut* pFile);

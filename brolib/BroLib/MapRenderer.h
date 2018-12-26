@@ -37,7 +37,7 @@ public:
 class RsmMeshRenderInfo
 {
 public:
-	blib::VBO* vbo;
+	blib::VBO* vbo = nullptr;
 	std::vector<VboIndex> indices;
 	glm::mat4 matrix;
 	glm::mat4 matrixSub;

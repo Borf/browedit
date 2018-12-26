@@ -197,7 +197,7 @@ void Rsm::Mesh::calcMatrix1()
 			int tick = 0;
 			if(model->renderer)
 				tick = model->renderer->timer.millis() % frames[frames.size() - 1]->time;
-			Log::out << "Tick: " << tick << Log::newline;
+			//Log::out << "Tick: " << tick << Log::newline;
 			int current = 0;
 			for(unsigned int i = 0; i < frames.size(); i++)
 			{
@@ -430,6 +430,32 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 	}
 //	calcVbos();
 }
+
+
+Rsm::Mesh::Mesh(Rsm* model)
+{
+	renderer = NULL;
+	this->model = model;
+
+	offset[0][0] = 1;
+	offset[0][1] = 0;
+	offset[0][2] = 0;
+
+	offset[1][0] = 0;
+	offset[1][1] = 0;
+	offset[1][2] = 1;
+
+	offset[2][0] = 0;
+	offset[2][1] = -1;
+	offset[2][2] = 0;
+
+	pos_ = glm::vec3(0,0,0);
+	pos = glm::vec3(0,0,0);
+	rotangle = 0;
+	rotaxis = glm::vec3(0, 1, 0);
+	scale = glm::vec3(1, 1, 1);
+}
+
 
 
 Rsm::Mesh::~Mesh()

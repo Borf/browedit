@@ -813,8 +813,6 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 	if (mesh->renderer == NULL)
 	{
 		mesh->renderer = new RsmMeshRenderInfo();
-		mesh->renderer->vbo = resourceManager->getResource<blib::VBO>();
-		mesh->renderer->vbo->setVertexFormat<blib::VertexP3T2N3>();
 
 		std::map<int, std::vector<blib::VertexP3T2N3> > verts;
 		for (size_t i = 0; i < mesh->faces.size(); i++)
@@ -830,7 +828,12 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 			mesh->renderer->indices.push_back(VboIndex(it2->first, allVerts.size(), it2->second.size()));
 			allVerts.insert(allVerts.end(), it2->second.begin(), it2->second.end());
 		}
-		renderer->setVbo(mesh->renderer->vbo, allVerts);
+		if (!allVerts.empty())
+		{
+			mesh->renderer->vbo = resourceManager->getResource<blib::VBO>();
+			mesh->renderer->vbo->setVertexFormat<blib::VertexP3T2N3>();
+			renderer->setVbo(mesh->renderer->vbo, allVerts);
+		}
 		mesh->renderer->matrix = matrix * mesh->matrix1 * mesh->matrix2;
 		mesh->renderer->matrixSub = matrix * mesh->matrix1;
 	}
@@ -843,14 +846,16 @@ void MapRenderer::renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelR
 	}
 
 	RsmMeshRenderInfo* meshInfo = mesh->renderer;
-
-	rswRenderState.activeVbo = meshInfo->vbo;
-	rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, meshInfo->matrix);
-
-	for (VboIndex& it : meshInfo->indices)
+	if (meshInfo->vbo != nullptr)
 	{
-		rswRenderState.activeTexture[0] = renderInfo->textures[mesh->textures[it.texture]];
-		renderer->drawTriangles<blib::VertexP3T2N3>(it.begin, it.count, rswRenderState);
+		rswRenderState.activeVbo = meshInfo->vbo;
+		rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, meshInfo->matrix);
+
+		for (VboIndex& it : meshInfo->indices)
+		{
+			rswRenderState.activeTexture[0] = renderInfo->textures[mesh->textures[it.texture]];
+			renderer->drawTriangles<blib::VertexP3T2N3>(it.begin, it.count, rswRenderState);
+		}
 	}
 
 	for (size_t i = 0; i < mesh->children.size(); i++)

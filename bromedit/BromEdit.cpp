@@ -459,7 +459,14 @@ void BromEdit::nextFrame()
 
 void BromEdit::addMesh()
 {
+	if (!selectedMesh)
+		return;
 
+	Rsm::Mesh* mesh = new Rsm::Mesh(model);
+	mesh->name = "BorfWasHere";
+	mesh->parent = selectedMesh;
+	mesh->parentName = mesh->parent->name;
+	mesh->parent->children.push_back(mesh);
 }
 
 void BromEdit::delMesh()
@@ -526,13 +533,16 @@ void BromEdit::menuFileSaveAs()
 void BromEdit::replaceMesh()
 {
 	std::string filename = "D:\\CloudStation\\Collection\\Models\\env\\_Stylized\\mini-house\\house.fbx";
-	auto mesh = model->rootMesh;
+	auto mesh = selectedMesh ? selectedMesh : model->rootMesh;
 	Assimp::Importer importer;
 
 	mesh->faces.clear();
 	mesh->vertices.clear();
 	mesh->texCoords.clear();
-	mesh->renderer = nullptr; //todo
+	mesh->textures.clear();
+	mesh->textures.push_back(0); //todo
+	delete mesh->renderer;
+	mesh->renderer = nullptr;
 
 	auto scene = importer.ReadFile(filename, aiProcessPreset_TargetRealtime_Quality);
 	// If the import failed, report it
