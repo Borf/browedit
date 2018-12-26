@@ -194,8 +194,10 @@ void Rsm::Mesh::calcMatrix1()
 	{
 		if(frames[frames.size() - 1]->time != 0)
 		{
-			int tick = (int)(blib::util::Profiler::getAppTime() * 1000) % frames[frames.size() - 1]->time;
-
+			int tick = 0;
+			if(model->renderer)
+				tick = model->renderer->timer.millis() % frames[frames.size() - 1]->time;
+			Log::out << "Tick: " << tick << Log::newline;
 			int current = 0;
 			for(unsigned int i = 0; i < frames.size(); i++)
 			{

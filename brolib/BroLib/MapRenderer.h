@@ -5,6 +5,7 @@
 #include <blib/gl/Vertex.h>
 #include <blib/gl/GlResizeRegister.h>
 #include <blib/math/Ray.h>
+#include <blib/util/Timer.h>
 #include <map>
 #include <vector>
 
@@ -47,6 +48,7 @@ class RsmModelRenderInfo
 public:
 	~RsmModelRenderInfo();
 	std::vector<blib::Texture*> textures;
+	blib::util::Timer timer;
 };
 
 class MapRenderer : public blib::gl::GlResizeRegister

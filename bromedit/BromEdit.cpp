@@ -199,6 +199,8 @@ void BromEdit::update(double elapsedTime)
 		for (auto frame : selectedMesh->frames)
 			if (fabs(frame->time / 10.0 - timeSelect) < 5)
 				frameProperties->selectFrame(frame);
+		if (model->renderer->timer.isPaused())
+			model->renderer->timer.setMillis(timeSelect*10);
 	}
 
 
@@ -305,7 +307,7 @@ void BromEdit::draw()
 
 		if (mesh->frames.size() > 0 && mesh->frames[mesh->frames.size() - 1]->time != 0)
 		{
-			int tick = (int)(blib::util::Profiler::getAppTime() * 1000) % mesh->frames[mesh->frames.size() - 1]->time;
+			int tick = model->renderer->timer.millis() % mesh->frames[mesh->frames.size() - 1]->time;
 			spriteBatch->draw(font, "|", blib::math::easyMatrix(glm::vec2(100 + tick / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 		}
 
@@ -345,10 +347,12 @@ void BromEdit::loadModel(const std::string &fileName)
 
 void BromEdit::pause()
 {
+	model->renderer->timer.pause();
 }
 
 void BromEdit::play()
 {
+	model->renderer->timer.resume();
 }
 
 void BromEdit::addKeyframe()
@@ -397,11 +401,15 @@ void BromEdit::delKeyframe()
 			{
 				frameProperties->selectFrame(selectedMesh->frames[0]);
 				timeSelect = selectedMesh->frames[0]->time / 10.0f;
+				if (model->renderer->timer.isPaused())
+					model->renderer->timer.setMillis(timeSelect*10);
 			}
 			else
 			{
 				frameProperties->selectFrame(*it2);
 				timeSelect = (*it2)->time / 10.0f;
+				if (model->renderer->timer.isPaused())
+					model->renderer->timer.setMillis(timeSelect*10);
 			}
 			delete frame;
 			break;
@@ -425,6 +433,8 @@ void BromEdit::prevFrame()
 		{
 			frameProperties->selectFrame(selectedMesh->frames[(i + selectedMesh->frames.size() - 1) % selectedMesh->frames.size()]);
 			timeSelect = selectedMesh->frames[(i + selectedMesh->frames.size() - 1) % selectedMesh->frames.size()]->time / 10.0f;
+			if (model->renderer->timer.isPaused())
+				model->renderer->timer.setMillis(timeSelect * 10);
 			break;
 		}
 	}
@@ -439,6 +449,8 @@ void BromEdit::nextFrame()
 		{
 			frameProperties->selectFrame(selectedMesh->frames[(i+1)% selectedMesh->frames.size()]);
 			timeSelect = selectedMesh->frames[(i + 1) % selectedMesh->frames.size()]->time / 10.0f;
+			if (model->renderer->timer.isPaused())
+				model->renderer->timer.setMillis(timeSelect * 10);
 			break;
 		}
 	}
