@@ -458,7 +458,13 @@ void BromEdit::menuFileNew()
 
 void BromEdit::menuFileSave()
 {
+	std::string fileName = model->fileName;
+	if (fileName.find(":") != std::string::npos && fileName.find("..") != std::string::npos)
+		model->save(model->fileName);
+	else
+		model->save(blib::util::replace(config["data"]["ropath"].get<std::string>() + "/" + fileName, "/", "\\"));
 
+	
 }
 
 void BromEdit::menuFileSaveAs()

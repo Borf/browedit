@@ -2,7 +2,9 @@ rmdir /q /s package
 del package
 mkdir package
 copy vs2015\release\browedit.exe package
+copy vs2015\release\rsw2json.exe package
 copy vs2015\release\BugTrap.dll package
+copy vs2015\release\bromedit\bromedit.exe package
 copy browedit_pause.bat package
 xcopy readme.txt package\
 xcopy /s assets\*.* package\assets\

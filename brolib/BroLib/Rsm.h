@@ -8,11 +8,12 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <functional>
 
 namespace blib
 {
 	class Texture;
-	namespace util { class StreamInFile; }
+	namespace util { class StreamInFile; class StreamOut; }
 }
 
 class RsmModelRenderInfo;
@@ -45,6 +46,9 @@ public:
 
 		Mesh(Rsm* model, blib::util::StreamInFile* rsmFile);
 		~Mesh();
+
+		void save(blib::util::StreamOut* pFile);
+		void foreach(const std::function<void(Mesh*)> &callback);
 
 		std::string						name;
 		std::string						parentName;
@@ -83,9 +87,10 @@ public:
 	};
 
 public:
-	Rsm(std::string fileName);
+	Rsm(const std::string &fileName);
 	~Rsm();
 	void updateMatrices();
+	void save(const std::string &fileName) const;
 
 	bool loaded;
 

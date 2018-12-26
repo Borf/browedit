@@ -14,8 +14,9 @@ using blib::util::Log;
 #include <glm/gtx/quaternion.hpp>
 
 
-Rsm::Rsm(std::string fileName)
+Rsm::Rsm(const std::string &fileName)
 {
+	this->fileName = fileName;
 	rootMesh = NULL;
 	renderer = NULL;
 	loaded = false;
@@ -46,6 +47,11 @@ Rsm::Rsm(std::string fileName)
 
 
 	int textureCount = rsmFile->readInt();
+	if (textureCount > 100)
+	{
+		Log::out << "Invalid textureCount, aborting" << Log::newline;
+		return;
+	}
 
 	for(int i = 0; i < textureCount; i++)
 	{
@@ -88,6 +94,44 @@ Rsm::~Rsm()
 		delete renderer;
 	if (rootMesh)
 		delete rootMesh;
+}
+
+
+void Rsm::save(const std::string &fileName) const
+{
+	blib::util::StreamOut* pFile = pFile = blib::util::FileSystem::openWrite(fileName);
+	if (!pFile)
+	{
+		Log::out << "Error saving to " << fileName << Log::newline;
+		Log::out << "Please create a directory to store it"<< Log::newline;
+		return;
+	}
+	pFile->write("GRSM", 4);
+
+	pFile->writeShort(version);
+	pFile->writeInt(animLen);
+	pFile->writeInt((int)shadeType);
+	if (version >= 0x0104)
+		pFile->write((char*)&alpha, 1);
+
+	pFile->write((char*)unknown, 16);
+
+	pFile->writeInt(textures.size());
+
+	for (int i = 0; i < textures.size(); i++)
+		pFile->writeString(textures[i], 40);
+
+	pFile->writeString(rootMesh->name, 40);
+
+	int meshCount = 0;
+	rootMesh->foreach([&meshCount](Rsm::Mesh* mesh) { meshCount++; });
+	pFile->writeInt(meshCount);
+
+	rootMesh->foreach([pFile](Mesh* mesh) { mesh->save(pFile); });
+
+
+	delete pFile;
+
 }
 
 void Rsm::updateMatrices()
@@ -375,6 +419,74 @@ Rsm::Mesh::~Mesh()
 	blib::linq::deleteall(children);
 }
 
+void Rsm::Mesh::save(blib::util::StreamOut* pFile)
+{
+	pFile->writeString(name, 40);
+	pFile->writeString(parentName, 40);
+
+	pFile->writeInt(textures.size());
+	//TODO!
+	for (int i = 0; i < textures.size(); i++)
+		pFile->writeInt(textures[i]);
+
+	pFile->writeFloat(offset[0][0]);
+	pFile->writeFloat(offset[0][1]);
+	pFile->writeFloat(offset[0][2]);
+
+	pFile->writeFloat(offset[1][0]);
+	pFile->writeFloat(offset[1][1]);
+	pFile->writeFloat(offset[1][2]);
+
+	pFile->writeFloat(offset[2][0]);
+	pFile->writeFloat(offset[2][1]);
+	pFile->writeFloat(offset[2][2]);
+
+	pFile->writeVec3(pos_);
+	pFile->writeVec3(pos);
+	pFile->writeFloat(rotangle);
+	pFile->writeVec3(rotaxis);
+	pFile->writeVec3(scale);
+
+	pFile->writeInt(vertices.size());
+	for (int i = 0; i < vertices.size(); i++)
+		pFile->writeVec3(vertices[i]);
+
+	pFile->writeInt(texCoords.size());
+	for (int i = 0; i < texCoords.size(); i++)
+	{
+		if (model->version >= 0x0102)
+			pFile->writeFloat(0); //TODO: investigate what this is????????
+		pFile->writeVec2(texCoords[i]);
+	}
+
+	pFile->writeInt(faces.size());
+	for (int i = 0; i < faces.size(); i++)
+	{
+		Face* f = faces[i];
+		pFile->writeWord(f->vertices[0]);
+		pFile->writeWord(f->vertices[1]);
+		pFile->writeWord(f->vertices[2]);
+		pFile->writeWord(f->texvertices[0]);
+		pFile->writeWord(f->texvertices[1]);
+		pFile->writeWord(f->texvertices[2]);
+
+		pFile->writeWord(f->texIndex);
+		pFile->writeWord(0); //TODO: investigate what this is???
+		pFile->writeInt(f->twoSide);
+		pFile->writeInt(f->smoothGroup);
+	}
+
+	pFile->writeInt(frames.size());
+	for (int i = 0; i < frames.size(); i++)
+	{
+		pFile->writeInt(frames[i]->time);
+		pFile->writeFloat(frames[i]->quaternion.x);
+		pFile->writeFloat(frames[i]->quaternion.y);
+		pFile->writeFloat(frames[i]->quaternion.z);
+		pFile->writeFloat(frames[i]->quaternion.w);
+	}
+}
+
 
 
 
@@ -441,3 +553,10 @@ void Rsm::draw(WorldShader* shader, glm::mat4 modelMatrix)
 }
 */
 
+
+void Rsm::Mesh::foreach(const std::function<void(Mesh*)> &callback)
+{
+	callback(this);
+	for (auto child : children)
+		child->foreach(callback);
+}

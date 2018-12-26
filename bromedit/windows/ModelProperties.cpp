@@ -30,6 +30,7 @@ ModelProperties::ModelProperties(blib::ResourceManager * resourceManager) : blib
 	{
 		textures->items.push_back(texture->text);
 		selectedModel->renderer->textures.push_back(resourceManager->getResource<blib::Texture>("data/texture/" + texture->text));
+		selectedModel->textures.push_back(texture->text);
 		return true;
 	});
 
@@ -41,6 +42,7 @@ ModelProperties::ModelProperties(blib::ResourceManager * resourceManager) : blib
 		textures->items[textures->selectedItems[0]] = texture->text;
 		resourceManager->dispose(selectedModel->renderer->textures[textures->selectedItems[0]]);
 		selectedModel->renderer->textures[textures->selectedItems[0]] = resourceManager->getResource<blib::Texture>("data/texture/" + texture->text);
+		selectedModel->textures[textures->selectedItems[0]] = texture->text;
 		return true;
 	});
 
@@ -52,6 +54,7 @@ ModelProperties::ModelProperties(blib::ResourceManager * resourceManager) : blib
 
 		resourceManager->dispose(selectedModel->renderer->textures[textures->selectedItems[0]]);
 		selectedModel->renderer->textures.erase(selectedModel->renderer->textures.begin() + textures->selectedItems[0]);
+		selectedModel->textures.erase(selectedModel->textures.begin() + textures->selectedItems[0]);
 		textures->items.erase(textures->items.begin() + textures->selectedItems[0]);
 		return true;
 	});
