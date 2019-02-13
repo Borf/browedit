@@ -94,7 +94,18 @@ void BromEdit::init()
 
 	if (model == nullptr)
 	//	loadModel("data\\model\\크리스마스마을\\xmas_내부트리.rsm");
-		loadModel("data\\model\\인던02\\인던02b중앙장식01.rsm");
+	//	loadModel("data\\model\\인던02\\인던02b중앙장식01.rsm");
+		loadModel("data\\model\\event\\3차전직_석상02.rsm");
+		//loadModel("data\\model\\para\\alchemy_01.rsm");
+		//loadModel("data\\model\\para\\mora_01.rsm");
+		//loadModel("data\\model\\para\\mora_02.rsm");
+		//loadModel("data\\model\\masin\\fire_land.rsm");
+		//loadModel("data\\model인던02인던02미이라.rsm");
+		//loadModel("data\\model\\pud\\stall_01.rsm");
+		//loadModel("data\\model\\pud\\stall_02.rsm");
+		//loadModel("data\\model\\pud\\stall_03.rsm");
+		//loadModel("data\\model\\pud\\swing_01.rsm");
+		//loadModel("data\\model\\pud\\balloon_01.rsm");
 
 	grid = resourceManager->getResource<blib::Texture>("assets/textures/grid.png");
 	grid->setTextureRepeat(true);
@@ -189,6 +200,7 @@ void BromEdit::update(double elapsedTime)
 			case 6: addMesh(); break;
 			case 7: delMesh(); break;
 			case 8: replaceMesh(); break;
+			case 9: exportMesh(); break;
 			}
 		}
 	}
@@ -604,6 +616,40 @@ void BromEdit::replaceMesh()
 }
 
 
+void BromEdit::exportMesh()
+{
+	if (!selectedMesh)
+		return;
+
+	char fileName[1024];
+	strcpy_s(fileName, 1024, blib::util::replace(model->fileName + "." + selectedMesh->name + ".obj", "/", "\\").c_str());
+
+	char curdir[100];
+	_getcwd(curdir, 100);
+	HWND hWnd = this->window->hWnd;
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = 1024;
+	ofn.lpstrFilter = "All\0*.*\0RO maps\0*.rsw\0";
+	ofn.nFilterIndex = 2;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT;
+	if (GetSaveFileName(&ofn))
+	{
+		std::string newFileName(fileName);
+		newFileName = blib::util::replace(newFileName, "/", "\\");
+		_chdir(curdir);
+
+		//->save(newFileName);
+	}
+	_chdir(curdir);
+
+}
 
 
 void BromEdit::testStuff()

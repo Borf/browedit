@@ -72,6 +72,7 @@ public:
 	void delMesh();
 
 	void replaceMesh();
+	void exportMesh();
 
 
 	void menuFileNew();
