@@ -195,6 +195,7 @@ void BrowEdit::init()
 	camera = new ModernCamera();
 
 	spriteBatch->utf8 = false;
+	wm->font->utf8 = false;
 	spriteBatch->tabsize = 15;
 
 	highlightRenderState.activeShader = resourceManager->getResource<blib::Shader>("highlight");

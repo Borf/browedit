@@ -69,11 +69,9 @@ Rsm::Rsm(const std::string &fileName)
 	for(int i = 0; i < meshCount; i++)
 	{
 		Mesh* mesh = new Mesh(this, rsmFile);
-		if(meshes.find(mesh->name) == meshes.end())
-			meshes[mesh->name] = mesh;
-		else
-			meshes[mesh->name + "(duplicate)"] = mesh;
-
+		if(meshes.find(mesh->name) != meshes.end())
+			mesh->name += "(duplicate)";
+		meshes[mesh->name] = mesh;
 	}
 
 	if(meshes.find(mainNodeName) == meshes.end())
