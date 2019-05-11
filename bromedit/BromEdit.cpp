@@ -93,12 +93,12 @@ void BromEdit::init()
 
 
 	if (model == nullptr)
-		loadModel("data\\model\\prontera_re\\streetlamp_01.rsm");
+		//loadModel("data\\model\\prontera_re\\streetlamp_01.rsm");
 	//	loadModel("data\\model\\크리스마스마을\\xmas_내부트리.rsm");
 	//	loadModel("data\\model\\인던02\\인던02b중앙장식01.rsm");
-		//loadModel("data\\model\\event\\3차전직_석상02.rsm");
+		//loadModel("data\\model\\event\\3차전직_석상02.rsm"); //bigass statue
 		//loadModel("data\\model\\para\\alchemy_01.rsm");
-		//loadModel("data\\model\\para\\mora_01.rsm");
+		loadModel("data\\model\\para\\mora_01.rsm");
 		//loadModel("data\\model\\para\\mora_02.rsm");
 		//loadModel("data\\model\\masin\\fire_land.rsm");
 		//loadModel("data\\model인던02인던02미이라.rsm");

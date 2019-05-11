@@ -71,6 +71,8 @@ Rsm::Rsm(const std::string &fileName)
 		Mesh* mesh = new Mesh(this, rsmFile);
 		if(meshes.find(mesh->name) != meshes.end())
 			mesh->name += "(duplicate)";
+		if (mesh->name == "")
+			mesh->name = "empty";
 		meshes[mesh->name] = mesh;
 	}
 
