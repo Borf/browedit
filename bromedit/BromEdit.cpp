@@ -484,7 +484,18 @@ void BromEdit::addMesh()
 
 void BromEdit::delMesh()
 {
+	if (!selectedMesh)
+		return;
+	// don't delete rootnode
+	if (!selectedMesh->parent)
+		return; 
 
+	auto toDelete = selectedMesh;
+	selectedMesh = selectedMesh->parent;
+
+	selectedMesh->children.erase(std::remove(selectedMesh->children.begin(), selectedMesh->children.end(), toDelete), selectedMesh->children.end());
+	delete toDelete;
+	
 }
 
 void BromEdit::menuFileNew()
@@ -545,7 +556,31 @@ void BromEdit::menuFileSaveAs()
 
 void BromEdit::replaceMesh()
 {
-	std::string filename = "D:\\CloudStation\\Collection\\Models\\env\\_Stylized\\mini-house\\house.fbx";
+	char pFileName[1024];
+	strcpy_s(pFileName, 1024, "D:\\CloudStation\\Collection\\Models\\env\\_Stylized\\mini-house\\house.fbx");
+
+	char curdir[256];
+	_getcwd(curdir, 256);
+	HWND hWnd = this->window->hWnd;
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+	ofn.lpstrFile = pFileName;
+	ofn.nMaxFile = 1024;
+	ofn.lpstrFilter = "All\0*.*\0Models\0*.fbx;*.obj;*.3ds;*.lwo;*.stl|\0";
+	ofn.nFilterIndex = 2;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT;
+	if (!GetOpenFileName(&ofn))
+		return;
+
+	std::string filename = pFileName;
+	filename = blib::util::replace(filename, "\\", "/");
+	_chdir(curdir);
+
 	auto mesh = selectedMesh ? selectedMesh : model->rootMesh;
 	Assimp::Importer importer;
 
