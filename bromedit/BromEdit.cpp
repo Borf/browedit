@@ -22,6 +22,7 @@
 #include <blib/wm/Menu.h>
 
 #include <assimp/Importer.hpp>	//OO version Header!
+#include <assimp/Exporter.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <assimp/DefaultLogger.hpp>
@@ -575,7 +576,10 @@ void BromEdit::replaceMesh()
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT;
 	if (!GetOpenFileName(&ofn))
+	{
+		_chdir(curdir);
 		return;
+	}
 
 	std::string filename = pFileName;
 	filename = blib::util::replace(filename, "\\", "/");
@@ -675,15 +679,85 @@ void BromEdit::exportMesh()
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_OVERWRITEPROMPT;
-	if (GetSaveFileName(&ofn))
+	if (!GetSaveFileName(&ofn))
 	{
-		std::string newFileName(fileName);
-		newFileName = blib::util::replace(newFileName, "/", "\\");
 		_chdir(curdir);
-
-		//->save(newFileName);
+		return;
 	}
+	std::string newFileName(fileName);
+	newFileName = blib::util::replace(newFileName, "/", "\\");
 	_chdir(curdir);
+
+
+
+	aiScene scene;
+	scene.mRootNode = new aiNode();
+	scene.mMaterials = new aiMaterial * [1];
+	scene.mNumMaterials = 1;
+
+	scene.mMaterials[0] = new aiMaterial();
+
+	scene.mMeshes = new aiMesh * [1];
+	scene.mMeshes[0] = nullptr;
+	scene.mNumMeshes = 1;
+
+	auto mesh = scene.mMeshes[0] = new aiMesh();
+	scene.mMeshes[0]->mMaterialIndex = 0;
+
+	scene.mRootNode->mMeshes = new unsigned int[1];
+	scene.mRootNode->mMeshes[0] = 0;
+	scene.mRootNode->mNumMeshes = 1;
+
+	
+
+	std::vector<std::pair<glm::vec3, glm::vec2>> vertices;
+	std::map<std::pair<int, int>, int> lookup;
+
+
+	for (auto f : selectedMesh->faces)
+	{
+		for(int i = 0; i < 3; i++)
+		{
+			auto indices = std::pair<int, int>(f->vertices[i], f->texvertices[i]);
+			if (lookup.find(indices) == lookup.end())
+			{
+				lookup[indices] = vertices.size();
+				vertices.push_back(std::pair<glm::vec3, glm::vec2>(selectedMesh->vertices[indices.first], selectedMesh->texCoords[indices.second]));
+			}
+		}
+	}
+
+	mesh->mVertices = new aiVector3D[vertices.size()];
+	mesh->mNumVertices = vertices.size();
+
+	mesh->mTextureCoords[0] = new aiVector3D[vertices.size()];
+	mesh->mNumUVComponents[0] = vertices.size();
+
+	for (std::size_t i = 0; i < vertices.size(); i++)
+	{
+		mesh->mVertices[i] = aiVector3D(vertices[i].first.x, vertices[i].first.y, vertices[i].first.z);
+		mesh->mTextureCoords[0][i] = aiVector3D(vertices[i].second.x, vertices[i].second.y, 0);
+	}
+
+	mesh->mNumFaces = selectedMesh->faces.size();
+	mesh->mFaces = new aiFace[selectedMesh->faces.size()];
+
+	for (std::size_t i = 0; i < selectedMesh->faces.size(); i++)
+	{
+		auto f = selectedMesh->faces[i];
+		aiFace& face = mesh->mFaces[i];
+		face.mIndices = new unsigned int[3];
+		face.mNumIndices = 3;
+
+		for (int ii = 0; ii < 3; ii++)
+		{
+			auto indices = std::pair<int, int>(f->vertices[ii], f->texvertices[ii]);
+			face.mIndices[ii] = lookup[indices];
+		}
+	}
+
+	Assimp::Exporter exporter;
+	exporter.Export(&scene, "obj", newFileName, aiProcess_Triangulate);
 
 }
 
