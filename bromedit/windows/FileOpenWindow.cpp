@@ -83,10 +83,7 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BromEdit*
 
 		fileName = getOpenFile(fileName.c_str(), "All\0*.*\0RO Models\0*.rsm\0");
 		if (fileName != "")
-		{
-			fileName = fileName.substr(0, fileName.rfind("."));
 			bromEdit->loadModel(fileName);
-		}
 
 		_chdir(curdir);
 		close();
