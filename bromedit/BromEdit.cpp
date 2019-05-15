@@ -673,7 +673,7 @@ void BromEdit::exportMesh()
 	ofn.hwndOwner = hWnd;
 	ofn.lpstrFile = fileName;
 	ofn.nMaxFile = 1024;
-	ofn.lpstrFilter = "All\0*.*\0RO maps\0*.rsw\0";
+	ofn.lpstrFilter = "All\0*.*\0Object files\0*.obj\0";
 	ofn.nFilterIndex = 2;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
@@ -736,7 +736,7 @@ void BromEdit::exportMesh()
 	for (std::size_t i = 0; i < vertices.size(); i++)
 	{
 		mesh->mVertices[i] = aiVector3D(vertices[i].first.x, vertices[i].first.y, vertices[i].first.z);
-		mesh->mTextureCoords[0][i] = aiVector3D(vertices[i].second.x, vertices[i].second.y, 0);
+		mesh->mTextureCoords[0][i] = aiVector3D(vertices[i].second.x, 1-vertices[i].second.y, 0);
 	}
 
 	mesh->mNumFaces = selectedMesh->faces.size();
