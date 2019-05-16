@@ -508,7 +508,7 @@ void BromEdit::menuFileNew()
 void BromEdit::menuFileSave()
 {
 	std::string fileName = model->fileName;
-	if (fileName.find(":") != std::string::npos && fileName.find("..") != std::string::npos)
+	if (fileName.find(":") != std::string::npos || fileName.find("..") != std::string::npos)
 		model->save(model->fileName);
 	else
 		model->save(blib::util::replace(config["data"]["ropath"].get<std::string>() + "/" + fileName, "/", "\\"));
@@ -519,7 +519,7 @@ void BromEdit::menuFileSave()
 void BromEdit::menuFileSaveAs()
 {
 	std::string fileNameStr = model->fileName;
-	if (!(fileNameStr.find(":") != std::string::npos && fileNameStr.find("..") != std::string::npos))
+	if (!(fileNameStr.find(":") != std::string::npos || fileNameStr.find("..") != std::string::npos))
 		fileNameStr = blib::util::replace(config["data"]["ropath"].get<std::string>() + "/" + fileNameStr, "/", "\\");
 
 	char fileName[1024];
@@ -534,7 +534,7 @@ void BromEdit::menuFileSaveAs()
 	ofn.hwndOwner = hWnd;
 	ofn.lpstrFile = fileName;
 	ofn.nMaxFile = 1024;
-	ofn.lpstrFilter = "All\0*.*\0RO maps\0*.rsw\0";
+	ofn.lpstrFilter = "All\0*.*\0RO models\0*.rsm\0";
 	ofn.nFilterIndex = 2;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
