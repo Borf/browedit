@@ -129,3 +129,26 @@ void BrowEdit::menuFileExportObj()
 		return true;
 	}, [dialog](bool bla) {	dialog->close();	});
 }
+
+
+void BrowEdit::menuFileExportColors()
+{
+	MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+	new blib::BackgroundTask<bool>(this, [this]()
+		{
+			if (map)
+				map->exportColors(config["data"]["ropath"].get<std::string>() + "/" + map->getFileName() + ".color.png");
+			return true;
+		}, [dialog](bool bla) {	dialog->close();	});
+}
+
+void BrowEdit::menuFileImportColors()
+{
+	MessageWindow* dialog = new MessageWindow(resourceManager, "Saving...", "Saving");
+	new blib::BackgroundTask<bool>(this, [this]()
+		{
+			if (map)
+				map->importColors(config["data"]["ropath"].get<std::string>() + "/" + map->getFileName() + ".color.png");
+			return true;
+		}, [dialog](bool bla) {	dialog->close();	});
+}

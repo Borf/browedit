@@ -249,10 +249,12 @@ void BrowEdit::init()
 	rootMenu->setAction("file/open", [this](){	new FileOpenWindow(resourceManager, this);	});
 	rootMenu->setAction("file/save",			std::bind(&BrowEdit::menuFileSave, this));
 	rootMenu->setAction("file/save as",			std::bind(&BrowEdit::menuFileSaveAs, this));
-	rootMenu->setAction("file/save heightmap",	std::bind(&BrowEdit::menuFileSaveHeightmap, this));
-	rootMenu->setAction("file/load heightmap",	std::bind(&BrowEdit::menuFileLoadHeightmap, this));
-	rootMenu->setAction("file/export lightmap", std::bind(&BrowEdit::menuFileExportLightmap, this));	
-	rootMenu->setAction("file/export obj",		std::bind(&BrowEdit::menuFileExportObj, this));
+	rootMenu->setAction("file/import-export/export lightmap",	std::bind(&BrowEdit::menuFileExportLightmap, this));
+	rootMenu->setAction("file/import-export/export colors",		std::bind(&BrowEdit::menuFileExportColors, this));
+	rootMenu->setAction("file/import-export/import colors",		std::bind(&BrowEdit::menuFileImportColors, this));
+	rootMenu->setAction("file/import-export/export heightmap",	std::bind(&BrowEdit::menuFileSaveHeightmap, this));
+	rootMenu->setAction("file/import-export/import heightmap",	std::bind(&BrowEdit::menuFileLoadHeightmap, this));
+	rootMenu->setAction("file/import-export/export obj",		std::bind(&BrowEdit::menuFileExportObj, this));
 
 	rootMenu->setAction("Actions/Lightmaps/Calculate Lightmaps",	std::bind(&BrowEdit::menuActionsLightmapCalculate, this));
 	rootMenu->setAction("Actions/Lightmaps/Smooth Lightmaps",		std::bind(&BrowEdit::menuActionsLightmapSmooth, this));

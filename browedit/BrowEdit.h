@@ -225,6 +225,8 @@ public:
 	void menuFileLoadHeightmap();
 	void menuFileExportLightmap();
 	void menuFileExportObj();
+	void menuFileExportColors();
+	void menuFileImportColors();
 
 	void menuActionsLightmapCalculate();
 	void menuActionsLightmapSmooth();

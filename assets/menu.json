@@ -20,22 +20,37 @@
 				"name" : "save as",
 				"type" : "item"
 			},
-			{
-				"name" : "save heightmap",
-				"type" : "item"
-			},
-			{
-				"name" : "export lightmap",
-				"type" : "item"
-			},
-			{
-				"name" : "load heightmap",
-				"type" : "item"
-			},
-			{
-				"name" : "export obj",
-				"type" : "item"
-			}
+      {
+        "name": "import-export",
+        "type": "menu",
+        "subitems": [
+          {
+            "name": "export lightmap",
+            "type": "item"
+          },
+          {
+            "name": "export colors",
+            "type": "item"
+          },
+          {
+            "name": "import colors",
+            "type": "item"
+          },
+          {
+            "name": "export heightmap",
+            "type": "item"
+          },
+          {
+            "name": "import heightmap",
+            "type": "item"
+          },
+          {
+            "name": "export obj",
+            "type": "item"
+          }
+
+        ]
+      }
 		]
 	},
 	{

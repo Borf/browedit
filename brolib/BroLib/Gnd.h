@@ -109,4 +109,5 @@ public:
 	int getLightmapBrightness(int x, int y, int lightmapX, int lightmapY);
 	glm::ivec3 getLightmapColor(int x, int y, int lightmapX, int lightmapY);
 	void makeLightmapsSmooth();
+	void makeTilesUnique();
 };

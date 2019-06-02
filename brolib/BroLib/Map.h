@@ -45,6 +45,8 @@ public:
 	void loadHeightmap(const std::string &fileName);
 	void exportLightmap(const std::string &fileName);
 	void exportObj(const std::string &fileName);
+	void exportColors(const std::string& fileName);
+	void importColors(const std::string& fileName);
 
 	float heightImportMin;
 	float heightImportMax;

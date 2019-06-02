@@ -375,24 +375,8 @@ void Gnd::Cube::calcNormals(Gnd* gnd, int x, int y)
 
 void Gnd::makeLightmapsUnique()
 {
+	makeTilesUnique();
 	std::set<int> taken;
-	for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			if (cubes[x][y]->tileUp == -1)
-				continue;
-			if (taken.find(cubes[x][y]->tileUp) == taken.end())
-				taken.insert(cubes[x][y]->tileUp);
-			else
-			{
-				Tile* t = new Tile(*tiles[cubes[x][y]->tileUp]);
-				cubes[x][y]->tileUp = tiles.size();
-				tiles.push_back(t);
-			}
-		}
-	}
-	taken.clear();
 	for (Tile* t : tiles)
 	{
 		if (taken.find(t->lightmapIndex) == taken.end())
@@ -680,4 +664,25 @@ void Gnd::makeLightmapsSmooth()
 		}
 	}
 
+}
+
+void Gnd::makeTilesUnique()
+{
+	std::set<int> taken;
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			if (cubes[x][y]->tileUp == -1)
+				continue;
+			if (taken.find(cubes[x][y]->tileUp) == taken.end())
+				taken.insert(cubes[x][y]->tileUp);
+			else
+			{
+				Tile* t = new Tile(*tiles[cubes[x][y]->tileUp]);
+				cubes[x][y]->tileUp = tiles.size();
+				tiles.push_back(t);
+			}
+		}
+	}
 }

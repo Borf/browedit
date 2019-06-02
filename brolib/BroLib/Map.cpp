@@ -376,6 +376,63 @@ float Map::getHeightAt(float x, float y)
 	return (c->h1 + c->h2 + c->h3 + c->h4) / 4.0f;
 }
 
+void Map::exportColors(const std::string& fileName)
+{
+	char* data = new char[gnd->width * gnd->height * 3];
+	for (int y = 0; y < gnd->height; y++)
+	{
+		for (int x = 0; x < gnd->width; x++)
+		{
+			data[(x + y * gnd->width) * 3 + 0] = 255;
+			data[(x + y * gnd->width) * 3 + 1] = 255;
+			data[(x + y * gnd->width) * 3 + 2] = 255;
+
+			if (gnd->cubes[x][y]->tileUp != -1)
+			{
+				auto tile = gnd->tiles[gnd->cubes[x][y]->tileUp];
+				data[(x + y * gnd->width) * 3 + 0] = (int)(tile->color.r * 255);
+				data[(x + y * gnd->width) * 3 + 1] = (int)(tile->color.g * 255);
+				data[(x + y * gnd->width) * 3 + 2] = (int)(tile->color.b * 255);
+			}
+				
+		}
+	}
+
+	stbi_write_png(fileName.c_str(), gnd->width, gnd->height, 3, data, 0);
+	delete[] data;
+}
+
+void Map::importColors(const std::string& fileName)
+{
+	int width, height, comp;
+
+	unsigned char* data = stbi_load(fileName.c_str(), &width, &height, &comp, 3);
+	if (!data || width != gnd->width * 2 || height != gnd->height * 2)
+	{
+		if (data)
+			stbi_image_free(data);
+		return;
+	}
+	this->gnd->makeTilesUnique();
+	for (int y = 0; y < gnd->height; y++)
+	{
+		for (int x = 0; x < gnd->width; x++)
+		{
+			if (gnd->cubes[x][y]->tileUp != -1)
+			{
+				auto tile = gnd->tiles[gnd->cubes[x][y]->tileUp];
+				tile->color.r = data[(x + y * gnd->width) * 3 + 0];
+				tile->color.g = data[(x + y * gnd->width) * 3 + 1];
+				tile->color.b = data[(x + y * gnd->width) * 3 + 2];
+			}
+
+		}
+	}
+
+}
+
+
+
 
 template class blib::BackgroundTask<int>;
 
