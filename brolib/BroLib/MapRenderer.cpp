@@ -902,6 +902,7 @@ void MapRenderer::setAllDirty()
 	gndTextureGridDirty = true;
 	gndShadowDirty = true;
 	gatDirty = true;
+	gndTileColorDirty = true;
 }
 
 void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)

@@ -104,7 +104,10 @@ void BrowEdit::menuFileLoadHeightmap()
 	new blib::BackgroundTask<bool>(this, [this]()
 	{
 		if (map)
+		{
 			map->loadHeightmap(config["data"]["ropath"].get<std::string>() + "/" + map->getFileName() + ".height.png");
+			mapRenderer.setAllDirty();
+		}
 		return true;
 	}, [dialog](bool bla) {	dialog->close();	});
 }
@@ -148,7 +151,10 @@ void BrowEdit::menuFileImportColors()
 	new blib::BackgroundTask<bool>(this, [this]()
 		{
 			if (map)
+			{
 				map->importColors(config["data"]["ropath"].get<std::string>() + "/" + map->getFileName() + ".color.png");
+				mapRenderer.setAllDirty();
+			}
 			return true;
 		}, [dialog](bool bla) {	dialog->close();	});
 }

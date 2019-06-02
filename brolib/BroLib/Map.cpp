@@ -390,9 +390,9 @@ void Map::exportColors(const std::string& fileName)
 			if (gnd->cubes[x][y]->tileUp != -1)
 			{
 				auto tile = gnd->tiles[gnd->cubes[x][y]->tileUp];
-				data[(x + y * gnd->width) * 3 + 0] = (int)(tile->color.r * 255);
-				data[(x + y * gnd->width) * 3 + 1] = (int)(tile->color.g * 255);
-				data[(x + y * gnd->width) * 3 + 2] = (int)(tile->color.b * 255);
+				data[(x + y * gnd->width) * 3 + 0] = tile->color.r;
+				data[(x + y * gnd->width) * 3 + 1] = tile->color.g;
+				data[(x + y * gnd->width) * 3 + 2] = tile->color.b;
 			}
 				
 		}
@@ -407,7 +407,7 @@ void Map::importColors(const std::string& fileName)
 	int width, height, comp;
 
 	unsigned char* data = stbi_load(fileName.c_str(), &width, &height, &comp, 3);
-	if (!data || width != gnd->width * 2 || height != gnd->height * 2)
+	if (!data || width != gnd->width || height != gnd->height)
 	{
 		if (data)
 			stbi_image_free(data);
@@ -428,7 +428,6 @@ void Map::importColors(const std::string& fileName)
 
 		}
 	}
-
 }
 
 
