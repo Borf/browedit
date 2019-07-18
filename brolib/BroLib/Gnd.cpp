@@ -390,6 +390,17 @@ void Gnd::makeLightmapsUnique()
 	}
 }
 
+void Gnd::makeLightmapsClear()
+{
+	lightmaps.clear();
+	Lightmap* l = new Lightmap();
+	memset(l->data, 255, 64);
+	memset(l->data+64, 0, 256-64);
+	lightmaps.push_back(l);
+
+	for (Tile* t : tiles)
+		t->lightmapIndex = 0;
+}
 void Gnd::makeLightmapBorders()
 {
 	makeLightmapsUnique();

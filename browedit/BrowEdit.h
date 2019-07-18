@@ -231,6 +231,7 @@ public:
 	void menuActionsLightmapCalculate();
 	void menuActionsLightmapSmooth();
 	void menuActionsLightmapUnique();
+	void menuActionsLightmapClear();
 
 	void menuActionsScaleDown();
 };

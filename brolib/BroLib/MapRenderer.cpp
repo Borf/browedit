@@ -551,6 +551,7 @@ void MapRenderer::renderGnd(blib::Renderer* renderer)
 					if (y * 8 >= 2048)
 					{
 						Log::out << "Lightmap too big!" << Log::newline;
+						y = 0;
 					}
 				}
 			}

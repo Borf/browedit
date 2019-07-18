@@ -298,6 +298,14 @@ void BrowEdit::menuActionsLightmapUnique()
 	mapRenderer.setAllDirty();
 }
 
+void BrowEdit::menuActionsLightmapClear()
+{
+	if (!map)
+		return;
+	map->getGnd()->makeLightmapsClear();
+	mapRenderer.setAllDirty();
+}
+
 
 
 

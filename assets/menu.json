@@ -252,6 +252,10 @@
 					{
 						"name" : "Unique Lightmaps",
 						"type" : "item"
+					},
+					{
+						"name" : "Clear Lightmaps",
+						"type" : "item"
 					}
 				]
 			},
