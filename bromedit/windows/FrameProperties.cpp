@@ -56,7 +56,7 @@ void FrameProperties::addHandler(const std::string & name, std::function<float*(
 	{
 		if (selectedFrame != nullptr)
 		{
-			*callback(selectedFrame) = atof(textbox->text.c_str());
+			*callback(selectedFrame) = (float)atof(textbox->text.c_str());
 		}
 	});
 	floatCallbacks.push_back(std::pair<blib::wm::widgets::Textbox*, std::function<float*(Rsm::Mesh::Frame*)>>(textbox, callback));

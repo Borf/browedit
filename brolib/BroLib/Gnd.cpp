@@ -233,8 +233,8 @@ Gnd::~Gnd()
 
 void Gnd::save(std::string fileName)
 {
+	cleanTiles();
 	blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical* pFile = new blib::util::PhysicalFileSystemHandler::StreamOutFilePhysical(fileName + ".gnd");
-
 
 	char header[5] = "GRGN";
 	pFile->write(header, 4);
@@ -643,6 +643,49 @@ glm::ivec3 Gnd::getLightmapColor(int x, int y, int lightmapX, int lightmapY)
 
 }
 
+void Gnd::cleanLightmaps()
+{
+	Log::out << "Lightmap cleanup, starting with " << lightmaps.size() << " lightmaps" << Log::newline;
+	std::map<unsigned char, std::vector<std::size_t>> lookup;
+
+	for(int i = 0; i < (int)lightmaps.size(); i++)
+	{
+		unsigned char hash = lightmaps[i]->hash();
+		bool found = false;
+		if (lookup.find(hash) != lookup.end())
+		{
+			for (const auto ii : lookup[hash])
+			{
+				if ((*lightmaps[i]) == (*lightmaps[ii]))
+				{// if it is found
+					assert(i > ii);
+					//change all tiles with lightmap i to ii
+					for (auto tile : tiles)
+						if (tile->lightmapIndex == i)
+							tile->lightmapIndex = ii;
+						else if (tile->lightmapIndex > i)
+							tile->lightmapIndex--;
+					//remove lightmap i
+					delete lightmaps[i];
+					lightmaps.erase(lightmaps.begin() + i);
+					i--;
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found)
+		{
+			lookup[hash].push_back(i);
+		}
+
+	}
+
+	Log::out << "Lightmap cleanup, ending with " << lightmaps.size() << " lightmaps" << Log::newline;
+
+}
+
+
 void Gnd::makeLightmapsSmooth()
 {
 	Log::out << "Smoothing..." << Log::newline;
@@ -677,6 +720,51 @@ void Gnd::makeLightmapsSmooth()
 
 }
 
+void Gnd::cleanTiles()
+{
+	Log::out << "Tiles cleanup, starting with " << tiles.size() << " tiles" << Log::newline;
+	std::map<unsigned char, std::vector<std::size_t>> lookup;
+
+	for (int i = 0; i < (int)tiles.size(); i++)
+	{
+		unsigned char hash = tiles[i]->hash();
+		bool found = false;
+		if (lookup.find(hash) != lookup.end())
+		{
+			for (const auto ii : lookup[hash])
+			{
+				if ((*tiles[i]) == (*tiles[ii]))
+				{// if it is found
+					assert(i > ii);
+					for(int x = 0; x < width; x++)
+						for (int y = 0; y < height; y++)
+						{
+							for (int iii = 0; iii < 3; iii++)
+							{
+								if (cubes[x][y]->tileIds[iii] == i)
+									cubes[x][y]->tileIds[iii] = ii;
+								else if (cubes[x][y]->tileIds[iii] > i)
+									cubes[x][y]->tileIds[iii]--;
+							}
+						}
+					//remove tile i
+					delete tiles[i];
+					tiles.erase(tiles.begin() + i);
+					i--;
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found)
+		{
+			lookup[hash].push_back(i);
+		}
+
+	}
+	Log::out << "Tiles cleanup, ending with " << tiles.size() << " tiles" << Log::newline;
+}
+
 void Gnd::makeTilesUnique()
 {
 	std::set<int> taken;
@@ -696,4 +784,44 @@ void Gnd::makeTilesUnique()
 			}
 		}
 	}
+}
+
+const unsigned char Gnd::Lightmap::hash() const //actually a crc, but will work
+{
+#define POLY 0x82f63b78
+	unsigned char crc = ~0;
+	for(int i = 0; i < 256; i++) {
+		crc ^= data[i];
+		for (int k = 0; k < 8; k++)
+			crc = crc & 1 ? (crc >> 1) ^ POLY : crc >> 1;
+	}
+	return ~crc;
+}
+
+bool Gnd::Lightmap::operator==(const Lightmap& other) const
+{
+	return memcmp(data, other.data, 256) == 0;
+}
+
+const unsigned char Gnd::Tile::hash() const
+{
+#define POLY 0x82f63b78
+	unsigned char crc = ~0;
+	for (int i = 0; i < sizeof(Tile); i++) {
+		crc ^= ((char*)this)[i];
+		for (int k = 0; k < 8; k++)
+			crc = crc & 1 ? (crc >> 1) ^ POLY : crc >> 1;
+	}
+	return ~crc;
+}
+
+bool Gnd::Tile::operator==(const Gnd::Tile& o) const
+{
+	return	v1 == o.v1 &&
+			v2 == o.v2 &&
+			v3 == o.v3 &&
+			v4 == o.v4 &&
+			textureIndex == o.textureIndex &&
+			lightmapIndex == o.lightmapIndex &&
+			color == o.color;
 }

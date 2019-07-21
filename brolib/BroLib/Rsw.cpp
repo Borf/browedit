@@ -655,10 +655,10 @@ public:
 	{
 		if (!data)
 			return 1;
-		int x1 = floor(uv.x * width);
-		int y1 = floor(uv.y * height);
-		int x2 = ceil(uv.x * width);
-		int y2 = ceil(uv.y * height);
+		int x1 = (int)floor(uv.x * width);
+		int y1 = (int)floor(uv.y * height);
+		int x2 = (int)ceil(uv.x * width);
+		int y2 = (int)ceil(uv.y * height);
 
 #if 1
 		float fracX = glm::fract(uv.x * width);

@@ -258,7 +258,6 @@ void BrowEdit::menuActionsLightmapCalculate()
 		for (auto &t : threads)
 			t.join();
 
-
 		/*Gnd::Cube* cube = map->getGnd()->cubes[63][31];
 		for (int i = 0; i < 3; i++)
 			if (cube->tileIds[i] != -1)
@@ -266,6 +265,8 @@ void BrowEdit::menuActionsLightmapCalculate()
 
 
 		map->getGnd()->makeLightmapBorders();
+		map->getGnd()->cleanLightmaps();
+		mapRenderer.setAllDirty();
 		window->close();
 	});
 

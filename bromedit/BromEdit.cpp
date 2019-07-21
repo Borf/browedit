@@ -642,7 +642,7 @@ void BromEdit::replaceMesh()
 
 		}
 
-		for (int i  = 0; i < node->mNumChildren; i++)
+		for (unsigned int i  = 0; i < node->mNumChildren; i++)
 			scanMesh(scene, node->mChildren[i], matrix);
 	};
 

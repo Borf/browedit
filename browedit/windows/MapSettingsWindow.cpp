@@ -54,26 +54,26 @@ MapSettingsWindow::MapSettingsWindow(blib::ResourceManager* resourceManager, Bro
 
 void MapSettingsWindow::apply(BrowEdit* browEdit)
 {
-	browEdit->map->getRsw()->water.height =			atof(getComponent<blib::wm::widgets::Textbox>("waterHeight")->text.c_str());
+	browEdit->map->getRsw()->water.height =			(float)atof(getComponent<blib::wm::widgets::Textbox>("waterHeight")->text.c_str());
 	browEdit->map->getRsw()->water.type =			atoi(getComponent<blib::wm::widgets::Textbox>("waterType")->text.c_str());
-	browEdit->map->getRsw()->water.amplitude =		atof(getComponent<blib::wm::widgets::Textbox>("waterAmplitude")->text.c_str());
-	browEdit->map->getRsw()->water.phase =			atof(getComponent<blib::wm::widgets::Textbox>("waterPhase")->text.c_str());
-	browEdit->map->getRsw()->water.surfaceCurve =	atof(getComponent<blib::wm::widgets::Textbox>("waterSurfaceCurve")->text.c_str());
+	browEdit->map->getRsw()->water.amplitude =		(float)atof(getComponent<blib::wm::widgets::Textbox>("waterAmplitude")->text.c_str());
+	browEdit->map->getRsw()->water.phase =			(float)atof(getComponent<blib::wm::widgets::Textbox>("waterPhase")->text.c_str());
+	browEdit->map->getRsw()->water.surfaceCurve =	(float)atof(getComponent<blib::wm::widgets::Textbox>("waterSurfaceCurve")->text.c_str());
 	browEdit->map->getRsw()->water.animSpeed =		atoi(getComponent<blib::wm::widgets::Textbox>("waterAnimSpeed")->text.c_str());
 
 
 	browEdit->map->getRsw()->light.longitude =		atoi(getComponent<blib::wm::widgets::Textbox>("lightLongitude")->text.c_str());
 	browEdit->map->getRsw()->light.latitude =		atoi(getComponent<blib::wm::widgets::Textbox>("lightLatitude")->text.c_str());
-	browEdit->map->getRsw()->light.diffuse.r =		atof(getComponent<blib::wm::widgets::Textbox>("lightDiffuseR")->text.c_str());
-	browEdit->map->getRsw()->light.diffuse.g =		atof(getComponent<blib::wm::widgets::Textbox>("lightDiffuseG")->text.c_str());
-	browEdit->map->getRsw()->light.diffuse.b =		atof(getComponent<blib::wm::widgets::Textbox>("lightDiffuseB")->text.c_str());
-	browEdit->map->getRsw()->light.ambient.r =		atof(getComponent<blib::wm::widgets::Textbox>("lightAmbientR")->text.c_str());
-	browEdit->map->getRsw()->light.ambient.g =		atof(getComponent<blib::wm::widgets::Textbox>("lightAmbientG")->text.c_str());
-	browEdit->map->getRsw()->light.ambient.b =		atof(getComponent<blib::wm::widgets::Textbox>("lightAmbientB")->text.c_str());
-	browEdit->map->getRsw()->light.intensity =		atof(getComponent<blib::wm::widgets::Textbox>("lightIntensity")->text.c_str());
+	browEdit->map->getRsw()->light.diffuse.r =		(float)atof(getComponent<blib::wm::widgets::Textbox>("lightDiffuseR")->text.c_str());
+	browEdit->map->getRsw()->light.diffuse.g =		(float)atof(getComponent<blib::wm::widgets::Textbox>("lightDiffuseG")->text.c_str());
+	browEdit->map->getRsw()->light.diffuse.b =		(float)atof(getComponent<blib::wm::widgets::Textbox>("lightDiffuseB")->text.c_str());
+	browEdit->map->getRsw()->light.ambient.r =		(float)atof(getComponent<blib::wm::widgets::Textbox>("lightAmbientR")->text.c_str());
+	browEdit->map->getRsw()->light.ambient.g =		(float)atof(getComponent<blib::wm::widgets::Textbox>("lightAmbientG")->text.c_str());
+	browEdit->map->getRsw()->light.ambient.b =		(float)atof(getComponent<blib::wm::widgets::Textbox>("lightAmbientB")->text.c_str());
+	browEdit->map->getRsw()->light.intensity =		(float)atof(getComponent<blib::wm::widgets::Textbox>("lightIntensity")->text.c_str());
 
 
-	browEdit->map->getRsw()->light.lightmapAmbient = atof(getComponent<blib::wm::widgets::Textbox>("lightmapAmbient")->text.c_str());
-	browEdit->map->getRsw()->light.lightmapIntensity = atof(getComponent<blib::wm::widgets::Textbox>("lightmapIntensity")->text.c_str());
+	browEdit->map->getRsw()->light.lightmapAmbient = (float)atof(getComponent<blib::wm::widgets::Textbox>("lightmapAmbient")->text.c_str());
+	browEdit->map->getRsw()->light.lightmapIntensity = (float)atof(getComponent<blib::wm::widgets::Textbox>("lightmapIntensity")->text.c_str());
 
 }

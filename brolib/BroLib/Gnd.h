@@ -35,12 +35,14 @@ public:
 			memcpy(data, other.data, 256 * sizeof(unsigned char));
 		}
 		unsigned char data[256];
+		const unsigned char hash() const;
+		bool operator == (const Lightmap& other) const;
 	};
 
 	class Tile
 	{
 	public:
-		Tile() {};
+		Tile() : textureIndex(-1), lightmapIndex(-1) {};
 		Tile(const Tile& o) {
 			v1 = o.v1;
 			v2 = o.v2;
@@ -54,6 +56,8 @@ public:
 		int textureIndex;
 		int lightmapIndex;
 		glm::ivec4 color;
+		const unsigned char hash() const;
+		bool operator == (const Tile& other) const;
 	};
 
 	class Cube
@@ -111,4 +115,7 @@ public:
 	glm::ivec3 getLightmapColor(int x, int y, int lightmapX, int lightmapY);
 	void makeLightmapsSmooth();
 	void makeTilesUnique();
+	void cleanLightmaps();
+	void cleanTiles();
+
 };

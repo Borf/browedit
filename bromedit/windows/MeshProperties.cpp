@@ -66,7 +66,7 @@ void MeshProperties::addHandler(const std::string & name, std::function<float*(R
 	{
 		if (selectedMesh != nullptr)
 		{
-			*callback(selectedMesh) = atof(textbox->text.c_str());
+			*callback(selectedMesh) = (float)atof(textbox->text.c_str());
 			selectedMesh->matrixDirty = true;
 			selectedMesh->model->updateMatrices();
 		}
