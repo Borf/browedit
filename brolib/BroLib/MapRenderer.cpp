@@ -35,7 +35,7 @@ MapRenderer::MapRenderer() : mouseRay(glm::vec3(0, 0,0), glm::vec3(1,0,0))
 	drawSounds = true;
 	drawTextureGrid = true;
 	drawObjectGrid = true;
-	drawQuadTree = true;
+	drawQuadTreeLevel = -1;
 	fbo = NULL;
 	fov = glm::radians(75.0f);
 	mouse3d = glm::vec4(0, 0, 0, -1);
@@ -323,14 +323,16 @@ void MapRenderer::render(blib::Renderer* renderer, glm::vec2 mousePosition)
 	highlightRenderState.activeShader->setUniform(HighlightShaderUniforms::modelviewMatrix, glm::translate(cameraMatrix, glm::vec3(map->getGnd()->width*5, 0, map->getGnd()->height*5)));
 	highlightRenderState.activeTexture[0] = NULL;
 
-	/* quadtree visualisation
-	map->getRsw()->quadtree->foreachLevel([&renderer, this](Rsw::QuadTreeNode* node, int level) {
-		if (level == 4)
-		{
-			std::vector<blib::VertexP3> verts = blib::Shapes::linebox(node->bbox.min * glm::vec3(1, -1, -1), node->bbox.max * glm::vec3(1, -1, -1));
-			renderer->drawLines(verts, highlightRenderState);
-		}
-	});*/
+	if (drawQuadTreeLevel > -1)
+	{
+		map->getRsw()->quadtree->foreachLevel([&renderer, this](Rsw::QuadTreeNode* node, int level) {
+			if (level == drawQuadTreeLevel)
+			{
+				std::vector<blib::VertexP3> verts = blib::Shapes::linebox(node->bbox.min * glm::vec3(1, -1, -1), node->bbox.max * glm::vec3(1, -1, -1));
+				renderer->drawLines(verts, highlightRenderState);
+			}
+			});
+	}
 
 	
 

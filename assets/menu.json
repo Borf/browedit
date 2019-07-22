@@ -80,40 +80,77 @@
 	{
 		"name" : "display",
 		"type" : "menu",
-		"subitems" :
-		[
-			{
-				"name" : "objects",
-				"type" : "toggle",
-				"initial" : true,
-				"key" : "o"
-			},
-			{
-				"name" : "shadows",
-				"type" : "toggle",
-				"initial" : true
-			},
-			{
-				"name" : "grid",
-				"type" : "toggle",
-				"initial" : true,
-				"key" : "g"
-			},
-			{
-				"name" : "lights",
-				"type" : "toggle",
-				"initial" : true
-			},
-			{
-				"name" : "sounds",
-				"type" : "toggle",
-				"initial" : true
-			},
-			{
-				"name" : "effects",
-				"type" : "toggle",
-				"initial" : true
-			}		]
+    "subitems": [
+      {
+        "name": "objects",
+        "type": "toggle",
+        "initial": true,
+        "key": "o"
+      },
+      {
+        "name": "shadows",
+        "type": "toggle",
+        "initial": true
+      },
+      {
+        "name": "grid",
+        "type": "toggle",
+        "initial": true,
+        "key": "g"
+      },
+      {
+        "name": "lights",
+        "type": "toggle",
+        "initial": true
+      },
+      {
+        "name": "sounds",
+        "type": "toggle",
+        "initial": true
+      },
+      {
+        "name": "effects",
+        "type": "toggle",
+        "initial": true
+      },
+      {
+        "name": "quadtree",
+        "type": "menu",
+        "subitems": [
+          {
+            "name": "Hide",
+            "type": "toggle",
+            "initial": true
+          },
+          {
+            "name": "1",
+            "type": "toggle",
+            "initial": false
+          },
+          {
+            "name": "2",
+            "type": "toggle",
+            "initial": false
+          },
+          {
+            "name": "3",
+            "type": "toggle",
+            "initial": false
+          },
+          {
+            "name": "4",
+            "type": "toggle",
+            "initial": false
+          },
+          {
+            "name": "5",
+            "type": "toggle",
+            "initial": false
+          }
+        ]
+      }
+
+    ]
 
 	},
 	{

@@ -264,6 +264,7 @@ void BrowEdit::init()
 
 
 
+
 	rootMenu->setAction("window/Help", [this]() { new HelpWindow(resourceManager, this);  });
 	rootMenu->setAction("window/Map Settings", [this]() { new MapSettingsWindow(resourceManager, this); });
 	rootMenu->linkToggle("display/objects", &mapRenderer.drawObjects);
@@ -271,6 +272,13 @@ void BrowEdit::init()
 	rootMenu->linkToggle("display/lights", &mapRenderer.drawLights);
 	rootMenu->linkToggle("display/sounds", &mapRenderer.drawSounds);
 	rootMenu->linkToggle("display/effects", &mapRenderer.drawEffects);
+	rootMenu->setAction("display/quadtree/Hide", std::bind(&BrowEdit::menuSetQuadtreeLevel, this, -1));
+	rootMenu->setAction("display/quadtree/1", std::bind(&BrowEdit::menuSetQuadtreeLevel, this, 0));
+	rootMenu->setAction("display/quadtree/2", std::bind(&BrowEdit::menuSetQuadtreeLevel, this, 1));
+	rootMenu->setAction("display/quadtree/3", std::bind(&BrowEdit::menuSetQuadtreeLevel, this, 2));
+	rootMenu->setAction("display/quadtree/4", std::bind(&BrowEdit::menuSetQuadtreeLevel, this, 3));
+	rootMenu->setAction("display/quadtree/5", std::bind(&BrowEdit::menuSetQuadtreeLevel, this, 4));
+
 	rootMenu->setAction("editmode/textureedit", std::bind(&BrowEdit::setEditMode, this, EditMode::TextureEdit));
 	rootMenu->setAction("editmode/objectedit", std::bind(&BrowEdit::setEditMode, this, EditMode::ObjectEdit));
 	rootMenu->setAction("editmode/heightedit", std::bind(&BrowEdit::setEditMode, this, EditMode::HeightEdit));
@@ -1271,6 +1279,18 @@ void BrowEdit::setObjectEditMode(ObjectEditModeTool newMode)
 	rootMenu->setToggleValue("objecttools/move", objectEditModeTool == ObjectEditModeTool::Translate);
 	rootMenu->setToggleValue("objecttools/scale", objectEditModeTool == ObjectEditModeTool::Scale);
 	rootMenu->setToggleValue("objecttools/rotate", objectEditModeTool == ObjectEditModeTool::Rotate);
+}
+
+
+void BrowEdit::menuSetQuadtreeLevel(int newLevel)
+{
+	mapRenderer.drawQuadTreeLevel = newLevel;
+	dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/quadtree/Hide"))->setValue(newLevel == -1);
+	dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/quadtree/1"))->setValue(newLevel == 0);
+	dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/quadtree/2"))->setValue(newLevel == 1);
+	dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/quadtree/3"))->setValue(newLevel == 2);
+	dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/quadtree/4"))->setValue(newLevel == 3);
+	dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/quadtree/5"))->setValue(newLevel == 4);
 }
 
 void BrowEdit::addModel(const std::string &fileName)

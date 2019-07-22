@@ -173,7 +173,7 @@ public:
 	bool drawSounds;
 	bool drawTextureGrid;
 	bool drawObjectGrid;
-	bool drawQuadTree;
+	int drawQuadTreeLevel;
 	bool drawGat;
 
 	float fov;
