@@ -261,6 +261,8 @@ void BrowEdit::init()
 	rootMenu->setAction("Actions/Lightmaps/Unique Lightmaps",		std::bind(&BrowEdit::menuActionsLightmapUnique, this));
 	rootMenu->setAction("Actions/Lightmaps/Clear Lightmaps",		std::bind(&BrowEdit::menuActionsLightmapClear, this));
 	rootMenu->setAction("Actions/Scale Down",						std::bind(&BrowEdit::menuActionsScaleDown, this));
+	rootMenu->setAction("Actions/Calculate quadtree",				std::bind(&BrowEdit::menuActionsCalculateQuadtree, this));
+	
 
 
 

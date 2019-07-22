@@ -389,3 +389,11 @@ void BrowEdit::menuActionsScaleDown()
 	textureWindow->updateTextures(newMap);
 	objectWindow->updateObjects(newMap);
 }
+
+
+
+
+void BrowEdit::menuActionsCalculateQuadtree()
+{
+	map->getRsw()->recalculateQuadTree(map->getGnd());
+}

@@ -232,8 +232,11 @@ public:
 	void menuActionsLightmapSmooth();
 	void menuActionsLightmapUnique();
 	void menuActionsLightmapClear();
+	void menuActionsCalculateQuadtree();
+	void menuActionsScaleDown();
+
+
 	void menuSetQuadtreeLevel(int level);
 
-	void menuActionsScaleDown();
 };
 

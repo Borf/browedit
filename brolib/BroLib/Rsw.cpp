@@ -571,7 +571,7 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 		}
 		if (node->bbox.min.y == MAP_MAX)
 			node->bbox.min.y = 0;
-		if (node->bbox.max.y = MAP_MIN)
+		if (node->bbox.max.y == MAP_MIN)
 			node->bbox.max.y = 0;
 
 		node->range[0] = (node->bbox.max - node->bbox.min) / 2.0f;
