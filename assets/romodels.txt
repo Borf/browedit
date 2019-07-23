@@ -1,3 +1,4 @@
+RO2/vanir_bridge|data\model\vanir_bridge01.rsm
 RO2/1-1acave|data\model\1-1acave.rsm
 RO2/2_babyfounde|data\model\2_babyfounde.rsm
 RO2/2_dm-_elluard02|data\model\2_dm-_elluard02.rsm

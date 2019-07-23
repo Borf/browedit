@@ -4,11 +4,12 @@
 		"ropath": "g:/games/RO",
 		"grfs": [
 			"g:/games/RO/data.grf",
-			"g:/games/RO/wicked_prt.grf"
+			"g:/games/RO/wicked_prt.grf",
+			"g:/games/RO/hakurei.grf"
 		]
 	},
 	"moveconsole": true,
-	"defaultmap": "prontera_h",
+	"defaultmap": "guild_vs1",
 	"threadedrendering": true,
 	"backgroundworkers": true,
 	"fov": 45,

@@ -312,10 +312,14 @@
 				]
 
 			},
-			{
-				"name" : "Scale Down",
-				"type" : "item"
-			}
+      {
+        "name": "Scale Down",
+        "type": "item"
+      },
+      {
+        "name": "Calculate quadtree",
+        "type" : "item"
+      }
 			
 		]
 	},
