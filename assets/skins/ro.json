@@ -15,7 +15,10 @@
     "colorblurred": "FFFFFFAA",
     "texture": "assets/textures/skins/ro.png",
     "font": "assets/fonts/tahoma",
-    "radialfont": "tahomabig",
+    "radialfont": {
+      "name": "tahoma",
+      "size": 15
+    },
     "window": {
         "title": {
             "fontcolor": "000000",
