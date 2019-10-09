@@ -99,7 +99,7 @@ void BromEdit::init()
 	//	loadModel("data\\model\\인던02\\인던02b중앙장식01.rsm");
 		//loadModel("data\\model\\event\\3차전직_석상02.rsm"); //bigass statue
 		//loadModel("data\\model\\para\\alchemy_01.rsm");
-		loadModel("data\\model\\para\\mora_01.rsm");
+		//loadModel("data\\model\\para\\mora_01.rsm");
 		//loadModel("data\\model\\para\\mora_02.rsm");
 		//loadModel("data\\model\\masin\\fire_land.rsm");
 		//loadModel("data\\model인던02인던02미이라.rsm");
@@ -108,6 +108,7 @@ void BromEdit::init()
 		//loadModel("data\\model\\pud\\stall_03.rsm");
 		//loadModel("data\\model\\pud\\swing_01.rsm");
 		//loadModel("data\\model\\pud\\balloon_01.rsm");
+		loadModel("data\\model\\plants_e_01.rsm2");
 
 	grid = resourceManager->getResource<blib::Texture>("assets/textures/grid.png");
 	grid->setTextureRepeat(true);
@@ -344,7 +345,7 @@ void BromEdit::draw()
 
 void BromEdit::loadModel(const std::string &fileName)
 {
-	model = new Rsm(fileName);
+	model = new IRsm(fileName);
 	distance = glm::min(100.0f, glm::max(glm::max(model->realbbmax.x - model->realbbmin.x, model->realbbmax.y - model->realbbmin.y), model->realbbmax.z - model->realbbmin.z));
 	mouseState.scrollPosition = 0;
 
@@ -777,7 +778,7 @@ void BromEdit::testStuff()
 		for (const auto &f : files)
 		{
 			Log::out << "Loading " << f << Log::newline;
-			Rsm* rsm = new Rsm(f);
+			IRsm* rsm = new IRsm(f);
 			delete rsm;
 		}
 	}

@@ -271,7 +271,8 @@ GRF_GenerateDataKey(char *key, const char *src)
  */
 static int GRF_readVer1_info(Grf *grf, GrfError *error, GrfOpenCallback callback) {
 	int callbackRet;
-	uint32_t i,offset,len,len2;
+	uint32_t i,len2;
+	__int64 offset,len;
 	char namebuf[GRF_NAMELEN], keyschedule[0x80], *buf;
 
 #ifdef GRF_FIXED_KEYSCHEDULE
@@ -304,7 +305,7 @@ static int GRF_readVer1_info(Grf *grf, GrfError *error, GrfOpenCallback callback
 		GRF_SETERR(error,GE_ERRNO,malloc);
 		return 1;
 	}
-	if (fseek(grf->f,offset,SEEK_SET)) {
+	if (_fseeki64(grf->f,offset,SEEK_SET)) {
 		free(buf);
 		GRF_SETERR(error,GE_ERRNO,fseek);
 		return 1;
@@ -795,7 +796,7 @@ grf_callback_open (const char *fname, const char *mode, GrfError *error, GrfOpen
 			return NULL;
 		}
 		free(zbuf);
-		if (0!=fseek(grf->f,0,SEEK_SET)) {
+		if (0!= _fseeki64(grf->f,0,SEEK_SET)) {
 			GRF_SETERR(error,GE_ERRNO,fseek);
 			return NULL;
 		}
@@ -880,20 +881,20 @@ grf_callback_open (const char *fname, const char *mode, GrfError *error, GrfOpen
 	}
 
 	/* Grab the filesize */
-	if (fseek(grf->f, 0, SEEK_END)) {
+	if (_fseeki64(grf->f, 0, SEEK_END)) {
 		grf_free(grf);
 		GRF_SETERR(error,GE_ERRNO,fseek);
 		return NULL;
 	}
-	if (ftell(grf->f)==-1) {
+	if (_ftelli64(grf->f)==-1) {
 		grf_free(grf);
 		GRF_SETERR(error,GE_ERRNO,ftell);
 		return NULL;
 	}
-	grf->len=ftell(grf->f);
+	grf->len= _ftelli64(grf->f);
 
 	/* Seek to the offset of the file tables */
-	if (fseek(grf->f, LittleEndian32((uint8_t*)buf+GRF_HEADER_MID_LEN)+GRF_HEADER_FULL_LEN, SEEK_SET)) {
+	if (_fseeki64(grf->f, LittleEndian32((uint8_t*)buf+GRF_HEADER_MID_LEN)+GRF_HEADER_FULL_LEN, SEEK_SET)) {
 		grf_free(grf);
 		GRF_SETERR(error,GE_ERRNO,fseek);
 		return NULL;
@@ -1125,7 +1126,7 @@ GRFEXPORT void *grf_index_get_z(Grf *grf, uint32_t index, uint32_t *size, uint32
 	}
 
 	/* Read the data */
-	if (fseek(grf->f,gfile->pos,SEEK_SET)) {
+	if (_fseeki64(grf->f,gfile->pos,SEEK_SET)) {
 		free(buf);
 		free(zbuf);
 		GRF_SETERR(error,GE_ERRNO,fseek);

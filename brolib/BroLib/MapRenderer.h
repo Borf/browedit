@@ -16,7 +16,7 @@ namespace blib { class ResourceManager; class Shader; class Renderer; class App;
 class Map;
 class Gnd;
 class Rsw;
-class Rsm;
+class IRsm;
 
 #define CHUNKSIZE 16
 
@@ -50,6 +50,9 @@ public:
 	std::vector<blib::Texture*> textures;
 	blib::util::Timer timer;
 };
+
+
+
 
 class MapRenderer : public blib::gl::GlResizeRegister
 {
@@ -194,14 +197,14 @@ public:
 	void renderObjects(blib::Renderer* renderer, bool selected);
 
 	void renderModel(Rsw::Model* model, blib::Renderer* renderer);
-	void renderMesh(Rsm::Mesh* mesh, const glm::mat4 &matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
+	void renderMesh(IRsm::IMesh* mesh, const glm::mat4 &matrix, RsmModelRenderInfo* modelInfo, blib::Renderer* renderer);
 
 	virtual void resizeGl(int width, int height, int offsetx, int offsety) override;
 	void setTileDirty(int xx, int yy);
 	void setAllDirty();
 	void setShadowDirty();
 	void setColorDirty() { gndTileColorDirty = true; }
-	void renderMeshFbo(Rsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
+	void renderMeshFbo(IRsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
 	void renderMesh(Rsm* rsm, const glm::mat4& matrix, blib::Renderer* renderer);
 	bool gndTextureGridDirty;
 	bool gndGridDirty;

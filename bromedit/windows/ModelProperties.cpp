@@ -63,7 +63,7 @@ ModelProperties::ModelProperties(blib::ResourceManager * resourceManager) : blib
 
 
 
-void ModelProperties::selectModel(Rsm* model)
+void ModelProperties::selectModel(IRsm* model)
 {
 	selectedModel = model;
 	shadeType->text = std::to_string(model->shadeType);

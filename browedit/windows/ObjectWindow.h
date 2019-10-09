@@ -15,19 +15,19 @@
 
 class BrowEdit;
 class Map;
-class Rsm;
+class IRsm;
 
 namespace blib { class FBO; };
 
 class ModelWidget : public blib::wm::Widget
 {
-	Rsm* rsm;
+	IRsm* rsm;
 	BrowEdit* browedit;
 
 	blib::FBO* fbo;
 	float rotation;
 public:
-	ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit);
+	ModelWidget(IRsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit);
 	~ModelWidget();
 	virtual void draw(blib::SpriteBatch &spriteBatch, glm::mat4 matrix, blib::Renderer* renderer) const;
 };

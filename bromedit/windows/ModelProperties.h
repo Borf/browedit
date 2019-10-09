@@ -19,7 +19,7 @@ namespace blib
 
 class ModelProperties : public blib::wm::Window
 {
-	Rsm* selectedModel;
+	IRsm* selectedModel;
 
 	blib::wm::widgets::Textbox* shadeType;
 	blib::wm::widgets::Textbox* texture;
@@ -30,5 +30,5 @@ class ModelProperties : public blib::wm::Window
 public:
 	ModelProperties(blib::ResourceManager* resourceManager);
 
-	void selectModel(Rsm* mesh);
+	void selectModel(IRsm* mesh);
 };

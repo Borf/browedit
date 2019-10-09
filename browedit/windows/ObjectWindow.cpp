@@ -439,7 +439,7 @@ void ObjectWindow::setLightDirectory(std::string directory)
 
 
 
-ModelWidget::ModelWidget(Rsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit)
+ModelWidget::ModelWidget(IRsm* rsm, blib::ResourceManager* resourceManager, BrowEdit* browedit)
 {
 	this->rsm = rsm;
 	this->browedit = browedit;

@@ -1,5 +1,6 @@
 #include "Rsw.h"
 #include "Rsm.h"
+#include "Rsm2.h"
 #include "Gnd.h"
 #include "MapRenderer.h"
 #include <blib/util/Log.h>
@@ -92,6 +93,10 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 	}
 	version = file->readShort();
 
+	if (version == 0x0202) // ???
+	{
+		file->get();
+	}
 
 	iniFile = file->readString(40);
 	gndFile = file->readString(40);
@@ -463,15 +468,21 @@ void Rsw::save(const std::string &fileName)
 
 
 
-Rsm* Rsw::getRsm( const std::string &fileName )
+IRsm* Rsw::getRsm( const std::string &fileName )
 {
-	std::map<std::string, Rsm*>::iterator it = rsmCache.find(fileName);
+	std::map<std::string, IRsm*>::iterator it = rsmCache.find(fileName);
 	if (it == rsmCache.end())
 	{
-		Rsm* rsm = new Rsm("data/model/" + fileName);
+		IRsm* rsm = nullptr;
+		if (fileName.substr(fileName.size() - 4) == ".rsm")
+			rsm = new Rsm("data/model/" + fileName);
+		else if (fileName.substr(fileName.size() - 5) == ".rsm2")
+			rsm = new Rsm2("data/model/" + fileName);
+		else
+			Log::out << "Unable to load " << fileName << Log::newline;
 		//Log::out << "Rsw: loading mesh " << fileName << Log::newline;
-		rsmCache[fileName] = rsm->loaded ? rsm : NULL;
-		if (!rsm->loaded)
+		rsmCache[fileName] = (rsm && rsm->loaded) ? rsm : NULL;
+		if (rsm && !rsm->loaded)
 			delete rsm;
 		it = rsmCache.find(fileName);
 	}
@@ -693,7 +704,7 @@ Image* getImage(const std::string &filename)
 
 
 
-bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix, Rsw::Model* rswModel)
+bool collides_Texture(IRsm::IMesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix, Rsw::Model* rswModel)
 {
 	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
 	newMatrix = glm::inverse(newMatrix);
@@ -706,7 +717,7 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 	for (size_t i = 0; i < mesh->faces.size(); i++)
 	{
 		for (size_t ii = 0; ii < 3; ii++)
-			verts[ii] = mesh->vertices[mesh->faces[i]->vertices[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+			verts[ii] = mesh->vertices[mesh->faces[i]->vertexIds[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
 
 		if (newRay.LineIntersectPolygon(verts, t))
 		{
@@ -720,9 +731,9 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 			float a2 = glm::length(glm::cross(f3, f1)) / a;
 			float a3 = glm::length(glm::cross(f1, f2)) / a;
 
-			glm::vec2 uv1 = mesh->texCoords[mesh->faces[i]->texvertices[0]];
-			glm::vec2 uv2 = mesh->texCoords[mesh->faces[i]->texvertices[1]];
-			glm::vec2 uv3 = mesh->texCoords[mesh->faces[i]->texvertices[2]];
+			glm::vec2 uv1 = mesh->texCoords[mesh->faces[i]->texCoordIds[0]];
+			glm::vec2 uv2 = mesh->texCoords[mesh->faces[i]->texCoordIds[1]];
+			glm::vec2 uv3 = mesh->texCoords[mesh->faces[i]->texCoordIds[2]];
 			
 			glm::vec2 uv = uv1 * a1 + uv2 * a2 + uv3 * a3;
 
@@ -737,7 +748,15 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 				return false;
 			}
 
-			Image* img = getImage("data/texture/" + mesh->model->textures[mesh->faces[i]->texIndex]);
+			Image* img = nullptr;
+
+			auto rsmMesh = dynamic_cast<Rsm::Mesh*>(mesh);
+			if (rsmMesh)
+			{
+				auto rsm = dynamic_cast<Rsm*>(rsmMesh->model);
+				if (rsm)
+					img = getImage("data/texture/" + rsm->textures[mesh->faces[i]->texId]);
+			}
 			if (img && img->get(uv) < 0.01)
 				continue;
 			return true;
@@ -754,8 +773,7 @@ bool collides_Texture(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 mat
 
 
 
-
-bool collides_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
+bool collides_(IRsm::IMesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
 {
 	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
 	newMatrix = glm::inverse(newMatrix);
@@ -768,7 +786,7 @@ bool collides_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
 	for (size_t i = 0; i < mesh->faces.size(); i++)
 	{
 		for (size_t ii = 0; ii < 3; ii++)
-			verts[ii] = mesh->vertices[mesh->faces[i]->vertices[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+			verts[ii] = mesh->vertices[mesh->faces[i]->vertexIds[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
 
 		if (newRay.LineIntersectPolygon(verts, t))
 			return true;
@@ -782,7 +800,7 @@ bool collides_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
 	return false;
 }
 
-std::vector<glm::vec3> collisions_(Rsm::Mesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
+std::vector<glm::vec3> collisions_(IRsm::IMesh* mesh, const blib::math::Ray &ray, glm::mat4 matrix)
 {
 	std::vector<glm::vec3> ret;
 
@@ -797,7 +815,7 @@ std::vector<glm::vec3> collisions_(Rsm::Mesh* mesh, const blib::math::Ray &ray, 
 	for (size_t i = 0; i < mesh->faces.size(); i++)
 	{
 		for (size_t ii = 0; ii < 3; ii++)
-			verts[ii] = mesh->vertices[mesh->faces[i]->vertices[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+			verts[ii] = mesh->vertices[mesh->faces[i]->vertexIds[ii]];// glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
 
 		if (newRay.LineIntersectPolygon(verts, t))
 		{
@@ -818,9 +836,7 @@ bool Rsw::Model::collides(const blib::math::Ray &ray)
 {
 	if (!aabb.hasRayCollision(ray, 0, 10000000))
 		return false;
-
 	return collides_(model->rootMesh, ray, matrixCache);
-	return true;
 }
 
 bool Rsw::Model::collidesTexture(const blib::math::Ray &ray)
@@ -829,34 +845,27 @@ bool Rsw::Model::collidesTexture(const blib::math::Ray &ray)
 		return false;
 
 	return collides_Texture(model->rootMesh, ray, matrixCache, this);
-	return true;
+}
+
+void gatherVerts(IRsm::IMesh* mesh, glm::mat4 matrix, std::vector<int>& indices, std::vector<glm::vec3>& vertices)
+{
+	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
+	for (size_t i = 0; i < mesh->faces.size(); i++)
+	{
+		for (size_t ii = 0; ii < 3; ii++)
+		{
+			indices.push_back(vertices.size());
+			vertices.push_back(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertexIds[ii]], 1));
+		}
+	}
+
+	for (size_t i = 0; i < mesh->children.size(); i++)
+		gatherVerts(mesh->children[i], matrix, indices, vertices);
 }
 
 void Rsw::Model::getWorldVerts(std::vector<int>& indices, std::vector<glm::vec3>& vertices)
 {
-	std::function<void(Rsm::Mesh*, glm::mat4 matrix)> gatherVerts;
-	gatherVerts = [&indices, &vertices, this, &gatherVerts](Rsm::Mesh* mesh, glm::mat4 matrix)
-	{
-		std::vector<glm::vec3> ret;
-
-		glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
-
-		for (size_t i = 0; i < mesh->faces.size(); i++)
-		{
-			for (size_t ii = 0; ii < 3; ii++)
-			{
-				indices.push_back(vertices.size());
-				vertices.push_back(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
-			}
-		}
-
-		for (size_t i = 0; i < mesh->children.size(); i++)
-		{
-			gatherVerts(mesh->children[i], matrix);
-		}
-
-	};
-	gatherVerts(model->rootMesh, matrixCache);
+	gatherVerts(model->rootMesh, matrixCache, indices, vertices);
 }
 
 
@@ -865,12 +874,15 @@ std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray)
 {
 	if (!aabb.hasRayCollision(ray, 0, 10000000))
 		return std::vector<glm::vec3>();
+	Rsm* rsm = dynamic_cast<Rsm*>(model);
+	if (rsm)
+		return collisions_(rsm->rootMesh, ray, matrixCache);
 
-	return collisions_(model->rootMesh, ray, matrixCache);
+	return std::vector<glm::vec3>();
 }
 
 
-void foreachface_(Rsm::Mesh* mesh, std::function<void(const std::vector<glm::vec3>&)> callback, glm::mat4 matrix)
+void foreachface_(IRsm::IMesh* mesh, std::function<void(const std::vector<glm::vec3>&)> callback, const glm::mat4 &matrix)
 {
 	glm::mat4 newMatrix = matrix * mesh->renderer->matrix;
 
@@ -880,7 +892,7 @@ void foreachface_(Rsm::Mesh* mesh, std::function<void(const std::vector<glm::vec
 	for (size_t i = 0; i < mesh->faces.size(); i++)
 	{
 		for (size_t ii = 0; ii < 3; ii++)
-			verts[ii] = glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertices[ii]], 1));
+			verts[ii] = glm::vec3(matrix * mesh->renderer->matrix * glm::vec4(mesh->vertices[mesh->faces[i]->vertexIds[ii]], 1));
 		callback(verts);
 	}
 
@@ -893,7 +905,9 @@ void Rsw::Model::foreachface(std::function<void(const std::vector<glm::vec3>&)> 
 {
 	if (!model)
 		return;
-	foreachface_(model->rootMesh, callback, matrixCache);
+	Rsm* rsm = dynamic_cast<Rsm*>(model);
+	if (rsm)
+		foreachface_(rsm->rootMesh, callback, matrixCache);
 }
 
 Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::const_iterator &it, int level /*= 0*/) : bbox(glm::vec3(0, 0, 0), glm::vec3(0,0,0))

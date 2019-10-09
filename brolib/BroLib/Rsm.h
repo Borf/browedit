@@ -9,6 +9,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include "IRsm.h"
 
 namespace blib
 {
@@ -19,21 +20,14 @@ namespace blib
 class RsmModelRenderInfo;
 class RsmMeshRenderInfo;
 
-class Rsm
+class Rsm : public IRsm
 {
 public:
-	class Mesh
+	class Mesh : public IRsm::Mesh<Rsm>
 	{
 	public:
-		class Face
+		class Face : public IRsm::Face
 		{
-		public:
-			int							vertices[3];
-			int							texvertices[3];
-			glm::vec3					normal;
-			int							texIndex;
-			int							twoSide;
-			int							smoothGroup;
 		};
 
 		class Frame
@@ -43,35 +37,20 @@ public:
 			glm::quat					quaternion;
 		};
 
-
 		Mesh(Rsm* model, blib::util::StreamInFile* rsmFile);
 		Mesh(Rsm* model);
 		~Mesh();
 
 		void save(blib::util::StreamOut* pFile);
-		void foreach(const std::function<void(Mesh*)> &callback);
 
-		std::string						name;
-		std::string						parentName;
-
-		glm::mat4						offset;
 		glm::vec3						pos_;
-		glm::vec3						pos;
 		float							rotangle;
 		glm::vec3						rotaxis;
 		glm::vec3						scale;
 
 		std::vector<int>				textures;
-		std::vector<glm::vec3>			vertices;
-		std::vector<glm::vec2>			texCoords;
-		std::vector<Face*>				faces;
 		std::vector<Frame*>				frames;
 
-
-		RsmMeshRenderInfo*				renderer;
-		Mesh* parent;
-		Rsm* model;
-		std::vector<Mesh*> children;
 		glm::vec3 bbmin;
 		glm::vec3 bbmax;
 		glm::vec3 bbrange;
@@ -84,7 +63,6 @@ public:
 
 		void setBoundingBox( glm::vec3& bbmin, glm::vec3& bbmax );
 		void setBoundingBox2( glm::mat4& mat, glm::vec3& realbbmin, glm::vec3& realbbmax );
-		void fetchChildren( std::map<std::string, Mesh* > meshes );
 	};
 
 public:
@@ -93,12 +71,8 @@ public:
 	void updateMatrices();
 	void save(const std::string &fileName) const;
 
-	bool loaded;
 
-	short version;
 	int animLen;
-	std::string fileName;
-	std::vector<std::string> textures;
 
 	glm::vec3 realbbmin;
 	glm::vec3 realbbmax;
@@ -109,17 +83,6 @@ public:
 	glm::vec3 bbrange;
 
 	float maxRange;
-
-	Mesh* rootMesh;
-	RsmModelRenderInfo*					renderer;
-
-	enum eShadeType
-	{
-		SHADE_NO,
-		SHADE_FLAT,
-		SHADE_SMOOTH,
-		SHADE_BLACK,
-	}								shadeType;
 
 	char							unknown[16];
 	char							alpha;

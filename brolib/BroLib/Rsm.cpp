@@ -20,6 +20,10 @@ Rsm::Rsm(const std::string &fileName)
 	rootMesh = NULL;
 	renderer = NULL;
 	loaded = false;
+	if (fileName.substr(fileName.size() - 5) == ".rsm2")
+		return;
+
+
 	blib::util::StreamInFile* rsmFile = new blib::util::StreamInFile(fileName);
 	if(!rsmFile || !rsmFile->opened())
 	{
@@ -65,7 +69,7 @@ Rsm::Rsm(const std::string &fileName)
 
 	std::string mainNodeName = rsmFile->readString(40);
 	int meshCount = rsmFile->readInt();
-	std::map<std::string, Mesh* > meshes;
+	std::map<std::string, IMesh* > meshes;
 	for(int i = 0; i < meshCount; i++)
 	{
 		Mesh* mesh = new Mesh(this, rsmFile);
@@ -139,10 +143,10 @@ void Rsm::save(const std::string &fileName) const
 	pFile->writeString(rootMesh->name, 40);
 
 	int meshCount = 0;
-	rootMesh->foreach([&meshCount](Rsm::Mesh* mesh) { meshCount++; });
+	rootMesh->foreach([&meshCount](IRsm::IMesh* mesh) { meshCount++; });
 	pFile->writeInt(meshCount);
 
-	rootMesh->foreach([pFile](Mesh* mesh) { mesh->save(pFile); });
+	rootMesh->foreach([pFile](IRsm::IMesh* mesh) { dynamic_cast<Rsm::Mesh*>(mesh)->save(pFile); });
 
 	pFile->writeInt(0); // translation keyframes
 	pFile->writeInt(0); // volume box?
@@ -156,19 +160,19 @@ void Rsm::updateMatrices()
 {
 	bbmin = glm::vec3(999999, 999999, 999999);
 	bbmax = glm::vec3(-999999, -999999, -9999999);
-	rootMesh->setBoundingBox(bbmin, bbmax);
+	dynamic_cast<Mesh*>(rootMesh)->setBoundingBox(bbmin, bbmax);
 	bbrange = (bbmin + bbmax) / 2.0f;
 
 
-	rootMesh->calcMatrix1();
-	rootMesh->calcMatrix2();
+	dynamic_cast<Mesh*>(rootMesh)->calcMatrix1();
+	dynamic_cast<Mesh*>(rootMesh)->calcMatrix2();
 
 
 
 	realbbmax = glm::vec3(-999999, -999999, -999999);
 	realbbmin = glm::vec3(999999, 999999, 999999);
 	glm::mat4 mat = glm::scale(glm::mat4(), glm::vec3(1, -1, 1));
-	rootMesh->setBoundingBox2(mat, realbbmin, realbbmax);
+	dynamic_cast<Mesh*>(rootMesh)->setBoundingBox2(mat, realbbmin, realbbmax);
 	realbbrange = (realbbmax + realbbmin) / 2.0f;
 	maxRange = glm::max(glm::max(realbbmax.x, -realbbmin.x), glm::max(glm::max(realbbmax.y, -realbbmin.y), glm::max(realbbmax.z, -realbbmin.z)));
 
@@ -245,7 +249,7 @@ void Rsm::Mesh::calcMatrix1()
 //		cache1 = true;
 
 	for(unsigned int i = 0; i < children.size(); i++)
-		children[i]->calcMatrix1();
+		child(i)->calcMatrix1();
 }
 
 void Rsm::Mesh::calcMatrix2()
@@ -261,7 +265,7 @@ void Rsm::Mesh::calcMatrix2()
 	matrix2 *= offset;
 
 	for(unsigned int i = 0; i < children.size(); i++)
-		children[i]->calcMatrix2();
+		child(i)->calcMatrix2();
 }
 
 
@@ -281,7 +285,7 @@ void Rsm::Mesh::setBoundingBox( glm::vec3& _bbmin, glm::vec3& _bbmax )
 	{
 		for(int ii = 0; ii < 3; ii++)
 		{
-			glm::vec4 v = glm::vec4(vertices[faces[i]->vertices[ii]], 1);
+			glm::vec4 v = glm::vec4(vertices[faces[i]->vertexIds[ii]], 1);
 			v = myMat * v;
 			if(parent != NULL || children.size() != 0)
 				v += glm::vec4(pos + pos_, 1);
@@ -302,7 +306,7 @@ void Rsm::Mesh::setBoundingBox( glm::vec3& _bbmin, glm::vec3& _bbmax )
 		}
 
 		for(unsigned int i = 0; i < children.size(); i++)
-			children[i]->setBoundingBox(_bbmin, _bbmax);
+			dynamic_cast<Mesh*>(children[i])->setBoundingBox(_bbmin, _bbmax);
 }
 
 void Rsm::Mesh::setBoundingBox2( glm::mat4& mat, glm::vec3& bbmin_, glm::vec3& bbmax_)
@@ -313,7 +317,7 @@ void Rsm::Mesh::setBoundingBox2( glm::mat4& mat, glm::vec3& bbmin_, glm::vec3& b
 	{
 		for(int ii = 0; ii < 3; ii++)
 		{
-			glm::vec4 v = mat2 * glm::vec4(vertices[faces[i]->vertices[ii]],1);
+			glm::vec4 v = mat2 * glm::vec4(vertices[faces[i]->vertexIds[ii]],1);
 			bbmin_.x = glm::min(bbmin_.x, v.x);
 			bbmin_.y = glm::min(bbmin_.y, v.y);
 			bbmin_.z = glm::min(bbmin_.z, v.z);
@@ -325,7 +329,7 @@ void Rsm::Mesh::setBoundingBox2( glm::mat4& mat, glm::vec3& bbmin_, glm::vec3& b
 	}
 
 	for(unsigned int i = 0; i < children.size(); i++)
-		children[i]->setBoundingBox2(mat1, bbmin_, bbmax_);	
+		dynamic_cast<Mesh*>(children[i])->setBoundingBox2(mat1, bbmin_, bbmax_);	
 }
 
 
@@ -397,23 +401,22 @@ Rsm::Mesh::Mesh(Rsm* model, blib::util::StreamInFile* rsmFile)
 	for(int i = 0; i < faceCount; i++)
 	{
 		Face* f = new Face();
-		f->vertices[0] = rsmFile->readWord();
-		f->vertices[1] = rsmFile->readWord();
-		f->vertices[2] = rsmFile->readWord();
-		f->texvertices[0] = rsmFile->readWord();
-		f->texvertices[1] = rsmFile->readWord();
-		f->texvertices[2] = rsmFile->readWord();
+		f->vertexIds[0] = rsmFile->readWord();
+		f->vertexIds[1] = rsmFile->readWord();
+		f->vertexIds[2] = rsmFile->readWord();
+		f->texCoordIds[0] = rsmFile->readWord();
+		f->texCoordIds[1] = rsmFile->readWord();
+		f->texCoordIds[2] = rsmFile->readWord();
 
-		f->texIndex = rsmFile->readWord();
-		int padding = rsmFile->readWord(); //padding can be 0, -1, or other strange values?
-		
+		f->texId = rsmFile->readWord();
+		f->padding = rsmFile->readWord(); //padding can be 0, -1, or other strange values?
 
-		f->twoSide = rsmFile->readInt();
+		f->twoSided = rsmFile->readInt();
 		f->smoothGroup = rsmFile->readInt();
 
 		faces[i] = f;
 		
-		f->normal = glm::normalize(glm::cross(vertices[f->vertices[1]] - vertices[f->vertices[0]], vertices[f->vertices[2]] - vertices[f->vertices[0]]));
+		f->normal = glm::normalize(glm::cross(vertices[f->vertexIds[1]] - vertices[f->vertexIds[0]], vertices[f->vertexIds[2]] - vertices[f->vertexIds[0]]));
 	}
 
 	int frameCount = rsmFile->readInt();
@@ -514,17 +517,17 @@ void Rsm::Mesh::save(blib::util::StreamOut* pFile)
 	pFile->writeInt(faces.size());
 	for (std::size_t i = 0; i < faces.size(); i++)
 	{
-		Face* f = faces[i];
-		pFile->writeWord(f->vertices[0]);
-		pFile->writeWord(f->vertices[1]);
-		pFile->writeWord(f->vertices[2]);
-		pFile->writeWord(f->texvertices[0]);
-		pFile->writeWord(f->texvertices[1]);
-		pFile->writeWord(f->texvertices[2]);
+		auto f = faces[i];
+		pFile->writeWord(f->vertexIds[0]);
+		pFile->writeWord(f->vertexIds[1]);
+		pFile->writeWord(f->vertexIds[2]);
+		pFile->writeWord(f->texCoordIds[0]);
+		pFile->writeWord(f->texCoordIds[1]);
+		pFile->writeWord(f->texCoordIds[2]);
 
-		pFile->writeWord(f->texIndex);
-		pFile->writeWord(0); //padding, always 0
-		pFile->writeInt(f->twoSide);
+		pFile->writeWord(f->texId);
+		pFile->writeWord(f->padding); //padding, always 0
+		pFile->writeInt(f->twoSided);
 		pFile->writeInt(f->smoothGroup);
 	}
 
@@ -583,19 +586,6 @@ void Rsm::Mesh::draw(WorldShader* shader, glm::mat4 modelMatrix)
 	}
 }
 */
-void Rsm::Mesh::fetchChildren( std::map<std::string, Mesh* > meshes )
-{
-	for(std::map<std::string, Mesh*, std::less<std::string> >::iterator it = meshes.begin(); it != meshes.end(); it++)
-	{
-		if(it->second->parentName == name && it->second != this)
-		{
-			it->second->parent = this;
-			children.push_back(it->second);
-		}
-	}
-	for(unsigned int i = 0; i < children.size(); i++)
-		children[i]->fetchChildren(meshes);
-}
 
 
 /*
@@ -606,9 +596,3 @@ void Rsm::draw(WorldShader* shader, glm::mat4 modelMatrix)
 */
 
 
-void Rsm::Mesh::foreach(const std::function<void(Mesh*)> &callback)
-{
-	callback(this);
-	for (auto child : children)
-		child->foreach(callback);
-}

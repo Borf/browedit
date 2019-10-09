@@ -9,7 +9,7 @@
 #include <blib/math/AABB.h>
 #include <blib/util/Watchable.h>
 class Gnd;
-class Rsm;
+class IRsm;
 
 class Rsw
 {
@@ -55,7 +55,7 @@ public:
 		std::string fileName;
 		//std::string nodeName;
 
-		Rsm* model;
+		IRsm* model;
 		bool collides(const blib::math::Ray &ray);
 		std::vector<glm::vec3> collisions(const blib::math::Ray &ray);
 		void foreachface(std::function<void(const std::vector<glm::vec3>&)> callback);
@@ -176,13 +176,13 @@ public:
 	std::vector<glm::vec3> quadtreeFloats;
 	QuadTreeNode* quadtree;
 
-	std::map<std::string, Rsm*> rsmCache;
+	std::map<std::string, IRsm*> rsmCache;
 
 	Rsw(const std::string &fileName, bool loadModels = true);
 	Rsw(int width, int height);
 	~Rsw();
 
-	Rsm* getRsm( const std::string &fileName );
+	IRsm* getRsm( const std::string &fileName );
 	void save(const std::string &fileName);
 	void recalculateQuadTree(Gnd* gnd);
 };

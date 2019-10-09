@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 
 	BromEdit* app = new BromEdit(config);
 	if (argc > 1)
-		app->model = new Rsm(argv[1]);
+		app->model = new IRsm(argv[1]);
 	app->start();
 	delete app;
 	blib::util::FileSystem::dispose();

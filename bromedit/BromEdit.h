@@ -49,7 +49,7 @@ public:
 
 	json config;
 
-	Rsm* model;
+	IRsm* model;
 	RsmModelRenderInfo* renderInfo;
 
 	MapRenderer mapRenderer;

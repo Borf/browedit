@@ -228,7 +228,7 @@ typedef struct _GrfFile {
 	uint32_t compressed_len_aligned;
 	uint32_t compressed_len;		/**<  Compressed size */
 	uint32_t real_len;			/**<  Original (decompressed) file size */
-	uint32_t pos;				/**< location in GRF archive */
+	__int64 pos;				/**< location in GRF archive */
 
 	/* Directories have specific sizes and offsets, even though
 	 * no data is stored inside the GRF file
@@ -295,7 +295,7 @@ typedef struct _GrfFile {
 /** The structure which contains information about a GRF file. */
 typedef struct {
 	char *filename;		/**<  Archive filename. */
-	uint32_t len;		/**<  Size of the GRF file */
+	__int64 len;		/**<  Size of the GRF file */
 
 	uint32_t type;		/**<  Archive type (GRF, RGZ, etc)
 				 *
