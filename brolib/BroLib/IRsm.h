@@ -40,6 +40,9 @@ public:
 		std::vector<Face*>				faces;
 		std::vector<IMesh*> children;
 
+		glm::mat4						matrix1;
+		glm::mat4						matrix2;
+
 		RsmMeshRenderInfo* renderer;
 		IMesh* parent;
 
@@ -52,7 +55,8 @@ public:
 				child->foreach(callback);
 		}
 
-		virtual void makeVirtual() {}
+		virtual void calcMatrix1() {}
+		virtual void calcMatrix2() {}
 	};
 
 	template<class T>
@@ -63,8 +67,6 @@ public:
 
 		inline Mesh<T>* child(int i) { return (Mesh<T>*)children[i]; }
 		
-		virtual void calcMatrix1() {}
-		virtual void calcMatrix2() {}
 		void foreach(const std::function<void(Mesh<T>*)>& callback)
 		{
 			callback(this);

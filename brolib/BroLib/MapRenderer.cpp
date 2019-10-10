@@ -853,17 +853,8 @@ void MapRenderer::renderMesh(IRsm::IMesh* mesh, const glm::mat4 &matrix, RsmMode
 			mesh->renderer->vbo->setVertexFormat<blib::VertexP3T2N3>();
 			renderer->setVbo(mesh->renderer->vbo, allVerts);
 		}
-		Rsm::Mesh* rsmMesh = dynamic_cast<Rsm::Mesh*>(mesh);
-		if (rsmMesh)
-		{
-			mesh->renderer->matrix = matrix * rsmMesh->matrix1 * rsmMesh->matrix2;
-			mesh->renderer->matrixSub = matrix * rsmMesh->matrix1;
-		}
-		if (rsm2Mesh)
-		{
-			mesh->renderer->matrix = matrix;
-			mesh->renderer->matrixSub = matrix;
-		}
+		mesh->renderer->matrix = matrix * mesh->matrix1 * mesh->matrix2;
+		mesh->renderer->matrixSub = matrix * mesh->matrix1;
 	}
 	
 	if (rsmMesh && (!rsmMesh->frames.empty() || rsmMesh->matrixDirty))

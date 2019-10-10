@@ -55,8 +55,6 @@ public:
 		glm::vec3 bbmax;
 		glm::vec3 bbrange;
 
-		glm::mat4 matrix1;
-		glm::mat4 matrix2;
 		void calcMatrix1();
 		void calcMatrix2();
 		bool matrixDirty = true;

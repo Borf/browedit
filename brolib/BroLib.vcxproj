@@ -33,9 +33,11 @@
     <ClCompile Include="BroLib\grflib\grfcrypt.c" />
     <ClCompile Include="BroLib\grflib\grfsupport.c" />
     <ClCompile Include="BroLib\grflib\rgz.c" />
+    <ClCompile Include="BroLib\IRsm.cpp" />
     <ClCompile Include="BroLib\Map.cpp" />
     <ClCompile Include="BroLib\MapRenderer.cpp" />
     <ClCompile Include="BroLib\Rsm.cpp" />
+    <ClCompile Include="BroLib\Rsm2.cpp" />
     <ClCompile Include="BroLib\Rsw.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -58,10 +60,12 @@
     <ClInclude Include="BroLib\grflib\grfsupport.h" />
     <ClInclude Include="BroLib\grflib\grftypes.h" />
     <ClInclude Include="BroLib\grflib\rgz.h" />
+    <ClInclude Include="BroLib\IRsm.h" />
     <ClInclude Include="BroLib\Map.h" />
     <ClInclude Include="BroLib\MapRenderer.h" />
     <ClInclude Include="BroLib\Renderer.h" />
     <ClInclude Include="BroLib\Rsm.h" />
+    <ClInclude Include="BroLib\Rsm2.h" />
     <ClInclude Include="BroLib\Rsw.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

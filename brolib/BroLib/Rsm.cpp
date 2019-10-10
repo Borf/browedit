@@ -164,8 +164,8 @@ void Rsm::updateMatrices()
 	bbrange = (bbmin + bbmax) / 2.0f;
 
 
-	dynamic_cast<Mesh*>(rootMesh)->calcMatrix1();
-	dynamic_cast<Mesh*>(rootMesh)->calcMatrix2();
+	rootMesh->calcMatrix1();
+	rootMesh->calcMatrix2();
 
 
 

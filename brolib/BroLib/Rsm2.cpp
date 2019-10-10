@@ -9,6 +9,7 @@ Rsm2::Rsm2(const std::string& fileName)
 	this->fileName = fileName;
 	renderer = NULL;
 	loaded = false;
+	rootMesh = nullptr;
 	if (fileName.substr(fileName.size() - 5) != ".rsm2")
 		return;
 
@@ -42,6 +43,12 @@ Rsm2::Rsm2(const std::string& fileName)
 	{
 		load0203(rsmFile);
 		loaded = true;
+	}
+
+	if (rootMesh)
+	{
+		rootMesh->calcMatrix1();
+		rootMesh->calcMatrix2();
 	}
 
 
@@ -183,6 +190,25 @@ void Rsm2::load0203(blib::util::StreamInFile* rsmFile)
 
 }
 
+
+
+void Rsm2::Mesh::calcMatrix1()
+{
+	matrix1 = glm::mat4();
+	matrix1 = glm::translate(matrix1, pos);
+	for (unsigned int i = 0; i < children.size(); i++)
+		child(i)->calcMatrix1();
+}
+void Rsm2::Mesh::calcMatrix2()
+{
+	matrix2 = glm::mat4();
+
+
+	matrix2 *= offset;
+
+	for (unsigned int i = 0; i < children.size(); i++)
+		child(i)->calcMatrix2();
+}
 
 
 std::string Rsm2::readString(blib::util::StreamInFile* file)

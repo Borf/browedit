@@ -6,10 +6,13 @@
 class Rsm2 : public IRsm
 {
 public:
-	class Mesh : public IMesh
+	class Mesh : public IRsm::Mesh<Rsm2>
 	{
 	public:
 		std::vector<int> textures;
+
+		void calcMatrix1();
+		void calcMatrix2();
 	};
 	class Face : public IRsm::Face
 	{

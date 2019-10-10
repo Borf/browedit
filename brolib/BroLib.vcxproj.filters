@@ -99,6 +99,12 @@
     <ClCompile Include="BroLib\Gat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BroLib\Rsm2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroLib\IRsm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BroLib\Map.h">
@@ -171,6 +177,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BroLib\Gat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\Rsm2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroLib\IRsm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
