@@ -93,6 +93,7 @@ public:
 
 
 	virtual void updateMatrices() {}
+	virtual void save(const std::string& fileName) {}
 
 
 

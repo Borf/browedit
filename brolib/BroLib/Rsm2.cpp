@@ -90,6 +90,7 @@ void Rsm2::load0203(blib::util::StreamInFile* rsmFile)
 				mesh->textures.push_back(f - textures.begin());
 		}
 
+		mesh->offset = glm::mat4(1.0f);
 		mesh->offset[0][0] = rsmFile->readFloat();//rotation
 		mesh->offset[0][1] = rsmFile->readFloat();
 		mesh->offset[0][2] = rsmFile->readFloat();
@@ -195,15 +196,13 @@ void Rsm2::load0203(blib::util::StreamInFile* rsmFile)
 void Rsm2::Mesh::calcMatrix1()
 {
 	matrix1 = glm::mat4();
-	matrix1 = glm::translate(matrix1, pos);
 	for (unsigned int i = 0; i < children.size(); i++)
 		child(i)->calcMatrix1();
 }
 void Rsm2::Mesh::calcMatrix2()
 {
 	matrix2 = glm::mat4();
-
-
+	matrix2 = glm::translate(matrix2, pos);
 	matrix2 *= offset;
 
 	for (unsigned int i = 0; i < children.size(); i++)

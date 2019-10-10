@@ -37,15 +37,15 @@ MeshProperties::MeshProperties(blib::ResourceManager * resourceManager) : blib::
 
 
 
-void MeshProperties::selectMesh(Rsm::Mesh * mesh)
+void MeshProperties::selectMesh(IRsm::IMesh * mesh)
 {
-	selectedMesh = mesh;
+	selectedMesh = (Rsm::Mesh*)mesh;
 
 	for (auto& c : strCallbacks)
-		c.first->text = *c.second(mesh);
+		c.first->text = *c.second(selectedMesh);
 
 	for (auto& c : floatCallbacks)
-		c.first->text = blib::util::toString(*c.second(mesh));
+		c.first->text = blib::util::toString(*c.second(selectedMesh));
 
 }
 

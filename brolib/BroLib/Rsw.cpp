@@ -872,13 +872,9 @@ void Rsw::Model::getWorldVerts(std::vector<int>& indices, std::vector<glm::vec3>
 
 std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray)
 {
-	if (!aabb.hasRayCollision(ray, 0, 10000000))
+	if(!model || !model->loaded || !model->rootMesh || !aabb.hasRayCollision(ray, 0, 10000000))
 		return std::vector<glm::vec3>();
-	Rsm* rsm = dynamic_cast<Rsm*>(model);
-	if (rsm)
-		return collisions_(rsm->rootMesh, ray, matrixCache);
-
-	return std::vector<glm::vec3>();
+	return collisions_(model->rootMesh, ray, matrixCache);
 }
 
 
@@ -905,9 +901,7 @@ void Rsw::Model::foreachface(std::function<void(const std::vector<glm::vec3>&)> 
 {
 	if (!model)
 		return;
-	Rsm* rsm = dynamic_cast<Rsm*>(model);
-	if (rsm)
-		foreachface_(rsm->rootMesh, callback, matrixCache);
+	foreachface_(model->rootMesh, callback, matrixCache);
 }
 
 Rsw::QuadTreeNode::QuadTreeNode(std::vector<glm::vec3>::const_iterator &it, int level /*= 0*/) : bbox(glm::vec3(0, 0, 0), glm::vec3(0,0,0))

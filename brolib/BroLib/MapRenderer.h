@@ -205,7 +205,7 @@ public:
 	void setShadowDirty();
 	void setColorDirty() { gndTileColorDirty = true; }
 	void renderMeshFbo(IRsm* rsm, float rotation, blib::FBO* fbo, blib::Renderer* renderer);
-	void renderMesh(Rsm* rsm, const glm::mat4& matrix, blib::Renderer* renderer);
+	void renderMesh(IRsm* rsm, const glm::mat4& matrix, blib::Renderer* renderer);
 	bool gndTextureGridDirty;
 	bool gndGridDirty;
 	bool gatDirty;

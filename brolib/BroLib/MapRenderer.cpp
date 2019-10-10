@@ -809,6 +809,11 @@ void MapRenderer::renderModel(Rsw::Model* model, blib::Renderer* renderer)
 				model->aabb.max = glm::max(model->aabb.max, verts[i].position);
 			}
 		}
+		if (rsm2Model)
+		{
+			model->aabb.min = glm::vec3(-99, -99, -99);
+			model->aabb.max = glm::vec3(99, 99, 99);
+		}
 	}
 
 	if (model->model->renderer == NULL)
@@ -1044,7 +1049,7 @@ void MapRenderer::renderMeshFbo(IRsm* rsm, float rotation, blib::FBO* fbo, blib:
 }
 
 
-void MapRenderer::renderMesh(Rsm* rsm, const glm::mat4 &camera, blib::Renderer* renderer)
+void MapRenderer::renderMesh(IRsm* rsm, const glm::mat4 &camera, blib::Renderer* renderer)
 {
 	blib::FBO* oldFbo = rswRenderState.activeFbo;
 
@@ -1063,9 +1068,7 @@ void MapRenderer::renderMesh(Rsm* rsm, const glm::mat4 &camera, blib::Renderer* 
 	rswRenderState.activeFbo = nullptr;
 	rswRenderState.depthTest = true;
 
-	Rsm* rsm1 = dynamic_cast<Rsm*>(rsm);
-	if(rsm1)
-		renderMesh(rsm1->rootMesh, glm::mat4(), rsm->renderer, renderer);
+	renderMesh(rsm->rootMesh, glm::mat4(), rsm->renderer, renderer);
 
 	rswRenderState.activeFbo = oldFbo;
 	//rswRenderState.activeShader->setUniform(RswShaderAttributes::ProjectionMatrix, projectionMatrix);

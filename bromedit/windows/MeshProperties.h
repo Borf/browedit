@@ -23,7 +23,7 @@ class MeshProperties : public blib::wm::Window
 public:
 	MeshProperties(blib::ResourceManager* resourceManager);
 
-	void selectMesh(Rsm::Mesh* mesh);
+	void selectMesh(IRsm::IMesh* mesh);
 
 	void addHandler(const std::string &name, std::function<std::string*(Rsm::Mesh*)> callback);
 	void addHandler(const std::string &name, std::function<float*(Rsm::Mesh*)> callback);

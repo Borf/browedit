@@ -3,6 +3,8 @@
 #include <blib/App.h>
 #include <blib/MouseListener.h>
 #include <BroLib/MapRenderer.h>
+#include <BroLib/IRsm.h>
+#include <BroLib/Rsm2.h>
 #include <blib/json.hpp>
 
 namespace blib {
@@ -28,7 +30,10 @@ class BromEdit : public blib::App, public blib::MouseListener
 	glm::vec2 rotation;
 	float distance = 0;
 
-	Rsm::Mesh* selectedMesh = nullptr;
+	union {
+		IRsm::IMesh* selectedMesh = nullptr;
+		Rsm::Mesh* selectedRsmMesh;
+	};
 	float timeSelect = 0;
 
 
@@ -49,7 +54,12 @@ public:
 
 	json config;
 
-	IRsm* model;
+	union
+	{
+		IRsm* model;
+		Rsm* model1;
+		Rsm2* model2;
+	};
 	RsmModelRenderInfo* renderInfo;
 
 	MapRenderer mapRenderer;

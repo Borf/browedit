@@ -108,7 +108,8 @@ void BromEdit::init()
 		//loadModel("data\\model\\pud\\stall_03.rsm");
 		//loadModel("data\\model\\pud\\swing_01.rsm");
 		//loadModel("data\\model\\pud\\balloon_01.rsm");
-		loadModel("data\\model\\plants_e_01.rsm2");
+		//loadModel("data\\model\\plants_e_01.rsm2");
+		loadModel("data\\model\\ilusion\\boarding_j_01.rsm2");
 
 	grid = resourceManager->getResource<blib::Texture>("assets/textures/grid.png");
 	grid->setTextureRepeat(true);
@@ -168,8 +169,8 @@ void BromEdit::update(double elapsedTime)
 		if (mouseState.position.y > bary+40)
 		{
 			int index = (int)((mouseState.position.y - bary - 40) / 13);
-			std::function<void(Rsm::Mesh*)> selectMesh;
-			selectMesh = [&, this](Rsm::Mesh* mesh)
+			std::function<void(IRsm::IMesh*)> selectMesh;
+			selectMesh = [&, this](IRsm::IMesh* mesh)
 			{
 				if (index == 0)
 				{
@@ -182,11 +183,11 @@ void BromEdit::update(double elapsedTime)
 
 			};
 			selectMesh(model->rootMesh);
-
-			for (auto frame : selectedMesh->frames)
+#ifdef FIXME
+			for (auto frame : selectedRsmMesh->frames)
 				if (fabs(frame->time / 10.0 - timeSelect) < 5)
 					frameProperties->selectFrame(frame);
-
+#endif
 
 		}
 		if (mouseState.position.y > bary && mouseState.position.y < bary + 40)
@@ -211,7 +212,7 @@ void BromEdit::update(double elapsedTime)
 	if (mouseState.position.y > bary + 40 && mouseState.position.x > 100 && mouseState.leftButton)
 	{
 		timeSelect = mouseState.position.x - 100.0f;
-		for (auto frame : selectedMesh->frames)
+		for (auto frame : selectedRsmMesh->frames)
 			if (fabs(frame->time / 10.0 - timeSelect) < 5)
 				frameProperties->selectFrame(frame);
 		if (model->renderer->timer.isPaused())
@@ -235,7 +236,11 @@ void BromEdit::draw()
 	matrix = glm::rotate(matrix, rotation.y, glm::vec3(1, 0, 0));
 	matrix = glm::rotate(matrix, rotation.x, glm::vec3(0, 1, 0));
 	matrix = glm::rotate(matrix, glm::pi<float>(), glm::vec3(1, 0, 0));
-	matrix = glm::translate(matrix, glm::vec3(model->realbbrange));
+
+	if(model->version < 0x0200)
+		matrix = glm::translate(matrix, glm::vec3(model1->realbbrange));
+	else
+		matrix = glm::translate(matrix, glm::vec3(100));
 
 
 	renderer->setViewPort(0, 200, window->getWidth(), window->getHeight() - 200);
@@ -296,9 +301,9 @@ void BromEdit::draw()
 
 
 	int i = 0;
-	std::function<void(Rsm::Mesh*, int)> drawLine;
+	std::function<void(IRsm::IMesh*, int)> drawLine;
 
-	drawLine = [&,this](Rsm::Mesh* mesh, int level)
+	drawLine = [&,this](IRsm::IMesh* mesh, int level)
 	{
 		if (mesh == selectedMesh)
 		{
@@ -311,7 +316,7 @@ void BromEdit::draw()
 		else
 			spriteBatch->draw(font, mesh->name, blib::math::easyMatrix(glm::vec2(5 + 16 * level, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 
-
+#ifdef FIXME 
 		for (auto frame : mesh->frames)
 		{
 			std::string symbol = "o";
@@ -325,7 +330,7 @@ void BromEdit::draw()
 			int tick = model->renderer->timer.millis() % mesh->frames[mesh->frames.size() - 1]->time;
 			spriteBatch->draw(font, "|", blib::math::easyMatrix(glm::vec2(100 + tick / 10, y + 40 + i * 13)), glm::vec4(0, 0, 0, 1));
 		}
-
+#endif
 		i++;
 		for (auto &m : mesh->children)
 			drawLine(m, level + 1);
@@ -345,8 +350,15 @@ void BromEdit::draw()
 
 void BromEdit::loadModel(const std::string &fileName)
 {
-	model = new IRsm(fileName);
-	distance = glm::min(100.0f, glm::max(glm::max(model->realbbmax.x - model->realbbmin.x, model->realbbmax.y - model->realbbmin.y), model->realbbmax.z - model->realbbmin.z));
+	if (fileName.substr(fileName.size() - 4) == ".rsm")
+	{
+		model = new Rsm(fileName);
+		distance = glm::min(100.0f, glm::max(glm::max(model1->realbbmax.x - model1->realbbmin.x, model1->realbbmax.y - model1->realbbmin.y), model1->realbbmax.z - model1->realbbmin.z));
+	}
+	else if (fileName.substr(fileName.size() - 5) == ".rsm2")
+	{
+		model = new Rsm2(fileName);
+	}
 	mouseState.scrollPosition = 0;
 
 	renderInfo = new RsmModelRenderInfo();
@@ -376,7 +388,7 @@ void BromEdit::addKeyframe()
 	frame->time = (int)(timeSelect * 10);
 
 	frameProperties->selectFrame(frame);
-
+#ifdef FIXME
 	for (auto it = selectedMesh->frames.begin(); it != selectedMesh->frames.end(); it++)
 	{
 		if ((*it)->time / 10 > timeSelect) {
@@ -400,12 +412,13 @@ void BromEdit::addKeyframe()
 			return b->time > a->time;
 		});
 	}
-
+#endif
 
 }
 
 void BromEdit::delKeyframe()
 {
+#ifdef FIXME
 	for (auto it = selectedMesh->frames.begin(); it != selectedMesh->frames.end(); it++)
 	{
 		if (fabs((*it)->time / 10.0 - timeSelect) < 5)
@@ -436,11 +449,12 @@ void BromEdit::delKeyframe()
 		delete selectedMesh->frames[0];
 		selectedMesh->frames.clear();
 	}
-
+#endif
 }
 
 void BromEdit::prevFrame()
 {
+#ifdef FIXME
 	for (std::size_t i = 0; i < selectedMesh->frames.size(); i++)
 	{
 		auto frame = selectedMesh->frames[i];
@@ -453,10 +467,12 @@ void BromEdit::prevFrame()
 			break;
 		}
 	}
+#endif
 }
 
 void BromEdit::nextFrame()
 {
+#ifdef FIXME
 	for (std::size_t i = 0; i < selectedMesh->frames.size(); i++)
 	{
 		auto frame = selectedMesh->frames[i];
@@ -469,11 +485,13 @@ void BromEdit::nextFrame()
 			break;
 		}
 	}
+#endif
 }
 
 
 void BromEdit::addMesh()
 {
+#ifdef FIXME
 	if (!selectedMesh)
 		return;
 
@@ -482,10 +500,12 @@ void BromEdit::addMesh()
 	mesh->parent = selectedMesh;
 	mesh->parentName = mesh->parent->name;
 	mesh->parent->children.push_back(mesh);
+#endif
 }
 
 void BromEdit::delMesh()
 {
+#ifdef FIXME
 	if (!selectedMesh)
 		return;
 	// don't delete rootnode
@@ -497,7 +517,7 @@ void BromEdit::delMesh()
 
 	selectedMesh->children.erase(std::remove(selectedMesh->children.begin(), selectedMesh->children.end(), toDelete), selectedMesh->children.end());
 	delete toDelete;
-	
+#endif
 }
 
 void BromEdit::menuFileNew()
@@ -592,8 +612,10 @@ void BromEdit::replaceMesh()
 	mesh->faces.clear();
 	mesh->vertices.clear();
 	mesh->texCoords.clear();
+#ifdef FIXME
 	mesh->textures.clear();
 	mesh->textures.push_back(0); //todo
+#endif
 	delete mesh->renderer;
 	mesh->renderer = nullptr;
 
@@ -627,15 +649,15 @@ void BromEdit::replaceMesh()
 				Rsm::Mesh::Face* face = new Rsm::Mesh::Face();
 				const auto &f = m->mFaces[ii];
 
-				face->twoSide = false;
-				face->texIndex = 0;
+				face->twoSided = false;
+				face->texId = 0;
 				face->smoothGroup = 0;
 
 				assert(f.mNumIndices == 3);
 				for (int iii = 0; iii < f.mNumIndices; iii++)
 				{
-					face->vertices[iii] = f.mIndices[iii];
-					face->texvertices[iii] = f.mIndices[iii];
+					face->vertexIds[iii] = f.mIndices[iii];
+					face->texCoordIds[iii] = f.mIndices[iii];
 				}
 
 				mesh->faces.push_back(face);
@@ -719,7 +741,7 @@ void BromEdit::exportMesh()
 	{
 		for(int i = 0; i < 3; i++)
 		{
-			auto indices = std::pair<int, int>(f->vertices[i], f->texvertices[i]);
+			auto indices = std::pair<int, int>(f->vertexIds[i], f->texCoordIds[i]);
 			if (lookup.find(indices) == lookup.end())
 			{
 				lookup[indices] = vertices.size();
@@ -752,7 +774,7 @@ void BromEdit::exportMesh()
 
 		for (int ii = 0; ii < 3; ii++)
 		{
-			auto indices = std::pair<int, int>(f->vertices[ii], f->texvertices[ii]);
+			auto indices = std::pair<int, int>(f->vertexIds[ii], f->texCoordIds[ii]);
 			face.mIndices[ii] = lookup[indices];
 		}
 	}
@@ -765,6 +787,7 @@ void BromEdit::exportMesh()
 
 void BromEdit::testStuff()
 {
+#ifdef FIXME
 	{
 		auto files = blib::util::FileSystem::getFileList([](const std::string &fileName)
 		{
@@ -782,4 +805,5 @@ void BromEdit::testStuff()
 			delete rsm;
 		}
 	}
+#endif
 }
