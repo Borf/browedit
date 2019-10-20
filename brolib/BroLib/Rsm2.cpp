@@ -182,6 +182,11 @@ void Rsm2::load0203(blib::util::StreamInFile* rsmFile)
 				}
 			}
 		}
+
+		if (meshes.find(mesh->name) != meshes.end())
+			mesh->name += "(duplicate)";
+		if (mesh->name == "")
+			mesh->name = "empty";
 		meshes[mesh->name] = mesh;
 	}
 

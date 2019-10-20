@@ -723,47 +723,28 @@ void Gnd::makeLightmapsSmooth()
 void Gnd::cleanTiles()
 {
 	Log::out << "Tiles cleanup, starting with " << tiles.size() << " tiles" << Log::newline;
-	std::map<unsigned char, std::vector<std::size_t>> lookup;
-
-	for (int i = 0; i < (int)tiles.size(); i++)
-	{
-		unsigned char hash = tiles[i]->hash();
-		bool found = false;
-		if (lookup.find(hash) != lookup.end())
+	std::set<int> used;
+	for (int y = 0; y < height; y++)
+		for (int x = 0; x < width; x++)
 		{
-			for (const auto ii : lookup[hash])
-			{
-				if ((*tiles[i]) == (*tiles[ii]))
-				{// if it is found
-					assert(i > ii);
-					for(int x = 0; x < width; x++)
-						for (int y = 0; y < height; y++)
-						{
-							for (int iii = 0; iii < 3; iii++)
-							{
-								if (cubes[x][y]->tileIds[iii] == i)
-									cubes[x][y]->tileIds[iii] = ii;
-								else if (cubes[x][y]->tileIds[iii] > i)
-									cubes[x][y]->tileIds[iii]--;
-							}
-						}
-					//remove tile i
-					delete tiles[i];
-					tiles.erase(tiles.begin() + i);
-					i--;
-					found = true;
-					break;
-				}
-			}
-		}
-		if (!found)
-		{
-			lookup[hash].push_back(i);
+			used.insert(cubes[x][y]->tileUp);
+			used.insert(cubes[x][y]->tileFront);
+			used.insert(cubes[x][y]->tileSide);
 		}
 
-	}
+
+	std::list<int> toRemove;
+	for (int i = 0; i < tiles.size(); i++)
+		if (used.find(i) == used.end())
+			toRemove.push_back(i);
+	toRemove.reverse();
+	for (int i : toRemove)
+		tiles.erase(tiles.begin() + i);
+	
+
 	Log::out << "Tiles cleanup, ending with " << tiles.size() << " tiles" << Log::newline;
 }
+
 
 void Gnd::makeTilesUnique()
 {
