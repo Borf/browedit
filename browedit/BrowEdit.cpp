@@ -1322,7 +1322,7 @@ void BrowEdit::addLight(const json &properties)
 	auto newLight = new Rsw::Light();
 	newObject = newLight;
 	newLight->matrixCached = false;
-	newLight->name = properties["name"];
+	newLight->name = properties["name"].get<std::string>();
 
 	newLight->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
 	newLight->rotation = glm::vec3(0, 0, 0);

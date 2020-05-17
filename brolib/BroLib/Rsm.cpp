@@ -20,7 +20,7 @@ Rsm::Rsm(const std::string &fileName)
 	rootMesh = NULL;
 	renderer = NULL;
 	loaded = false;
-	if (fileName.substr(fileName.size() - 5) == ".rsm2")
+	if (fileName.length() > 2 && fileName.substr(fileName.size() - 5) == ".rsm2")
 		return;
 
 

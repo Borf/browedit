@@ -734,13 +734,12 @@ void Gnd::cleanTiles()
 
 
 	std::list<int> toRemove;
-	for (int i = 0; i < tiles.size(); i++)
+	for (std::size_t i = 0; i < tiles.size(); i++)
 		if (used.find(i) == used.end())
 			toRemove.push_back(i);
 	toRemove.reverse();
 	for (int i : toRemove)
 		tiles.erase(tiles.begin() + i);
-	
 
 	Log::out << "Tiles cleanup, ending with " << tiles.size() << " tiles" << Log::newline;
 }

@@ -4,7 +4,7 @@ using blib::util::Log;
 
 #include <algorithm>
 #include <cctype>
-
+#include <filesystem>
 
 std::string GrfFileSystemHandler::sanitizeFileName(std::string fileName)
 {
@@ -27,6 +27,9 @@ GrfFileSystemHandler::GrfFileSystemHandler( const std::string &grfFile ) : blib:
 	if (grf == NULL)
 	{
 		Log::err<<"Error opening GRF file: "<<grfFile<<Log::newline;
+
+		Log::err <<"In path "<< std::filesystem::current_path().string() << Log::newline;
+
 		return;
 	}
 	Log::out<<"Loaded GRF file "<<grfFile<<Log::newline;

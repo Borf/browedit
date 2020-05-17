@@ -397,7 +397,7 @@ void ObjectWindow::setLightDirectory(std::string directory)
 		if (item["type"] == "dir")
 			continue;
 		blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
-		label->text = item["name"];
+		label->text = item["name"].get<std::string>();
 		label->width = textureSize;
 		label->height = 12;
 		label->x = px;

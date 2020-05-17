@@ -1,17 +1,16 @@
 {
-	"resolution": [ 1920, 1080 ],
-	"data": {
-		"ropath": "g:/games/RO",
-		"grfs": [
-			"g:/games/RO/data.grf",
-			"g:/games/RO/wicked_prt.grf",
-			"g:/games/RO/hakurei.grf"
-		]
-	},
-	"moveconsole": true,
-	"defaultmap": "guild_vs1",
-	"threadedrendering": true,
-	"backgroundworkers": true,
-	"fov": 45,
-	"vsync": false
+  "resolution": [ 1920, 1080 ],
+  "data": {
+    "ropath": "servert/client-slim/",
+    "grfs": [
+      "../servert/client-slim/data.grf",
+      "../servert/client-slim/rdata.grf"
+    ]
+  },
+  "moveconsole": true,
+  "defaultmap": "prontera",
+  "threadedrendering": true,
+  "backgroundworkers": true,
+  "fov": 45,
+  "vsync": false
 } 
