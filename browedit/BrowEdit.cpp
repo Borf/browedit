@@ -54,7 +54,7 @@ using blib::util::Log;
 #endif
 
 
-BrowEdit::BrowEdit(const json &config, v8::Isolate* isolate) : mouseRay(glm::vec3(0,0,0), glm::vec3(1,0,0))
+BrowEdit::BrowEdit(const json &config, v8::Isolate* isolate)
 {
 	this->config = config;
 	this->isolate = isolate;
@@ -370,9 +370,6 @@ void BrowEdit::update( double elapsedTime )
 	mapRenderer.drawTextureGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && editMode == EditMode::TextureEdit; // TODO: fix this
 	mapRenderer.drawObjectGrid = dynamic_cast<blib::wm::ToggleMenuItem*>(rootMenu->getItem("display/grid"))->getValue() && (editMode == EditMode::ObjectEdit || editMode == EditMode::HeightEdit || editMode == EditMode::DetailHeightEdit || editMode == EditMode::WallEdit); // TODO: fix this
 	mapRenderer.drawGat = editMode == EditMode::GatEdit || editMode == EditMode::DetailGatEdit || editMode == EditMode::GatTypeEdit;
-
-	if (mouseState.leftButton)
-		mouseRay = mapRenderer.mouseRay;
 
 
 
