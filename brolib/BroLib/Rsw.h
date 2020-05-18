@@ -10,6 +10,7 @@
 #include <blib/util/Watchable.h>
 class Gnd;
 class IRsm;
+class Map;
 
 class Rsw
 {
@@ -25,7 +26,7 @@ public:
 			Effect,
 		} type;
 
-		Object(Type type) : type(type), selected(false), matrixCached(false), aabb(glm::vec3(0,0,0), glm::vec3(0,0,0)) {};
+		Object(Type type) : type(type), selected(false), matrixCached(false) {};
 
 		std::string name;
 
@@ -38,17 +39,18 @@ public:
 		bool matrixCached;
 		glm::mat4 matrixCache;
 
-		blib::math::AABB aabb;
-
 		virtual ~Object() {}
-		virtual bool collides(const blib::math::Ray &ray) { return false; };
-		virtual std::vector<glm::vec3> collisions(const blib::math::Ray &ray) { return std::vector<glm::vec3>();  };
+		virtual bool collides(const blib::math::Ray &ray, Map* map) { return false; };
+		virtual std::vector<glm::vec3> collisions(const blib::math::Ray &ray, Map* map) { return std::vector<glm::vec3>();  };
 	};
 
 
 	class Model : public Object
 	{
 	public: 
+		blib::math::AABB aabb;
+
+
 		int animType;
 		float animSpeed;
 		int blockType;
@@ -56,14 +58,14 @@ public:
 		//std::string nodeName;
 
 		IRsm* model;
-		bool collides(const blib::math::Ray &ray);
-		std::vector<glm::vec3> collisions(const blib::math::Ray &ray);
+		bool collides(const blib::math::Ray &ray, Map* map);
+		std::vector<glm::vec3> collisions(const blib::math::Ray &ray, Map* map) override;
 		void foreachface(std::function<void(const std::vector<glm::vec3>&)> callback);
 		bool collidesTexture(const blib::math::Ray &ray);
 
 		void getWorldVerts(std::vector<int> &indices, std::vector<glm::vec3> &vertices);
 
-		Model() : Object(Object::Type::Model)
+		Model() : Object(Object::Type::Model), aabb(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0))
 		{
 			model = NULL;
 		}
@@ -82,6 +84,10 @@ public:
 		Light() : Object(Object::Type::Light)
 		{
 		}
+
+		virtual bool collides(const blib::math::Ray& ray, Map* map) override;
+		virtual std::vector<glm::vec3> collisions(const blib::math::Ray& ray, Map* map) override;
+
 		// custom properties!!!!!!!!!
 		enum class Type
 		{

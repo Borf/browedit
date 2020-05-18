@@ -2,6 +2,7 @@
 #include "Rsm.h"
 #include "Rsm2.h"
 #include "Gnd.h"
+#include "Map.h"
 #include "MapRenderer.h"
 #include <blib/util/Log.h>
 #include <blib/Util.h>
@@ -832,7 +833,7 @@ std::vector<glm::vec3> collisions_(IRsm::IMesh* mesh, const blib::math::Ray &ray
 	return ret;
 }
 
-bool Rsw::Model::collides(const blib::math::Ray &ray)
+bool Rsw::Model::collides(const blib::math::Ray &ray, Map* map)
 {
 	if (!aabb.hasRayCollision(ray, 0, 10000000))
 		return false;
@@ -870,7 +871,7 @@ void Rsw::Model::getWorldVerts(std::vector<int>& indices, std::vector<glm::vec3>
 
 
 
-std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray)
+std::vector<glm::vec3> Rsw::Model::collisions(const blib::math::Ray &ray, Map* map)
 {
 	if(!model || !model->loaded || !model->rootMesh || !aabb.hasRayCollision(ray, 0, 10000000))
 		return std::vector<glm::vec3>();
@@ -929,6 +930,24 @@ Rsw::QuadTreeNode::~QuadTreeNode()
 			delete children[i];
 }
 
+bool Rsw::Light::collides(const blib::math::Ray& ray, Map* map)
+{
+	glm::vec3 pos(map->getGnd()->width * 5 + position.x, -position.y, 10 + 5 * map->getGnd()->height - position.z);
+	blib::math::AABB box(pos - glm::vec3(2.0f), pos + glm::vec3(2.0f));
+	return box.hasRayCollision(ray, 0, 1000000);
+}
+
+
+std::vector<glm::vec3> Rsw::Light::collisions(const blib::math::Ray& ray, Map* map)
+{
+	glm::vec3 pos(map->getGnd()->width * 5 + position.x, -position.y, 10 + 5 * map->getGnd()->height - position.z);
+
+	blib::math::AABB box(pos - glm::vec3(2.0f), pos + glm::vec3(2.0f));
+	std::vector<glm::vec3> col;
+	if (box.hasRayCollision(ray, 0, 1000000))
+		col.push_back(pos);
+	return col;
+}
 
 float Rsw::Light::realRange()
 {

@@ -73,9 +73,9 @@ void BrowEdit::objectEditUpdate()
 						for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 						{
 							Rsw::Object* o = map->getRsw()->objects[i];
-							glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
-							float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
-							std::vector<glm::vec3> collisions = o->collisions(mapRenderer.mouseRay);
+							//glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
+							//float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
+							std::vector<glm::vec3> collisions = o->collisions(mapRenderer.mouseRay, map);
 							if (!collisions.empty())
 							{
 								if (o->selected)
@@ -112,7 +112,7 @@ void BrowEdit::objectEditUpdate()
 						Rsw::Object* o = map->getRsw()->objects[i];
 						glm::vec2 pos = glm::vec2(map->getGnd()->width * 5 + o->position.x, 10 + 5 * map->getGnd()->height - o->position.z);
 						float dist = glm::length(pos - glm::vec2(mapRenderer.mouse3d.x, mapRenderer.mouse3d.z));
-						std::vector<glm::vec3> collisions = o->collisions(mapRenderer.mouseRay);
+						std::vector<glm::vec3> collisions = o->collisions(mapRenderer.mouseRay, map);
 						o->selected = false;
 						if (collisions.size() > 0)
 						{
@@ -129,7 +129,7 @@ void BrowEdit::objectEditUpdate()
 
 					if (closestObject)
 					{
-						closestObject->selected = closestObject->collides(mapRenderer.mouseRay);
+						closestObject->selected = closestObject->collides(mapRenderer.mouseRay, map);
 						if (closestObject->selected && mouseState.clickcount == 2)
 						{
 							if (closestObject->type == Rsw::Object::Type::Model)

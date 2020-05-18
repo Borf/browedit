@@ -59,7 +59,7 @@ void BrowEdit::menuActionsLightmapCalculate()
 			std::vector<glm::vec3> quad;
 			quad.resize(4);
 			float t;
-			for (int i = 0; i < mapQuads.size(); i += 4)
+			for (std::size_t i = 0; i < mapQuads.size(); i += 4)
 			{
 				for (int ii = 0; ii < 4; ii++)
 					quad[ii] = mapQuads[i + ii];
@@ -127,7 +127,7 @@ void BrowEdit::menuActionsLightmapCalculate()
 				bool collides = false;
 				for (Rsw::Object* o : map->getRsw()->objects)
 				{
-					if (o->collides(ray))
+					if (o->collides(ray, map))
 					{
 						collides = true;
 						break;
