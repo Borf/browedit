@@ -185,7 +185,7 @@ void BrowEdit::init()
 	wm->setSkin("assets/skins/ro.json", resourceManager);
 	wm->setRadialMenu(rootMenu = wm->loadMenu("assets/menu.json", translation["menu"]));
 	wm->setMenuBar(rootMenu);
-	addMouseListener(wm);
+	addMouseListener(wm, true);
 	addKeyListener(wm);
 
 	addMouseListener(this);
