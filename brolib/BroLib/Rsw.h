@@ -77,7 +77,7 @@ public:
 	class Light : public Object
 	{
 	public:
-		std::string 	todo;
+		float todo[10];
 		glm::vec3		color;
 		float			todo2;
 		
