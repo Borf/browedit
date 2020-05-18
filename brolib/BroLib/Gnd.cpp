@@ -180,7 +180,7 @@ Gnd::Gnd( const std::string &fileName )
 
 				if (cube->tileUp >= (int)tiles.size())
 				{
-					Log::out << "Wrong value for tileup at " << x << ", " << y << Log::newline;
+					Log::out << "Wrong value for tileup at " << x << ", " << y << "Found "<<cube->tileUp<<", but only "<<tiles.size()<<" tiles found"<<Log::newline;
 					cube->tileUp = -1;
 				}
 				if (cube->tileSide >= (int)tiles.size())
@@ -738,9 +738,23 @@ void Gnd::cleanTiles()
 		if (used.find(i) == used.end())
 			toRemove.push_back(i);
 	toRemove.reverse();
-	for (int i : toRemove)
-		tiles.erase(tiles.begin() + i);
 
+	for (int i : toRemove)
+	{
+		tiles.erase(tiles.begin() + i);
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				if (cubes[x][y]->tileUp > i)
+					cubes[x][y]->tileUp--;
+				if (cubes[x][y]->tileSide > i)
+					cubes[x][y]->tileSide--;
+				if (cubes[x][y]->tileFront > i)
+					cubes[x][y]->tileFront--;
+			}
+		}
+	}
 	Log::out << "Tiles cleanup, ending with " << tiles.size() << " tiles" << Log::newline;
 }
 

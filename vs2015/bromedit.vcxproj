@@ -64,6 +64,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;$(SolutionDir)\..\bromedit\externals\assimp_build\include;$(SolutionDir)\..\bromedit\externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,6 +85,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\blib;$(SolutionDir)\..\blib\externals;$(SolutionDir)\..\blib\externals\glew\include;$(SolutionDir)\..\BroLib;$(SolutionDir)\..\externals\bugtrap;$(SolutionDir)\..\externals\v8\include;$(SolutionDir)\..\bromedit\externals\assimp_build\include;$(SolutionDir)\..\bromedit\externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

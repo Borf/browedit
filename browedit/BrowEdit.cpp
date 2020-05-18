@@ -170,12 +170,12 @@ BrowEdit::~BrowEdit(void)
 void BrowEdit::init()
 {
 	std::list<blib::BackgroundTask<int>*> tasks;
+	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(config["data"]["ropath"].get<std::string>()));
 	for (size_t i = 0; i < config["data"]["grfs"].size(); i++)
 		tasks.push_back(new blib::BackgroundTask<int>(NULL, [this, i]() { blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].get<std::string>())); return 0; }));
 	for (blib::BackgroundTask<int>* task : tasks)
 		task->waitForTermination();
 
-	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler( config["data"]["ropath"].get<std::string>() ));
 
 
 	gradientBackground = resourceManager->getResource<blib::Texture>("assets/textures/gradient.png");
