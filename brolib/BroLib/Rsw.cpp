@@ -203,7 +203,7 @@ Rsw::Rsw(const std::string &fileName, bool loadModels)
 				light->position = file->readVec3() * glm::vec3(1, -1, 1);
 				for (int i = 0; i < 10; i++)
 					light->todo[i] = file->readFloat();
-				light->color = file->readVec3();
+				light->color = file->readVec3(); 
 				light->todo2 = file->readFloat();
 				objects.push_back(light);
 
