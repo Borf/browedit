@@ -2,6 +2,7 @@
 #include "ModelPropertiesWindow.h"
 #include "EffectPropertiesWindow.h"
 #include "LightPropertiesWindow.h"
+#include "SoundPropertiesWindow.h"
 #include "../BrowEdit.h"
 #include "../Camera.h"
 
@@ -71,6 +72,8 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 				new EffectPropertiesWindow((Rsw::Effect*)node->object, resourceManager, browEdit);
 			if (node->object->type == Rsw::Object::Type::Light)
 				new LightPropertiesWindow(dynamic_cast<Rsw::Light*>(node->object), resourceManager, browEdit);
+			if (node->object->type == Rsw::Object::Type::Sound)
+				new SoundPropertiesWindow(dynamic_cast<Rsw::Sound*>(node->object), resourceManager, browEdit);
 
 
 		}
