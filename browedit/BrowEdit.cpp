@@ -1339,6 +1339,33 @@ void BrowEdit::addLight(const json &properties)
 	map->getRsw()->objects.push_back(newLight);
 }
 
+void BrowEdit::addEffect(const json& properties)
+{
+	auto newEffect = new Rsw::Effect();
+	newObject = newEffect;
+	newEffect->matrixCached = false;
+	newEffect->name = properties["name"].get<std::string>();
+
+	newEffect->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
+	newEffect->rotation = glm::vec3(0, 0, 0);
+	newEffect->scale = glm::vec3(1, 1, 1);
+	newEffect->id = properties["id"].get<int>();
+	if (properties.find("loop") != properties.end())
+		newEffect->loop = properties["loop"].get<float>();
+	if (properties.find("param1") != properties.end())
+		newEffect->loop = properties["param1"].get<float>();
+	if (properties.find("param2") != properties.end())
+		newEffect->loop = properties["param2"].get<float>();
+	if (properties.find("param3") != properties.end())
+		newEffect->loop = properties["param3"].get<float>();
+	if (properties.find("param4") != properties.end())
+		newEffect->loop = properties["param4"].get<float>();
+
+
+
+	map->getRsw()->objects.push_back(newEffect);
+}
+
 void BrowEdit::perform(Action* action)
 {
 	std::for_each(undone.begin(), undone.end(), [](Action* a) { delete a; });

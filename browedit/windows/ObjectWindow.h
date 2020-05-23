@@ -36,6 +36,8 @@ public:
 class ObjectWindow : public blib::wm::Window
 {
 	static blib::Texture* lightTexture;
+	static blib::Texture* effectTexture;
+
 	class ObjectTreeNode : public blib::wm::widgets::TreeView::TreeNode
 	{
 	public:
@@ -61,6 +63,7 @@ class ObjectWindow : public blib::wm::Window
 	std::map<std::string, std::string> textureFiles;
 
 	json lights;
+	json effects;
 
 	blib::wm::widgets::TreeView::TreeNode* newModelsNode;
 	blib::wm::widgets::TreeView::TreeNode* newSoundsNode;
@@ -80,6 +83,7 @@ public:
 	void updateObjects(Map* map);
 	void setModelDirectory(const std::string &dir);
 	void setLightDirectory(std::string dir);
+	void setEffectDirectory(std::string dir);
 
 	virtual void arrangeComponents(int oldWidth, int oldHeight);
 };

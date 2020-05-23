@@ -173,7 +173,8 @@ public:
 	};
 	void setObjectEditMode(ObjectEditModeTool newMode);
 	void addModel(const std::string &fileName);
-	void addLight(const json &lightProperties);
+	void addLight(const json& lightProperties);
+	void addEffect(const json& effectProperties);
 
 	void perform(Action* action);
 	void undo();

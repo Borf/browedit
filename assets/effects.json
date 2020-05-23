@@ -1,0 +1,5498 @@
+[
+
+  {
+    "id": -1,
+    "constant": "EF_NONE",
+    "desc": "None"
+  },
+  {
+    "id": 0,
+    "constant": "EF_HIT1",
+    "desc": "Regular Hit"
+  },
+  {
+    "id": 1,
+    "constant": "EF_HIT2",
+    "desc": "Bash"
+  },
+  {
+    "id": 2,
+    "constant": "EF_HIT3",
+    "desc": "Melee Skill Hit"
+  },
+  {
+    "id": 3,
+    "constant": "EF_HIT4",
+    "desc": "Melee Skill Hit"
+  },
+  {
+    "id": 4,
+    "constant": "EF_HIT5",
+    "desc": "Melee Skill Hit"
+  },
+  {
+    "id": 5,
+    "constant": "EF_HIT6",
+    "desc": "Melee Skill Hit"
+  },
+  {
+    "id": 6,
+    "constant": "EF_ENTRY",
+    "desc": "Being Warped"
+  },
+  {
+    "id": 7,
+    "constant": "EF_EXIT",
+    "desc": "Item Heal effect"
+  },
+  {
+    "id": 8,
+    "constant": "EF_WARP",
+    "desc": "Yellow Ripple Effect"
+  },
+  {
+    "id": 9,
+    "constant": "EF_ENHANCE",
+    "desc": "Different Type of Heal"
+  },
+  {
+    "id": 10,
+    "constant": "EF_COIN",
+    "desc": "Mammonite"
+  },
+  {
+    "id": 11,
+    "constant": "EF_ENDURE",
+    "desc": "Endure"
+  },
+  {
+    "id": 12,
+    "constant": "EF_BEGINSPELL",
+    "desc": "Yellow cast aura"
+  },
+  {
+    "id": 13,
+    "constant": "EF_GLASSWALL",
+    "desc": "Blue Box"
+  },
+  {
+    "id": 14,
+    "constant": "EF_HEALSP",
+    "desc": "Blue restoring effect"
+  },
+  {
+    "id": 15,
+    "constant": "EF_SOULSTRIKE",
+    "desc": "Soul Strike"
+  },
+  {
+    "id": 16,
+    "constant": "EF_BASH",
+    "desc": "Hide"
+  },
+  {
+    "id": 17,
+    "constant": "EF_MAGNUMBREAK",
+    "desc": "Magnum Break"
+  },
+  {
+    "id": 18,
+    "constant": "EF_STEAL",
+    "desc": "Steal"
+  },
+  {
+    "id": 19,
+    "constant": "EF_HIDING",
+    "desc": "(Invalid)"
+  },
+  {
+    "id": 20,
+    "constant": "EF_PATTACK",
+    "desc": "Envenom/Poison"
+  },
+  {
+    "id": 21,
+    "constant": "EF_DETOXICATION",
+    "desc": "Detoxify"
+  },
+  {
+    "id": 22,
+    "constant": "EF_SIGHT",
+    "desc": "Sight"
+  },
+  {
+    "id": 23,
+    "constant": "EF_STONECURSE",
+    "desc": "Stone Curse"
+  },
+  {
+    "id": 24,
+    "constant": "EF_FIREBALL",
+    "desc": "Fire Ball"
+  },
+  {
+    "id": 25,
+    "constant": "EF_FIREWALL",
+    "desc": "Fire Wall"
+  },
+  {
+    "id": 26,
+    "constant": "EF_ICEARROW",
+    "desc": "A sound (a swipe?)"
+  },
+  {
+    "id": 27,
+    "constant": "EF_FROSTDIVER",
+    "desc": "Frost Diver (Traveling to Target)"
+  },
+  {
+    "id": 28,
+    "constant": "EF_FROSTDIVER2",
+    "desc": "Frost Diver (Hitting)"
+  },
+  {
+    "id": 29,
+    "constant": "EF_LIGHTBOLT",
+    "desc": "Lightning Bolt"
+  },
+  {
+    "id": 30,
+    "constant": "EF_THUNDERSTORM",
+    "desc": "Thunder Storm"
+  },
+  {
+    "id": 31,
+    "constant": "EF_FIREARROW",
+    "desc": "Weird bubbles launching from feet"
+  },
+  {
+    "id": 32,
+    "constant": "EF_NAPALMBEAT",
+    "desc": "Small clustered explosions"
+  },
+  {
+    "id": 33,
+    "constant": "EF_RUWACH",
+    "desc": "Ruwach"
+  },
+  {
+    "id": 34,
+    "constant": "EF_TELEPORTATION",
+    "desc": "Old Map Exit Animation (unused)"
+  },
+  {
+    "id": 35,
+    "constant": "EF_READYPORTAL",
+    "desc": "Old Warp Portal (unused)"
+  },
+  {
+    "id": 36,
+    "constant": "EF_PORTAL",
+    "desc": "Old Warp Portal (unused)"
+  },
+  {
+    "id": 37,
+    "constant": "EF_INCAGILITY",
+    "desc": "AGI Up"
+  },
+  {
+    "id": 38,
+    "constant": "EF_DECAGILITY",
+    "desc": "AGI Down"
+  },
+  {
+    "id": 39,
+    "constant": "EF_AQUA",
+    "desc": "Aqua Benedicta"
+  },
+  {
+    "id": 40,
+    "constant": "EF_SIGNUM",
+    "desc": "Signum Crucis"
+  },
+  {
+    "id": 41,
+    "constant": "EF_ANGELUS",
+    "desc": "Angelus"
+  },
+  {
+    "id": 42,
+    "constant": "EF_BLESSING",
+    "desc": "Blessing"
+  },
+  {
+    "id": 43,
+    "constant": "EF_INCAGIDEX",
+    "desc": "Dex + Agi Up"
+  },
+  {
+    "id": 44,
+    "constant": "EF_SMOKE",
+    "desc": "Little Fog Smoke."
+  },
+  {
+    "id": 45,
+    "constant": "EF_FIREFLY",
+    "desc": "Faint Little Ball Things."
+  },
+  {
+    "id": 46,
+    "constant": "EF_SANDWIND",
+    "desc": "Sand Wind"
+  },
+  {
+    "id": 47,
+    "constant": "EF_TORCH",
+    "desc": "Torch"
+  },
+  {
+    "id": 48,
+    "constant": "EF_SPRAYPOND",
+    "desc": "Small Piece of Glass"
+  },
+  {
+    "id": 49,
+    "constant": "EF_FIREHIT",
+    "desc": "Firebolt/Wall Hits"
+  },
+  {
+    "id": 50,
+    "constant": "EF_FIRESPLASHHIT",
+    "desc": "Spinning Fire Thing"
+  },
+  {
+    "id": 51,
+    "constant": "EF_COLDHIT",
+    "desc": "Ice Elemental Hit"
+  },
+  {
+    "id": 52,
+    "constant": "EF_WINDHIT",
+    "desc": "Wind Elemental Hit"
+  },
+  {
+    "id": 53,
+    "constant": "EF_POISONHIT",
+    "desc": "Puff of Purpulish Smoke?"
+  },
+  {
+    "id": 54,
+    "constant": "EF_BEGINSPELL2",
+    "desc": "Cast Initiation Aura (Water Element)"
+  },
+  {
+    "id": 55,
+    "constant": "EF_BEGINSPELL3",
+    "desc": "Cast Initiation Aura (Fire Element)"
+  },
+  {
+    "id": 56,
+    "constant": "EF_BEGINSPELL4",
+    "desc": "Cast Initiation Aura (Wind Element)"
+  },
+  {
+    "id": 57,
+    "constant": "EF_BEGINSPELL5",
+    "desc": "Cast Initiation Aura (Earth Element)"
+  },
+  {
+    "id": 58,
+    "constant": "EF_BEGINSPELL6",
+    "desc": "Cast Initiation Aura (Holy Element)"
+  },
+  {
+    "id": 59,
+    "constant": "EF_BEGINSPELL7",
+    "desc": "Cast Initiation Aura (Poison Element)"
+  },
+  {
+    "id": 60,
+    "constant": "EF_LOCKON",
+    "desc": "Cast target circle"
+  },
+  {
+    "id": 61,
+    "constant": "EF_WARPZONE",
+    "desc": "Old Warp Portal (NPC Warp, unused)"
+  },
+  {
+    "id": 62,
+    "constant": "EF_SIGHTRASHER",
+    "desc": "Sight Trasher"
+  },
+  {
+    "id": 63,
+    "constant": "EF_BARRIER",
+    "desc": "Moonlight Sphere"
+  },
+  {
+    "id": 64,
+    "constant": "EF_ARROWSHOT",
+    "desc": "Something Like Puruple/Yellow Light Bullet"
+  },
+  {
+    "id": 65,
+    "constant": "EF_INVENOM",
+    "desc": "Something Like Absorb of Power"
+  },
+  {
+    "id": 66,
+    "constant": "EF_CURE",
+    "desc": "Cure"
+  },
+  {
+    "id": 67,
+    "constant": "EF_PROVOKE",
+    "desc": "Provoke"
+  },
+  {
+    "id": 68,
+    "constant": "EF_MVP",
+    "desc": "MVP Banner"
+  },
+  {
+    "id": 69,
+    "constant": "EF_SKIDTRAP",
+    "desc": "Skid Trap"
+  },
+  {
+    "id": 70,
+    "constant": "EF_BRANDISHSPEAR",
+    "desc": "Brandish Spear"
+  },
+  {
+    "id": 71,
+    "constant": "EF_CONE",
+    "desc": "Spiral White balls"
+  },
+  {
+    "id": 72,
+    "constant": "EF_SPHERE",
+    "desc": "Bigger Spiral White balls"
+  },
+  {
+    "id": 73,
+    "constant": "EF_BOWLINGBASH",
+    "desc": "Blue/White Small Aura"
+  },
+  {
+    "id": 74,
+    "constant": "EF_ICEWALL",
+    "desc": "Ice Wall"
+  },
+  {
+    "id": 75,
+    "constant": "EF_GLORIA",
+    "desc": "Gloria"
+  },
+  {
+    "id": 76,
+    "constant": "EF_MAGNIFICAT",
+    "desc": "Magnificat"
+  },
+  {
+    "id": 77,
+    "constant": "EF_RESURRECTION",
+    "desc": "Resurrection"
+  },
+  {
+    "id": 78,
+    "constant": "EF_RECOVERY",
+    "desc": "Status Recovery"
+  },
+  {
+    "id": 79,
+    "constant": "EF_EARTHSPIKE",
+    "desc": "Earth Spike"
+  },
+  {
+    "id": 80,
+    "constant": "EF_SPEARBMR",
+    "desc": "Spear Boomerang"
+  },
+  {
+    "id": 81,
+    "constant": "EF_PIERCE",
+    "desc": "Skill hit"
+  },
+  {
+    "id": 82,
+    "constant": "EF_TURNUNDEAD",
+    "desc": "Turn Undead"
+  },
+  {
+    "id": 83,
+    "constant": "EF_SANCTUARY",
+    "desc": "Sanctuary"
+  },
+  {
+    "id": 84,
+    "constant": "EF_IMPOSITIO",
+    "desc": "Impositio Manus"
+  },
+  {
+    "id": 85,
+    "constant": "EF_LEXAETERNA",
+    "desc": "Lex Aeterna"
+  },
+  {
+    "id": 86,
+    "constant": "EF_ASPERSIO",
+    "desc": "Aspersio"
+  },
+  {
+    "id": 87,
+    "constant": "EF_LEXDIVINA",
+    "desc": "Lex Divina"
+  },
+  {
+    "id": 88,
+    "constant": "EF_SUFFRAGIUM",
+    "desc": "Suffragium"
+  },
+  {
+    "id": 89,
+    "constant": "EF_STORMGUST",
+    "desc": "Storm Gust"
+  },
+  {
+    "id": 90,
+    "constant": "EF_LORD",
+    "desc": "Lord of Vermilion"
+  },
+  {
+    "id": 91,
+    "constant": "EF_BENEDICTIO",
+    "desc": "B. S. Sacramenti"
+  },
+  {
+    "id": 92,
+    "constant": "EF_METEORSTORM",
+    "desc": "Meteor Storm"
+  },
+  {
+    "id": 93,
+    "constant": "EF_YUFITEL",
+    "desc": "Jupitel Thunder (Ball)"
+  },
+  {
+    "id": 94,
+    "constant": "EF_YUFITELHIT",
+    "desc": "Jupitel Thunder (Hit)"
+  },
+  {
+    "id": 95,
+    "constant": "EF_QUAGMIRE",
+    "desc": "Quagmire"
+  },
+  {
+    "id": 96,
+    "constant": "EF_FIREPILLAR",
+    "desc": "Fire Pillar"
+  },
+  {
+    "id": 97,
+    "constant": "EF_FIREPILLARBOMB",
+    "desc": "Fire Pillar/Land Mine hit"
+  },
+  {
+    "id": 98,
+    "constant": "EF_HASTEUP",
+    "desc": "Adrenaline Rush"
+  },
+  {
+    "id": 99,
+    "constant": "EF_FLASHER",
+    "desc": "Flasher Trap"
+  },
+  {
+    "id": 100,
+    "constant": "EF_REMOVETRAP",
+    "desc": "Yellow ball fountain"
+  },
+  {
+    "id": 101,
+    "constant": "EF_REPAIRWEAPON",
+    "desc": "Weapon Repair"
+  },
+  {
+    "id": 102,
+    "constant": "EF_CRASHEARTH",
+    "desc": "Hammerfall"
+  },
+  {
+    "id": 103,
+    "constant": "EF_PERFECTION",
+    "desc": "Weapon Perfection"
+  },
+  {
+    "id": 104,
+    "constant": "EF_MAXPOWER",
+    "desc": "Maximize Power"
+  },
+  {
+    "id": 105,
+    "constant": "EF_BLASTMINE",
+    "desc": "(nothing)"
+  },
+  {
+    "id": 106,
+    "constant": "EF_BLASTMINEBOMB",
+    "desc": "Blast Mine Trap"
+  },
+  {
+    "id": 107,
+    "constant": "EF_CLAYMORE",
+    "desc": "Claymore Trap"
+  },
+  {
+    "id": 108,
+    "constant": "EF_FREEZING",
+    "desc": "Freezing Trap"
+  },
+  {
+    "id": 109,
+    "constant": "EF_BUBBLE",
+    "desc": "Bailaban Blue bubble Map Effect"
+  },
+  {
+    "id": 110,
+    "constant": "EF_GASPUSH",
+    "desc": "Trap Used by Giearth"
+  },
+  {
+    "id": 111,
+    "constant": "EF_SPRINGTRAP",
+    "desc": "Spring Trap"
+  },
+  {
+    "id": 112,
+    "constant": "EF_KYRIE",
+    "desc": "Kyrie Eleison"
+  },
+  {
+    "id": 113,
+    "constant": "EF_MAGNUS",
+    "desc": "Magnus Exorcismus"
+  },
+  {
+    "id": 114,
+    "constant": "EF_BOTTOM",
+    "desc": "Old Magnus Exorcismus Map Unit (unused)"
+  },
+  {
+    "id": 115,
+    "constant": "EF_BLITZBEAT",
+    "desc": "Blitz Beat"
+  },
+  {
+    "id": 116,
+    "constant": "EF_WATERBALL",
+    "desc": "Fling Watersphere"
+  },
+  {
+    "id": 117,
+    "constant": "EF_WATERBALL2",
+    "desc": "Waterball"
+  },
+  {
+    "id": 118,
+    "constant": "EF_FIREIVY",
+    "desc": "Fling Firesphere"
+  },
+  {
+    "id": 119,
+    "constant": "EF_DETECTING",
+    "desc": "Detect"
+  },
+  {
+    "id": 120,
+    "constant": "EF_CLOAKING",
+    "desc": "Cloaking"
+  },
+  {
+    "id": 121,
+    "constant": "EF_SONICBLOW",
+    "desc": "Sonic Blow (Part 1/2)"
+  },
+  {
+    "id": 122,
+    "constant": "EF_SONICBLOWHIT",
+    "desc": "Multi hit effect"
+  },
+  {
+    "id": 123,
+    "constant": "EF_GRIMTOOTH",
+    "desc": "Grimtooth Cast"
+  },
+  {
+    "id": 124,
+    "constant": "EF_VENOMDUST",
+    "desc": "Venom Dust"
+  },
+  {
+    "id": 125,
+    "constant": "EF_ENCHANTPOISON",
+    "desc": "Enchant Poison"
+  },
+  {
+    "id": 126,
+    "constant": "EF_POISONREACT",
+    "desc": "Poison React"
+  },
+  {
+    "id": 127,
+    "constant": "EF_POISONREACT2",
+    "desc": "Small Posion React"
+  },
+  {
+    "id": 128,
+    "constant": "EF_OVERTHRUST",
+    "desc": "Over Thrust"
+  },
+  {
+    "id": 129,
+    "constant": "EF_SPLASHER",
+    "desc": "Venom Splasher Explosion"
+  },
+  {
+    "id": 130,
+    "constant": "EF_TWOHANDQUICKEN",
+    "desc": "Two-Hand Quicken"
+  },
+  {
+    "id": 131,
+    "constant": "EF_AUTOCOUNTER",
+    "desc": "Auto-Counter Hit"
+  },
+  {
+    "id": 132,
+    "constant": "EF_GRIMTOOTHATK",
+    "desc": "Grimtooth Hit"
+  },
+  {
+    "id": 133,
+    "constant": "EF_FREEZE",
+    "desc": "Ice Effect (Used by NPCs)"
+  },
+  {
+    "id": 134,
+    "constant": "EF_FREEZED",
+    "desc": "Ice Effect (Used by NPCs)"
+  },
+  {
+    "id": 135,
+    "constant": "EF_ICECRASH",
+    "desc": "Ice Effect (Used by NPCs)"
+  },
+  {
+    "id": 136,
+    "constant": "EF_SLOWPOISON",
+    "desc": "Slow Poison"
+  },
+  {
+    "id": 137,
+    "constant": "EF_BOTTOM2",
+    "desc": "Old Sanctuary Map Unit (unused)"
+  },
+  {
+    "id": 138,
+    "constant": "EF_FIREPILLARON",
+    "desc": "Fire pillar"
+  },
+  {
+    "id": 139,
+    "constant": "EF_SANDMAN",
+    "desc": "Sandman Trap"
+  },
+  {
+    "id": 140,
+    "constant": "EF_REVIVE",
+    "desc": "Ressurection Aura"
+  },
+  {
+    "id": 141,
+    "constant": "EF_PNEUMA",
+    "desc": "Pneuma"
+  },
+  {
+    "id": 142,
+    "constant": "EF_HEAVENSDRIVE",
+    "desc": "Heaven's Drive"
+  },
+  {
+    "id": 143,
+    "constant": "EF_SONICBLOW2",
+    "desc": "Sonic Blow (Part 2/2)"
+  },
+  {
+    "id": 144,
+    "constant": "EF_BRANDISH2",
+    "desc": "Brandish Spear Pre-Hit Effect"
+  },
+  {
+    "id": 145,
+    "constant": "EF_SHOCKWAVE",
+    "desc": "Shockwave Trap"
+  },
+  {
+    "id": 146,
+    "constant": "EF_SHOCKWAVEHIT",
+    "desc": "Shockwave Trap Hit"
+  },
+  {
+    "id": 147,
+    "constant": "EF_EARTHHIT",
+    "desc": "Pierce Hit"
+  },
+  {
+    "id": 148,
+    "constant": "EF_PIERCESELF",
+    "desc": "Pierce Cast Animation"
+  },
+  {
+    "id": 149,
+    "constant": "EF_BOWLINGSELF",
+    "desc": "Bowling Bash"
+  },
+  {
+    "id": 150,
+    "constant": "EF_SPEARSTABSELF",
+    "desc": "Pierce Cast Animation"
+  },
+  {
+    "id": 151,
+    "constant": "EF_SPEARBMRSELF",
+    "desc": "Spear Boomerang Cast"
+  },
+  {
+    "id": 152,
+    "constant": "EF_HOLYHIT",
+    "desc": "Turn Undead"
+  },
+  {
+    "id": 153,
+    "constant": "EF_CONCENTRATION",
+    "desc": "Increase Concentration"
+  },
+  {
+    "id": 154,
+    "constant": "EF_REFINEOK",
+    "desc": "Refine Success"
+  },
+  {
+    "id": 155,
+    "constant": "EF_REFINEFAIL",
+    "desc": "Refine Fail"
+  },
+  {
+    "id": 156,
+    "constant": "EF_JOBCHANGE",
+    "desc": "jobchange.str not found error"
+  },
+  {
+    "id": 157,
+    "constant": "EF_LVUP",
+    "desc": "levelup.str not found error"
+  },
+  {
+    "id": 158,
+    "constant": "EF_JOBLVUP",
+    "desc": "Job Level Up"
+  },
+  {
+    "id": 159,
+    "constant": "EF_TOPRANK",
+    "desc": "PvP circle"
+  },
+  {
+    "id": 160,
+    "constant": "EF_PARTY",
+    "desc": "PvP Party Circle"
+  },
+  {
+    "id": 161,
+    "constant": "EF_RAIN",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 162,
+    "constant": "EF_SNOW",
+    "desc": "Snow"
+  },
+  {
+    "id": 163,
+    "constant": "EF_SAKURA",
+    "desc": "White Sakura Leaves"
+  },
+  {
+    "id": 164,
+    "constant": "EF_STATUS_STATE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 165,
+    "constant": "EF_BANJJAKII",
+    "desc": "Comodo Fireworks Ball"
+  },
+  {
+    "id": 166,
+    "constant": "EF_MAKEBLUR",
+    "desc": "Energy Coat (Visual Effect)"
+  },
+  {
+    "id": 167,
+    "constant": "EF_TAMINGSUCCESS",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 168,
+    "constant": "EF_TAMINGFAILED",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 169,
+    "constant": "EF_ENERGYCOAT",
+    "desc": "Energy Coat Animation"
+  },
+  {
+    "id": 170,
+    "constant": "EF_CARTREVOLUTION",
+    "desc": "Cart Revolution"
+  },
+  {
+    "id": 171,
+    "constant": "EF_VENOMDUST2",
+    "desc": "Venom Dust Map Unit"
+  },
+  {
+    "id": 172,
+    "constant": "EF_CHANGEDARK",
+    "desc": "Change Element (Dark)"
+  },
+  {
+    "id": 173,
+    "constant": "EF_CHANGEFIRE",
+    "desc": "Change Element (Fire)"
+  },
+  {
+    "id": 174,
+    "constant": "EF_CHANGECOLD",
+    "desc": "Change Element (Water)"
+  },
+  {
+    "id": 175,
+    "constant": "EF_CHANGEWIND",
+    "desc": "Change Element (Wind)"
+  },
+  {
+    "id": 176,
+    "constant": "EF_CHANGEFLAME",
+    "desc": "Change Element (Fire)"
+  },
+  {
+    "id": 177,
+    "constant": "EF_CHANGEEARTH",
+    "desc": "Change Element (Earth)"
+  },
+  {
+    "id": 178,
+    "constant": "EF_CHAINGEHOLY",
+    "desc": "Change Element (Holy)"
+  },
+  {
+    "id": 179,
+    "constant": "EF_CHANGEPOISON",
+    "desc": "Change Element (Poison)"
+  },
+  {
+    "id": 180,
+    "constant": "EF_HITDARK",
+    "desc": "Darkness Attack"
+  },
+  {
+    "id": 181,
+    "constant": "EF_MENTALBREAK",
+    "desc": "Mental Breaker"
+  },
+  {
+    "id": 182,
+    "constant": "EF_MAGICALATTHIT",
+    "desc": "Magical Hit"
+  },
+  {
+    "id": 183,
+    "constant": "EF_SUI_EXPLOSION",
+    "desc": "Self Destruction"
+  },
+  {
+    "id": 184,
+    "constant": "EF_DARKATTACK",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 185,
+    "constant": "EF_SUICIDE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 186,
+    "constant": "EF_COMBOATTACK1",
+    "desc": "Combo Attack 1"
+  },
+  {
+    "id": 187,
+    "constant": "EF_COMBOATTACK2",
+    "desc": "Combo Attack 2"
+  },
+  {
+    "id": 188,
+    "constant": "EF_COMBOATTACK3",
+    "desc": "Combo Attack 3"
+  },
+  {
+    "id": 189,
+    "constant": "EF_COMBOATTACK4",
+    "desc": "Combo Attack 4"
+  },
+  {
+    "id": 190,
+    "constant": "EF_COMBOATTACK5",
+    "desc": "Combo Attack 5"
+  },
+  {
+    "id": 191,
+    "constant": "EF_GUIDEDATTACK",
+    "desc": "Guided Attack"
+  },
+  {
+    "id": 192,
+    "constant": "EF_POISONATTACK",
+    "desc": "Poison Attack"
+  },
+  {
+    "id": 193,
+    "constant": "EF_SILENCEATTACK",
+    "desc": "Silence Attack"
+  },
+  {
+    "id": 194,
+    "constant": "EF_STUNATTACK",
+    "desc": "Stun Attack"
+  },
+  {
+    "id": 195,
+    "constant": "EF_PETRIFYATTACK",
+    "desc": "Petrify Attack"
+  },
+  {
+    "id": 196,
+    "constant": "EF_CURSEATTACK",
+    "desc": "Curse Attack"
+  },
+  {
+    "id": 197,
+    "constant": "EF_SLEEPATTACK",
+    "desc": "Sleep Attack"
+  },
+  {
+    "id": 198,
+    "constant": "EF_TELEKHIT",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 199,
+    "constant": "EF_PONG",
+    "desc": "Small Popping Bubble Map Effect"
+  },
+  {
+    "id": 200,
+    "constant": "EF_LEVEL99",
+    "desc": "Normal level 99 Aura (Middle)"
+  },
+  {
+    "id": 201,
+    "constant": "EF_LEVEL99_2",
+    "desc": "Normal level 99 Aura (Bottom)"
+  },
+  {
+    "id": 202,
+    "constant": "EF_LEVEL99_3",
+    "desc": "Lv 99 Aura Bubble"
+  },
+  {
+    "id": 203,
+    "constant": "EF_GUMGANG",
+    "desc": "Fury (Visual Effect)"
+  },
+  {
+    "id": 204,
+    "constant": "EF_POTION1",
+    "desc": "Red Herb/Potion"
+  },
+  {
+    "id": 205,
+    "constant": "EF_POTION2",
+    "desc": "Orange Potion"
+  },
+  {
+    "id": 206,
+    "constant": "EF_POTION3",
+    "desc": "Yellow Herb/Potion"
+  },
+  {
+    "id": 207,
+    "constant": "EF_POTION4",
+    "desc": "White Herb/Potion"
+  },
+  {
+    "id": 208,
+    "constant": "EF_POTION5",
+    "desc": "Blue Herb/Potion"
+  },
+  {
+    "id": 209,
+    "constant": "EF_POTION6",
+    "desc": "Green Herb/Potion"
+  },
+  {
+    "id": 210,
+    "constant": "EF_POTION7",
+    "desc": "Yellow Circle Healing Effect"
+  },
+  {
+    "id": 211,
+    "constant": "EF_POTION8",
+    "desc": "Blue Circle Healing Effect"
+  },
+  {
+    "id": 212,
+    "constant": "EF_DARKBREATH",
+    "desc": "Dark Breath"
+  },
+  {
+    "id": 213,
+    "constant": "EF_DEFFENDER",
+    "desc": "Defender"
+  },
+  {
+    "id": 214,
+    "constant": "EF_KEEPING",
+    "desc": "Keeping"
+  },
+  {
+    "id": 215,
+    "constant": "EF_SUMMONSLAVE",
+    "desc": "Summon Slave"
+  },
+  {
+    "id": 216,
+    "constant": "EF_BLOODDRAIN",
+    "desc": "Blood Drain"
+  },
+  {
+    "id": 217,
+    "constant": "EF_ENERGYDRAIN",
+    "desc": "Energy Drain"
+  },
+  {
+    "id": 218,
+    "constant": "EF_POTION_CON",
+    "desc": "Concentration Potion"
+  },
+  {
+    "id": 219,
+    "constant": "EF_POTION_",
+    "desc": "Awakening Potion"
+  },
+  {
+    "id": 220,
+    "constant": "EF_POTION_BERSERK",
+    "desc": "Berserk Potion"
+  },
+  {
+    "id": 221,
+    "constant": "EF_POTIONPILLAR",
+    "desc": "Intense light beam"
+  },
+  {
+    "id": 222,
+    "constant": "EF_DEFENDER",
+    "desc": "Defender (Crusader)"
+  },
+  {
+    "id": 223,
+    "constant": "EF_GANBANTEIN",
+    "desc": "Holy Cast Aura"
+  },
+  {
+    "id": 224,
+    "constant": "EF_WIND",
+    "desc": "Wind (Map effect)"
+  },
+  {
+    "id": 225,
+    "constant": "EF_VOLCANO",
+    "desc": "Volcano casting effect"
+  },
+  {
+    "id": 226,
+    "constant": "EF_GRANDCROSS",
+    "desc": "Grand Cross Effect"
+  },
+  {
+    "id": 227,
+    "constant": "EF_INTIMIDATE",
+    "desc": "Snatch"
+  },
+  {
+    "id": 228,
+    "constant": "EF_CHOOKGI",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 229,
+    "constant": "EF_CLOUD",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 230,
+    "constant": "EF_CLOUD2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 231,
+    "constant": "EF_MAPPILLAR",
+    "desc": "Map Light Pillar Animation 1"
+  },
+  {
+    "id": 232,
+    "constant": "EF_LINELINK",
+    "desc": "Sacrifice (Visual Effect)"
+  },
+  {
+    "id": 233,
+    "constant": "EF_CLOUD3",
+    "desc": "Fog"
+  },
+  {
+    "id": 234,
+    "constant": "EF_SPELLBREAKER",
+    "desc": "Spell Breaker"
+  },
+  {
+    "id": 235,
+    "constant": "EF_DISPELL",
+    "desc": "Dispell"
+  },
+  {
+    "id": 236,
+    "constant": "EF_DELUGE",
+    "desc": "Deluge Cast Aura"
+  },
+  {
+    "id": 237,
+    "constant": "EF_VIOLENTGALE",
+    "desc": "Violent Gale Cast Aura"
+  },
+  {
+    "id": 238,
+    "constant": "EF_LANDPROTECTOR",
+    "desc": "Magnetic Earth Cast Aura"
+  },
+  {
+    "id": 239,
+    "constant": "EF_BOTTOM_VO",
+    "desc": "Volcano (Visual Effect)"
+  },
+  {
+    "id": 240,
+    "constant": "EF_BOTTOM_DE",
+    "desc": "Deluge (Visual Effect)"
+  },
+  {
+    "id": 241,
+    "constant": "EF_BOTTOM_VI",
+    "desc": "Violent Gale (Visual Effect)"
+  },
+  {
+    "id": 242,
+    "constant": "EF_BOTTOM_LA",
+    "desc": "Magnetic Earth (Visual Effect)"
+  },
+  {
+    "id": 243,
+    "constant": "EF_FASTMOVE",
+    "desc": "(Invalid)"
+  },
+  {
+    "id": 244,
+    "constant": "EF_MAGICROD",
+    "desc": "Magic Rod"
+  },
+  {
+    "id": 245,
+    "constant": "EF_HOLYCROSS",
+    "desc": "Holy Cross"
+  },
+  {
+    "id": 246,
+    "constant": "EF_SHIELDCHARGE",
+    "desc": "Shield Charge"
+  },
+  {
+    "id": 247,
+    "constant": "EF_MAPPILLAR2",
+    "desc": "Map Light Pillar Animation 2"
+  },
+  {
+    "id": 248,
+    "constant": "EF_PROVIDENCE",
+    "desc": "Resistant Souls"
+  },
+  {
+    "id": 249,
+    "constant": "EF_SHIELDBOOMERANG",
+    "desc": "Shield Boomerang"
+  },
+  {
+    "id": 250,
+    "constant": "EF_SPEARQUICKEN",
+    "desc": "Spear Quicken"
+  },
+  {
+    "id": 251,
+    "constant": "EF_DEVOTION",
+    "desc": "Devotion"
+  },
+  {
+    "id": 252,
+    "constant": "EF_REFLECTSHIELD",
+    "desc": "Reflect Shield"
+  },
+  {
+    "id": 253,
+    "constant": "EF_ABSORBSPIRITS",
+    "desc": "Absorb Spirit Spheres"
+  },
+  {
+    "id": 254,
+    "constant": "EF_STEELBODY",
+    "desc": "Mental Strength (Visual Effect)"
+  },
+  {
+    "id": 255,
+    "constant": "EF_FLAMELAUNCHER",
+    "desc": "Elemental Endow (Fire)"
+  },
+  {
+    "id": 256,
+    "constant": "EF_FROSTWEAPON",
+    "desc": "Elemental Endow (Water)"
+  },
+  {
+    "id": 257,
+    "constant": "EF_LIGHTNINGLOADER",
+    "desc": "Elemental Endow (Wind)"
+  },
+  {
+    "id": 258,
+    "constant": "EF_SEISMICWEAPON",
+    "desc": "Elemental Endow (Earth)"
+  },
+  {
+    "id": 259,
+    "constant": "EF_MAPPILLAR3",
+    "desc": "Map Light Pillar Animation 3"
+  },
+  {
+    "id": 260,
+    "constant": "EF_MAPPILLAR4",
+    "desc": "Map Light Pillar Animation 4"
+  },
+  {
+    "id": 261,
+    "constant": "EF_GUMGANG2",
+    "desc": "Fury Cast Animation"
+  },
+  {
+    "id": 262,
+    "constant": "EF_TEIHIT1",
+    "desc": "Raging Quadruple Blow"
+  },
+  {
+    "id": 263,
+    "constant": "EF_GUMGANG3",
+    "desc": "Raging Quadruple Blow 2"
+  },
+  {
+    "id": 264,
+    "constant": "EF_TEIHIT2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 265,
+    "constant": "EF_TANJI",
+    "desc": "Throw Spirit Sphere"
+  },
+  {
+    "id": 266,
+    "constant": "EF_TEIHIT1X",
+    "desc": "Raging Quadruple Blow 3"
+  },
+  {
+    "id": 267,
+    "constant": "EF_CHIMTO",
+    "desc": "Occult Impaction"
+  },
+  {
+    "id": 268,
+    "constant": "EF_STEALCOIN",
+    "desc": "Steal Coin"
+  },
+  {
+    "id": 269,
+    "constant": "EF_STRIPWEAPON",
+    "desc": "Divest Weapon"
+  },
+  {
+    "id": 270,
+    "constant": "EF_STRIPSHIELD",
+    "desc": "Divest Shield"
+  },
+  {
+    "id": 271,
+    "constant": "EF_STRIPARMOR",
+    "desc": "Divest Armor"
+  },
+  {
+    "id": 272,
+    "constant": "EF_STRIPHELM",
+    "desc": "Divest Helm"
+  },
+  {
+    "id": 273,
+    "constant": "EF_CHAINCOMBO",
+    "desc": "Raging Quadruple Blow 4"
+  },
+  {
+    "id": 274,
+    "constant": "EF_RG_COIN",
+    "desc": "Steal Coin Animation"
+  },
+  {
+    "id": 275,
+    "constant": "EF_BACKSTAP",
+    "desc": "Back Stab Animation"
+  },
+  {
+    "id": 276,
+    "constant": "EF_TEIHIT3",
+    "desc": "Raging Thrust"
+  },
+  {
+    "id": 277,
+    "constant": "EF_BOTTOM_DISSONANCE",
+    "desc": "Dissoance Map Unit"
+  },
+  {
+    "id": 278,
+    "constant": "EF_BOTTOM_LULLABY",
+    "desc": "Lullaby Map Unit"
+  },
+  {
+    "id": 279,
+    "constant": "EF_BOTTOM_RICHMANKIM",
+    "desc": "Mr Kim a Rich Man Map Unit"
+  },
+  {
+    "id": 280,
+    "constant": "EF_BOTTOM_ETERNALCHAOS",
+    "desc": "Eternal Chaos Map Unit"
+  },
+  {
+    "id": 281,
+    "constant": "EF_BOTTOM_DRUMBATTLEFIELD",
+    "desc": "A Drum on the Battlefield Map Unit"
+  },
+  {
+    "id": 282,
+    "constant": "EF_BOTTOM_RINGNIBELUNGEN",
+    "desc": "The Ring Of Nibelungen Map Unit"
+  },
+  {
+    "id": 283,
+    "constant": "EF_BOTTOM_ROKISWEIL",
+    "desc": "Loki's Veil Map Unit"
+  },
+  {
+    "id": 284,
+    "constant": "EF_BOTTOM_INTOABYSS",
+    "desc": "Into the Abyss Map Unit"
+  },
+  {
+    "id": 285,
+    "constant": "EF_BOTTOM_SIEGFRIED",
+    "desc": "Invunerable Siegfriend Map Unit"
+  },
+  {
+    "id": 286,
+    "constant": "EF_BOTTOM_WHISTLE",
+    "desc": "A Wistle Map Unit"
+  },
+  {
+    "id": 287,
+    "constant": "EF_BOTTOM_ASSASSINCROSS",
+    "desc": "Assassin Cross of Sunset Map Unit"
+  },
+  {
+    "id": 288,
+    "constant": "EF_BOTTOM_POEMBRAGI",
+    "desc": "A Poem of Bragi Map Unit"
+  },
+  {
+    "id": 289,
+    "constant": "EF_BOTTOM_APPLEIDUN",
+    "desc": "The Apple Of Idun Map Unit"
+  },
+  {
+    "id": 290,
+    "constant": "EF_BOTTOM_UGLYDANCE",
+    "desc": "Ugly Dance Map Unit"
+  },
+  {
+    "id": 291,
+    "constant": "EF_BOTTOM_HUMMING",
+    "desc": "Humming Map Unit"
+  },
+  {
+    "id": 292,
+    "constant": "EF_BOTTOM_DONTFORGETME",
+    "desc": "Please don't Forget Me Map Unit"
+  },
+  {
+    "id": 293,
+    "constant": "EF_BOTTOM_FORTUNEKISS",
+    "desc": "Fortune's Kiss Map Unit"
+  },
+  {
+    "id": 294,
+    "constant": "EF_BOTTOM_SERVICEFORYOU",
+    "desc": "Service For You Map Unit"
+  },
+  {
+    "id": 295,
+    "constant": "EF_TALK_FROSTJOKE",
+    "desc": "Frost Joke"
+  },
+  {
+    "id": 296,
+    "constant": "EF_TALK_SCREAM",
+    "desc": "Scream"
+  },
+  {
+    "id": 297,
+    "constant": "EF_POKJUK",
+    "desc": "Fire Works (Visual Effect)"
+  },
+  {
+    "id": 298,
+    "constant": "EF_THROWITEM",
+    "desc": "Acid Terror Animnation"
+  },
+  {
+    "id": 299,
+    "constant": "EF_THROWITEM2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 300,
+    "constant": "EF_CHEMICALPROTECTION",
+    "desc": "Chemical Protection"
+  },
+  {
+    "id": 301,
+    "constant": "EF_POKJUK_SOUND",
+    "desc": "Fire Works (Sound Effect)"
+  },
+  {
+    "id": 302,
+    "constant": "EF_DEMONSTRATION",
+    "desc": "Bomb"
+  },
+  {
+    "id": 303,
+    "constant": "EF_CHEMICAL2",
+    "desc": "(Unused)"
+  },
+  {
+    "id": 304,
+    "constant": "EF_TELEPORTATION2",
+    "desc": "Teleportation Animation"
+  },
+  {
+    "id": 305,
+    "constant": "EF_PHARMACY_OK",
+    "desc": "Pharmacy Success"
+  },
+  {
+    "id": 306,
+    "constant": "EF_PHARMACY_FAIL",
+    "desc": "Pharmacy Failed"
+  },
+  {
+    "id": 307,
+    "constant": "EF_FORESTLIGHT",
+    "desc": "Forest Light 1"
+  },
+  {
+    "id": 308,
+    "constant": "EF_THROWITEM3",
+    "desc": "Throw Stone"
+  },
+  {
+    "id": 309,
+    "constant": "EF_FIRSTAID",
+    "desc": "First Aid"
+  },
+  {
+    "id": 310,
+    "constant": "EF_SPRINKLESAND",
+    "desc": "Sprinkle Sand"
+  },
+  {
+    "id": 311,
+    "constant": "EF_LOUD",
+    "desc": "Crazy Uproar"
+  },
+  {
+    "id": 312,
+    "constant": "EF_HEAL",
+    "desc": "Heal Effect"
+  },
+  {
+    "id": 313,
+    "constant": "EF_HEAL2",
+    "desc": "Heal Effect 2"
+  },
+  {
+    "id": 314,
+    "constant": "EF_EXIT2",
+    "desc": "Old Map Exit effect (Unused)"
+  },
+  {
+    "id": 315,
+    "constant": "EF_GLASSWALL2",
+    "desc": "Safety Wall"
+  },
+  {
+    "id": 316,
+    "constant": "EF_READYPORTAL2",
+    "desc": "Warp Portal Animation 1"
+  },
+  {
+    "id": 317,
+    "constant": "EF_PORTAL2",
+    "desc": "Warp Portal Animation 2"
+  },
+  {
+    "id": 318,
+    "constant": "EF_BOTTOM_MAG",
+    "desc": "Magnus Exorcisimus Map Unit"
+  },
+  {
+    "id": 319,
+    "constant": "EF_BOTTOM_SANC",
+    "desc": "Sanctuary Map Unit"
+  },
+  {
+    "id": 320,
+    "constant": "EF_HEAL3",
+    "desc": "Offensive Heal"
+  },
+  {
+    "id": 321,
+    "constant": "EF_WARPZONE2",
+    "desc": "Warp NPC"
+  },
+  {
+    "id": 322,
+    "constant": "EF_FORESTLIGHT2",
+    "desc": "Forest Light 2"
+  },
+  {
+    "id": 323,
+    "constant": "EF_FORESTLIGHT3",
+    "desc": "Forest Light 3"
+  },
+  {
+    "id": 324,
+    "constant": "EF_FORESTLIGHT4",
+    "desc": "Forest Light 4"
+  },
+  {
+    "id": 325,
+    "constant": "EF_HEAL4",
+    "desc": "Heal Effect 4"
+  },
+  {
+    "id": 326,
+    "constant": "EF_FOOT",
+    "desc": "Chase Walk Left Foot"
+  },
+  {
+    "id": 327,
+    "constant": "EF_FOOT2",
+    "desc": "Chse Walk Right Foot"
+  },
+  {
+    "id": 328,
+    "constant": "EF_BEGINASURA",
+    "desc": "Monk Asura Strike"
+  },
+  {
+    "id": 329,
+    "constant": "EF_TRIPLEATTACK",
+    "desc": "Triple Strike"
+  },
+  {
+    "id": 330,
+    "constant": "EF_HITLINE",
+    "desc": "Combo Finish"
+  },
+  {
+    "id": 331,
+    "constant": "EF_HPTIME",
+    "desc": "Natural HP Regeneration"
+  },
+  {
+    "id": 332,
+    "constant": "EF_SPTIME",
+    "desc": "Natural SP Regeneration"
+  },
+  {
+    "id": 333,
+    "constant": "EF_MAPLE",
+    "desc": "Autumn Leaves"
+  },
+  {
+    "id": 334,
+    "constant": "EF_BLIND",
+    "desc": "Blind"
+  },
+  {
+    "id": 335,
+    "constant": "EF_POISON",
+    "desc": "Poison"
+  },
+  {
+    "id": 336,
+    "constant": "EF_GUARD",
+    "desc": "Kyrie Eleison/Parrying Shield"
+  },
+  {
+    "id": 337,
+    "constant": "EF_JOBLVUP50",
+    "desc": "Class Change"
+  },
+  {
+    "id": 338,
+    "constant": "EF_ANGEL2",
+    "desc": "Super Novice/Taekwon Level Up Angel"
+  },
+  {
+    "id": 339,
+    "constant": "EF_MAGNUM2",
+    "desc": "Spiral Pierce"
+  },
+  {
+    "id": 340,
+    "constant": "EF_CALLZONE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 341,
+    "constant": "EF_PORTAL3",
+    "desc": "Wedding Warp Portal"
+  },
+  {
+    "id": 342,
+    "constant": "EF_COUPLECASTING",
+    "desc": "Wedding Skill"
+  },
+  {
+    "id": 343,
+    "constant": "EF_HEARTCASTING",
+    "desc": "Another Merry Skill"
+  },
+  {
+    "id": 344,
+    "constant": "EF_ENTRY2",
+    "desc": "Character map entry effect"
+  },
+  {
+    "id": 345,
+    "constant": "EF_SAINTWING",
+    "desc": "Wings (Animated)"
+  },
+  {
+    "id": 346,
+    "constant": "EF_SPHEREWIND",
+    "desc": "Like Moonlight But Blue"
+  },
+  {
+    "id": 347,
+    "constant": "EF_COLORPAPER",
+    "desc": "Wedding Ceremony"
+  },
+  {
+    "id": 348,
+    "constant": "EF_LIGHTSPHERE",
+    "desc": "Like 1000 Blade trepassing"
+  },
+  {
+    "id": 349,
+    "constant": "EF_WATERFALL",
+    "desc": "Waterfall (Horizonatal)"
+  },
+  {
+    "id": 350,
+    "constant": "EF_WATERFALL_90",
+    "desc": "Waterfall (Vertical)"
+  },
+  {
+    "id": 351,
+    "constant": "EF_WATERFALL_SMALL",
+    "desc": "Small Waterfall (Horizonatal)"
+  },
+  {
+    "id": 352,
+    "constant": "EF_WATERFALL_SMALL_90",
+    "desc": "Small Waterfall (Vertical)"
+  },
+  {
+    "id": 353,
+    "constant": "EF_WATERFALL_T2",
+    "desc": "Dark Waterfall (Horizonatal)"
+  },
+  {
+    "id": 354,
+    "constant": "EF_WATERFALL_T2_90",
+    "desc": "Dark Waterfall (Vertical)"
+  },
+  {
+    "id": 355,
+    "constant": "EF_WATERFALL_SMALL_T2",
+    "desc": "Dark Small Waterfall (Horizonatal)"
+  },
+  {
+    "id": 356,
+    "constant": "EF_WATERFALL_SMALL_T2_90",
+    "desc": "Dark Small Waterfall (Vertical)"
+  },
+  {
+    "id": 357,
+    "constant": "EF_MINI_TETRIS",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 358,
+    "constant": "EF_GHOST",
+    "desc": "Niflheim Ghost"
+  },
+  {
+    "id": 359,
+    "constant": "EF_BAT",
+    "desc": "Niflheim Bat Slow"
+  },
+  {
+    "id": 360,
+    "constant": "EF_BAT2",
+    "desc": "Niflheim Bat Fast"
+  },
+  {
+    "id": 361,
+    "constant": "EF_SOULBREAKER",
+    "desc": "Soul Destroyer"
+  },
+  {
+    "id": 362,
+    "constant": "EF_LEVEL99_4",
+    "desc": "Trancendant Level 99 Aura 1"
+  },
+  {
+    "id": 363,
+    "constant": "EF_VALLENTINE",
+    "desc": "Valentine Day Heart With Wings"
+  },
+  {
+    "id": 364,
+    "constant": "EF_VALLENTINE2",
+    "desc": "Valentine Day Heart"
+  },
+  {
+    "id": 365,
+    "constant": "EF_PRESSURE",
+    "desc": "Gloria Domini"
+  },
+  {
+    "id": 366,
+    "constant": "EF_BASH3D",
+    "desc": "Martyr's Reckoning"
+  },
+  {
+    "id": 367,
+    "constant": "EF_AURABLADE",
+    "desc": "Aura Blade"
+  },
+  {
+    "id": 368,
+    "constant": "EF_REDBODY",
+    "desc": "Berserk"
+  },
+  {
+    "id": 369,
+    "constant": "EF_LKCONCENTRATION",
+    "desc": "Concentration"
+  },
+  {
+    "id": 370,
+    "constant": "EF_BOTTOM_GOSPEL",
+    "desc": "Gospel Map Unit"
+  },
+  {
+    "id": 371,
+    "constant": "EF_ANGEL",
+    "desc": "Level Up"
+  },
+  {
+    "id": 372,
+    "constant": "EF_DEVIL",
+    "desc": "Death"
+  },
+  {
+    "id": 373,
+    "constant": "EF_DRAGONSMOKE",
+    "desc": "House Smoke"
+  },
+  {
+    "id": 374,
+    "constant": "EF_BOTTOM_BASILICA",
+    "desc": "Basilica"
+  },
+  {
+    "id": 375,
+    "constant": "EF_ASSUMPTIO",
+    "desc": "Assumptio (Visual Effect)"
+  },
+  {
+    "id": 376,
+    "constant": "EF_HITLINE2",
+    "desc": "Palm Strike"
+  },
+  {
+    "id": 377,
+    "constant": "EF_BASH3D2",
+    "desc": "Matyr's Reckoning 2"
+  },
+  {
+    "id": 378,
+    "constant": "EF_ENERGYDRAIN2",
+    "desc": "Soul Drain (1st Part)"
+  },
+  {
+    "id": 379,
+    "constant": "EF_TRANSBLUEBODY",
+    "desc": "Soul Drain (2nd Part)"
+  },
+  {
+    "id": 380,
+    "constant": "EF_MAGICCRASHER",
+    "desc": "Magic Crasher"
+  },
+  {
+    "id": 381,
+    "constant": "EF_LIGHTSPHERE2",
+    "desc": "Blue Starburst (Unknown use)"
+  },
+  {
+    "id": 382,
+    "constant": "EF_LIGHTBLADE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 383,
+    "constant": "EF_ENERGYDRAIN3",
+    "desc": "Health Conversion"
+  },
+  {
+    "id": 384,
+    "constant": "EF_LINELINK2",
+    "desc": "Soul Change (Sound Effect)"
+  },
+  {
+    "id": 385,
+    "constant": "EF_LINKLIGHT",
+    "desc": "Soul Change (Visual Effect)"
+  },
+  {
+    "id": 386,
+    "constant": "EF_TRUESIGHT",
+    "desc": "True Sight"
+  },
+  {
+    "id": 387,
+    "constant": "EF_FALCONASSAULT",
+    "desc": "Falcon Assault"
+  },
+  {
+    "id": 388,
+    "constant": "EF_TRIPLEATTACK2",
+    "desc": "Focused Arrow Strike (Sound Effect)"
+  },
+  {
+    "id": 389,
+    "constant": "EF_PORTAL4",
+    "desc": "Wind Walk"
+  },
+  {
+    "id": 390,
+    "constant": "EF_MELTDOWN",
+    "desc": "Shattering Strike"
+  },
+  {
+    "id": 391,
+    "constant": "EF_CARTBOOST",
+    "desc": "Cart Boost"
+  },
+  {
+    "id": 392,
+    "constant": "EF_REJECTSWORD",
+    "desc": "Reject Sword"
+  },
+  {
+    "id": 393,
+    "constant": "EF_TRIPLEATTACK3",
+    "desc": "Arrow Vulcan"
+  },
+  {
+    "id": 394,
+    "constant": "EF_SPHEREWIND2",
+    "desc": "Sheltering Bliss"
+  },
+  {
+    "id": 395,
+    "constant": "EF_LINELINK3",
+    "desc": "Marionette Control (Sound Effect)"
+  },
+  {
+    "id": 396,
+    "constant": "EF_PINKBODY",
+    "desc": "Marionette Control (Visual Effect)"
+  },
+  {
+    "id": 397,
+    "constant": "EF_LEVEL99_5",
+    "desc": "Trancended 99 Aura (Middle)"
+  },
+  {
+    "id": 398,
+    "constant": "EF_LEVEL99_6",
+    "desc": "Trancended 99 Aura (Bottom)"
+  },
+  {
+    "id": 399,
+    "constant": "EF_BASH3D3",
+    "desc": "Head Crush"
+  },
+  {
+    "id": 400,
+    "constant": "EF_BASH3D4",
+    "desc": "Joint Beat"
+  },
+  {
+    "id": 401,
+    "constant": "EF_NAPALMVALCAN",
+    "desc": "Napalm Vulcan Sound"
+  },
+  {
+    "id": 402,
+    "constant": "EF_PORTAL5",
+    "desc": "Dangerous Soul Collect"
+  },
+  {
+    "id": 403,
+    "constant": "EF_MAGICCRASHER2",
+    "desc": "Mind Breaker"
+  },
+  {
+    "id": 404,
+    "constant": "EF_BOTTOM_SPIDER",
+    "desc": "Fiber Lock"
+  },
+  {
+    "id": 405,
+    "constant": "EF_BOTTOM_FOGWALL",
+    "desc": "Wall Of Fog"
+  },
+  {
+    "id": 406,
+    "constant": "EF_SOULBURN",
+    "desc": "Soul Burn"
+  },
+  {
+    "id": 407,
+    "constant": "EF_SOULCHANGE",
+    "desc": "Soul Change"
+  },
+  {
+    "id": 408,
+    "constant": "EF_BABY",
+    "desc": "Mom, Dad, I love you! (Baby Skill)"
+  },
+  {
+    "id": 409,
+    "constant": "EF_SOULBREAKER2",
+    "desc": "Meteor Assault"
+  },
+  {
+    "id": 410,
+    "constant": "EF_RAINBOW",
+    "desc": "Rainbow"
+  },
+  {
+    "id": 411,
+    "constant": "EF_PEONG",
+    "desc": "Leap"
+  },
+  {
+    "id": 412,
+    "constant": "EF_TANJI2",
+    "desc": "Like Throw Spirit Sphere"
+  },
+  {
+    "id": 413,
+    "constant": "EF_PRESSEDBODY",
+    "desc": "Axe Kick"
+  },
+  {
+    "id": 414,
+    "constant": "EF_SPINEDBODY",
+    "desc": "Round Kick"
+  },
+  {
+    "id": 415,
+    "constant": "EF_KICKEDBODY",
+    "desc": "Counter Kick"
+  },
+  {
+    "id": 416,
+    "constant": "EF_AIRTEXTURE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 417,
+    "constant": "EF_HITBODY",
+    "desc": "Flash"
+  },
+  {
+    "id": 418,
+    "constant": "EF_DOUBLEGUMGANG",
+    "desc": "Warmth Lightning"
+  },
+  {
+    "id": 419,
+    "constant": "EF_REFLECTBODY",
+    "desc": "Kaite (Visual Effect)"
+  },
+  {
+    "id": 420,
+    "constant": "EF_BABYBODY",
+    "desc": "Eswoo (Small) (Visual Effect)"
+  },
+  {
+    "id": 421,
+    "constant": "EF_BABYBODY2",
+    "desc": "Eswoo (Alt. Small) (Visual Effect)"
+  },
+  {
+    "id": 422,
+    "constant": "EF_GIANTBODY",
+    "desc": "Eswoo (Normal) (Visual Effect)"
+  },
+  {
+    "id": 423,
+    "constant": "EF_GIANTBODY2",
+    "desc": "Eswoo (Alt. Normal) (Visual Effect)"
+  },
+  {
+    "id": 424,
+    "constant": "EF_ASURABODY",
+    "desc": "Spirit Link (Visual Effect)"
+  },
+  {
+    "id": 425,
+    "constant": "EF_4WAYBODY",
+    "desc": "Esma Hit (Visual Effect)"
+  },
+  {
+    "id": 426,
+    "constant": "EF_QUAKEBODY",
+    "desc": "Sprint Collision (Visual Effect)"
+  },
+  {
+    "id": 427,
+    "constant": "EF_ASURABODY_MONSTER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 428,
+    "constant": "EF_HITLINE3",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 429,
+    "constant": "EF_HITLINE4",
+    "desc": "Taekwon Kick Hit 1"
+  },
+  {
+    "id": 430,
+    "constant": "EF_HITLINE5",
+    "desc": "Taekwon Kick Hit 2"
+  },
+  {
+    "id": 431,
+    "constant": "EF_HITLINE6",
+    "desc": "Taekwon Kick Hit 3"
+  },
+  {
+    "id": 432,
+    "constant": "EF_ELECTRIC",
+    "desc": "Solar, Lunar and Stellar Perception (Visual Effect)"
+  },
+  {
+    "id": 433,
+    "constant": "EF_ELECTRIC2",
+    "desc": "Solar, Lunar and Stellar Opposition (Visual Effect)"
+  },
+  {
+    "id": 434,
+    "constant": "EF_HITLINE7",
+    "desc": "Taekwon Kick Hit 4"
+  },
+  {
+    "id": 435,
+    "constant": "EF_STORMKICK",
+    "desc": "Whirlwind Kick"
+  },
+  {
+    "id": 436,
+    "constant": "EF_HALFSPHERE",
+    "desc": "White Barrier (Unused)"
+  },
+  {
+    "id": 437,
+    "constant": "EF_ATTACKENERGY",
+    "desc": "White barrier 2 (Unused)"
+  },
+  {
+    "id": 438,
+    "constant": "EF_ATTACKENERGY2",
+    "desc": "Kaite Reflect Animation"
+  },
+  {
+    "id": 439,
+    "constant": "EF_CHEMICAL3",
+    "desc": "Flying Side Kick"
+  },
+  {
+    "id": 440,
+    "constant": "EF_ASSUMPTIO2",
+    "desc": "Assumptio (Animation)"
+  },
+  {
+    "id": 441,
+    "constant": "EF_BLUECASTING",
+    "desc": "Comfort Skills Cast Aura"
+  },
+  {
+    "id": 442,
+    "constant": "EF_RUN",
+    "desc": "Foot Prints caused by Sprint."
+  },
+  {
+    "id": 443,
+    "constant": "EF_STOPRUN",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 444,
+    "constant": "EF_STOPEFFECT",
+    "desc": "Sprint Stop Animation"
+  },
+  {
+    "id": 445,
+    "constant": "EF_JUMPBODY",
+    "desc": "High Jump (Jump)"
+  },
+  {
+    "id": 446,
+    "constant": "EF_LANDBODY",
+    "desc": "High Jump (Return Down)"
+  },
+  {
+    "id": 447,
+    "constant": "EF_FOOT3",
+    "desc": "Running Left Foot"
+  },
+  {
+    "id": 448,
+    "constant": "EF_FOOT4",
+    "desc": "Running Right Foot"
+  },
+  {
+    "id": 449,
+    "constant": "EF_TAE_READY",
+    "desc": "KA-Spell (1st Part)"
+  },
+  {
+    "id": 450,
+    "constant": "EF_GRANDCROSS2",
+    "desc": "Darkcross"
+  },
+  {
+    "id": 451,
+    "constant": "EF_SOULSTRIKE2",
+    "desc": "Dark Strike"
+  },
+  {
+    "id": 452,
+    "constant": "EF_YUFITEL2",
+    "desc": "Something Like Jupitel Thunder"
+  },
+  {
+    "id": 453,
+    "constant": "EF_NPC_STOP",
+    "desc": "Paralized"
+  },
+  {
+    "id": 454,
+    "constant": "EF_DARKCASTING",
+    "desc": "Like Blind"
+  },
+  {
+    "id": 455,
+    "constant": "EF_GUMGANGNPC",
+    "desc": "Another Warmth Lightning"
+  },
+  {
+    "id": 456,
+    "constant": "EF_AGIUP",
+    "desc": "Power Up"
+  },
+  {
+    "id": 457,
+    "constant": "EF_JUMPKICK",
+    "desc": "Flying Side Kick (2nd Part)"
+  },
+  {
+    "id": 458,
+    "constant": "EF_QUAKEBODY2",
+    "desc": "Running/Sprint (running into a wall)"
+  },
+  {
+    "id": 459,
+    "constant": "EF_STORMKICK1",
+    "desc": "Brown tornado that spins sprite (unused)"
+  },
+  {
+    "id": 460,
+    "constant": "EF_STORMKICK2",
+    "desc": "Green tornado (unused)"
+  },
+  {
+    "id": 461,
+    "constant": "EF_STORMKICK3",
+    "desc": "Blue tornado (unused)"
+  },
+  {
+    "id": 462,
+    "constant": "EF_STORMKICK4",
+    "desc": "Kaupe Dodge Effect"
+  },
+  {
+    "id": 463,
+    "constant": "EF_STORMKICK5",
+    "desc": "Kaupe Dodge Effect"
+  },
+  {
+    "id": 464,
+    "constant": "EF_STORMKICK6",
+    "desc": "White tornado (unused)"
+  },
+  {
+    "id": 465,
+    "constant": "EF_STORMKICK7",
+    "desc": "Purple tornado (unused)"
+  },
+  {
+    "id": 466,
+    "constant": "EF_SPINEDBODY2",
+    "desc": "Another Round Kick"
+  },
+  {
+    "id": 467,
+    "constant": "EF_BEGINASURA1",
+    "desc": "Warm/Mild Wind (Earth)"
+  },
+  {
+    "id": 468,
+    "constant": "EF_BEGINASURA2",
+    "desc": "Warm/Mild Wind (Wind)"
+  },
+  {
+    "id": 469,
+    "constant": "EF_BEGINASURA3",
+    "desc": "Warm/Mild Wind (Water)"
+  },
+  {
+    "id": 470,
+    "constant": "EF_BEGINASURA4",
+    "desc": "Warm/Mild Wind (Fire)"
+  },
+  {
+    "id": 471,
+    "constant": "EF_BEGINASURA5",
+    "desc": "Warm/Mild Wind (Undead)"
+  },
+  {
+    "id": 472,
+    "constant": "EF_BEGINASURA6",
+    "desc": "Warm/Mild Wind (Shadow)"
+  },
+  {
+    "id": 473,
+    "constant": "EF_BEGINASURA7",
+    "desc": "Warm/Mild Wind (Holy)"
+  },
+  {
+    "id": 474,
+    "constant": "EF_AURABLADE2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 475,
+    "constant": "EF_DEVIL1",
+    "desc": "Demon of The Sun Moon And Stars (Level 1)"
+  },
+  {
+    "id": 476,
+    "constant": "EF_DEVIL2",
+    "desc": "Demon of The Sun Moon And Stars (Level 2)"
+  },
+  {
+    "id": 477,
+    "constant": "EF_DEVIL3",
+    "desc": "Demon of The Sun Moon And Stars (Level 3)"
+  },
+  {
+    "id": 478,
+    "constant": "EF_DEVIL4",
+    "desc": "Demon of The Sun Moon And Stars (Level 4)"
+  },
+  {
+    "id": 479,
+    "constant": "EF_DEVIL5",
+    "desc": "Demon of The Sun Moon And Stars (Level 5)"
+  },
+  {
+    "id": 480,
+    "constant": "EF_DEVIL6",
+    "desc": "Demon of The Sun Moon And Stars (Level 6)"
+  },
+  {
+    "id": 481,
+    "constant": "EF_DEVIL7",
+    "desc": "Demon of The Sun Moon And Stars (Level 7)"
+  },
+  {
+    "id": 482,
+    "constant": "EF_DEVIL8",
+    "desc": "Demon of The Sun Moon And Stars (Level 8)"
+  },
+  {
+    "id": 483,
+    "constant": "EF_DEVIL9",
+    "desc": "Demon of The Sun Moon And Stars (Level 9)"
+  },
+  {
+    "id": 484,
+    "constant": "EF_DEVIL10",
+    "desc": "Demon of The Sun Moon And Stars (Level 10)"
+  },
+  {
+    "id": 485,
+    "constant": "EF_DOUBLEGUMGANG2",
+    "desc": "Mental Strength Lightning but White"
+  },
+  {
+    "id": 486,
+    "constant": "EF_DOUBLEGUMGANG3",
+    "desc": "Mental Strength Lightning"
+  },
+  {
+    "id": 487,
+    "constant": "EF_BLACKDEVIL",
+    "desc": "Demon of The Sun Moon And Stars Ground Effect"
+  },
+  {
+    "id": 488,
+    "constant": "EF_FLOWERCAST",
+    "desc": "Comfort Skills"
+  },
+  {
+    "id": 489,
+    "constant": "EF_FLOWERCAST2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 490,
+    "constant": "EF_FLOWERCAST3",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 491,
+    "constant": "EF_MOCHI",
+    "desc": "Element Potions"
+  },
+  {
+    "id": 492,
+    "constant": "EF_LAMADAN",
+    "desc": "Cooking Foods"
+  },
+  {
+    "id": 493,
+    "constant": "EF_EDP",
+    "desc": "Enchant Deadly Poison"
+  },
+  {
+    "id": 494,
+    "constant": "EF_SHIELDBOOMERANG2",
+    "desc": "Throwing Tomahawk"
+  },
+  {
+    "id": 495,
+    "constant": "EF_RG_COIN2",
+    "desc": "Full Strip Sound"
+  },
+  {
+    "id": 496,
+    "constant": "EF_GUARD2",
+    "desc": "Preserve"
+  },
+  {
+    "id": 497,
+    "constant": "EF_SLIM",
+    "desc": "Twilight Alchemy 1"
+  },
+  {
+    "id": 498,
+    "constant": "EF_SLIM2",
+    "desc": "Twilight Alchemy 2"
+  },
+  {
+    "id": 499,
+    "constant": "EF_SLIM3",
+    "desc": "Twilight Alchemy 3"
+  },
+  {
+    "id": 500,
+    "constant": "EF_CHEMICALBODY",
+    "desc": "Player Become Blue with Blue Aura"
+  },
+  {
+    "id": 501,
+    "constant": "EF_CASTSPIN",
+    "desc": "Chase Walk Animation"
+  },
+  {
+    "id": 502,
+    "constant": "EF_PIERCEBODY",
+    "desc": "Player Become Yellow with Yellow Aura"
+  },
+  {
+    "id": 503,
+    "constant": "EF_SOULLINK",
+    "desc": "Soul Link Word"
+  },
+  {
+    "id": 504,
+    "constant": "EF_CHOOKGI2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 505,
+    "constant": "EF_MEMORIZE",
+    "desc": "Memorize"
+  },
+  {
+    "id": 506,
+    "constant": "EF_SOULLIGHT",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 507,
+    "constant": "EF_MAPAE",
+    "desc": "Authoritative Badge"
+  },
+  {
+    "id": 508,
+    "constant": "EF_ITEMPOKJUK",
+    "desc": "Fire Cracker"
+  },
+  {
+    "id": 509,
+    "constant": "EF_05VAL",
+    "desc": "Valentine Day Hearth (Wings)"
+  },
+  {
+    "id": 510,
+    "constant": "EF_BEGINASURA11",
+    "desc": "Champion Asura Strike"
+  },
+  {
+    "id": 511,
+    "constant": "EF_NIGHT",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 512,
+    "constant": "EF_CHEMICAL2DASH",
+    "desc": "Chain Crush Combo"
+  },
+  {
+    "id": 513,
+    "constant": "EF_GROUNDSAMPLE",
+    "desc": "Area Cast"
+  },
+  {
+    "id": 514,
+    "constant": "EF_GI_EXPLOSION",
+    "desc": "Really Big Circle"
+  },
+  {
+    "id": 515,
+    "constant": "EF_CLOUD4",
+    "desc": "Einbroch Fog"
+  },
+  {
+    "id": 516,
+    "constant": "EF_CLOUD5",
+    "desc": "Airship Cloud"
+  },
+  {
+    "id": 517,
+    "constant": "EF_BOTTOM_HERMODE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 518,
+    "constant": "EF_CARTTER",
+    "desc": "Cart Termination"
+  },
+  {
+    "id": 519,
+    "constant": "EF_ITEMFAST",
+    "desc": "Speed Down Potion"
+  },
+  {
+    "id": 520,
+    "constant": "EF_SHIELDBOOMERANG3",
+    "desc": "Shield Bumerang"
+  },
+  {
+    "id": 521,
+    "constant": "EF_DOUBLECASTBODY",
+    "desc": "Player Become Red with Red Aura"
+  },
+  {
+    "id": 522,
+    "constant": "EF_GRAVITATION",
+    "desc": "Gravitation Field"
+  },
+  {
+    "id": 523,
+    "constant": "EF_TAROTCARD1",
+    "desc": "Tarot Card of Fate (The Fool)"
+  },
+  {
+    "id": 524,
+    "constant": "EF_TAROTCARD2",
+    "desc": "Tarot Card of Fate (The Magician)"
+  },
+  {
+    "id": 525,
+    "constant": "EF_TAROTCARD3",
+    "desc": "Tarot Card of Fate (The High Priestess)"
+  },
+  {
+    "id": 526,
+    "constant": "EF_TAROTCARD4",
+    "desc": "Tarot Card of Fate (The Chariot)"
+  },
+  {
+    "id": 527,
+    "constant": "EF_TAROTCARD5",
+    "desc": "Tarot Card of Fate (Strength)"
+  },
+  {
+    "id": 528,
+    "constant": "EF_TAROTCARD6",
+    "desc": "Tarot Card of Fate (The Lovers)"
+  },
+  {
+    "id": 529,
+    "constant": "EF_TAROTCARD7",
+    "desc": "Tarot Card of Fate (The Wheel of Fortune)"
+  },
+  {
+    "id": 530,
+    "constant": "EF_TAROTCARD8",
+    "desc": "Tarot Card of Fate (The Hanged Man)"
+  },
+  {
+    "id": 531,
+    "constant": "EF_TAROTCARD9",
+    "desc": "Tarot Card of Fate (Death)"
+  },
+  {
+    "id": 532,
+    "constant": "EF_TAROTCARD10",
+    "desc": "Tarot Card of Fate (Temperance)"
+  },
+  {
+    "id": 533,
+    "constant": "EF_TAROTCARD11",
+    "desc": "Tarot Card of Fate (The Devil)"
+  },
+  {
+    "id": 534,
+    "constant": "EF_TAROTCARD12",
+    "desc": "Tarot Card of Fate (The Tower)"
+  },
+  {
+    "id": 535,
+    "constant": "EF_TAROTCARD13",
+    "desc": "Tarot Card of Fate (The Star)"
+  },
+  {
+    "id": 536,
+    "constant": "EF_TAROTCARD14",
+    "desc": "Tarot Card of Fate (The Sun)"
+  },
+  {
+    "id": 537,
+    "constant": "EF_ACIDDEMON",
+    "desc": "Acid Demonstration"
+  },
+  {
+    "id": 538,
+    "constant": "EF_GREENBODY",
+    "desc": "Player Become Green with Green Aura"
+  },
+  {
+    "id": 539,
+    "constant": "EF_THROWITEM4",
+    "desc": "Throw Random Bottle"
+  },
+  {
+    "id": 540,
+    "constant": "EF_BABYBODY_BACK",
+    "desc": "Instant Small->Normal"
+  },
+  {
+    "id": 541,
+    "constant": "EF_THROWITEM5",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 542,
+    "constant": "EF_BLUEBODY",
+    "desc": "KA-Spell (1st Part)"
+  },
+  {
+    "id": 543,
+    "constant": "EF_HATED",
+    "desc": "Kahii"
+  },
+  {
+    "id": 544,
+    "constant": "EF_REDLIGHTBODY",
+    "desc": "Warmth Red Sprite"
+  },
+  {
+    "id": 545,
+    "constant": "EF_RO2YEAR",
+    "desc": "Sound And... PUFF Client Crash :P"
+  },
+  {
+    "id": 546,
+    "constant": "EF_SMA_READY",
+    "desc": "Kaupe"
+  },
+  {
+    "id": 547,
+    "constant": "EF_STIN",
+    "desc": "Estin"
+  },
+  {
+    "id": 548,
+    "constant": "EF_RED_HIT",
+    "desc": "Instant Red Sprite"
+  },
+  {
+    "id": 549,
+    "constant": "EF_BLUE_HIT",
+    "desc": "Instant Blue Sprite"
+  },
+  {
+    "id": 550,
+    "constant": "EF_QUAKEBODY3",
+    "desc": "Another Effect like Running Hit"
+  },
+  {
+    "id": 551,
+    "constant": "EF_SMA",
+    "desc": "Effect Like Estun but with Circle"
+  },
+  {
+    "id": 552,
+    "constant": "EF_SMA2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 553,
+    "constant": "EF_STIN2",
+    "desc": "Esma"
+  },
+  {
+    "id": 554,
+    "constant": "EF_HITTEXTURE",
+    "desc": "Large White Cloud"
+  },
+  {
+    "id": 555,
+    "constant": "EF_STIN3",
+    "desc": "Estun"
+  },
+  {
+    "id": 556,
+    "constant": "EF_SMA3",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 557,
+    "constant": "EF_BLUEFALL",
+    "desc": "Juperos Energy Waterfall (Horizontal)"
+  },
+  {
+    "id": 558,
+    "constant": "EF_BLUEFALL_90",
+    "desc": "Juperos Energy Waterfall (Vertical)"
+  },
+  {
+    "id": 559,
+    "constant": "EF_FASTBLUEFALL",
+    "desc": "Juperos Energy Waterfall Fast (Horizontal)"
+  },
+  {
+    "id": 560,
+    "constant": "EF_FASTBLUEFALL_90",
+    "desc": "Juperos Energy Waterfall Fast (Vertical)"
+  },
+  {
+    "id": 561,
+    "constant": "EF_BIG_PORTAL",
+    "desc": "Juperos Warp"
+  },
+  {
+    "id": 562,
+    "constant": "EF_BIG_PORTAL2",
+    "desc": "Juperos Warp"
+  },
+  {
+    "id": 563,
+    "constant": "EF_SCREEN_QUAKE",
+    "desc": "Earthquake Effect (Juperos Elevator)"
+  },
+  {
+    "id": 564,
+    "constant": "EF_HOMUNCASTING",
+    "desc": "Wedding Cast"
+  },
+  {
+    "id": 565,
+    "constant": "EF_HFLIMOON1",
+    "desc": "Filir Moonlight Lvl 1"
+  },
+  {
+    "id": 566,
+    "constant": "EF_HFLIMOON2",
+    "desc": "Filir Moonlight Lvl 2"
+  },
+  {
+    "id": 567,
+    "constant": "EF_HFLIMOON3",
+    "desc": "Filir Moonlight Lvl 3"
+  },
+  {
+    "id": 568,
+    "constant": "EF_HO_UP",
+    "desc": "Another Job Level Up"
+  },
+  {
+    "id": 569,
+    "constant": "EF_HAMIDEFENCE",
+    "desc": "Amistr Bulwark"
+  },
+  {
+    "id": 570,
+    "constant": "EF_HAMICASTLE",
+    "desc": "Amistr Castling"
+  },
+  {
+    "id": 571,
+    "constant": "EF_HAMIBLOOD",
+    "desc": "Amistr Bloodlust"
+  },
+  {
+    "id": 572,
+    "constant": "EF_HATED2",
+    "desc": "Warmth Soul"
+  },
+  {
+    "id": 573,
+    "constant": "EF_TWILIGHT1",
+    "desc": "Twilight Alchemy 1"
+  },
+  {
+    "id": 574,
+    "constant": "EF_TWILIGHT2",
+    "desc": "Twilight Alchemy 2"
+  },
+  {
+    "id": 575,
+    "constant": "EF_TWILIGHT3",
+    "desc": "Twilight Alchemy 3"
+  },
+  {
+    "id": 576,
+    "constant": "EF_ITEM_THUNDER",
+    "desc": "Box Effect (Thunder)"
+  },
+  {
+    "id": 577,
+    "constant": "EF_ITEM_CLOUD",
+    "desc": "Box Effect (Cloud)"
+  },
+  {
+    "id": 578,
+    "constant": "EF_ITEM_CURSE",
+    "desc": "Box Effect (Curse)"
+  },
+  {
+    "id": 579,
+    "constant": "EF_ITEM_ZZZ",
+    "desc": "Box Effect (Sleep)"
+  },
+  {
+    "id": 580,
+    "constant": "EF_ITEM_RAIN",
+    "desc": "Box Effect (Rain)"
+  },
+  {
+    "id": 581,
+    "constant": "EF_ITEM_LIGHT",
+    "desc": "Box Effect (Sunlight)"
+  },
+  {
+    "id": 582,
+    "constant": "EF_ANGEL3",
+    "desc": "Another Super Novice/Taekwon Angel"
+  },
+  {
+    "id": 583,
+    "constant": "EF_M01",
+    "desc": "Warmth Hit"
+  },
+  {
+    "id": 584,
+    "constant": "EF_M02",
+    "desc": "Full Buster"
+  },
+  {
+    "id": 585,
+    "constant": "EF_M03",
+    "desc": "5 Medium Size Explosion"
+  },
+  {
+    "id": 586,
+    "constant": "EF_M04",
+    "desc": "Somatology Lab Mobs Aura"
+  },
+  {
+    "id": 587,
+    "constant": "EF_M05",
+    "desc": "Big Purple Flame"
+  },
+  {
+    "id": 588,
+    "constant": "EF_M06",
+    "desc": "Little Red Flame"
+  },
+  {
+    "id": 589,
+    "constant": "EF_M07",
+    "desc": "Eswoo"
+  },
+  {
+    "id": 590,
+    "constant": "EF_KAIZEL",
+    "desc": "Running Stop"
+  },
+  {
+    "id": 591,
+    "constant": "EF_KAAHI",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 592,
+    "constant": "EF_CLOUD6",
+    "desc": "Thanatos Tower Bloody Clouds"
+  },
+  {
+    "id": 593,
+    "constant": "EF_FOOD01",
+    "desc": "Food Effect (STR)"
+  },
+  {
+    "id": 594,
+    "constant": "EF_FOOD02",
+    "desc": "Food Effect (INT)"
+  },
+  {
+    "id": 595,
+    "constant": "EF_FOOD03",
+    "desc": "Food Effect (VIT)"
+  },
+  {
+    "id": 596,
+    "constant": "EF_FOOD04",
+    "desc": "Food Effect (AGI)"
+  },
+  {
+    "id": 597,
+    "constant": "EF_FOOD05",
+    "desc": "Food Effect (DEX)"
+  },
+  {
+    "id": 598,
+    "constant": "EF_FOOD06",
+    "desc": "Food Effect (LUK)"
+  },
+  {
+    "id": 599,
+    "constant": "EF_SHRINK",
+    "desc": "Cast Time Sound and Flashing Animation on Player"
+  },
+  {
+    "id": 600,
+    "constant": "EF_THROWITEM6",
+    "desc": "Throw Venom Knife"
+  },
+  {
+    "id": 601,
+    "constant": "EF_SIGHT2",
+    "desc": "Sight Blaster"
+  },
+  {
+    "id": 602,
+    "constant": "EF_QUAKEBODY4",
+    "desc": "Close Confine (Grab Effect)"
+  },
+  {
+    "id": 603,
+    "constant": "EF_FIREHIT2",
+    "desc": "Spinning fire ball (like 50, but smaller)"
+  },
+  {
+    "id": 604,
+    "constant": "EF_NPC_STOP2",
+    "desc": "Close Confine (Ground Effect)"
+  },
+  {
+    "id": 605,
+    "constant": "EF_NPC_STOP2_DEL",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 606,
+    "constant": "EF_FVOICE",
+    "desc": "Pang Voice (Visual Effect)"
+  },
+  {
+    "id": 607,
+    "constant": "EF_WINK",
+    "desc": "Wink of Charm (Visual Effect)"
+  },
+  {
+    "id": 608,
+    "constant": "EF_COOKING_OK",
+    "desc": "Cooking Success"
+  },
+  {
+    "id": 609,
+    "constant": "EF_COOKING_FAIL",
+    "desc": "Cooking Failed"
+  },
+  {
+    "id": 610,
+    "constant": "EF_TEMP_OK",
+    "desc": "Success"
+  },
+  {
+    "id": 611,
+    "constant": "EF_TEMP_FAIL",
+    "desc": "Failed"
+  },
+  {
+    "id": 612,
+    "constant": "EF_HAPGYEOK",
+    "desc": "Korean Words and /no1 Emoticon"
+  },
+  {
+    "id": 613,
+    "constant": "EF_THROWITEM7",
+    "desc": "Throw Shuriken"
+  },
+  {
+    "id": 614,
+    "constant": "EF_THROWITEM8",
+    "desc": "Throw Kunai"
+  },
+  {
+    "id": 615,
+    "constant": "EF_THROWITEM9",
+    "desc": "Throw Fumma Shuriken"
+  },
+  {
+    "id": 616,
+    "constant": "EF_THROWITEM10",
+    "desc": "Throw Money"
+  },
+  {
+    "id": 617,
+    "constant": "EF_BUNSINJYUTSU",
+    "desc": "Illusionary Shadow"
+  },
+  {
+    "id": 618,
+    "constant": "EF_KOUENKA",
+    "desc": "Crimson Fire Bolossom"
+  },
+  {
+    "id": 619,
+    "constant": "EF_HYOUSENSOU",
+    "desc": "Lightning Spear Of Ice"
+  },
+  {
+    "id": 620,
+    "constant": "EF_BOTTOM_SUITON",
+    "desc": "Water Escape Technique"
+  },
+  {
+    "id": 621,
+    "constant": "EF_STIN4",
+    "desc": "Wind Blade"
+  },
+  {
+    "id": 622,
+    "constant": "EF_THUNDERSTORM2",
+    "desc": "Lightning Crash"
+  },
+  {
+    "id": 623,
+    "constant": "EF_CHEMICAL4",
+    "desc": "Piercing Shot"
+  },
+  {
+    "id": 624,
+    "constant": "EF_STIN5",
+    "desc": "Kamaitachi"
+  },
+  {
+    "id": 625,
+    "constant": "EF_MADNESS_BLUE",
+    "desc": "Madness Canceller"
+  },
+  {
+    "id": 626,
+    "constant": "EF_MADNESS_RED",
+    "desc": "Adjustment"
+  },
+  {
+    "id": 627,
+    "constant": "EF_RG_COIN3",
+    "desc": "Disarm (Sound Effect)"
+  },
+  {
+    "id": 628,
+    "constant": "EF_BASH3D5",
+    "desc": "Dust"
+  },
+  {
+    "id": 629,
+    "constant": "EF_CHOOKGI3",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 630,
+    "constant": "EF_KIRIKAGE",
+    "desc": "Shadow Slash"
+  },
+  {
+    "id": 631,
+    "constant": "EF_TATAMI",
+    "desc": "Reverse Tatami Map Unit"
+  },
+  {
+    "id": 632,
+    "constant": "EF_KASUMIKIRI",
+    "desc": "Mist Slash"
+  },
+  {
+    "id": 633,
+    "constant": "EF_ISSEN",
+    "desc": "Final Strike"
+  },
+  {
+    "id": 634,
+    "constant": "EF_KAEN",
+    "desc": "Crimson Fire Formation"
+  },
+  {
+    "id": 635,
+    "constant": "EF_BAKU",
+    "desc": "Dragon Fire Formation"
+  },
+  {
+    "id": 636,
+    "constant": "EF_HYOUSYOURAKU",
+    "desc": "Falling Ice Pillar"
+  },
+  {
+    "id": 637,
+    "constant": "EF_DESPERADO",
+    "desc": "Desperado"
+  },
+  {
+    "id": 638,
+    "constant": "EF_LIGHTNING_S",
+    "desc": "Ground Drift Grenade"
+  },
+  {
+    "id": 639,
+    "constant": "EF_BLIND_S",
+    "desc": "Ground Drift Grenade"
+  },
+  {
+    "id": 640,
+    "constant": "EF_POISON_S",
+    "desc": "Ground Drift Grenade"
+  },
+  {
+    "id": 641,
+    "constant": "EF_FREEZING_S",
+    "desc": "Ground Drift Grenade"
+  },
+  {
+    "id": 642,
+    "constant": "EF_FLARE_S",
+    "desc": "Ground Drift Grenade"
+  },
+  {
+    "id": 643,
+    "constant": "EF_RAPIDSHOWER",
+    "desc": "Rapid Shower"
+  },
+  {
+    "id": 644,
+    "constant": "EF_MAGICALBULLET",
+    "desc": "Magic Bullet"
+  },
+  {
+    "id": 645,
+    "constant": "EF_SPREADATTACK",
+    "desc": "Spread Attack"
+  },
+  {
+    "id": 646,
+    "constant": "EF_TRACKCASTING",
+    "desc": "Tracking (Shown While Casting)"
+  },
+  {
+    "id": 647,
+    "constant": "EF_TRACKING",
+    "desc": "Tracking"
+  },
+  {
+    "id": 648,
+    "constant": "EF_TRIPLEACTION",
+    "desc": "Triple Action"
+  },
+  {
+    "id": 649,
+    "constant": "EF_BULLSEYE",
+    "desc": "Bull's Eye"
+  },
+  {
+    "id": 650,
+    "constant": "EF_MAP_MAGICZONE",
+    "desc": "Ice Cave Level 4 Circle"
+  },
+  {
+    "id": 651,
+    "constant": "EF_MAP_MAGICZONE2",
+    "desc": "Ice Cave Level 4 Big Circle"
+  },
+  {
+    "id": 652,
+    "constant": "EF_DAMAGE1",
+    "desc": "Like Regeneration Number but Red with a Sound"
+  },
+  {
+    "id": 653,
+    "constant": "EF_DAMAGE1_2",
+    "desc": "Like Regeneration Number but Red"
+  },
+  {
+    "id": 654,
+    "constant": "EF_DAMAGE1_3",
+    "desc": "Like Regeneration Number but Purple"
+  },
+  {
+    "id": 655,
+    "constant": "EF_UNDEADBODY",
+    "desc": "Mobs Skill (Change Undead Element)"
+  },
+  {
+    "id": 656,
+    "constant": "EF_UNDEADBODY_DEL",
+    "desc": "Last animation before Change Undead Element finish"
+  },
+  {
+    "id": 657,
+    "constant": "EF_GREEN_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 658,
+    "constant": "EF_BLUE_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 659,
+    "constant": "EF_RED_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 660,
+    "constant": "EF_PURPLE_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 661,
+    "constant": "EF_BLACK_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 662,
+    "constant": "EF_WHITE_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 663,
+    "constant": "EF_YELLOW_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 664,
+    "constant": "EF_PINK_NUMBER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 665,
+    "constant": "EF_BUBBLE_DROP",
+    "desc": "Little Blue Ball Falling From the Sky"
+  },
+  {
+    "id": 666,
+    "constant": "EF_NPC_EARTHQUAKE",
+    "desc": "Earthquake"
+  },
+  {
+    "id": 667,
+    "constant": "EF_DA_SPACE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 668,
+    "constant": "EF_DRAGONFEAR",
+    "desc": "Dragonfear"
+  },
+  {
+    "id": 669,
+    "constant": "EF_BLEEDING",
+    "desc": "Wide Bleeding"
+  },
+  {
+    "id": 670,
+    "constant": "EF_WIDECONFUSE",
+    "desc": "Dragon fear (Visual Effect)"
+  },
+  {
+    "id": 671,
+    "constant": "EF_BOTTOM_RUNNER",
+    "desc": "The Japan Earth Symbol (like 'Seven Wind Lv1', but on the ground)"
+  },
+  {
+    "id": 672,
+    "constant": "EF_BOTTOM_TRANSFER",
+    "desc": "The Japan Wind Symbol (like 'Seven Wind Lv2', but on the ground)"
+  },
+  {
+    "id": 673,
+    "constant": "EF_CRYSTAL_BLUE",
+    "desc": "Map turns Blue (like Soul Link)"
+  },
+  {
+    "id": 674,
+    "constant": "EF_BOTTOM_EVILLAND",
+    "desc": "Evil Land Cell"
+  },
+  {
+    "id": 675,
+    "constant": "EF_GUARD3",
+    "desc": "Like Parrying/Kyrie Eleison barrier but Yellow with small Cross in every barrier piece"
+  },
+  {
+    "id": 676,
+    "constant": "EF_NPC_SLOWCAST",
+    "desc": "Slow Casting"
+  },
+  {
+    "id": 677,
+    "constant": "EF_CRITICALWOUND",
+    "desc": "Critical Wounds/Bleeding Attack"
+  },
+  {
+    "id": 678,
+    "constant": "EF_GREEN99_3",
+    "desc": "White 99 Aura Bubbles"
+  },
+  {
+    "id": 679,
+    "constant": "EF_GREEN99_5",
+    "desc": "Green Aura (Middle)"
+  },
+  {
+    "id": 680,
+    "constant": "EF_GREEN99_6",
+    "desc": "Green Aura (Bottom)"
+  },
+  {
+    "id": 681,
+    "constant": "EF_MAPSPHERE",
+    "desc": "Dimensional Gorge Map Effect"
+  },
+  {
+    "id": 682,
+    "constant": "EF_POK_LOVE",
+    "desc": "I Love You Banner"
+  },
+  {
+    "id": 683,
+    "constant": "EF_POK_WHITE",
+    "desc": "Happy White Day Banner"
+  },
+  {
+    "id": 684,
+    "constant": "EF_POK_VALEN",
+    "desc": "Happy Valentine Day Banner"
+  },
+  {
+    "id": 685,
+    "constant": "EF_POK_BIRTH",
+    "desc": "Happy Birthday Banner"
+  },
+  {
+    "id": 686,
+    "constant": "EF_POK_CHRISTMAS",
+    "desc": "Merry Christmas Banner"
+  },
+  {
+    "id": 687,
+    "constant": "EF_MAP_MAGICZONE3",
+    "desc": "Cast Circle-Like effect 1"
+  },
+  {
+    "id": 688,
+    "constant": "EF_MAP_MAGICZONE4",
+    "desc": "Cast Circle-Like effect 2"
+  },
+  {
+    "id": 689,
+    "constant": "EF_DUST",
+    "desc": "Endless Tower Map Effect"
+  },
+  {
+    "id": 690,
+    "constant": "EF_TORCH_RED",
+    "desc": "Burning Flame (Red)"
+  },
+  {
+    "id": 691,
+    "constant": "EF_TORCH_GREEN",
+    "desc": "Burning Flame (Green)"
+  },
+  {
+    "id": 692,
+    "constant": "EF_MAP_GHOST",
+    "desc": "Unknown Aura Bubbles (Small ghosts)"
+  },
+  {
+    "id": 693,
+    "constant": "EF_GLOW1",
+    "desc": "Translucent yellow circle"
+  },
+  {
+    "id": 694,
+    "constant": "EF_GLOW2",
+    "desc": "Translucent green circle"
+  },
+  {
+    "id": 695,
+    "constant": "EF_GLOW4",
+    "desc": "Rotating green light"
+  },
+  {
+    "id": 696,
+    "constant": "EF_TORCH_PURPLE",
+    "desc": "The same of 690 and 691 but Blue/Purple"
+  },
+  {
+    "id": 697,
+    "constant": "EF_CLOUD7",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 698,
+    "constant": "EF_CLOUD8",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 699,
+    "constant": "EF_FLOWERLEAF",
+    "desc": "Fall of powder from the sky and raise of some leaf"
+  },
+  {
+    "id": 700,
+    "constant": "EF_MAPSPHERE2",
+    "desc": "Big Colored Green Sphere."
+  },
+  {
+    "id": 701,
+    "constant": "EF_GLOW11",
+    "desc": "Huge Blue Sphere"
+  },
+  {
+    "id": 702,
+    "constant": "EF_GLOW12",
+    "desc": "Little Colored Violet Sphere"
+  },
+  {
+    "id": 703,
+    "constant": "EF_CIRCLELIGHT",
+    "desc": "Light Infiltration with fall of pownder"
+  },
+  {
+    "id": 704,
+    "constant": "EF_ITEM315",
+    "desc": "Client Error (mobile_ef02.str)"
+  },
+  {
+    "id": 705,
+    "constant": "EF_ITEM316",
+    "desc": "Client Error (mobile_ef01.str)"
+  },
+  {
+    "id": 706,
+    "constant": "EF_ITEM317",
+    "desc": "Client Error (mobile_ef03.str)"
+  },
+  {
+    "id": 707,
+    "constant": "EF_ITEM318",
+    "desc": "Client Crash :P"
+  },
+  {
+    "id": 708,
+    "constant": "EF_STORM_MIN",
+    "desc": "Storm Gust (same as 89)"
+  },
+  {
+    "id": 709,
+    "constant": "EF_POK_JAP",
+    "desc": "A Firework that split in 4 mini fireworks"
+  },
+  {
+    "id": 710,
+    "constant": "EF_MAP_GREENLIGHT",
+    "desc": "A Sphere like Effect 701 but Green, and a bit more larger"
+  },
+  {
+    "id": 711,
+    "constant": "EF_MAP_MAGICWALL",
+    "desc": "A big violet wall"
+  },
+  {
+    "id": 712,
+    "constant": "EF_MAP_GREENLIGHT2",
+    "desc": "A Little Flame Sphere"
+  },
+  {
+    "id": 713,
+    "constant": "EF_YELLOWFLY1",
+    "desc": "A lot of Very Small and Yellow Sphere"
+  },
+  {
+    "id": 714,
+    "constant": "EF_YELLOWFLY2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 715,
+    "constant": "EF_BOTTOM_BLUE",
+    "desc": "Little blue Basilica"
+  },
+  {
+    "id": 716,
+    "constant": "EF_BOTTOM_BLUE2",
+    "desc": "Same as 715"
+  },
+  {
+    "id": 717,
+    "constant": "EF_WEWISH",
+    "desc": "Christmas Carol (copy of Angelus)"
+  },
+  {
+    "id": 718,
+    "constant": "EF_FIREPILLARON2",
+    "desc": "Judex (Visual Effect)"
+  },
+  {
+    "id": 719,
+    "constant": "EF_FORESTLIGHT5",
+    "desc": "Renovatio (light beam)"
+  },
+  {
+    "id": 720,
+    "constant": "EF_SOULBREAKER3",
+    "desc": "Yellow version of Soul Breaker"
+  },
+  {
+    "id": 721,
+    "constant": "EF_ADO_STR",
+    "desc": "Adoramus (lightning bolt)"
+  },
+  {
+    "id": 722,
+    "constant": "EF_IGN_STR",
+    "desc": "Ignition Break (big explosion)"
+  },
+  {
+    "id": 723,
+    "constant": "EF_CHIMTO2",
+    "desc": "Hundred Spear (sound effect)"
+  },
+  {
+    "id": 724,
+    "constant": "EF_WINDCUTTER",
+    "desc": "Green version of Detecting"
+  },
+  {
+    "id": 725,
+    "constant": "EF_DETECT2",
+    "desc": "Oratorio (like Detecting)"
+  },
+  {
+    "id": 726,
+    "constant": "EF_FROSTMYSTY",
+    "desc": "Frost Misty (blue vapor and bubbles)"
+  },
+  {
+    "id": 727,
+    "constant": "EF_CRIMSON_STR",
+    "desc": "Crimson Rock"
+  },
+  {
+    "id": 728,
+    "constant": "EF_HELL_STR",
+    "desc": "Small fire (part of Hell Inferno)"
+  },
+  {
+    "id": 729,
+    "constant": "EF_SPR_MASH",
+    "desc": "Marsh of Abyss (like Close Confine)"
+  },
+  {
+    "id": 730,
+    "constant": "EF_SPR_SOULE",
+    "desc": "Small, cartoony explosion (part of Soul Expansion)"
+  },
+  {
+    "id": 731,
+    "constant": "EF_DHOWL_STR",
+    "desc": "Dragon Howling (blinking, expanding circle)"
+  },
+  {
+    "id": 732,
+    "constant": "EF_EARTHWALL",
+    "desc": "Spike from the ground"
+  },
+  {
+    "id": 733,
+    "constant": "EF_SOULBREAKER4",
+    "desc": "Fluffy Ball flying by"
+  },
+  {
+    "id": 734,
+    "constant": "EF_CHAINL_STR",
+    "desc": "Chain Lightning"
+  },
+  {
+    "id": 735,
+    "constant": "EF_CHOOKGI_FIRE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 736,
+    "constant": "EF_CHOOKGI_WIND",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 737,
+    "constant": "EF_CHOOKGI_WATER",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 738,
+    "constant": "EF_CHOOKGI_GROUND",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 739,
+    "constant": "EF_MAGENTA_TRAP",
+    "desc": "Old Magenta Trap"
+  },
+  {
+    "id": 740,
+    "constant": "EF_COBALT_TRAP",
+    "desc": "Old Cobald Trap"
+  },
+  {
+    "id": 741,
+    "constant": "EF_MAIZE_TRAP",
+    "desc": "Old Maize Trap"
+  },
+  {
+    "id": 742,
+    "constant": "EF_VERDURE_TRAP",
+    "desc": "Old Verdure Trap"
+  },
+  {
+    "id": 743,
+    "constant": "EF_NORMAL_TRAP",
+    "desc": "White Ranger Trap"
+  },
+  {
+    "id": 744,
+    "constant": "EF_CLOAKING2",
+    "desc": "Camouflage"
+  },
+  {
+    "id": 745,
+    "constant": "EF_AIMED_STR",
+    "desc": "Aimed Bolt (crosshairs)"
+  },
+  {
+    "id": 746,
+    "constant": "EF_ARROWSTORM_STR",
+    "desc": "Arrow Storm"
+  },
+  {
+    "id": 747,
+    "constant": "EF_LAULAMUS_STR",
+    "desc": "Falling white feathers"
+  },
+  {
+    "id": 748,
+    "constant": "EF_LAUAGNUS_STR",
+    "desc": "Falling blue feathers"
+  },
+  {
+    "id": 749,
+    "constant": "EF_MILSHIELD_STR",
+    "desc": "Millennium Shield"
+  },
+  {
+    "id": 750,
+    "constant": "EF_CONCENTRATION2",
+    "desc": "Detonator (blue sparkles)"
+  },
+  {
+    "id": 751,
+    "constant": "EF_FIREBALL2",
+    "desc": "Releasing summoned warlock spheres"
+  },
+  {
+    "id": 752,
+    "constant": "EF_BUNSINJYUTSU2",
+    "desc": "Like Energy Coat, but not as dark"
+  },
+  {
+    "id": 753,
+    "constant": "EF_CLEARTIME",
+    "desc": "Clearance"
+  },
+  {
+    "id": 754,
+    "constant": "EF_GLASSWALL3",
+    "desc": "Green warp portal (root of Epiclesis)"
+  },
+  {
+    "id": 755,
+    "constant": "EF_ORATIO",
+    "desc": "Oratio (spinning blue symbol)"
+  },
+  {
+    "id": 756,
+    "constant": "EF_POTION_BERSERK2",
+    "desc": "Enchant Blade (like Berserk Potion)"
+  },
+  {
+    "id": 757,
+    "constant": "EF_CIRCLEPOWER",
+    "desc": "Third Class Aura (Middle)"
+  },
+  {
+    "id": 758,
+    "constant": "EF_ROLLING1",
+    "desc": "Rolling Cutter - Spin Count 1"
+  },
+  {
+    "id": 759,
+    "constant": "EF_ROLLING2",
+    "desc": "Rolling Cutter - Spin Count 2"
+  },
+  {
+    "id": 760,
+    "constant": "EF_ROLLING3",
+    "desc": "Rolling Cutter - Spin Count 3"
+  },
+  {
+    "id": 761,
+    "constant": "EF_ROLLING4",
+    "desc": "Rolling Cutter - Spin Count 4"
+  },
+  {
+    "id": 762,
+    "constant": "EF_ROLLING5",
+    "desc": "Rolling Cutter - Spin Count 5"
+  },
+  {
+    "id": 763,
+    "constant": "EF_ROLLING6",
+    "desc": "Rolling Cutter - Spin Count 6"
+  },
+  {
+    "id": 764,
+    "constant": "EF_ROLLING7",
+    "desc": "Rolling Cutter - Spin Count 7"
+  },
+  {
+    "id": 765,
+    "constant": "EF_ROLLING8",
+    "desc": "Rolling Cutter - Spin Count 8"
+  },
+  {
+    "id": 766,
+    "constant": "EF_ROLLING9",
+    "desc": "Rolling Cutter - Spin Count 9"
+  },
+  {
+    "id": 767,
+    "constant": "EF_ROLLING10",
+    "desc": "Rolling Cutter - Spin Count 10"
+  },
+  {
+    "id": 768,
+    "constant": "EF_PURPLEBODY",
+    "desc": "Blinking"
+  },
+  {
+    "id": 769,
+    "constant": "EF_STIN6",
+    "desc": "Cross Ripper Slasher (flying knives)"
+  },
+  {
+    "id": 770,
+    "constant": "EF_RG_COIN4",
+    "desc": "Strip sound"
+  },
+  {
+    "id": 771,
+    "constant": "EF_POISONWAV",
+    "desc": "Poison sound"
+  },
+  {
+    "id": 772,
+    "constant": "EF_POISONSMOKE",
+    "desc": "Poison particles"
+  },
+  {
+    "id": 773,
+    "constant": "EF_GUMGANG4",
+    "desc": "Expanding purple aura (part of Phantom Menace)"
+  },
+  {
+    "id": 774,
+    "constant": "EF_SHIELDBOOMERANG4",
+    "desc": "Axe Boomerang"
+  },
+  {
+    "id": 775,
+    "constant": "EF_CASTSPIN2",
+    "desc": "Spinning character sprite"
+  },
+  {
+    "id": 776,
+    "constant": "EF_VULCANWAV",
+    "desc": "Like Desperado sound effect"
+  },
+  {
+    "id": 777,
+    "constant": "EF_AGIUP2",
+    "desc": "Faded light from the ground [S]"
+  },
+  {
+    "id": 778,
+    "constant": "EF_DETECT3",
+    "desc": "Expanding white aura (like Clearance)"
+  },
+  {
+    "id": 779,
+    "constant": "EF_AGIUP3",
+    "desc": "Faded light from the ground [S]"
+  },
+  {
+    "id": 780,
+    "constant": "EF_DETECT4",
+    "desc": "Expanding red aura (from Infrared Scan)"
+  },
+  {
+    "id": 781,
+    "constant": "EF_ELECTRIC3",
+    "desc": "Magnetic Field (purple chains)"
+  },
+  {
+    "id": 782,
+    "constant": "EF_GUARD4",
+    "desc": "All-around shield [S]"
+  },
+  {
+    "id": 783,
+    "constant": "EF_BOTTOM_BARRIER",
+    "desc": "Yellow shaft of light"
+  },
+  {
+    "id": 784,
+    "constant": "EF_BOTTOM_STEALTH",
+    "desc": "White shaft of light"
+  },
+  {
+    "id": 785,
+    "constant": "EF_REPAIRTIME",
+    "desc": "Upward flying wrenches"
+  },
+  {
+    "id": 786,
+    "constant": "EF_NC_ANAL",
+    "desc": "Symbol with bleeping sound [S]"
+  },
+  {
+    "id": 787,
+    "constant": "EF_FIRETHROW",
+    "desc": "Flare Launcher (line of fire)"
+  },
+  {
+    "id": 788,
+    "constant": "EF_VENOMIMPRESS",
+    "desc": "Venom Impress (green skull)"
+  },
+  {
+    "id": 789,
+    "constant": "EF_FROSTMISTY",
+    "desc": "Freezing Status Effect (two ancillas)"
+  },
+  {
+    "id": 790,
+    "constant": "EF_BURNING",
+    "desc": "Burning Status Effect (flame symbol)"
+  },
+  {
+    "id": 791,
+    "constant": "EF_COLDTHROW",
+    "desc": "Two ice shots"
+  },
+  {
+    "id": 792,
+    "constant": "EF_MAKEHALLU",
+    "desc": "Upward streaming white particles"
+  },
+  {
+    "id": 793,
+    "constant": "EF_HALLUTIME",
+    "desc": "Same, but more brief"
+  },
+  {
+    "id": 794,
+    "constant": "EF_INFRAREDSCAN",
+    "desc": "Infrared Scan (red lasers)"
+  },
+  {
+    "id": 795,
+    "constant": "EF_CRASHAXE",
+    "desc": "Power Swing (axe crash)"
+  },
+  {
+    "id": 796,
+    "constant": "EF_GTHUNDER",
+    "desc": "Spinning blue triangles"
+  },
+  {
+    "id": 797,
+    "constant": "EF_STONERING",
+    "desc": "Stapo"
+  },
+  {
+    "id": 798,
+    "constant": "EF_INTIMIDATE2",
+    "desc": "Red triangles (like Intimidate)"
+  },
+  {
+    "id": 799,
+    "constant": "EF_STASIS",
+    "desc": "Stasis (expanding blue mist) [S]"
+  },
+  {
+    "id": 800,
+    "constant": "EF_REDLINE",
+    "desc": "Hell Inferno (red lights)"
+  },
+  {
+    "id": 801,
+    "constant": "EF_FROSTDIVER3",
+    "desc": "Jack Frost unit (ice spikes)"
+  },
+  {
+    "id": 802,
+    "constant": "EF_BOTTOM_BASILICA2",
+    "desc": "White Imprison"
+  },
+  {
+    "id": 803,
+    "constant": "EF_RECOGNIZED",
+    "desc": "Recognized Spell"
+  },
+  {
+    "id": 804,
+    "constant": "EF_TETRA",
+    "desc": "Tetra Vortex [S]"
+  },
+  {
+    "id": 805,
+    "constant": "EF_TETRACASTING",
+    "desc": "Tetra Vortex cast animation (blinking colors)"
+  },
+  {
+    "id": 806,
+    "constant": "EF_FIREBALL3",
+    "desc": "Flying by as fast as a rocket"
+  },
+  {
+    "id": 807,
+    "constant": "EF_INTIMIDATE3",
+    "desc": "Kidnapping sound"
+  },
+  {
+    "id": 808,
+    "constant": "EF_RECOGNIZED2",
+    "desc": "Like Recognized Spell, but one symbol"
+  },
+  {
+    "id": 809,
+    "constant": "EF_CLOAKING3",
+    "desc": "Shadowy filter [S]"
+  },
+  {
+    "id": 810,
+    "constant": "EF_INTIMIDATE4",
+    "desc": "Damp thud sound [S]"
+  },
+  {
+    "id": 811,
+    "constant": "EF_STRETCH",
+    "desc": "Body Painting"
+  },
+  {
+    "id": 812,
+    "constant": "EF_BLACKBODY",
+    "desc": "Black expanding aura"
+  },
+  {
+    "id": 813,
+    "constant": "EF_ENERVATION",
+    "desc": "Masquerade - Enervation"
+  },
+  {
+    "id": 814,
+    "constant": "EF_ENERVATION2",
+    "desc": "Masquerade - Groomy"
+  },
+  {
+    "id": 815,
+    "constant": "EF_ENERVATION3",
+    "desc": "Masquerade - Ignorance"
+  },
+  {
+    "id": 816,
+    "constant": "EF_ENERVATION4",
+    "desc": "Masquerade - Laziness"
+  },
+  {
+    "id": 817,
+    "constant": "EF_ENERVATION5",
+    "desc": "Masquerade - Unlucky"
+  },
+  {
+    "id": 818,
+    "constant": "EF_ENERVATION6",
+    "desc": "Masquerade - Weakness"
+  },
+  {
+    "id": 819,
+    "constant": "EF_LINELINK4",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 820,
+    "constant": "EF_RG_COIN5",
+    "desc": "Strip Accessory"
+  },
+  {
+    "id": 821,
+    "constant": "EF_WATERFALL_ANI",
+    "desc": "Waterfall"
+  },
+  {
+    "id": 822,
+    "constant": "EF_BOTTOM_MANHOLE",
+    "desc": "Dimension Door (spinning blue aura)"
+  },
+  {
+    "id": 823,
+    "constant": "EF_MANHOLE",
+    "desc": "in-the-manhole effect"
+  },
+  {
+    "id": 824,
+    "constant": "EF_MAKEFEINT",
+    "desc": "Some filter"
+  },
+  {
+    "id": 825,
+    "constant": "EF_FORESTLIGHT6",
+    "desc": "Dimension Door (aura + blue light)"
+  },
+  {
+    "id": 826,
+    "constant": "EF_DARKCASTING2",
+    "desc": "Expanding black casting anim."
+  },
+  {
+    "id": 827,
+    "constant": "EF_BOTTOM_ANI",
+    "desc": "Chaos Panic (spinning brown aura)"
+  },
+  {
+    "id": 828,
+    "constant": "EF_BOTTOM_MAELSTROM",
+    "desc": "Maelstrom (spinning pink aura)"
+  },
+  {
+    "id": 829,
+    "constant": "EF_BOTTOM_BLOODYLUST",
+    "desc": "Bloody Lust (spinning red aura)"
+  },
+  {
+    "id": 830,
+    "constant": "EF_BEGINSPELL_N1",
+    "desc": "Blue aura (Arch Bishop cast animation)"
+  },
+  {
+    "id": 831,
+    "constant": "EF_BEGINSPELL_N2",
+    "desc": "Blue cone [S]"
+  },
+  {
+    "id": 832,
+    "constant": "EF_HEAL_N",
+    "desc": "Sonic Wave"
+  },
+  {
+    "id": 833,
+    "constant": "EF_CHOOKGI_N",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 834,
+    "constant": "EF_JOBLVUP50_2",
+    "desc": "Light shooting away circlish"
+  },
+  {
+    "id": 835,
+    "constant": "EF_CHEMICAL2DASH2",
+    "desc": "Fastness yellow-reddish"
+  },
+  {
+    "id": 836,
+    "constant": "EF_CHEMICAL2DASH3",
+    "desc": "Fastness yellow-pinkish"
+  },
+  {
+    "id": 837,
+    "constant": "EF_ROLLINGCAST",
+    "desc": "Casting [S]"
+  },
+  {
+    "id": 838,
+    "constant": "EF_WATER_BELOW",
+    "desc": "Watery aura"
+  },
+  {
+    "id": 839,
+    "constant": "EF_WATER_FADE",
+    "desc": "[Client Error]"
+  },
+  {
+    "id": 840,
+    "constant": "EF_BEGINSPELL_N3",
+    "desc": "Red cone"
+  },
+  {
+    "id": 841,
+    "constant": "EF_BEGINSPELL_N4",
+    "desc": "Green cone"
+  },
+  {
+    "id": 842,
+    "constant": "EF_BEGINSPELL_N5",
+    "desc": "Yellow cone"
+  },
+  {
+    "id": 843,
+    "constant": "EF_BEGINSPELL_N6",
+    "desc": "White cone"
+  },
+  {
+    "id": 844,
+    "constant": "EF_BEGINSPELL_N7",
+    "desc": "Purple cone"
+  },
+  {
+    "id": 845,
+    "constant": "EF_BEGINSPELL_N8",
+    "desc": "light-bluish turquoise cone"
+  },
+  {
+    "id": 846,
+    "constant": "EF_WATER_SMOKE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 847,
+    "constant": "EF_DANCE1",
+    "desc": "Gloomy Day (white/red light rays)"
+  },
+  {
+    "id": 848,
+    "constant": "EF_DANCE2",
+    "desc": "Gloomy Day (white/blue light rays)"
+  },
+  {
+    "id": 849,
+    "constant": "EF_LINKPARTICLE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 850,
+    "constant": "EF_SOULLIGHT2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 851,
+    "constant": "EF_SPR_PARTICLE",
+    "desc": "Green mushy-foggy stuff (dull)"
+  },
+  {
+    "id": 852,
+    "constant": "EF_SPR_PARTICLE2",
+    "desc": "Green mushy-foggy stuff (bright)"
+  },
+  {
+    "id": 853,
+    "constant": "EF_SPR_PLANT",
+    "desc": "Bright green flower area"
+  },
+  {
+    "id": 854,
+    "constant": "EF_CHEMICAL_V",
+    "desc": "Blue beam of light with notes"
+  },
+  {
+    "id": 855,
+    "constant": "EF_SHOOTPARTICLE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 856,
+    "constant": "EF_BOT_REVERB",
+    "desc": "Reverberation (red eighth notes)"
+  },
+  {
+    "id": 857,
+    "constant": "EF_RAIN_PARTICLE",
+    "desc": "Severe Rainstorm (falling red and blue beams)"
+  },
+  {
+    "id": 858,
+    "constant": "EF_CHEMICAL_V2",
+    "desc": "Deep Sleep Lullaby (two red beams and music notes)"
+  },
+  {
+    "id": 859,
+    "constant": "EF_SECRA",
+    "desc": "Holograph of text (blue)"
+  },
+  {
+    "id": 860,
+    "constant": "EF_BOT_REVERB2",
+    "desc": "Distorted note (blue)"
+  },
+  {
+    "id": 861,
+    "constant": "EF_CIRCLEPOWER2",
+    "desc": "Green aura (from Circle of Life's Melody)"
+  },
+  {
+    "id": 862,
+    "constant": "EF_SECRA2",
+    "desc": "Randomize Spell (holograph of text)"
+  },
+  {
+    "id": 863,
+    "constant": "EF_CHEMICAL_V3",
+    "desc": "Dominion Impulse (two spears of light)"
+  },
+  {
+    "id": 864,
+    "constant": "EF_ENERVATION7",
+    "desc": "Gloomy Day (colorful lines)"
+  },
+  {
+    "id": 865,
+    "constant": "EF_CIRCLEPOWER3",
+    "desc": "Blue aura (from Song of Mana)"
+  },
+  {
+    "id": 866,
+    "constant": "EF_SPR_PLANT2",
+    "desc": "Dance with a Warg (Wargs)"
+  },
+  {
+    "id": 867,
+    "constant": "EF_CIRCLEPOWER4",
+    "desc": "Yellow aura (from Dance with a Warg)"
+  },
+  {
+    "id": 868,
+    "constant": "EF_SPR_PLANT3",
+    "desc": "Song of Mana (Violies)"
+  },
+  {
+    "id": 869,
+    "constant": "EF_RG_COIN6",
+    "desc": "Strip sound [S]"
+  },
+  {
+    "id": 870,
+    "constant": "EF_SPR_PLANT4",
+    "desc": "Ghostly Succubuses of fire"
+  },
+  {
+    "id": 871,
+    "constant": "EF_CIRCLEPOWER5",
+    "desc": "Red aura (from Lerad's Dew)"
+  },
+  {
+    "id": 872,
+    "constant": "EF_SPR_PLANT5",
+    "desc": "Lerad's Dew (Minerals)"
+  },
+  {
+    "id": 873,
+    "constant": "EF_CIRCLEPOWER6",
+    "desc": "Stargate-wormhole stuff (bright purple)"
+  },
+  {
+    "id": 874,
+    "constant": "EF_SPR_PLANT6",
+    "desc": "Melody of Sink (Ktullanuxes)"
+  },
+  {
+    "id": 875,
+    "constant": "EF_CIRCLEPOWER7",
+    "desc": "Stargate-wormhole stuff (bright turquoise)"
+  },
+  {
+    "id": 876,
+    "constant": "EF_SPR_PLANT7",
+    "desc": "Warcry of Beyond (Garms)"
+  },
+  {
+    "id": 877,
+    "constant": "EF_CIRCLEPOWER8",
+    "desc": "Stargate-wormhole stuff (white)"
+  },
+  {
+    "id": 878,
+    "constant": "EF_SPR_PLANT8",
+    "desc": "Unlimited Humming Voice (Miyabi Ningyos)"
+  },
+  {
+    "id": 879,
+    "constant": "EF_HEARTASURA",
+    "desc": "Siren's Voice (heart-like)"
+  },
+  {
+    "id": 880,
+    "constant": "EF_BEGINSPELL_150",
+    "desc": "Bluish castish cone"
+  },
+  {
+    "id": 881,
+    "constant": "EF_LEVEL99_150",
+    "desc": "Blue aura"
+  },
+  {
+    "id": 882,
+    "constant": "EF_PRIMECHARGE",
+    "desc": "Whirl of fireflies (red)"
+  },
+  {
+    "id": 883,
+    "constant": "EF_GLASSWALL4",
+    "desc": "Epiclesis (transparent green tree)"
+  },
+  {
+    "id": 884,
+    "constant": "EF_GRADIUS_LASER",
+    "desc": "Green beam"
+  },
+  {
+    "id": 885,
+    "constant": "EF_BASH3D6",
+    "desc": "Blue light beams"
+  },
+  {
+    "id": 886,
+    "constant": "EF_GUMGANG5",
+    "desc": "Blue castish cone"
+  },
+  {
+    "id": 887,
+    "constant": "EF_HITLINE8",
+    "desc": "Wavy sparks"
+  },
+  {
+    "id": 888,
+    "constant": "EF_ELECTRIC4",
+    "desc": "Earth Shaker (same as 432)"
+  },
+  {
+    "id": 889,
+    "constant": "EF_TEIHIT1T",
+    "desc": "Fast light beams"
+  },
+  {
+    "id": 890,
+    "constant": "EF_SPINMOVE",
+    "desc": "Rotation"
+  },
+  {
+    "id": 891,
+    "constant": "EF_FIREBALL4",
+    "desc": "Magic shots [S]"
+  },
+  {
+    "id": 892,
+    "constant": "EF_TRIPLEATTACK4",
+    "desc": "Fastness with hitting sound[S]"
+  },
+  {
+    "id": 893,
+    "constant": "EF_CHEMICAL3S",
+    "desc": "Blue-white light passing by"
+  },
+  {
+    "id": 894,
+    "constant": "EF_GROUNDSHAKE",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 895,
+    "constant": "EF_DQ9_CHARGE",
+    "desc": "Big wheel of flat light beams"
+  },
+  {
+    "id": 896,
+    "constant": "EF_DQ9_CHARGE2",
+    "desc": "Still sun shaped lightning aura"
+  },
+  {
+    "id": 897,
+    "constant": "EF_DQ9_CHARGE3",
+    "desc": "Animated sun shaped lightning aura"
+  },
+  {
+    "id": 898,
+    "constant": "EF_DQ9_CHARGE4",
+    "desc": "Animated, curvy sun shaped lightning aura"
+  },
+  {
+    "id": 899,
+    "constant": "EF_BLUELINE",
+    "desc": "White/red light shots from below"
+  },
+  {
+    "id": 900,
+    "constant": "EF_SELFSCROLL",
+    "desc": "Animated, slow curvy sun shaped lightning aura"
+  },
+  {
+    "id": 901,
+    "constant": "EF_SPR_LIGHTPRINT",
+    "desc": "Explosion"
+  },
+  {
+    "id": 902,
+    "constant": "EF_PNG_TEST",
+    "desc": "Floating bedtable texture"
+  },
+  {
+    "id": 903,
+    "constant": "EF_BEGINSPELL_YB",
+    "desc": "Castish flamey cone"
+  },
+  {
+    "id": 904,
+    "constant": "EF_CHEMICAL2DASH4",
+    "desc": "Yellow/pink lights passing by"
+  },
+  {
+    "id": 905,
+    "constant": "EF_GROUNDSHAKE2",
+    "desc": "Expanding circle"
+  },
+  {
+    "id": 906,
+    "constant": "EF_PRESSURE2",
+    "desc": "Shield Press (falling shield)"
+  },
+  {
+    "id": 907,
+    "constant": "EF_RG_COIN7",
+    "desc": "Chainy, metalish sound [S]"
+  },
+  {
+    "id": 908,
+    "constant": "EF_PRIMECHARGE2",
+    "desc": "Prestige (sphere of yellow particles)"
+  },
+  {
+    "id": 909,
+    "constant": "EF_PRIMECHARGE3",
+    "desc": "Banding (sphere of red particles)"
+  },
+  {
+    "id": 910,
+    "constant": "EF_PRIMECHARGE4",
+    "desc": "Inspiration (sphere of blue particles)"
+  },
+  {
+    "id": 911,
+    "constant": "EF_GREENCASTING",
+    "desc": "Green castish animation [S]"
+  },
+  {
+    "id": 912,
+    "constant": "EF_WALLOFTHORN",
+    "desc": "Wall of Thorns unit (green fog cloud)"
+  },
+  {
+    "id": 913,
+    "constant": "EF_FIREBALL5",
+    "desc": "Magic projectiles"
+  },
+  {
+    "id": 914,
+    "constant": "EF_THROWITEM11",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 915,
+    "constant": "EF_SPR_PLANT9",
+    "desc": "Crazy Weed"
+  },
+  {
+    "id": 916,
+    "constant": "EF_DEMONICFIRE",
+    "desc": "Demonic Fire"
+  },
+  {
+    "id": 917,
+    "constant": "EF_DEMONICFIRE2",
+    "desc": "More angry, demonic flames"
+  },
+  {
+    "id": 918,
+    "constant": "EF_DEMONICFIRE3",
+    "desc": "Fire Insignia (demonic flames)"
+  },
+  {
+    "id": 919,
+    "constant": "EF_HELLSPLANT",
+    "desc": "Hell's Plant (green snapping plant)"
+  },
+  {
+    "id": 920,
+    "constant": "EF_FIREWALL2",
+    "desc": "Fire Walk unit"
+  },
+  {
+    "id": 921,
+    "constant": "EF_VACUUM",
+    "desc": "Vacuum Extreme (whirlwind)"
+  },
+  {
+    "id": 922,
+    "constant": "EF_SPR_PLANT10",
+    "desc": "Psychic Wave"
+  },
+  {
+    "id": 923,
+    "constant": "EF_SPR_LIGHTPRINT2",
+    "desc": "Poison Buster"
+  },
+  {
+    "id": 924,
+    "constant": "EF_POISONSMOKE2",
+    "desc": "Poisoning animation"
+  },
+  {
+    "id": 925,
+    "constant": "EF_MAKEHALLU2",
+    "desc": "Some filter"
+  },
+  {
+    "id": 926,
+    "constant": "EF_SHOCKWAVE2",
+    "desc": "Electric Walk unit"
+  },
+  {
+    "id": 927,
+    "constant": "EF_SPR_PLANT11",
+    "desc": "Earth Grave (speary roots)"
+  },
+  {
+    "id": 928,
+    "constant": "EF_COLDTHROW2",
+    "desc": "Ice cloud projectiles"
+  },
+  {
+    "id": 929,
+    "constant": "EF_DEMONICFIRE4",
+    "desc": "Warmer (field of flames)"
+  },
+  {
+    "id": 930,
+    "constant": "EF_PRESSURE3",
+    "desc": "Varetyr Spear (falling spear)"
+  },
+  {
+    "id": 931,
+    "constant": "EF_LINKPARTICLE2",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 932,
+    "constant": "EF_SOULLIGHT3",
+    "desc": "Firefly"
+  },
+  {
+    "id": 933,
+    "constant": "EF_CHAREFFECT",
+    "desc": "[Client Crash]"
+  },
+  {
+    "id": 934,
+    "constant": "EF_GUMGANG6",
+    "desc": "White, castishly expanding cone"
+  },
+  {
+    "id": 935,
+    "constant": "EF_FIREBALL6",
+    "desc": "Green magic projectile"
+  },
+  {
+    "id": 936,
+    "constant": "EF_GUMGANG7",
+    "desc": "Red, castishly expanding cone"
+  },
+  {
+    "id": 937,
+    "constant": "EF_GUMGANG8",
+    "desc": "Yellow, castishly expanding cone"
+  },
+  {
+    "id": 938,
+    "constant": "EF_GUMGANG9",
+    "desc": "Dark-red, castishly expanding cone"
+  },
+  {
+    "id": 939,
+    "constant": "EF_BOTTOM_DE2",
+    "desc": "Blue, conish aura"
+  },
+  {
+    "id": 940,
+    "constant": "EF_COLDSTATUS",
+    "desc": "Snow flake"
+  },
+  {
+    "id": 941,
+    "constant": "EF_SPR_LIGHTPRINT3",
+    "desc": "Explosion of red, demonic fire"
+  },
+  {
+    "id": 942,
+    "constant": "EF_WATERBALL3",
+    "desc": "Expanding, white dome"
+  },
+  {
+    "id": 943,
+    "constant": "EF_HEAL_N2",
+    "desc": "Green, fluffy projectile"
+  },
+  {
+    "id": 944,
+    "constant": "EF_RAIN_PARTICLE2",
+    "desc": "Falling gems"
+  },
+  {
+    "id": 945,
+    "constant": "EF_CLOUD9",
+    "desc": "(Nothing)"
+  },
+  {
+    "id": 946,
+    "constant": "EF_YELLOWFLY3",
+    "desc": "Floating lights"
+  },
+  {
+    "id": 947,
+    "constant": "EF_EL_GUST",
+    "desc": "Blue lightning sphere"
+  },
+  {
+    "id": 948,
+    "constant": "EF_EL_BLAST",
+    "desc": "Two blue lightning spheres"
+  },
+  {
+    "id": 949,
+    "constant": "EF_EL_AQUAPLAY",
+    "desc": "Flat, spinning diamond"
+  },
+  {
+    "id": 950,
+    "constant": "EF_EL_UPHEAVAL",
+    "desc": "Circling, planetlike spheres"
+  },
+  {
+    "id": 951,
+    "constant": "EF_EL_WILD_STORM",
+    "desc": "Three lightning spheres"
+  },
+  {
+    "id": 952,
+    "constant": "EF_EL_CHILLY_AIR",
+    "desc": "Flat, spinning gem and two lightning spheres"
+  },
+  {
+    "id": 953,
+    "constant": "EF_EL_CURSED_SOIL",
+    "desc": "Spinning, planetlike spheres"
+  },
+  {
+    "id": 954,
+    "constant": "EF_EL_COOLER",
+    "desc": "Two lightblue glowing spheres"
+  },
+  {
+    "id": 955,
+    "constant": "EF_EL_TROPIC",
+    "desc": "Three spinning flame spheres"
+  },
+  {
+    "id": 956,
+    "constant": "EF_EL_PYROTECHNIC",
+    "desc": "Flame"
+  },
+  {
+    "id": 957,
+    "constant": "EF_EL_PETROLOGY",
+    "desc": "Spinning planetlike sphere"
+  },
+  {
+    "id": 958,
+    "constant": "EF_EL_HEATER",
+    "desc": "Two flames"
+  },
+  {
+    "id": 959,
+    "constant": "EF_POISON_MIST",
+    "desc": "Purple flame"
+  },
+  {
+    "id": 960,
+    "constant": "EF_ERASER_CUTTER",
+    "desc": "Small yellow explosion"
+  },
+  {
+    "id": 961,
+    "constant": "EF_SILENT_BREEZE",
+    "desc": "Cartoony whirlwind"
+  },
+  {
+    "id": 962,
+    "constant": "EF_MAGMA_FLOW",
+    "desc": "Rising fire"
+  },
+  {
+    "id": 963,
+    "constant": "EF_GRAYBODY",
+    "desc": "Dark filter (like Stone Curse)"
+  },
+  {
+    "id": 964,
+    "constant": "EF_LAVA_SLIDE",
+    "desc": "Same as 920"
+  },
+  {
+    "id": 965,
+    "constant": "EF_SONIC_CLAW",
+    "desc": "Small white explosion"
+  },
+  {
+    "id": 966,
+    "constant": "EF_TINDER_BREAKER",
+    "desc": "Bone crack"
+  },
+  {
+    "id": 967,
+    "constant": "EF_MIDNIGHT_FRENZY",
+    "desc": "Another little explosion"
+  },
+  {
+    "id": 968,
+    "constant": "EF_MACRO",
+    "desc": ""
+  },
+  {
+    "id": 969,
+    "constant": "EF_CHEMICAL_ALLRANGE",
+    "desc": ""
+  },
+  {
+    "id": 970,
+    "constant": "EF_TETRA_FIRE",
+    "desc": ""
+  },
+  {
+    "id": 971,
+    "constant": "EF_TETRA_WATER",
+    "desc": ""
+  },
+  {
+    "id": 972,
+    "constant": "EF_TETRA_WIND",
+    "desc": ""
+  },
+  {
+    "id": 973,
+    "constant": "EF_TETRA_GROUND",
+    "desc": ""
+  },
+  {
+    "id": 974,
+    "constant": "EF_EMITTER",
+    "desc": ""
+  },
+  {
+    "id": 975,
+    "constant": "EF_VOLCANIC_ASH",
+    "desc": ""
+  },
+  {
+    "id": 976,
+    "constant": "EF_LEVEL99_ORB1",
+    "desc": ""
+  },
+  {
+    "id": 977,
+    "constant": "EF_LEVEL99_ORB2",
+    "desc": ""
+  },
+  {
+    "id": 978,
+    "constant": "EF_LEVEL150",
+    "desc": ""
+  },
+  {
+    "id": 979,
+    "constant": "EF_LEVEL150_SUB",
+    "desc": ""
+  },
+  {
+    "id": 980,
+    "constant": "EF_THROWITEM4_1",
+    "desc": ""
+  },
+  {
+    "id": 981,
+    "constant": "EF_THROW_HAPPOKUNAI",
+    "desc": ""
+  },
+  {
+    "id": 982,
+    "constant": "EF_THROW_MULTIPLE_COIN",
+    "desc": ""
+  },
+  {
+    "id": 983,
+    "constant": "EF_THROW_BAKURETSU",
+    "desc": ""
+  },
+  {
+    "id": 984,
+    "constant": "EF_ROTATE_HUUMARANKA",
+    "desc": ""
+  },
+  {
+    "id": 985,
+    "constant": "EF_ROTATE_BG",
+    "desc": ""
+  },
+  {
+    "id": 986,
+    "constant": "EF_ROTATE_LINE_GRAY",
+    "desc": ""
+  },
+  {
+    "id": 987,
+    "constant": "EF_2011RWC",
+    "desc": ""
+  },
+  {
+    "id": 988,
+    "constant": "EF_2011RWC2",
+    "desc": ""
+  },
+  {
+    "id": 989,
+    "constant": "EF_KAIHOU",
+    "desc": ""
+  },
+  {
+    "id": 990,
+    "constant": "EF_GROUND_EXPLOSION",
+    "desc": ""
+  },
+  {
+    "id": 991,
+    "constant": "EF_KG_KAGEHUMI",
+    "desc": ""
+  },
+  {
+    "id": 992,
+    "constant": "EF_KO_ZENKAI_WATER",
+    "desc": ""
+  },
+  {
+    "id": 993,
+    "constant": "EF_KO_ZENKAI_LAND",
+    "desc": ""
+  },
+  {
+    "id": 994,
+    "constant": "EF_KO_ZENKAI_FIRE",
+    "desc": ""
+  },
+  {
+    "id": 995,
+    "constant": "EF_KO_ZENKAI_WIND",
+    "desc": ""
+  },
+  {
+    "id": 996,
+    "constant": "EF_KO_JYUMONJIKIRI",
+    "desc": ""
+  },
+  {
+    "id": 997,
+    "constant": "EF_KO_SETSUDAN",
+    "desc": ""
+  },
+  {
+    "id": 998,
+    "constant": "EF_RED_CROSS",
+    "desc": ""
+  },
+  {
+    "id": 999,
+    "constant": "EF_KO_IZAYOI",
+    "desc": ""
+  },
+  {
+    "id": 1000,
+    "constant": "EF_ROTATE_LINE_BLUE",
+    "desc": ""
+  },
+  {
+    "id": 1001,
+    "constant": "EF_KG_KYOMU",
+    "desc": ""
+  },
+  {
+    "id": 1002,
+    "constant": "EF_KO_HUUMARANKA",
+    "desc": ""
+  },
+  {
+    "id": 1003,
+    "constant": "EF_BLUELIGHTBODY",
+    "desc": ""
+  },
+  {
+    "id": 1004,
+    "constant": "EF_KAGEMUSYA",
+    "desc": ""
+  },
+  {
+    "id": 1005,
+    "constant": "EF_OB_GENSOU",
+    "desc": ""
+  },
+  {
+    "id": 1006,
+    "constant": "EF_NO100_FIRECRACKER",
+    "desc": ""
+  },
+  {
+    "id": 1007,
+    "constant": "EF_KO_MAKIBISHI",
+    "desc": ""
+  },
+  {
+    "id": 1008,
+    "constant": "EF_KAIHOU1",
+    "desc": ""
+  },
+  {
+    "id": 1009,
+    "constant": "EF_AKAITSUKI",
+    "desc": ""
+  },
+  {
+    "id": 1010,
+    "constant": "EF_ZANGETSU",
+    "desc": ""
+  },
+  {
+    "id": 1011,
+    "constant": "EF_GENSOU",
+    "desc": ""
+  },
+  {
+    "id": 1012,
+    "constant": "EF_HAT_EFFECT",
+    "desc": ""
+  },
+  {
+    "id": 1013,
+    "constant": "EF_CHERRYBLOSSOM",
+    "desc": ""
+  },
+  {
+    "id": 1014,
+    "constant": "EF_EVENT_CLOUD",
+    "desc": ""
+  },
+  {
+    "id": 1015,
+    "constant": "EF_RUN_MAKE_OK",
+    "desc": ""
+  },
+  {
+    "id": 1016,
+    "constant": "EF_RUN_MAKE_FAILURE",
+    "desc": ""
+  },
+  {
+    "id": 1017,
+    "constant": "EF_MIRESULT_MAKE_OK",
+    "desc": ""
+  },
+  {
+    "id": 1018,
+    "constant": "EF_MIRESULT_MAKE_FAIL",
+    "desc": ""
+  },
+  {
+    "id": 1019,
+    "constant": "EF_ALL_RAY_OF_PROTECTION",
+    "desc": ""
+  },
+  {
+    "id": 1020,
+    "constant": "EF_VENOMFOG",
+    "desc": ""
+  },
+  {
+    "id": 1021,
+    "constant": "EF_DUSTSTORM",
+    "desc": ""
+  },
+  {
+    "id": 1022,
+    "constant": "EF_LEVEL160",
+    "desc": ""
+  },
+  {
+    "id": 1023,
+    "constant": "EF_LEVEL160_SUB",
+    "desc": ""
+  },
+  {
+    "id": 1024,
+    "constant": "EF_MAPCHAIN",
+    "desc": ""
+  },
+  {
+    "id": 1025,
+    "constant": "EF_MAGIC_FLOOR",
+    "desc": ""
+  },
+  {
+    "id": 1026,
+    "constant": "EF_ICEMINE",
+    "desc": ""
+  },
+  {
+    "id": 1027,
+    "constant": "EF_FLAMECORSS",
+    "desc": ""
+  },
+  {
+    "id": 1028,
+    "constant": "EF_ICEMINE_1",
+    "desc": ""
+  },
+  {
+    "id": 1029,
+    "constant": "EF_DANCE_BLADE_ATK",
+    "desc": ""
+  },
+  {
+    "id": 1030,
+    "constant": "EF_DARKPIERCING",
+    "desc": ""
+  },
+  {
+    "id": 1031,
+    "constant": "EF_INVINCIBLEOFF2",
+    "desc": ""
+  },
+  {
+    "id": 1032,
+    "constant": "EF_MAXPAIN",
+    "desc": ""
+  },
+  {
+    "id": 1033,
+    "constant": "EF_DEATHSUMMON",
+    "desc": ""
+  },
+  {
+    "id": 1034,
+    "constant": "EF_MOONSTAR",
+    "desc": ""
+  },
+  {
+    "id": 1035,
+    "constant": "EF_STRANGELIGHTS",
+    "desc": ""
+  },
+  {
+    "id": 1036,
+    "constant": "EF_SUPER_STAR",
+    "desc": ""
+  },
+  {
+    "id": 1037,
+    "constant": "EF_YELLOBODY",
+    "desc": ""
+  },
+  {
+    "id": 1038,
+    "constant": "EF_COLORPAPER2",
+    "desc": ""
+  },
+  {
+    "id": 1039,
+    "constant": "EF_EVILS_PAW",
+    "desc": ""
+  },
+  {
+    "id": 1040,
+    "constant": "EF_GC_DARKCROW",
+    "desc": ""
+  },
+  {
+    "id": 1041,
+    "constant": "EF_RK_DRAGONBREATH_WATER",
+    "desc": ""
+  },
+  {
+    "id": 1042,
+    "constant": "EF_ALL_FULL_THROTTLE",
+    "desc": ""
+  },
+  {
+    "id": 1043,
+    "constant": "EF_SR_FLASHCOMBO",
+    "desc": ""
+  },
+  {
+    "id": 1044,
+    "constant": "EF_RK_LUXANIMA",
+    "desc": ""
+  },
+  {
+    "id": 1045,
+    "constant": "EF_CLOUD10",
+    "desc": ""
+  },
+  {
+    "id": 1046,
+    "constant": "EF_SO_ELEMENTAL_SHIELD",
+    "desc": ""
+  },
+  {
+    "id": 1047,
+    "constant": "EF_AB_OFFERTORIUM",
+    "desc": ""
+  },
+  {
+    "id": 1048,
+    "constant": "EF_WL_TELEKINESIS_INTENSE",
+    "desc": ""
+  },
+  {
+    "id": 1049,
+    "constant": "EF_GN_ILLUSIONDOPING",
+    "desc": ""
+  },
+  {
+    "id": 1050,
+    "constant": "EF_NC_MAGMA_ERUPTION",
+    "desc": ""
+  },
+  {
+    "id": 1051,
+    "constant": "EF_LG_KINGS_GRACE",
+    "desc": ""
+  },
+  {
+    "id": 1052,
+    "constant": "EF_BLOODDRAIN2",
+    "desc": ""
+  },
+  {
+    "id": 1053,
+    "constant": "EF_NPC_WIDEWEB",
+    "desc": ""
+  },
+  {
+    "id": 1054,
+    "constant": "EF_NPC_BURNT",
+    "desc": ""
+  },
+  {
+    "id": 1055,
+    "constant": "EF_NPC_CHILL",
+    "desc": ""
+  },
+  {
+    "id": 1056,
+    "constant": "EF_RA_UNLIMIT",
+    "desc": ""
+  },
+  {
+    "id": 1057,
+    "constant": "EF_AB_OFFERTORIUM_RING",
+    "desc": ""
+  },
+  {
+    "id": 1058,
+    "constant": "EF_SC_ESCAPE",
+    "desc": ""
+  },
+  {
+    "id": 1059,
+    "constant": "EF_WM_FRIGG_SONG",
+    "desc": ""
+  },
+  {
+    "id": 1060,
+    "constant": "EF_FLICKER",
+    "desc": ""
+  },
+  {
+    "id": 1061,
+    "constant": "EF_C_MAKER",
+    "desc": ""
+  },
+  {
+    "id": 1062,
+    "constant": "EF_HAMMER_OF_GOD",
+    "desc": ""
+  },
+  {
+    "id": 1063,
+    "constant": "EF_MASS_SPIRAL",
+    "desc": ""
+  },
+  {
+    "id": 1064,
+    "constant": "EF_FIRE_RAIN",
+    "desc": ""
+  },
+  {
+    "id": 1065,
+    "constant": "EF_WHITEBODY",
+    "desc": ""
+  },
+  {
+    "id": 1066,
+    "constant": "EF_BANISHING_BUSTER",
+    "desc": ""
+  },
+  {
+    "id": 1067,
+    "constant": "EF_SLUGSHOT",
+    "desc": ""
+  },
+  {
+    "id": 1068,
+    "constant": "EF_D_TAIL",
+    "desc": ""
+  },
+  {
+    "id": 1069,
+    "constant": "EF_BIND_TRAP1",
+    "desc": ""
+  },
+  {
+    "id": 1070,
+    "constant": "EF_BIND_TRAP2",
+    "desc": ""
+  },
+  {
+    "id": 1071,
+    "constant": "EF_BIND_TRAP3",
+    "desc": ""
+  },
+  {
+    "id": 1072,
+    "constant": "EF_JUMPBODY1",
+    "desc": ""
+  },
+  {
+    "id": 1073,
+    "constant": "EF_ANIMATED_EMITTER",
+    "desc": ""
+  },
+  {
+    "id": 1074,
+    "constant": "EF_RL_EXPLOSION",
+    "desc": ""
+  },
+  {
+    "id": 1075,
+    "constant": "EF_C_MAKER_1",
+    "desc": ""
+  },
+  {
+    "id": 1076,
+    "constant": "EF_QD_SHOT",
+    "desc": ""
+  },
+  {
+    "id": 1077,
+    "constant": "EF_P_ALTER",
+    "desc": ""
+  },
+  {
+    "id": 1078,
+    "constant": "EF_S_STORM",
+    "desc": ""
+  },
+  {
+    "id": 1079,
+    "constant": "EF_MUSIC_HAT",
+    "desc": ""
+  },
+  {
+    "id": 1080,
+    "constant": "EF_CLOUD_KILL",
+    "desc": ""
+  },
+  {
+    "id": 1081,
+    "constant": "EF_ESCAPE",
+    "desc": ""
+  },
+  {
+    "id": 1082,
+    "constant": "EF_XENO_SLASHER",
+    "desc": ""
+  },
+  {
+    "id": 1083,
+    "constant": "EF_FLOWERSMOKE",
+    "desc": ""
+  },
+  {
+    "id": 1084,
+    "constant": "EF_FSTONE",
+    "desc": ""
+  },
+  {
+    "id": 1085,
+    "constant": "EF_QSCARABA",
+    "desc": ""
+  },
+  {
+    "id": 1086,
+    "constant": "EF_LJOSALFAR",
+    "desc": ""
+  },
+  {
+    "id": 1087,
+    "constant": "EF_HAPPINESSSTAR",
+    "desc": ""
+  },
+  {
+    "id": 1088,
+    "constant": "EF_POWER_OF_GAIA",
+    "desc": ""
+  },
+  {
+    "id": 1089,
+    "constant": "EF_MAPLE_FALLS",
+    "desc": ""
+  },
+  {
+    "id": 1090,
+    "constant": "EF_MARKING_USE_CHANGEMONSTER",
+    "desc": ""
+  },
+  {
+    "id": 1091,
+    "constant": "EF_MAGICAL_FEATHER",
+    "desc": ""
+  },
+  {
+    "id": 1092,
+    "constant": "EF_MERMAID_LONGING",
+    "desc": ""
+  },
+  {
+    "id": 1093,
+    "constant": "EF_GIFT_OF_SNOW",
+    "desc": ""
+  },
+  {
+    "id": 1094,
+    "constant": "EF_ACH_COMPLETE",
+    "desc": ""
+  },
+  {
+    "id": 1095,
+    "constant": "EF_TIME_ACCESSORY",
+    "desc": ""
+  },
+  {
+    "id": 1096,
+    "constant": "EF_SPRITEMABLE",
+    "desc": ""
+  },
+  {
+    "id": 1097,
+    "constant": "EF_TUNAPARTY",
+    "desc": ""
+  }
+]

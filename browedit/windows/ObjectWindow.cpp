@@ -34,6 +34,7 @@ using blib::util::Log;
 
 
 blib::Texture* ObjectWindow::lightTexture = nullptr;
+blib::Texture* ObjectWindow::effectTexture = nullptr;
 
 ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Objects", "ObjectWindow.json", resourceManager)
 {
@@ -41,6 +42,8 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	this->resourceManager = resourceManager;
 	if (!lightTexture)
 		lightTexture = resourceManager->getResource<blib::Texture>("assets/light.png");
+	if (!effectTexture)
+		effectTexture = resourceManager->getResource<blib::Texture>("assets/effect.png");
 	x = 1000;
 	y = 10;
 	textureSize = 128;
@@ -119,8 +122,8 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	tree->root = new blib::wm::widgets::TreeView::TreeNode();
 	newModelsNode = new blib::wm::widgets::TreeView::TreeNode("models", tree->root);
 	newLightsNode = new blib::wm::widgets::TreeView::TreeNode("lights", tree->root);
+	newEffectsNode = new blib::wm::widgets::TreeView::TreeNode("effects", tree->root);
 	loadModelList();
-	lights = blib::util::FileSystem::getJson("assets/lights.json");
 	std::function<void(const json&, blib::wm::widgets::TreeView::TreeNode*)> addDir;
 	addDir = [&addDir](const json& data, blib::wm::widgets::TreeView::TreeNode* node)
 	{
@@ -133,7 +136,13 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 			}
 		}
 	};
+
+
+	lights = blib::util::FileSystem::getJson("assets/lights.json");
 	addDir(lights, newLightsNode);
+
+	effects = blib::util::FileSystem::getJson("assets/effects.json");
+	addDir(effects, newEffectsNode);
 
 
 	tree->buildList();
@@ -152,6 +161,8 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 				setModelDirectory(dir);
 			else if (n == newLightsNode)
 				setLightDirectory(dir);
+			else if (n == newEffectsNode)
+				setEffectDirectory(dir);
 		}
 		return true;
 	});
@@ -425,6 +436,91 @@ void ObjectWindow::setLightDirectory(std::string directory)
 
 
 
+
+void ObjectWindow::setEffectDirectory(std::string directory)
+{
+	Log::out << "ObjectWindow::setEffectDirectory(" << directory << ")" << Log::newline;
+	blib::wm::widgets::ScrollPanel* panel = getComponent<blib::wm::widgets::ScrollPanel>("lstAllTextures");
+	panel->clear();
+	panel->internalWidth = panel->width;
+
+
+
+	int px = 0;
+	int py = 0;
+
+	double start = blib::util::Profiler::getAppTime();
+	json currentPath = effects;
+	while (directory != "")
+	{
+		std::string d = directory.substr(0, directory.find("/"));
+		for (const auto& p : currentPath)
+			if (p["type"] == "dir" && p["name"] == d)
+			{
+				currentPath = p["items"];
+				break;
+			}
+		directory = directory.substr(directory.find("/") + 1);
+	}
+
+	for (const auto& item : currentPath)
+	{
+		if (item.find("type") != item.end() && item["type"] == "dir")
+			continue;
+		auto widget = new blib::wm::widgets::Image(effectTexture);
+		widget->width = textureSize;
+		widget->height = textureSize;
+		widget->x = px;
+		widget->y = py;
+		panel->add(widget);
+
+		widget->addClickHandler([this, item](int, int, int) {
+			Log::out << item << Log::newline;
+			std::for_each(browEdit->map->getRsw()->objects.begin(), browEdit->map->getRsw()->objects.end(), [](Rsw::Object* o) { o->selected = false; });
+			browEdit->addEffect(item);
+			getComponent<blib::wm::widgets::Button>("btnExpand")->onMouseClick(0, 0, 1);
+			return true;
+			});
+
+
+		px += textureSize;
+
+		if (px + textureSize > panel->width)
+		{
+			py += textureSize + 12;
+			px = 0;
+		}
+	}
+
+	px = 0;
+	py = 0;
+
+	for (const auto& item : currentPath)
+	{
+		if (item.find("type") != item.end() && item["type"] == "dir")
+			continue;
+		blib::wm::widgets::Label* label = new blib::wm::widgets::Label();
+		label->text = std::to_string(item["id"].get<int>()) + " - " + item["constant"].get<std::string>();
+		label->width = textureSize;
+		label->height = 12;
+		label->x = px;
+		label->y = py + textureSize;
+		panel->add(label);
+		px += textureSize;
+		if (px + textureSize > panel->width)
+		{
+			py += textureSize + 12;
+			px = 0;
+		}
+	}
+
+
+	Log::out << "Time taken: " << blib::util::Profiler::getAppTime() - start << Log::newline;
+	panel->scrollX = 0;
+	panel->scrollY = 0;
+	panel->internalHeight = py + textureSize + 12;
+
+}
 
 
 

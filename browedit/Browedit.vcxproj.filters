@@ -114,6 +114,9 @@
     <ClInclude Include="windows\ProgressWindow.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\SoundPropertiesWindow.h">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrowEdit.cpp">
@@ -219,6 +222,9 @@
       <Filter>Source Files\editmodes</Filter>
     </ClCompile>
     <ClCompile Include="windows\ProgressWindow.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\SoundPropertiesWindow.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>

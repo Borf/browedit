@@ -122,6 +122,7 @@
     <ClInclude Include="windows\NewMapWindow.h" />
     <ClInclude Include="windows\ObjectWindow.h" />
     <ClInclude Include="windows\ProgressWindow.h" />
+    <ClInclude Include="windows\SoundPropertiesWindow.h" />
     <ClInclude Include="windows\TextureWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +160,7 @@
     <ClCompile Include="windows\NewMapWindow.cpp" />
     <ClCompile Include="windows\ObjectWindow.cpp" />
     <ClCompile Include="windows\ProgressWindow.cpp" />
+    <ClCompile Include="windows\SoundPropertiesWindow.cpp" />
     <ClCompile Include="windows\TextureWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
