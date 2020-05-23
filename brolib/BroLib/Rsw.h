@@ -74,19 +74,26 @@ public:
 
 	};
 
-	class Light : public Object
+	class SpriteObject : public Object
+	{
+	public:
+		SpriteObject(Type type) : Object(type) {}
+
+		virtual bool collides(const blib::math::Ray& ray, Map* map) override;
+		virtual std::vector<glm::vec3> collisions(const blib::math::Ray& ray, Map* map) override;
+	};
+
+	class Light : public SpriteObject
 	{
 	public:
 		float todo[10];
 		glm::vec3		color;
 		float			todo2;
 		
-		Light() : Object(Object::Type::Light)
+		Light() : SpriteObject(Object::Type::Light)
 		{
 		}
 
-		virtual bool collides(const blib::math::Ray& ray, Map* map) override;
-		virtual std::vector<glm::vec3> collisions(const blib::math::Ray& ray, Map* map) override;
 
 		// custom properties!!!!!!!!!
 		enum class Type
@@ -105,10 +112,10 @@ public:
 		float realRange();
 	};
 
-	class Sound : public Object
+	class Sound : public SpriteObject
 	{
 	public:
-		Sound() : Object(Object::Type::Sound)
+		Sound() : SpriteObject(Object::Type::Sound)
 		{
 		}
 		std::string fileName;
@@ -125,10 +132,10 @@ public:
 		float unknown8;
 	};
 
-	class Effect : public Object
+	class Effect : public SpriteObject
 	{
 	public:
-		Effect() : Object(Object::Type::Effect)
+		Effect() : SpriteObject(Object::Type::Effect)
 		{
 		}
 

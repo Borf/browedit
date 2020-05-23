@@ -932,7 +932,7 @@ Rsw::QuadTreeNode::~QuadTreeNode()
 			delete children[i];
 }
 
-bool Rsw::Light::collides(const blib::math::Ray& ray, Map* map)
+bool Rsw::SpriteObject::collides(const blib::math::Ray& ray, Map* map)
 {
 	glm::vec3 pos(map->getGnd()->width * 5 + position.x, -position.y, 10 + 5 * map->getGnd()->height - position.z);
 	blib::math::AABB box(pos - glm::vec3(2.0f), pos + glm::vec3(2.0f));
@@ -940,7 +940,7 @@ bool Rsw::Light::collides(const blib::math::Ray& ray, Map* map)
 }
 
 
-std::vector<glm::vec3> Rsw::Light::collisions(const blib::math::Ray& ray, Map* map)
+std::vector<glm::vec3> Rsw::SpriteObject::collisions(const blib::math::Ray& ray, Map* map)
 {
 	glm::vec3 pos(map->getGnd()->width * 5 + position.x, -position.y, 10 + 5 * map->getGnd()->height - position.z);
 
