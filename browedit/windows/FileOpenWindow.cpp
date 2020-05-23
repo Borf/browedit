@@ -55,7 +55,7 @@ FileOpenWindow::FileOpenWindow(blib::ResourceManager* resourceManager, BrowEdit*
 
 	std::vector<std::string> tmpFiles = blib::util::FileSystem::getFileList("data/");
 	std::sort(tmpFiles.begin(), tmpFiles.end());
-
+	tmpFiles.erase(std::unique(tmpFiles.begin(), tmpFiles.end()), tmpFiles.end());
 	for (size_t i = 0; i < tmpFiles.size(); i++)
 	{
 		if (tmpFiles[i].size() < 4)
