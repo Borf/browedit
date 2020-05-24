@@ -254,6 +254,8 @@ void ObjectWindow::updateObjects(Map* map)
 	if (!map)
 		return;
 
+	int effectCount = 0;
+
 	for (size_t i = 0; i < map->getRsw()->objects.size(); i++)
 	{
 		Rsw::Object* obj = map->getRsw()->objects[i];
@@ -276,7 +278,13 @@ void ObjectWindow::updateObjects(Map* map)
 				child = new blib::wm::widgets::TreeView::TreeNode(folders[i], node);
 			node = child;
 		}
-		new ObjectTreeNode(folders[folders.size() - 1], obj, node);
+		std::string name = folders[folders.size() - 1];
+		if (obj->type == Rsw::Object::Type::Effect)
+			name += " (" + std::to_string(dynamic_cast<Rsw::Effect*>(obj)->id) + ")";
+		if (obj->type == Rsw::Object::Type::Effect && dynamic_cast<Rsw::Effect*>(obj)->id == 974)
+			name += " #" + std::to_string(effectCount++);
+		
+		new ObjectTreeNode(name, obj, node);
 	}
 	items->buildList();
 }
