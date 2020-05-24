@@ -14,6 +14,9 @@
 #include "actions/GroupAction.h"
 
 #include "windows/ModelPropertiesWindow.h"
+#include "windows/EffectPropertiesWindow.h"
+#include "windows/SoundPropertiesWindow.h"
+#include "windows/LightPropertiesWindow.h"
 #include "windows/ObjectWindow.h"
 
 using blib::util::Log;
@@ -297,6 +300,22 @@ void BrowEdit::objectEditUpdate()
 
 	if (!wm->keyPressed)
 	{
+		if (keyState.isPressed(blib::Key::ENTER) && !lastKeyState.isPressed(blib::Key::ENTER))
+		{
+			Rsw::Object* o = nullptr;
+			for (auto object : map->getRsw()->objects)
+				if (object->selected)
+					o = object;
+
+			if (o->type == Rsw::Object::Type::Model)
+				new ModelPropertiesWindow((Rsw::Model*)o, resourceManager, this);
+			if (o->type == Rsw::Object::Type::Effect)
+				new EffectPropertiesWindow((Rsw::Effect*)o, resourceManager, this);
+			if (o->type == Rsw::Object::Type::Light)
+				new LightPropertiesWindow(dynamic_cast<Rsw::Light*>(o), resourceManager, this);
+			if (o->type == Rsw::Object::Type::Sound)
+				new SoundPropertiesWindow(dynamic_cast<Rsw::Sound*>(o), resourceManager, this);
+		}
 		if (keyState.isPressed(blib::Key::DEL) && !lastKeyState.isPressed(blib::Key::DEL))
 		{
 			deleteSelectedObjects();
