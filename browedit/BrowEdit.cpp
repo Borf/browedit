@@ -1344,7 +1344,7 @@ void BrowEdit::addEffect(const json& properties)
 	auto newEffect = new Rsw::Effect();
 	newObject = newEffect;
 	newEffect->matrixCached = false;
-	newEffect->name = properties["name"].get<std::string>();
+	newEffect->name = properties["constant"].get<std::string>();
 
 	newEffect->position = glm::vec3(mapRenderer.mouse3d.x - map->getGnd()->width * 5, -mapRenderer.mouse3d.y, -mapRenderer.mouse3d.z + (10 + 5 * map->getGnd()->height));;
 	newEffect->rotation = glm::vec3(0, 0, 0);
