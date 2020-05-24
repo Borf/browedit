@@ -1350,6 +1350,13 @@ void BrowEdit::addEffect(const json& properties)
 	newEffect->rotation = glm::vec3(0, 0, 0);
 	newEffect->scale = glm::vec3(1, 1, 1);
 	newEffect->id = properties["id"].get<int>();
+	newEffect->loop = 1;
+	newEffect->param1 = 0;
+	newEffect->param2 = 0;
+	newEffect->param3 = 0;
+	newEffect->param4 = 0;
+
+
 	if (properties.find("loop") != properties.end())
 		newEffect->loop = properties["loop"].get<float>();
 	if (properties.find("param1") != properties.end())

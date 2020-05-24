@@ -2,9 +2,13 @@
 #include <fstream>
 #include <blib/json.hpp>
 #include <string>
+#include <iostream>
 
+#include <blib/util/Log.h>
 #include <blib/util/FileSystem.h>
-
+#include <BroLib/GrfFileSystemHandler.h>
+#include <blib/platform/win32/Registry.h>
+using blib::util::Log;
 
 json vec3(const glm::vec3 &val)
 {
@@ -14,14 +18,96 @@ json vec3(const glm::vec3 &val)
 	ret[2u] = val.z;
 	return ret;
 }
+void mergeConfig(json& config, const json& newConfig)
+{
+	for (auto it = newConfig.begin(); it != newConfig.end(); it++)
+		if (config.find(it.key()) != config.end())
+			if (config[it.key()].is_object())
+				mergeConfig(config[it.key()], it.value());
+			else
+				config[it.key()] = it.value();
+		else
+			config[it.key()] = it.value();
+}
+
+std::string fixname(const std::string& name)
+{
+	std::string ret;
+	for (int i = 0; i < name.size(); i++)
+	{
+		if ((unsigned char)name[i] < 128)
+			ret += name[i];
+		else
+			ret += "\\u" + blib::util::Log::format("%04X", (unsigned char)name[i]);
+	}
+	return ret;
+}
+
 
 int main(int argc, char* argv[])
 {
-	std::string filename = argv[1];
-	filename = filename.substr(0, filename.rfind("."));
-
-
+	std::string filename;
+	if(argc > 1)
+		filename = argv[1];
+	if(filename.find(".") != std::string::npos)
+		filename = filename.substr(0, filename.rfind("."));
 	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(""));
+	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(".."));
+
+	Log::out << "Loading configuration..." << Log::newline;
+	json config = blib::util::FileSystem::getJson("assets/configs/config.default.json");
+#ifdef WIN32
+	blib::platform::win32::RegistryKey key(HKEY_CURRENT_USER, "Software\\Browedit");
+	if (!key.exists() && !key.create()) {
+		// Something went wrong
+	}
+	blib::platform::win32::RegistryValue value(key, "config");
+	std::string configFileName = value.readString("");
+	while (!blib::util::FileSystem::exists("assets/configs/" + configFileName))
+	{
+		// we ask him for his choice
+		Log::err << "Unable to find configuration file, please type the configuration filename" << Log::newline;
+		std::vector<std::string> configs = blib::util::FileSystem::getFileList("assets/configs");
+		for (const auto& file : configs)
+			if (file[0] != '.')
+				Log::err << " - " << file << Log::newline;
+		std::getline(std::cin, configFileName);
+	}
+	value.writeString(configFileName);
+
+	mergeConfig(config, blib::util::FileSystem::getJson("assets/configs/" + configFileName));
+
+#else
+	Log::out << "Loading assets/configs/config.linux.json" << Log::newline;
+	json linuxConfig = blib::util::FileSystem::getJson("assets/configs/config.linux.json");
+	Log::out << "Linux config size: " << linuxConfig.size() << Log::newline;
+	mergeConfig(config, linuxConfig);
+#endif
+	blib::util::FileSystem::registerHandler(new blib::util::PhysicalFileSystemHandler(config["data"]["ropath"].get<std::string>()));
+	for (size_t i = 0; i < config["data"]["grfs"].size(); i++)
+		blib::util::FileSystem::registerHandler(new GrfFileSystemHandler(config["data"]["grfs"][i].get<std::string>()));
+
+
+	if (filename == "")
+	{
+		Log::out << "Listing all maps" << Log::newline;
+		auto files = blib::util::FileSystem::getFileList([](const std::string& fileName)
+			{
+				if (fileName.size() < 4)
+					return false;
+				std::string ext = fileName.substr(fileName.length() - 4, 4);
+				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+				return ext == ".rsw";
+			});
+		std::sort(files.begin(), files.end());
+
+		for (auto& file : files)
+			std::cout << file << std::endl;
+
+		return 0;
+	}
+
+
 
 	printf("Opening %s\n", filename.c_str());
 
@@ -63,11 +149,11 @@ int main(int argc, char* argv[])
 			o["type"] = "model";
 			Rsw::Model* model = (Rsw::Model*)object;
 
-			o["name"] = model->name;
+			o["name"] = fixname(model->name);
 			o["animType"] = model->animType;
 			o["animSpeed"] = model->animSpeed;
 			o["blockType"] = model->blockType;
-			o["fileName"] = model->fileName;
+			o["fileName"] = fixname(model->fileName);
 			//unknown!!!!
 			o["position"] = vec3(model->position);
 			o["rotation"] = vec3(model->rotation);
@@ -78,7 +164,7 @@ int main(int argc, char* argv[])
 		{
 			o["type"] = "light";
 			Rsw::Light* light = (Rsw::Light*)object;
-			o["name"] = light->name;
+			o["name"] = fixname(light->name);
 			o["position"] = vec3(light->position);
 			o["todo"] = light->todo; 
 			o["color"] = vec3(light->color);
@@ -89,8 +175,8 @@ int main(int argc, char* argv[])
 		{
 			o["type"] = "sound";
 			Rsw::Sound* sound = (Rsw::Sound*)object;
-			o["name"] = sound->name; 
-			o["filename"] = sound->fileName;
+			o["name"] = fixname(sound->name);
+			o["filename"] = fixname(sound->fileName);
 			o["position"] = vec3(sound->position);
 			o["volume"] = sound->vol;
 			o["width"] = sound->width;
@@ -104,7 +190,7 @@ int main(int argc, char* argv[])
 		{
 			o["type"] = "effect";
 			Rsw::Effect* effect = (Rsw::Effect*)object;
-			o["name"] = effect->name;
+			o["name"] = fixname(effect->name);
 			o["position"] = vec3(effect->position);
 			o["id"] = effect->id; 
 			o["loop"] = effect->loop;
@@ -119,8 +205,9 @@ int main(int argc, char* argv[])
 	}
 
 
-	std::ofstream((filename + ".json").c_str(), std::ios_base::out | std::ios_base::binary) << data;
-
+	std::ofstream out((filename + ".json").c_str(), std::ios_base::out | std::ios_base::binary);
+	out<< data;
+	out.close();
 	printf("Wrote to %s\n", (filename + ".json").c_str());
 	return 0;
 }

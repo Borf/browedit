@@ -486,6 +486,10 @@ void ObjectWindow::setEffectDirectory(std::string directory)
 			widget = new blib::wm::widgets::Image(effectTexture);
 		else
 			widget = new blib::wm::widgets::Image(effectTextureInfo[id]);
+
+		if (item.find("loop") != item.end())
+			widget->bgcolor = glm::vec4(0.9, 0.9, 1.0f, 1.0f);
+
 		widget->width = textureSize;
 		widget->height = textureSize;
 		widget->x = px;

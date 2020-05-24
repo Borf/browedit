@@ -13,7 +13,8 @@
   {
     "id": 0,
     "constant": "EF_HIT1",
-    "desc": "Regular Hit"
+    "desc": "Regular Hit",
+    "loop": 1
   },
   {
     "id": 1,
@@ -33,7 +34,10 @@
   {
     "id": 4,
     "constant": "EF_HIT5",
-    "desc": "Melee Skill Hit"
+    "desc": "Melee Skill Hit",
+    "loop": 40,
+    "param1": 35,
+    "param2": 35
   },
   {
     "id": 5,
@@ -58,7 +62,8 @@
   {
     "id": 9,
     "constant": "EF_ENHANCE",
-    "desc": "Different Type of Heal"
+    "desc": "Different Type of Heal",
+    "loop": 100
   },
   {
     "id": 10,
@@ -118,7 +123,8 @@
   {
     "id": 21,
     "constant": "EF_DETOXICATION",
-    "desc": "Detoxify"
+    "desc": "Detoxify",
+    "loop": 4500
   },
   {
     "id": 22,
@@ -233,7 +239,10 @@
   {
     "id": 44,
     "constant": "EF_SMOKE",
-    "desc": "Little Fog Smoke."
+    "desc": "Little Fog Smoke.",
+    "loop": 40,
+    "param1": 35,
+    "param2": 35
   },
   {
     "id": 45,
@@ -248,7 +257,10 @@
   {
     "id": 47,
     "constant": "EF_TORCH",
-    "desc": "Torch"
+    "desc": "Torch",
+    "loop": 125,
+    "param1": 1,
+    "param2": 1
   },
   {
     "id": 48,
@@ -483,7 +495,8 @@
   {
     "id": 94,
     "constant": "EF_YUFITELHIT",
-    "desc": "Jupitel Thunder (Hit)"
+    "desc": "Jupitel Thunder (Hit)",
+    "loop": 200
   },
   {
     "id": 95,
@@ -563,7 +576,8 @@
   {
     "id": 110,
     "constant": "EF_GASPUSH",
-    "desc": "Trap Used by Giearth"
+    "desc": "Trap Used by Giearth",
+    "loop": 200
   },
   {
     "id": 111,
@@ -718,7 +732,8 @@
   {
     "id": 141,
     "constant": "EF_PNEUMA",
-    "desc": "Pneuma"
+    "desc": "Pneuma",
+    "loop": 1
   },
   {
     "id": 142,
@@ -838,7 +853,8 @@
   {
     "id": 165,
     "constant": "EF_BANJJAKII",
-    "desc": "Comodo Fireworks Ball"
+    "desc": "Comodo Fireworks Ball",
+    "loop": 125
   },
   {
     "id": 166,
@@ -1008,7 +1024,8 @@
   {
     "id": 199,
     "constant": "EF_PONG",
-    "desc": "Small Popping Bubble Map Effect"
+    "desc": "Small Popping Bubble Map Effect",
+    "loop": 100
   },
   {
     "id": 200,
@@ -1168,7 +1185,8 @@
   {
     "id": 231,
     "constant": "EF_MAPPILLAR",
-    "desc": "Map Light Pillar Animation 1"
+    "desc": "Map Light Pillar Animation 1",
+    "loop": 300
   },
   {
     "id": 232,
@@ -1248,7 +1266,8 @@
   {
     "id": 247,
     "constant": "EF_MAPPILLAR2",
-    "desc": "Map Light Pillar Animation 2"
+    "desc": "Map Light Pillar Animation 2",
+    "loop": 1000
   },
   {
     "id": 248,
@@ -1308,12 +1327,14 @@
   {
     "id": 259,
     "constant": "EF_MAPPILLAR3",
-    "desc": "Map Light Pillar Animation 3"
+    "desc": "Map Light Pillar Animation 3",
+    "loop": 1000
   },
   {
     "id": 260,
     "constant": "EF_MAPPILLAR4",
-    "desc": "Map Light Pillar Animation 4"
+    "desc": "Map Light Pillar Animation 4",
+    "loop": 1000
   },
   {
     "id": 261,
@@ -1548,7 +1569,8 @@
   {
     "id": 307,
     "constant": "EF_FORESTLIGHT",
-    "desc": "Forest Light 1"
+    "desc": "Forest Light 1",
+    "loop": 36000
   },
   {
     "id": 308,
@@ -1623,17 +1645,20 @@
   {
     "id": 322,
     "constant": "EF_FORESTLIGHT2",
-    "desc": "Forest Light 2"
+    "desc": "Forest Light 2",
+    "loop": 36000
   },
   {
     "id": 323,
     "constant": "EF_FORESTLIGHT3",
-    "desc": "Forest Light 3"
+    "desc": "Forest Light 3",
+    "loop": 36000
   },
   {
     "id": 324,
     "constant": "EF_FORESTLIGHT4",
-    "desc": "Forest Light 4"
+    "desc": "Forest Light 4",
+    "loop": 36000
   },
   {
     "id": 325,
@@ -1758,42 +1783,50 @@
   {
     "id": 349,
     "constant": "EF_WATERFALL",
-    "desc": "Waterfall (Horizonatal)"
+    "desc": "Waterfall (Horizonatal)",
+    "loop": 9999999
   },
   {
     "id": 350,
     "constant": "EF_WATERFALL_90",
-    "desc": "Waterfall (Vertical)"
+    "desc": "Waterfall (Vertical)",
+    "loop": 100000000
   },
   {
     "id": 351,
     "constant": "EF_WATERFALL_SMALL",
-    "desc": "Small Waterfall (Horizonatal)"
+    "desc": "Small Waterfall (Horizonatal)",
+    "loop": 100000000
   },
   {
     "id": 352,
     "constant": "EF_WATERFALL_SMALL_90",
-    "desc": "Small Waterfall (Vertical)"
+    "desc": "Small Waterfall (Vertical)",
+    "loop": 100000000
   },
   {
     "id": 353,
     "constant": "EF_WATERFALL_T2",
-    "desc": "Dark Waterfall (Horizonatal)"
+    "desc": "Dark Waterfall (Horizonatal)",
+    "loop": 9999999
   },
   {
     "id": 354,
     "constant": "EF_WATERFALL_T2_90",
-    "desc": "Dark Waterfall (Vertical)"
+    "desc": "Dark Waterfall (Vertical)",
+    "loop": 9999999
   },
   {
     "id": 355,
     "constant": "EF_WATERFALL_SMALL_T2",
-    "desc": "Dark Small Waterfall (Horizonatal)"
+    "desc": "Dark Small Waterfall (Horizonatal)",
+    "loop": 9999999
   },
   {
     "id": 356,
     "constant": "EF_WATERFALL_SMALL_T2_90",
-    "desc": "Dark Small Waterfall (Vertical)"
+    "desc": "Dark Small Waterfall (Vertical)",
+    "loop": 9999999
   },
   {
     "id": 357,
@@ -1803,17 +1836,20 @@
   {
     "id": 358,
     "constant": "EF_GHOST",
-    "desc": "Niflheim Ghost"
+    "desc": "Niflheim Ghost",
+    "loop": 3500
   },
   {
     "id": 359,
     "constant": "EF_BAT",
-    "desc": "Niflheim Bat Slow"
+    "desc": "Niflheim Bat Slow",
+    "loop": 4000
   },
   {
     "id": 360,
     "constant": "EF_BAT2",
-    "desc": "Niflheim Bat Fast"
+    "desc": "Niflheim Bat Fast",
+    "loop":  4000
   },
   {
     "id": 361,
@@ -2798,32 +2834,38 @@
   {
     "id": 557,
     "constant": "EF_BLUEFALL",
-    "desc": "Juperos Energy Waterfall (Horizontal)"
+    "desc": "Juperos Energy Waterfall (Horizontal)",
+    "loop": 100000000
   },
   {
     "id": 558,
     "constant": "EF_BLUEFALL_90",
-    "desc": "Juperos Energy Waterfall (Vertical)"
+    "desc": "Juperos Energy Waterfall (Vertical)",
+    "loop": 100000000
   },
   {
     "id": 559,
     "constant": "EF_FASTBLUEFALL",
-    "desc": "Juperos Energy Waterfall Fast (Horizontal)"
+    "desc": "Juperos Energy Waterfall Fast (Horizontal)",
+    "loop": 100000000
   },
   {
     "id": 560,
     "constant": "EF_FASTBLUEFALL_90",
-    "desc": "Juperos Energy Waterfall Fast (Vertical)"
+    "desc": "Juperos Energy Waterfall Fast (Vertical)",
+    "loop": 100000000
   },
   {
     "id": 561,
     "constant": "EF_BIG_PORTAL",
-    "desc": "Juperos Warp"
+    "desc": "Juperos Warp",
+    "loop": 100000000
   },
   {
     "id": 562,
     "constant": "EF_BIG_PORTAL2",
-    "desc": "Juperos Warp"
+    "desc": "Juperos Warp",
+    "loop": 100000000
   },
   {
     "id": 563,
@@ -3263,12 +3305,14 @@
   {
     "id": 650,
     "constant": "EF_MAP_MAGICZONE",
-    "desc": "Ice Cave Level 4 Circle"
+    "desc": "Ice Cave Level 4 Circle",
+    "loop": 100000000
   },
   {
     "id": 651,
     "constant": "EF_MAP_MAGICZONE2",
-    "desc": "Ice Cave Level 4 Big Circle"
+    "desc": "Ice Cave Level 4 Big Circle",
+    "loop": 100000000
   },
   {
     "id": 652,
@@ -3418,7 +3462,8 @@
   {
     "id": 681,
     "constant": "EF_MAPSPHERE",
-    "desc": "Dimensional Gorge Map Effect"
+    "desc": "Dimensional Gorge Map Effect",
+    "loop": 37000
   },
   {
     "id": 682,
@@ -3448,27 +3493,32 @@
   {
     "id": 687,
     "constant": "EF_MAP_MAGICZONE3",
-    "desc": "Cast Circle-Like effect 1"
+    "desc": "Cast Circle-Like effect 1",
+    "loop": 9999999
   },
   {
     "id": 688,
     "constant": "EF_MAP_MAGICZONE4",
-    "desc": "Cast Circle-Like effect 2"
+    "desc": "Cast Circle-Like effect 2",
+    "loop": 9999999
   },
   {
     "id": 689,
     "constant": "EF_DUST",
-    "desc": "Endless Tower Map Effect"
+    "desc": "Endless Tower Map Effect",
+    "loop": 9999999
   },
   {
     "id": 690,
     "constant": "EF_TORCH_RED",
-    "desc": "Burning Flame (Red)"
+    "desc": "Burning Flame (Red)",
+    "loop": 9999999
   },
   {
     "id": 691,
     "constant": "EF_TORCH_GREEN",
-    "desc": "Burning Flame (Green)"
+    "desc": "Burning Flame (Green)",
+    "loop": 9999999
   },
   {
     "id": 692,
@@ -3478,22 +3528,26 @@
   {
     "id": 693,
     "constant": "EF_GLOW1",
-    "desc": "Translucent yellow circle"
+    "desc": "Translucent yellow circle",
+    "loop": 9999999
   },
   {
     "id": 694,
     "constant": "EF_GLOW2",
-    "desc": "Translucent green circle"
+    "desc": "Translucent green circle",
+    "loop": 9999999
   },
   {
     "id": 695,
     "constant": "EF_GLOW4",
-    "desc": "Rotating green light"
+    "desc": "Rotating green light",
+    "loop": 9999999
   },
   {
     "id": 696,
     "constant": "EF_TORCH_PURPLE",
-    "desc": "The same of 690 and 691 but Blue/Purple"
+    "desc": "The same of 690 and 691 but Blue/Purple",
+    "loop": 9999999
   },
   {
     "id": 697,
@@ -3513,22 +3567,26 @@
   {
     "id": 700,
     "constant": "EF_MAPSPHERE2",
-    "desc": "Big Colored Green Sphere."
+    "desc": "Big Colored Green Sphere.",
+    "loop": 36000
   },
   {
     "id": 701,
     "constant": "EF_GLOW11",
-    "desc": "Huge Blue Sphere"
+    "desc": "Huge Blue Sphere",
+    "loop": 9999999
   },
   {
     "id": 702,
     "constant": "EF_GLOW12",
-    "desc": "Little Colored Violet Sphere"
+    "desc": "Little Colored Violet Sphere",
+    "loop": 9999999
   },
   {
     "id": 703,
     "constant": "EF_CIRCLELIGHT",
-    "desc": "Light Infiltration with fall of pownder"
+    "desc": "Light Infiltration with fall of pownder",
+    "loop": 9999999
   },
   {
     "id": 704,
@@ -3563,7 +3621,8 @@
   {
     "id": 710,
     "constant": "EF_MAP_GREENLIGHT",
-    "desc": "A Sphere like Effect 701 but Green, and a bit more larger"
+    "desc": "A Sphere like Effect 701 but Green, and a bit more larger",
+    "loop": 9999999
   },
   {
     "id": 711,
@@ -3573,17 +3632,20 @@
   {
     "id": 712,
     "constant": "EF_MAP_GREENLIGHT2",
-    "desc": "A Little Flame Sphere"
+    "desc": "A Little Flame Sphere",
+    "loop": 9999999
   },
   {
     "id": 713,
     "constant": "EF_YELLOWFLY1",
-    "desc": "A lot of Very Small and Yellow Sphere"
+    "desc": "A lot of Very Small and Yellow Sphere",
+    "loop": 9999999
   },
   {
     "id": 714,
     "constant": "EF_YELLOWFLY2",
-    "desc": "(Nothing)"
+    "desc": "(Nothing)",
+    "loop": 9999999
   },
   {
     "id": 715,
@@ -3738,7 +3800,10 @@
   {
     "id": 745,
     "constant": "EF_AIMED_STR",
-    "desc": "Aimed Bolt (crosshairs)"
+    "desc": "Aimed Bolt (crosshairs)",
+    "loop": 500,
+    "param1": 0.10000000149012,
+    "param2": 0.10000000149012
   },
   {
     "id": 746,
@@ -4118,7 +4183,10 @@
   {
     "id": 821,
     "constant": "EF_WATERFALL_ANI",
-    "desc": "Waterfall"
+    "desc": "Waterfall",
+    "loop": 9999999,
+    "param1": 45,
+    "param2": 45
   },
   {
     "id": 822,
@@ -4203,7 +4271,10 @@
   {
     "id": 838,
     "constant": "EF_WATER_BELOW",
-    "desc": "Watery aura"
+    "desc": "Watery aura",
+    "loop": 9999999,
+    "param1": 45,
+    "param2": 45
   },
   {
     "id": 839,
@@ -4243,7 +4314,10 @@
   {
     "id": 846,
     "constant": "EF_WATER_SMOKE",
-    "desc": "(Nothing)"
+    "desc": "(Nothing)",
+    "loop": 9999999,
+    "param1": 45,
+    "param2": 45
   },
   {
     "id": 847,
@@ -4743,7 +4817,8 @@
   {
     "id": 946,
     "constant": "EF_YELLOWFLY3",
-    "desc": "Floating lights"
+    "desc": "Floating lights",
+    "loop": 9999999
   },
   {
     "id": 947,
@@ -5463,7 +5538,8 @@
   {
     "id": 1090,
     "constant": "EF_MARKING_USE_CHANGEMONSTER",
-    "desc": ""
+    "desc": "",
+    "loop" :  200
   },
   {
     "id": 1091,
