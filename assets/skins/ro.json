@@ -14,7 +14,7 @@
     "color": "FFFFFFFF",
     "colorblurred": "FFFFFFAA",
     "texture": "assets/textures/skins/ro.png",
-    "font": "assets/fonts/tahoma",
+    "font": "tahoma",
     "radialfont": {
       "name": "tahoma",
       "size": 15

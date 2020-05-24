@@ -469,6 +469,9 @@ void MapRenderer::init( blib::ResourceManager* resourceManager, blib::App* app )
 
 	gatTexture = resourceManager->getResource<blib::Texture>("assets/textures/gat.png");
 
+	font = resourceManager->getResource<blib::Font>("tahoma", 72.0f);
+	font->utf8 = false;
+
 }
 
 void MapRenderer::setMap(const Map* map)
@@ -1003,9 +1006,21 @@ void MapRenderer::renderObjects(blib::Renderer* renderer, bool selected)
 				rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDiffuse, dynamic_cast<Rsw::Light*>(o)->color);
 
 			renderer->drawTriangles(verts, 6, rswRenderState);
+
+			if (o->type == Rsw::Object::Type::Light)
+				rswRenderState.activeShader->setUniform(RswShaderAttributes::lightDiffuse, map->getRsw()->light.diffuse);
+
+
+			std::string name = o->name;
+			float len = font->textlen(name);
+
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix, glm::translate(o->matrixCache, glm::vec3(0,-3,0)));
+			rswRenderState.activeShader->setUniform(RswShaderAttributes::ModelMatrix2, glm::translate(glm::scale(billboardMatrix, glm::vec3(0.05f, -0.05f, 0.05f)), glm::vec3(-len/2,0,0)));
+			font->render(renderer, rswRenderState, name, glm::vec4(1,1,1,1));
+
+
+
 			rswRenderState.activeShader->setUniform(RswShaderAttributes::billboard, 0.0f);
-
-
 		}
 	}
 }

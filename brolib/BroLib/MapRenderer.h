@@ -12,7 +12,7 @@
 #include "Rsw.h"
 #include "Rsm.h"
 
-namespace blib { class ResourceManager; class Shader; class Renderer; class App; class Texture; class VBO; };
+namespace blib { class ResourceManager; class Shader; class Renderer; class App; class Texture; class VBO; class Font; };
 class Map;
 class Gnd;
 class Rsw;
@@ -141,6 +141,7 @@ public:
 		texMult,
 	};
 
+	blib::Font* font;
 
 	blib::VBO* gndTextureGridVbo;	
 	blib::VBO* gndGridVbo;
