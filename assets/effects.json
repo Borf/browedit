@@ -3,7 +3,12 @@
   {
     "id": -1,
     "constant": "EF_NONE",
-    "desc": "None"
+    "desc": "None",
+    "loop": 0.0,
+    "param1": 0.0,
+    "param2": 0.0,
+    "param3": 0.0,
+    "param4": 0.0
   },
   {
     "id": 0,
