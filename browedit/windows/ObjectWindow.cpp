@@ -35,6 +35,9 @@ using blib::util::Log;
 
 blib::Texture* ObjectWindow::lightTexture = nullptr;
 blib::Texture* ObjectWindow::effectTexture = nullptr;
+blib::TextureMap* ObjectWindow::effectTextureMap = nullptr;
+std::map<int, blib::TextureMap::TexInfo*> ObjectWindow::effectTextureInfo;
+
 
 ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* browEdit) : blib::wm::Window("Objects", "ObjectWindow.json", resourceManager)
 {
@@ -44,6 +47,9 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 		lightTexture = resourceManager->getResource<blib::Texture>("assets/light.png");
 	if (!effectTexture)
 		effectTexture = resourceManager->getResource<blib::Texture>("assets/effect.png");
+	if (!effectTextureMap)
+		effectTextureMap = resourceManager->getResource<blib::TextureMap>(2048, 2048);
+
 	x = 1000;
 	y = 10;
 	textureSize = 128;
@@ -125,7 +131,7 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 	newEffectsNode = new blib::wm::widgets::TreeView::TreeNode("effects", tree->root);
 	loadModelList();
 	std::function<void(const json&, blib::wm::widgets::TreeView::TreeNode*)> addDir;
-	addDir = [&addDir](const json& data, blib::wm::widgets::TreeView::TreeNode* node)
+	addDir = [&addDir, this](const json& data, blib::wm::widgets::TreeView::TreeNode* node)
 	{
 		for (auto item : data)
 		{
@@ -134,6 +140,12 @@ ObjectWindow::ObjectWindow(blib::ResourceManager* resourceManager, BrowEdit* bro
 				auto newNode = new blib::wm::widgets::TreeView::TreeNode(item["name"], node);
 				addDir(item["items"], newNode);
 			}
+			else
+				if (data == effects) {
+					int id = item["id"].get<int>();
+					if(blib::util::FileSystem::exists("assets/textures/effects/" + std::to_string(id) + ".png"))
+						effectTextureInfo[id] = effectTextureMap->addTexture("assets/textures/effects/" + std::to_string(id) + ".png");
+				}
 		}
 	};
 
@@ -467,7 +479,13 @@ void ObjectWindow::setEffectDirectory(std::string directory)
 	{
 		if (item.find("type") != item.end() && item["type"] == "dir")
 			continue;
-		auto widget = new blib::wm::widgets::Image(effectTexture);
+		blib::wm::widgets::Image* widget;
+		int id = item["id"].get<int>();
+
+		if(effectTextureInfo[id] == nullptr)
+			widget = new blib::wm::widgets::Image(effectTexture);
+		else
+			widget = new blib::wm::widgets::Image(effectTextureInfo[id]);
 		widget->width = textureSize;
 		widget->height = textureSize;
 		widget->x = px;

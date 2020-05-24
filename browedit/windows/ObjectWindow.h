@@ -4,6 +4,7 @@
 #include <blib/wm/Window.h>
 #include <blib/wm/widgets/Image.h>
 #include <blib/wm/widgets/TreeView.h>
+#include <blib/TextureMap.h>
 
 #include <BroLib/Rsw.h>
 
@@ -37,6 +38,9 @@ class ObjectWindow : public blib::wm::Window
 {
 	static blib::Texture* lightTexture;
 	static blib::Texture* effectTexture;
+	static blib::TextureMap* effectTextureMap;
+	static std::map<int, blib::TextureMap::TexInfo*> effectTextureInfo;
+
 
 	class ObjectTreeNode : public blib::wm::widgets::TreeView::TreeNode
 	{
