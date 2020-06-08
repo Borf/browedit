@@ -612,6 +612,20 @@ void Rsw::recalculateQuadTree(Gnd* gnd)
 			}
 		});
 	}
+
+	nodes.clear();
+	quadtree->foreachLevel([&nodes](Rsw::QuadTreeNode* node, int level) { nodes.push_back(node); });
+	std::vector<glm::vec3> qf;
+
+	for (auto it : nodes)
+	{
+		qf.push_back(it->bbox.max);
+		qf.push_back(it->bbox.min);
+		qf.push_back(it->range[0]);
+		qf.push_back(it->range[1]);
+	}
+	quadtreeFloats = qf;
+
 	Log::out << "Done recalculating quadtree" << Log::newline;
 }
 
